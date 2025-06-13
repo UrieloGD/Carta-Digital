@@ -1,0 +1,36 @@
+{
+    "categorias": [
+        {
+            "id": "entradas",
+            "nombre": "Entradas",
+            "descripcion": "Deliciosos aperitivos para comenzar",
+            "imagen": "entradas.jpg",
+            "platillos": [
+                {
+                    "id": 1,
+                    "nombre": "Guacamole con Totopos",
+                    "descripcion": "Aguacate fresco con cebolla, tomate y cilantro",
+                    "precio": 120,
+                    "imagen": "guacamole.jpg",
+                    "disponible": true
+                }
+            ]
+        },
+        {
+            "id": "principales",
+            "nombre": "Platillos Principales",
+            "descripcion": "Nuestras especialidades de la casa",
+            "imagen": "principales.jpg",
+            "platillos": [
+                {
+                    "id": 2,
+                    "nombre": "Tacos de Carnitas",
+                    "descripcion": "Tortillas hechas a mano con carnitas de cerdo",
+                    "precio": 180,
+                    "imagen": "tacos-carnitas.jpg",
+                    "disponible": true
+                }
+            ]
+        }
+    ]
+}
