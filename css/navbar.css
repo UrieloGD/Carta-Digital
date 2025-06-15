@@ -1,14 +1,15 @@
 /* ========================================
-   NAVEGACIÓN
+   NAVBAR STYLES
 ======================================== */
 .header {
     position: fixed;
     top: 0;
     width: 100%;
-    background: rgba(18, 18, 18, 0.95);
+    background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
     z-index: 1000;
-    transition: var(--transition);
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
 .navbar {
@@ -24,12 +25,22 @@
     align-items: center;
 }
 
-.nav-logo h1 {
+.nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo-img {
+    width: 30px;
+    height: 30px;
+}
+
+.nav-logo span {
     font-family: 'Georgia', 'Times', serif;
-    color: var(--accent-gold);
-    font-size: 1.8rem;
-    font-weight: 300;
-    letter-spacing: 2px;
+    color: #c8a882;
+    font-size: 1.5rem;
+    font-weight: 400;
 }
 
 .nav-menu {
@@ -38,33 +49,17 @@
 }
 
 .nav-link {
-    color: var(--text-light);
+    color: #2c3e50;
     text-decoration: none;
-    font-weight: 400;
-    transition: var(--transition);
+    font-weight: 500;
+    transition: all 0.3s ease;
     position: relative;
     padding: 0.5rem 0;
 }
 
-.nav-link::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background: var(--accent-gold);
-    transition: var(--transition);
-}
-
 .nav-link:hover,
 .nav-link.active {
-    color: var(--accent-gold);
-}
-
-.nav-link:hover::after,
-.nav-link.active::after {
-    width: 100%;
+    color: #c8a882;
 }
 
 .nav-toggle {
@@ -76,7 +71,37 @@
 .bar {
     width: 25px;
     height: 3px;
-    background: var(--text-white);
+    background: #2c3e50;
     margin: 3px 0;
-    transition: var(--transition);
+    transition: all 0.3s ease;
+}
+
+/* Mobile Navigation */
+@media (max-width: 768px) {
+    .nav-toggle {
+        display: flex;
+    }
+    
+    .nav-menu {
+        position: fixed;
+        top: 70px;
+        left: -100%;
+        width: 100%;
+        height: calc(100vh - 70px);
+        background: white;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        padding-top: 2rem;
+        transition: left 0.3s ease;
+    }
+    
+    .nav-menu.active {
+        left: 0;
+    }
+    
+    .nav-link {
+        padding: 1rem 0;
+        font-size: 1.2rem;
+    }
 }

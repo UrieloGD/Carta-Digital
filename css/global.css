@@ -1,16 +1,18 @@
 /* ========================================
-   VARIABLES Y RESET
+   GLOBAL STYLES
 ======================================== */
 :root {
-    --primary-dark: #121212;
-    --secondary-dark: #1a1a2e;
-    --accent-gold: #d4af37;
-    --accent-gold-hover: #c28800;
-    --text-white: #ffffff;
-    --text-light: #e0e0e0;
-    --text-gray: #b0b0b0;
-    --shadow-gold: 0 0 20px rgba(212, 175, 55, 0.3);
+    --primary-color: #c8a882;
+    --primary-hover: #b8956b;
+    --text-dark: #2c3e50;
+    --text-medium: #6c757d;
+    --text-light: #bdc3c7;
+    --background-light: #f8f9fa;
+    --background-white: #ffffff;
+    --shadow-light: 0 5px 15px rgba(0,0,0,0.1);
+    --shadow-medium: 0 10px 30px rgba(0,0,0,0.15);
     --transition: all 0.3s ease;
+    --border-radius: 15px;
 }
 
 * {
@@ -19,94 +21,132 @@
     box-sizing: border-box;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 body {
-    font-family: 'Arial', 'Helvetica', sans-serif;
-    background-color: var(--primary-dark);
-    color: var(--text-white);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
-    overflow-x: hidden;
+    color: var(--text-dark);
+    background-color: var(--background-white);
 }
 
 .container {
-    max-width: auto;
+    max-width: 1200px;
     margin: 0 auto;
-    padding: 0 10%;
+    padding: 0 20px;
 }
 
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 300;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+}
 
-/* ========================================
-   MAIN CONTENT
-======================================== */
+h1 {
+    font-size: 3.5rem;
+}
+
+h2 {
+    font-size: 2.5rem;
+}
+
+h3 {
+    font-size: 2rem;
+}
+
+h4 {
+    font-size: 1.5rem;
+}
+
+p {
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    padding: 12px 30px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: var(--transition);
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    text-align: center;
+}
+
+.btn-primary {
+    background: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--primary-hover);
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background: transparent;
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+}
+
+.btn-secondary:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+.btn-outline {
+    background: transparent;
+    color: var(--text-dark);
+    border: 2px solid var(--text-dark);
+}
+
+.btn-outline:hover {
+    background: var(--text-dark);
+    color: white;
+}
+
+/* Utility Classes */
+.text-center {
+    text-align: center;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.mb-1 { margin-bottom: 1rem; }
+.mb-2 { margin-bottom: 2rem; }
+.mb-3 { margin-bottom: 3rem; }
+.mb-4 { margin-bottom: 4rem; }
+
+.mt-1 { margin-top: 1rem; }
+.mt-2 { margin-top: 2rem; }
+.mt-3 { margin-top: 3rem; }
+.mt-4 { margin-top: 4rem; }
+
+.p-1 { padding: 1rem; }
+.p-2 { padding: 2rem; }
+.p-3 { padding: 3rem; }
+.p-4 { padding: 4rem; }
+
+/* Main Content */
 .main-content {
-    margin-top: 80px;
-    min-height: calc(100vh - 80px);
+    margin-top: 70px;
+    min-height: calc(100vh - 70px);
 }
 
-/* ========================================
-   PAGE HEADER
-======================================== */
-.page-header {
-    padding: 3rem 0;
-    text-align: center;
-    background: linear-gradient(135deg, var(--secondary-dark) 0%, var(--primary-dark) 100%);
-}
-
-.page-header h1 {
-    font-size: 3rem;
-    margin-bottom: 1rem;
-    font-family: 'Georgia', 'Times', serif;
-    color: var(--accent-gold);
-}
-
-.page-header p {
-    font-size: 1.2rem;
-    color: var(--text-light);
-}
-
-/* ========================================
-   MODAL
-======================================== */
-.modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.8);
-    z-index: 2000;
-    align-items: center;
-    justify-content: center;
-}
-
-.modal.show {
-    display: flex;
-}
-
-.modal-content {
-    background: var(--secondary-dark);
-    padding: 2rem;
-    border-radius: 15px;
-    text-align: center;
-    max-width: 400px;
-    margin: 0 20px;
-    border: 1px solid var(--accent-gold);
-}
-
-.modal-content h3 {
-    color: var(--accent-gold);
-    margin-bottom: 1rem;
-    font-family: 'Georgia', 'Times', serif;
-}
-
-.modal-content p {
-    color: var(--text-light);
-    margin-bottom: 1.5rem;
-}
-
-/* ========================================
-   ANIMATIONS
-======================================== */
+/* Animations */
 @keyframes fadeInUp {
     from {
         opacity: 0;
@@ -118,7 +158,106 @@ body {
     }
 }
 
-@keyframes float {
-    0%, 100% { transform: translateY(0) rotate(0deg); }
-    50% { transform: translateY(-20px) rotate(180deg); }
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.6s ease-in;
+}
+
+.fade-in-up {
+    animation: fadeInUp 0.6s ease-in;
+}
+
+/* Responsive Images */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Form Elements */
+input, textarea, select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: var(--transition);
+}
+
+input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+/* Loading States */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+/* Responsive Grid */
+.grid {
+    display: grid;
+    gap: 2rem;
+}
+
+.grid-2 {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.grid-3 {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.grid-4 {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2.5rem;
+    }
+    
+    h2 {
+        font-size: 2rem;
+    }
+    
+    h3 {
+        font-size: 1.5rem;
+    }
+    
+    .container {
+        padding: 0 15px;
+    }
+    
+    .btn {
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+    
+    .btn:last-child {
+        margin-bottom: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 2rem;
+    }
+    
+    h2 {
+        font-size: 1.8rem;
+    }
+    
+    .container {
+        padding: 0 10px;
+    }
 }
