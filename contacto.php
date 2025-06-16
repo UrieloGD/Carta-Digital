@@ -2,79 +2,89 @@
 
 <link rel="stylesheet" href="./css/contacto.css">
 
-<section class="page-header">
-    <div class="container">
-        <h1>Contacto</h1>
-        <p>¿Listo para crear tu invitación perfecta? Hablemos</p>
-    </div>
-</section>
-
 <section class="contact">
     <div class="container">
-        <div class="contact-content">
-            <div class="contact-info">
-                <h2>Conversemos sobre tu boda</h2>
-                <p>Estamos aquí para ayudarte a crear la invitación digital perfecta para tu día especial. Cada detalle importa.</p>
-                
-                <div class="contact-details">
-                    <div class="contact-item">
-                        <strong>Email:</strong>
-                        <span>info@cartadigital.com</span>
-                    </div>
-                    <div class="contact-item">
-                        <strong>Teléfono:</strong>
-                        <span>+1 234 567 890</span>
-                    </div>
-                    <div class="contact-item">
-                        <strong>Horario:</strong>
-                        <span>Lun - Vie: 9:00 AM - 6:00 PM</span>
-                    </div>
-                </div>
-            </div>
+        <!-- Título principal -->
+        <div class="invitation-request">
+            <h1>¿Quieres tu invitación personalizada?</h1>
+            <p>Escríbenos o contáctanos directamente</p>
+        </div>
 
+        <div class="contact-content">
+            <!-- Formulario de contacto -->
             <div class="contact-form-container">
                 <form class="contact-form" id="contactForm">
                     <div class="form-group">
-                        <label for="name">Nombre completo</label>
-                        <input type="text" id="name" name="name" required>
+                        <label for="name">Nombre</label>
+                        <input type="text" id="name" name="name" placeholder="Tu nombre" required>
                         <span class="error-message" id="nameError"></span>
                     </div>
 
                     <div class="form-group">
                         <label for="email">Correo electrónico</label>
-                        <input type="email" id="email" name="email" required>
+                        <input type="email" id="email" name="email" placeholder="tu@correo.com" required>
                         <span class="error-message" id="emailError"></span>
                     </div>
 
                     <div class="form-group">
-                        <label for="phone">Teléfono (opcional)</label>
-                        <input type="tel" id="phone" name="phone">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="wedding-date">Fecha de boda</label>
-                        <input type="date" id="wedding-date" name="wedding-date">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="message">Cuéntanos sobre tu boda</label>
-                        <textarea id="message" name="message" rows="5" placeholder="Describe tu visión, estilo preferido, colores, y cualquier detalle especial que te gustaría incluir en tu invitación..." required></textarea>
+                        <label for="message">Mensaje</label>
+                        <textarea id="message" name="message" rows="5" placeholder="¿Qué tipo de invitación necesitas? ¿Para qué evento?" required></textarea>
                         <span class="error-message" id="messageError"></span>
                     </div>
 
-                    <button type="submit" class="btn btn-primary">Enviar Mensaje</button>
+                    <button type="submit" class="btn-send">Enviar mensaje</button>
                 </form>
+            </div>
+
+            <!-- Información de contacto y redes sociales -->
+            <div>
+                <!-- Información de contacto -->
+                <div class="contact-info-card">
+                    <h2>Información de contacto</h2>
+                    
+                    <div class="contact-details">
+                        <div class="contact-item">
+                            <i class="fa fa-map-marker contact-icon"></i>
+                            <span>Av. Insurgentes Sur 1234, Col. Del Valle, Ciudad de México</span>
+                        </div>
+                        
+                        <div class="contact-item">
+                            <i class="fa fa-phone contact-icon"></i>
+                            <span>+52 55 1234 5678</span>
+                        </div>
+                        
+                        <div class="contact-item">
+                            <i class="fa fa-envelope contact-icon"></i>
+                            <span>contacto@cartadigital.com</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Redes sociales con recuadro -->
+                <div class="social-media-card">
+                    <h3>Síguenos en redes sociales</h3>
+                    <div class="contact-social-buttons">
+                        <a href="#" class="contact-social-btn instagram">
+                            <i class="fa fa-instagram contact-social-icon"></i>
+                            <span>Instagram</span>
+                        </a>
+                        <a href="#" class="contact-social-btn whatsapp">
+                            <i class="fa fa-whatsapp contact-social-icon"></i>
+                            <span>WhatsApp</span>
+                        </a>
+                        <a href="#" class="contact-social-btn facebook">
+                            <i class="fa fa-facebook contact-social-icon"></i>
+                            <span>Facebook</span>
+                        </a>
+                        <a href="#" class="contact-social-btn tiktok">
+                            <i class="fa fa-facebook contact-social-icon"></i>
+                            <span>TikTok</span>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </section>
-
-<div class="modal" id="successModal">
-    <div class="modal-content">
-        <h3>¡Mensaje enviado!</h3>
-        <p>Gracias por contactarnos. Te responderemos pronto para crear tu invitación perfecta.</p>
-        <button class="btn btn-primary" onclick="closeModal()">Cerrar</button>
-    </div>
-</div>
 
 <?php include './includes/footer.php'; ?>

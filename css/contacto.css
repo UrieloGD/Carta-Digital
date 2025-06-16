@@ -3,6 +3,7 @@
 ======================================== */
 .contact {
     padding: 5rem 0;
+    background: var(--background-light);
 }
 
 .contact-content {
@@ -10,52 +11,39 @@
     grid-template-columns: 1fr 1fr;
     gap: 4rem;
     align-items: start;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
-.contact-info h2 {
-    font-size: 2rem;
+/* ========================================
+   INVITATION REQUEST SECTION
+======================================== */
+.invitation-request {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.invitation-request h1 {
+    font-size: 2.5rem;
+    color: var(--text-dark);
     margin-bottom: 1rem;
-    color: var(--accent-gold);
-    font-family: 'Georgia', 'Times', serif;
+    font-weight: 600;
 }
 
-.contact-info p {
-    color: var(--text-light);
-    margin-bottom: 2rem;
-    line-height: 1.7;
-}
-
-.contact-details {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.contact-item {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.contact-item strong {
-    color: var(--accent-gold);
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.contact-item span {
-    color: var(--text-light);
+.invitation-request p {
+    color: var(--text-medium);
+    font-size: 1.1rem;
 }
 
 /* ========================================
    FORM STYLES
 ======================================== */
 .contact-form-container {
-    background: var(--secondary-dark);
-    padding: 2.5rem;
-    border-radius: 15px;
-    border: 1px solid rgba(212, 175, 55, 0.1);
+    background: var(--background-white);
+    padding: 3rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-medium);
+    border: 1px solid #e9ecef;
 }
 
 .form-group {
@@ -65,40 +53,187 @@
 .form-group label {
     display: block;
     margin-bottom: 0.5rem;
-    color: var(--accent-gold);
+    color: var(--text-dark);
     font-weight: 600;
     font-size: 0.9rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
 }
 
 .form-group input,
 .form-group textarea {
     width: 100%;
-    padding: 1rem;
-    background: var(--primary-dark);
-    border: 2px solid rgba(212, 175, 55, 0.2);
-    border-radius: 5px;
-    color: var(--text-white);
+    padding: 0.875rem 1rem;
+    background: var(--background-white);
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    color: var(--text-dark);
     font-size: 1rem;
     transition: var(--transition);
+    box-sizing: border-box;
 }
 
 .form-group input:focus,
 .form-group textarea:focus {
     outline: none;
-    border-color: var(--accent-gold);
-    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(200, 168, 130, 0.1);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: var(--text-light);
 }
 
 .form-group textarea {
     resize: vertical;
     min-height: 120px;
+    font-family: inherit;
 }
 
+.btn-send {
+    width: 100%;
+    padding: 1rem;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    text-transform: none;
+}
+
+.btn-send:hover {
+    background: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-light);
+}
+
+/* ========================================
+   CONTACT INFO CARD
+======================================== */
+.contact-info-card {
+    background: var(--background-white);
+    padding: 2.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-light);
+    border: 1px solid #e9ecef;
+    margin-bottom: 1rem;
+}
+
+.contact-info-card h2 {
+    font-size: 1.5rem;
+    color: var(--text-dark);
+    margin-bottom: 2rem;
+    font-weight: 600;
+}
+
+.contact-details {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.contact-icon {
+    width: 20px;
+    height: 20px;
+    color: var(--primary-color);
+    flex-shrink: 0;
+    font-size: 1.2rem;
+}
+
+.contact-item span {
+    color: var(--text-medium);
+    font-size: 0.95rem;
+}
+
+/* ========================================
+   SOCIAL MEDIA CARD
+======================================== */
+.social-media-card {
+    background: var(--background-white);
+    padding: 2.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-light);
+    border: 1px solid #e9ecef;
+}
+
+.social-media-card h3 {
+    font-size: 1.5rem;
+    color: var(--text-dark);
+    margin-bottom: 2rem;
+    font-weight: 600;
+}
+
+.contact-social-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.contact-social-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 1rem;
+    background: var(--background-white);
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    color: var(--text-medium);
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: var(--transition);
+    text-align: center;
+}
+
+.contact-social-btn:hover {
+    background: var(--background-light);
+    border-color: var(--primary-color);
+    color: var(--text-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-light);
+}
+
+.contact-social-icon {
+    font-size: 1.3rem;
+    flex-shrink: 0;
+}
+
+/* Colores específicos para cada red social */
+.contact-social-btn.instagram .contact-social-icon {
+    color: #E4405F;
+}
+
+.contact-social-btn.whatsapp .contact-social-icon {
+    color: #25D366;
+}
+
+.contact-social-btn.facebook .contact-social-icon {
+    color: #1877F2;
+}
+
+.contact-social-btn.tiktok .contact-social-icon {
+    color: #000000;
+}
+
+.contact-social-btn span {
+    color: inherit;
+    font-weight: 500;
+}
+
+/* ========================================
+   ERROR MESSAGES
+======================================== */
 .error-message {
     display: block;
-    color: #ff6b6b;
+    color: #dc3545;
     font-size: 0.8rem;
     margin-top: 0.5rem;
     opacity: 0;
@@ -107,4 +242,35 @@
 
 .error-message.show {
     opacity: 1;
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+======================================== */
+@media (max-width: 768px) {
+    .contact-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    
+    .contact-form-container,
+    .contact-info-card,
+    .social-media-card {
+        padding: 2rem;
+    }
+    
+    .invitation-request h1 {
+        font-size: 2rem;
+    }
+    
+    .contact-social-buttons {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .contact-social-buttons {
+        grid-template-columns: 1fr;
+    }
 }
