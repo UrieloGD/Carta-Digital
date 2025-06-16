@@ -10,7 +10,7 @@
     <div class="hero-overlay"></div>
     <div class="container">
         <div class="hero-content">
-            <h1>Invitaciones digitales de</h1>
+            <h1>Invitaciones digitales</h1>
             <h2>con estilo y elegancia</h2>
             <p>Crea momentos inolvidables con nuestras exclusivas invitaciones digitales.</p>
             <div class="hero-buttons">
@@ -30,9 +30,7 @@
         <div class="features-grid">
             <div class="feature-card">
                 <div class="feature-icon">
-                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
-                        <path d="M12 2L2 7v10c0 5.55 3.84 9.74 9 11 5.16-1.26 9-5.45 9-11V7l-10-5z" stroke="currentColor" stroke-width="2"/>
-                    </svg>
+                    <i class="fas fa-mobile-alt"></i>
                 </div>
                 <h3>100% Digital</h3>
                 <p>Accesible desde cualquier dispositivo, sin necesidad de papel.</p>
@@ -40,9 +38,7 @@
             
             <div class="feature-card">
                 <div class="feature-icon">
-                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
-                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" stroke="currentColor" stroke-width="2"/>
-                    </svg>
+                    <i class="fa fa-star"></i>
                 </div>
                 <h3>Diseño Elegante</h3>
                 <p>Diseños sofisticados que reflejan la belleza y emoción de tu día especial.</p>
@@ -50,9 +46,7 @@
             
             <div class="feature-card">
                 <div class="feature-icon">
-                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" stroke="currentColor" stroke-width="2"/>
-                    </svg>
+                    <i class="fas fa-palette"></i>
                 </div>
                 <h3>Personalizado</h3>
                 <p>Cada detalle adaptado a tu estilo y necesidades, creando una experiencia única.</p>
@@ -68,9 +62,7 @@
         <div class="benefits-grid">
             <div class="benefit-card">
                 <div class="benefit-icon">
-                    <svg width="30" height="30" viewBox="0 0 24 24" fill="none">
-                        <path d="M8 5v14l11-7z" stroke="currentColor" stroke-width="2"/>
-                    </svg>
+                    <i class="fas fa-share-alt"></i>
                 </div>
                 <h3>Fácil de compartir</h3>
                 <p>Envía tu invitación por WhatsApp, email o redes sociales.</p>
@@ -78,9 +70,7 @@
             
             <div class="benefit-card">
                 <div class="benefit-icon">
-                    <svg width="30" height="30" viewBox="0 0 24 24" fill="none">
-                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" stroke="currentColor" stroke-width="2"/>
-                    </svg>
+                    <i class="fas fa-clock"></i>
                 </div>
                 <h3>Entrega Rápida</h3>
                 <p>Recibe tu invitación en menos de 24 horas.</p>
@@ -88,9 +78,7 @@
             
             <div class="benefit-card">
                 <div class="benefit-icon">
-                    <svg width="30" height="30" viewBox="0 0 24 24" fill="none">
-                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="currentColor" stroke-width="2"/>
-                    </svg>
+                    <i class="fas fa-images"></i>
                 </div>
                 <h3>Galería de fotos</h3>
                 <p>Incluye vuestras mejores fotografías para compartir.</p>
@@ -98,9 +86,7 @@
             
             <div class="benefit-card">
                 <div class="benefit-icon">
-                    <svg width="30" height="30" viewBox="0 0 24 24" fill="none">
-                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" stroke="currentColor" stroke-width="2"/>
-                    </svg>
+                    <i class="fas fa-map-marker-alt"></i>
                 </div>
                 <h3>Mapas y detalles</h3>
                 <p>Incluye ubicaciones y toda la información necesaria.</p>
@@ -117,7 +103,7 @@
         
         <div class="templates-grid">
             <div class="template-card">
-                <img src="./images/template1.jpg" alt="Elegancia Dorada">
+                <img src="./images/plantilla 1.png" alt="Elegancia Dorada">
                 <div class="template-info">
                     <h3>Elegancia Dorada</h3>
                     <a href="#" class="btn-template">Ver plantilla</a>
@@ -125,7 +111,7 @@
             </div>
             
             <div class="template-card">
-                <img src="./images/template2.jpg" alt="Elegancia Dorada">
+                <img src="./images/plantilla 1.png" alt="Elegancia Dorada">
                 <div class="template-info">
                     <h3>Elegancia Dorada</h3>
                     <a href="#" class="btn-template">Ver plantilla</a>
@@ -133,20 +119,13 @@
             </div>
             
             <div class="template-card">
-                <img src="./images/template3.jpg" alt="Elegancia Dorada">
+                <img src="./images/plantilla 1.png" alt="Elegancia Dorada">
                 <div class="template-info">
                     <h3>Elegancia Dorada</h3>
                     <a href="#" class="btn-template">Ver plantilla</a>
                 </div>
             </div>
             
-            <div class="template-card">
-                <img src="./images/template4.jpg" alt="Elegancia Dorada">
-                <div class="template-info">
-                    <h3>Elegancia Dorada</h3>
-                    <a href="#" class="btn-template">Ver plantilla</a>
-                </div>
-            </div>
         </div>
         
         <div class="templates-cta">
@@ -157,9 +136,11 @@
 
 <!-- Quote Section -->
 <section class="quote">
-    <div class="quote-content">
-        <h2>"Cada historia de amor merece una invitación inolvidable"</h2>
-        <p>Haz que cada detalle cuente desde el primer momento</p>
+    <div class="container">
+        <div class="quote-content">
+            <h2>"Cada historia de amor merece una invitación inolvidable"</h2>
+            <p>Haz que cada detalle cuente desde el primer momento</p>
+        </div>
     </div>
 </section>
 

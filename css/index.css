@@ -5,7 +5,7 @@
 /* Hero Section */
 .hero {
     position: relative;
-    min-height: 100vh;
+    min-height: 95vh;
     display: flex;
     align-items: center;
     overflow: hidden;
@@ -31,9 +31,9 @@
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
+    width: 80%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.3);
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0));
     z-index: 2;
 }
 
@@ -45,7 +45,7 @@
 
 .hero-content {
     max-width: 600px;
-    padding-left: 50px;
+    /* padding-left: 20px; */
 }
 
 .hero-content h1 {
@@ -94,6 +94,7 @@
 .btn-primary {
     background: #c8a882;
     color: white;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
 }
 
 .btn-primary:hover {
@@ -105,6 +106,7 @@
     background: transparent;
     color: white;
     border: 2px solid white;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
 }
 
 .btn-secondary:hover {
@@ -114,7 +116,7 @@
 
 /* About Section */
 .about {
-    padding: 100px 0;
+    padding: 80px 0;
     background: white;
 }
 
@@ -123,7 +125,7 @@
     font-size: 2.5rem;
     margin-bottom: 1rem;
     color: #2c3e50;
-    font-weight: 300;
+    font-weight: 400;
 }
 
 .about .highlight {
@@ -152,11 +154,13 @@
     padding: 2rem;
     border-radius: 15px;
     background: #f8f9fa;
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
 }
 
 .feature-card:hover {
     transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
 }
 
 .feature-icon {
@@ -174,6 +178,7 @@
 .feature-card h3 {
     font-size: 1.5rem;
     margin-bottom: 1rem;
+    font-weight: 500;
     color: #2c3e50;
 }
 
@@ -182,9 +187,18 @@
     line-height: 1.6;
 }
 
+.feature-icon i,
+.benefit-icon i {
+    font-size: 40px; /* Para feature-icon */
+}
+
+.benefit-icon i {
+    font-size: 30px; /* Para benefit-icon */
+}
+
 /* Benefits Section */
 .benefits {
-    padding: 100px 0;
+    padding: 80px 0;
     background: #f8f9fa;
 }
 
@@ -207,12 +221,13 @@
     padding: 2rem;
     border-radius: 15px;
     text-align: center;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-    transition: transform 0.3s ease;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .benefit-card:hover {
     transform: translateY(-3px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
 }
 
 .benefit-icon {
@@ -231,6 +246,7 @@
     font-size: 1.2rem;
     margin-bottom: 0.5rem;
     color: #2c3e50;
+    font-weight: 500;
 }
 
 .benefit-card p {
@@ -241,7 +257,7 @@
 
 /* Templates Preview */
 .templates-preview {
-    padding: 100px 0;
+    padding: 80px 0;
     background: white;
 }
 
@@ -257,7 +273,7 @@
     text-align: center;
     font-size: 1.2rem;
     color: #6c757d;
-    margin-bottom: 4rem;
+    margin-bottom: 2rem;
 }
 
 .templates-grid {
@@ -271,22 +287,23 @@
     background: white;
     border-radius: 15px;
     overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    transition: transform 0.3s ease;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .template-card:hover {
     transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
 }
 
 .template-card img {
     width: 100%;
-    height: 300px;
+    height: 500px;
     object-fit: cover;
 }
 
 .template-info {
-    padding: 1.5rem;
+    padding: 1.2rem;
     text-align: center;
 }
 
@@ -318,12 +335,31 @@
 
 /* Quote Section */
 .quote {
-    padding: 100px 0;
-    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('../images/quote-bg.jpg');
-    background-size: cover;
-    background-position: center;
+    position: relative;
+    padding: 80px 0;
+    background: url('../images/frase.webp') center 46%/cover no-repeat;
     color: white;
     text-align: center;
+    overflow: hidden;
+}
+
+.quote::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.55);
+    z-index: 1;
+}
+
+.quote-content {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 20px;
 }
 
 .quote-content h2 {
@@ -331,12 +367,15 @@
     font-weight: 300;
     margin-bottom: 1rem;
     font-style: italic;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
 }
 
 .quote-content p {
     font-size: 1.3rem;
-    color: rgba(255,255,255,0.8);
+    color: rgba(255,255,255);
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
 }
+
 
 /* Responsive Design */
 @media (max-width: 768px) {
