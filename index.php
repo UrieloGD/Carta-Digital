@@ -103,7 +103,7 @@
         
         <div class="templates-grid">
             <div class="template-card">
-                <img src="./images/plantilla 1.png" alt="Elegancia Dorada">
+                <img src="./images/plantilla-1.png" alt="Elegancia Dorada">
                 <div class="template-info">
                     <h3>Elegancia Dorada</h3>
                     <a href="#" class="btn-template">Ver plantilla</a>
@@ -111,7 +111,7 @@
             </div>
             
             <div class="template-card">
-                <img src="./images/plantilla 1.png" alt="Elegancia Dorada">
+                <img src="./images/plantilla-1.png" alt="Elegancia Dorada">
                 <div class="template-info">
                     <h3>Elegancia Dorada</h3>
                     <a href="#" class="btn-template">Ver plantilla</a>
@@ -119,7 +119,7 @@
             </div>
             
             <div class="template-card">
-                <img src="./images/plantilla 1.png" alt="Elegancia Dorada">
+                <img src="./images/plantilla-1.png" alt="Elegancia Dorada">
                 <div class="template-info">
                     <h3>Elegancia Dorada</h3>
                     <a href="#" class="btn-template">Ver plantilla</a>

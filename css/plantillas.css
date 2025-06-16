@@ -1,33 +1,131 @@
+:root {
+    --primary-color: #c8a882;
+    --primary-hover: #b8956b;
+    --text-dark: #2c3e50;
+    --text-medium: #6c757d;
+    --text-light: #bdc3c7;
+    --background-light: #f8f9fa;
+    --background-white: #ffffff;
+    --shadow-light: 0 5px 15px rgba(0,0,0,0.1);
+    --shadow-medium: 0 10px 30px rgba(0,0,0,0.15);
+    --transition: all 0.3s ease;
+    --border-radius: 15px;
+}
+
+/* ========================================
+   PAGE HEADER - Centrado
+======================================== */
+.page-header {
+    background: var(--background-white);
+    padding: 3rem 0 3rem 0;
+    text-align: center; /* Centrado */
+}
+
+.header-content {
+    max-width: 800px;
+    margin: 0 auto; /* Centrado del contenedor */
+}
+
+.page-header h1 {
+    font-size: 3rem;
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -1px;
+}
+
+.page-header .highlight {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.header-subtitle {
+    font-size: 1.1rem;
+    color: var(--text-medium);
+    margin-bottom: 2.5rem;
+    line-height: 1.6;
+    font-weight: 400;
+}
+
+/* ========================================
+   NAVIGATION TABS - Centrado
+======================================== */
+.template-nav {
+    display: inline-flex; /* Mantiene inline-flex para centrar el grupo */
+    background: var(--background-light);
+    border-radius: 12px;
+    padding: 6px;
+    gap: 4px;
+    border: 1px solid rgba(200, 168, 130, 0.2);
+    /* Se centra automáticamente por el text-align: center del padre */
+}
+
+.nav-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-medium);
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: var(--transition);
+    font-size: 0.95rem;
+    font-weight: 500;
+    white-space: nowrap;
+    position: relative;
+}
+
+.nav-btn:hover {
+    color: var(--text-dark);
+    background: rgba(200, 168, 130, 0.1);
+}
+
+.nav-btn.active {
+    background: var(--primary-color);
+    color: var(--background-white);
+    box-shadow: 0 2px 8px rgba(200, 168, 130, 0.3);
+}
+
 /* ========================================
    TEMPLATES SECTION
 ======================================== */
 .templates {
-    padding: 5rem 0;
+    padding: 0rem 0 4rem 0;
+    background: var(--background-white);
 }
 
 .templates-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 2rem;
+    margin-bottom: 3rem;
 }
 
+.templates-grid:last-child {
+    margin-bottom: 0;
+}
+
+/* ========================================
+   TEMPLATE CARDS
+======================================== */
 .template-card {
-    background: var(--secondary-dark);
-    border-radius: 15px;
+    background: var(--background-white);
+    border-radius: var(--border-radius);
     overflow: hidden;
     transition: var(--transition);
-    border: 1px solid rgba(212, 175, 55, 0.1);
+    box-shadow: var(--shadow-light);
+    border: 2px solid rgba(200, 168, 130, 0.1);
 }
 
 .template-card:hover {
-    transform: translateY(-10px);
-    box-shadow: var(--shadow-gold);
-    border-color: var(--accent-gold);
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-medium);
+    border-color: var(--primary-color);
 }
 
 .template-image {
     position: relative;
-    height: 300px;
+    height: 500px;
     overflow: hidden;
 }
 
@@ -44,7 +142,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(18, 18, 18, 0.8);
+    background: rgba(0, 0, 0, 0.35);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -57,20 +155,113 @@
 }
 
 .template-card:hover .template-image img {
-    transform: scale(1.1);
+    transform: scale(1.08);
 }
 
 .template-info {
-    padding: 1.5rem;
+    padding: 1.2rem;
+    text-align: center;
 }
 
 .template-info h3 {
-    font-size: 1.3rem;
-    margin-bottom: 0.5rem;
-    color: var(--accent-gold);
+    font-size: 1.1rem;
+    margin: 0;
+    color: var(--text-dark);
+    font-weight: 500;
 }
 
-.template-info p {
-    color: var(--text-gray);
-    line-height: 1.6;
+/* ========================================
+   BUTTONS
+======================================== */
+.btn {
+    display: inline-block;
+    padding: 0.8rem 1.8rem;
+    text-decoration: none;
+    border-radius: 25px;
+    transition: var(--transition);
+    font-weight: 500;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.btn-secondary {
+    background: var(--primary-color);
+    color: var(--background-white);
+}
+
+.btn-secondary:hover {
+    background: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-light);
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+======================================== */
+@media (max-width: 768px) {
+    .page-header {
+        text-align: center; /* Ya está centrado */
+        padding: 3rem 0 2rem 0;
+    }
+    
+    .page-header h1 {
+        font-size: 2.2rem;
+    }
+    
+    .header-subtitle {
+        font-size: 1rem;
+        margin-bottom: 2rem;
+    }
+    
+    .template-nav {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .templates-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .template-image {
+        height: 200px;
+    }
+}
+
+@media (max-width: 480px) {
+    .page-header h1 {
+        font-size: 1.8rem;
+    }
+    
+    .template-nav {
+        width: 100%;
+        flex-direction: column;
+        align-items: center; /* Centrado en móvil */
+    }
+    
+    .nav-btn {
+        text-align: center;
+        min-width: 120px; /* Ancho mínimo para mejor apariencia */
+    }
+    
+    .templates {
+        padding: 2rem 0;
+    }
+}
+
+/* ========================================
+   FILTER ANIMATIONS
+======================================== */
+.template-card.hidden {
+    opacity: 0;
+    transform: scale(0.8);
+    transition: var(--transition);
+}
+
+.template-card.visible {
+    opacity: 1;
+    transform: scale(1);
+    transition: var(--transition);
 }
