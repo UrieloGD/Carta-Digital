@@ -144,4 +144,31 @@
     </div>
 </section>
 
-<?php include './includes/footer.php'; ?>
+<script>
+// Intersection Observer para activar animaciones al hacer scroll
+const observerOptions = {
+    threshold: 0.3,
+    rootMargin: '0px 0px -50px 0px'
+};
+
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('animate');
+        }
+    });
+}, observerOptions);
+
+// Observar la sección quote
+document.addEventListener('DOMContentLoaded', () => {
+    const quoteContent = document.querySelector('.quote-content');
+    if (quoteContent) {
+        observer.observe(quoteContent);
+    }
+});
+</script>
+
+<?php 
+    include './includes/footer.php';
+    include './js/quote.js'; 
+?>

@@ -65,20 +65,20 @@
                     <h3>Síguenos en redes sociales</h3>
                     <div class="contact-social-buttons">
                         <a href="#" class="contact-social-btn instagram">
-                            <i class="fa fa-instagram contact-social-icon"></i>
+                            <img src="./images/logos/instagram.webp" alt="Instagram" class="contact-social-icon">
                             <span>Instagram</span>
                         </a>
-                        <a href="#" class="contact-social-btn whatsapp">
-                            <i class="fa fa-whatsapp contact-social-icon"></i>
-                            <span>WhatsApp</span>
-                        </a>
                         <a href="#" class="contact-social-btn facebook">
-                            <i class="fa fa-facebook contact-social-icon"></i>
+                            <img src="./images/logos/facebook.webp" alt="Facebook" class="contact-social-icon">
                             <span>Facebook</span>
                         </a>
-                        <a href="#" class="contact-social-btn tiktok">
-                            <i class="fa fa-facebook contact-social-icon"></i>
-                            <span>TikTok</span>
+                        <a href="#" class="contact-social-btn whatsapp">
+                            <img src="./images/logos/whatsapp.webp" alt="WhatsApp" class="contact-social-icon">
+                            <span>WhatsApp</span>
+                        </a>
+                        <a href="#" class="contact-social-btn messenger">
+                            <img src="./images/logos/Messenger.webp" alt="Messenger" class="contact-social-icon">
+                            <span>Messenger</span>
                         </a>
                     </div>
                 </div>

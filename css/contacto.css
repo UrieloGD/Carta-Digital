@@ -201,31 +201,44 @@
     box-shadow: var(--shadow-light);
 }
 
+/* Estilos específicos para las imágenes de redes sociales */
 .contact-social-icon {
-    font-size: 1.3rem;
+    width: 24px;
+    height: 24px;
     flex-shrink: 0;
+    object-fit: contain;
+    transition: var(--transition);
+    /* Filtro para cambiar al color principal - ajusta los valores según tu color principal */
+    filter: brightness(0) saturate(100%) invert(56%) sepia(85%) saturate(492%) hue-rotate(15deg) brightness(95%) contrast(89%);
 }
 
-/* Colores específicos para cada red social */
-.contact-social-btn.instagram .contact-social-icon {
-    color: #E4405F;
-}
-
-.contact-social-btn.whatsapp .contact-social-icon {
-    color: #25D366;
-}
-
-.contact-social-btn.facebook .contact-social-icon {
-    color: #1877F2;
-}
-
-.contact-social-btn.tiktok .contact-social-icon {
-    color: #000000;
+/* Efectos hover para las imágenes */
+.contact-social-btn:hover .contact-social-icon {
+    transform: scale(1.1);
+    /* En hover, puede ser más intenso o mantener el mismo color */
+    filter: brightness(0) saturate(100%) invert(48%) sepia(79%) saturate(492%) hue-rotate(15deg) brightness(100%) contrast(95%);
 }
 
 .contact-social-btn span {
     color: inherit;
     font-weight: 500;
+}
+
+/* Efectos hover para los botones */
+.contact-social-btn.instagram:hover {
+    border-color: var(--primary-color);
+}
+
+.contact-social-btn.facebook:hover {
+    border-color: var(--primary-color);
+}
+
+.contact-social-btn.whatsapp:hover {
+    border-color: var(--primary-color);
+}
+
+.contact-social-btn.messenger:hover {
+    border-color: var(--primary-color);
 }
 
 /* ========================================
