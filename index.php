@@ -170,5 +170,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
 <?php 
     include './includes/footer.php';
-    include './js/quote.js'; 
 ?>

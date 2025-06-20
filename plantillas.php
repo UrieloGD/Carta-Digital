@@ -27,7 +27,7 @@
                 <div class="template-image">
                     <img src="images/plantilla-1.png" alt="Plantilla Clásica">
                     <div class="template-overlay">
-                        <a href="./plantilla-clasica.php" class="btn btn-secondary">Ver plantilla</a>
+                        <a href="./plantillas/plantilla-1/invitacion-1.php" class="btn btn-secondary">Ver plantilla</a>
                     </div>
                 </div>
                 <div class="template-info">

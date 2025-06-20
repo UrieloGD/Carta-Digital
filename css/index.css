@@ -55,7 +55,7 @@
     font-weight: 300;
     line-height: 1.2;
     margin-bottom: 0.5rem;
-    color: white;
+    color: var(--background-white);
     text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
     opacity: 0;
     animation: fadeInUp 1s ease-out 0.5s forwards;
@@ -66,7 +66,7 @@
     font-weight: 300;
     line-height: 1.2;
     margin-bottom: 2rem;
-    color: #c8a882;
+    color: var(--primary-color);
     text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
     opacity: 0;
     animation: fadeInUp 1s ease-out 1s forwards;
@@ -74,7 +74,7 @@
 
 .hero-content p {
     font-size: 1.2rem;
-    color: white;
+    color: var(--background-white);
     margin-bottom: 3rem;
     line-height: 1.6;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
@@ -90,62 +90,51 @@
     animation: fadeInUp 1s ease-out 2s forwards;
 }
 
-.btn {
-    padding: 12px 30px;
-    border-radius: 25px;
-    text-decoration: none;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    border: none;
-    cursor: pointer;
-    font-size: 1rem;
+.hero .btn-primary {
+    background: var(--primary-color);
+    color: var(--background-white);
+    box-shadow: var(--shadow-light);
 }
 
-.btn-primary {
-    background: #c8a882;
-    color: white;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-}
-
-.btn-primary:hover {
-    background: #b8956b;
+.hero .btn-primary:hover {
+    background: var(--primary-hover);
     transform: translateY(-2px);
 }
 
-.btn-secondary {
+.hero .btn-secondary {
     background: transparent;
-    color: white;
-    border: 2px solid white;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    color: var(--background-white);
+    border: 2px solid var(--background-white);
+    box-shadow: var(--shadow-light);
 }
 
-.btn-secondary:hover {
-    background: white;
-    color: #c8a882;
+.hero .btn-secondary:hover {
+    background: var(--background-white);
+    color: var(--primary-color);
 }
 
 /* About Section */
 .about {
     padding: 80px 0;
-    background: white;
+    background: var(--background-white);
 }
 
 .about h2 {
     text-align: center;
     font-size: 2.5rem;
     margin-bottom: 1rem;
-    color: #2c3e50;
+    color: var(--text-dark);
     font-weight: 400;
 }
 
 .about .highlight {
-    color: #c8a882;
+    color: var(--primary-color);
 }
 
 .about > .container > p {
     text-align: center;
     font-size: 1.2rem;
-    color: #6c757d;
+    color: var(--text-medium);
     margin-bottom: 4rem;
     max-width: 800px;
     margin-left: auto;
@@ -162,61 +151,56 @@
 .feature-card {
     text-align: center;
     padding: 2rem;
-    border-radius: 15px;
-    background: #f8f9fa;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    border-radius: var(--border-radius);
+    background: var(--background-light);
+    transition: var(--transition);
+    box-shadow: var(--shadow-light);
 }
 
 .feature-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    box-shadow: var(--shadow-medium);
 }
 
 .feature-icon {
     width: 80px;
     height: 80px;
     margin: 0 auto 1.5rem;
-    background: #c8a882;
+    background: var(--primary-color);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: white;
+    color: var(--background-white);
 }
 
 .feature-card h3 {
     font-size: 1.5rem;
     margin-bottom: 1rem;
     font-weight: 500;
-    color: #2c3e50;
+    color: var(--text-dark);
 }
 
 .feature-card p {
-    color: #6c757d;
+    color: var(--text-medium);
     line-height: 1.6;
 }
 
-.feature-icon i,
-.benefit-icon i {
-    font-size: 40px; /* Para feature-icon */
-}
-
-.benefit-icon i {
-    font-size: 30px; /* Para benefit-icon */
+.feature-icon i {
+    font-size: 40px;
 }
 
 /* Benefits Section */
 .benefits {
     padding: 80px 0;
-    background: #f8f9fa;
+    background: var(--background-light);
 }
 
 .benefits h2 {
     text-align: center;
     font-size: 2.5rem;
     margin-bottom: 4rem;
-    color: #2c3e50;
+    color: var(--text-dark);
     font-weight: 300;
 }
 
@@ -227,62 +211,66 @@
 }
 
 .benefit-card {
-    background: white;
+    background: var(--background-white);
     padding: 2rem;
-    border-radius: 15px;
+    border-radius: var(--border-radius);
     text-align: center;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: var(--shadow-light);
+    transition: var(--transition);
 }
 
 .benefit-card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+    box-shadow: var(--shadow-medium);
 }
 
 .benefit-icon {
     width: 60px;
     height: 60px;
     margin: 0 auto 1rem;
-    background: #c8a882;
+    background: var(--primary-color);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: white;
+    color: var(--background-white);
 }
 
 .benefit-card h3 {
     font-size: 1.2rem;
     margin-bottom: 0.5rem;
-    color: #2c3e50;
+    color: var(--text-dark);
     font-weight: 500;
 }
 
 .benefit-card p {
-    color: #6c757d;
+    color: var(--text-medium);
     font-size: 0.9rem;
     line-height: 1.5;
+}
+
+.benefit-icon i {
+    font-size: 30px;
 }
 
 /* Templates Preview */
 .templates-preview {
     padding: 80px 0;
-    background: white;
+    background: var(--background-white);
 }
 
 .templates-preview h2 {
     text-align: center;
     font-size: 2.5rem;
     margin-bottom: 1rem;
-    color: #2c3e50;
+    color: var(--text-dark);
     font-weight: 300;
 }
 
 .templates-preview > .container > p {
     text-align: center;
     font-size: 1.2rem;
-    color: #6c757d;
+    color: var(--text-medium);
     margin-bottom: 2rem;
 }
 
@@ -294,16 +282,16 @@
 }
 
 .template-card {
-    background: white;
-    border-radius: 15px;
+    background: var(--background-white);
+    border-radius: var(--border-radius);
     overflow: hidden;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: var(--shadow-light);
+    transition: var(--transition);
 }
 
 .template-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+    box-shadow: var(--shadow-medium);
 }
 
 .template-card img {
@@ -320,22 +308,22 @@
 .template-info h3 {
     font-size: 1.3rem;
     margin-bottom: 1rem;
-    color: #2c3e50;
+    color: var(--text-dark);
 }
 
 .btn-template {
     display: inline-block;
     padding: 8px 20px;
-    background: #c8a882;
-    color: white;
+    background: var(--primary-color);
+    color: var(--background-white);
     text-decoration: none;
     border-radius: 20px;
     font-size: 0.9rem;
-    transition: background 0.3s ease;
+    transition: var(--transition);
 }
 
 .btn-template:hover {
-    background: #b8956b;
+    background: var(--primary-hover);
 }
 
 .templates-cta {
@@ -348,7 +336,7 @@
     position: relative;
     padding: 80px 0;
     background: url('../images/frase.webp') center 46%/cover no-repeat;
-    color: white;
+    color: var(--background-white);
     text-align: center;
     overflow: hidden;
 }
@@ -365,7 +353,6 @@
     animation: fadeIn 1.5s ease-out;
 }
 
-/* Nuevo pseudo-elemento para el efecto zoom en el background */
 .quote::after {
     content: '';
     position: absolute;
@@ -398,13 +385,13 @@
 
 .quote-content p {
     font-size: 1.3rem;
-    color: rgba(255,255,255);
+    color: var(--background-white);
     text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
     opacity: 0;
     animation: fadeInUp 1s ease-out 1s forwards;
 }
 
-/* Keyframes para las animaciones */
+/* Keyframes (sin cambios, ya están optimizadas) */
 @keyframes fadeInUp {
     from {
         opacity: 0;
@@ -467,7 +454,6 @@
     }
 }
 
-/* Animación activada por scroll (opcional) */
 @media (prefers-reduced-motion: no-preference) {
     .quote-content {
         opacity: 0;
