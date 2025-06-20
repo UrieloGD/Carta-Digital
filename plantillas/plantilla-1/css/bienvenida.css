@@ -1,0 +1,89 @@
+/* Sección Bienvenida */
+.bienvenida {
+    min-height: 105vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-primary);
+    padding: 2rem 0;
+}
+
+.bienvenida-content {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+    width: 100%;
+}
+
+.bienvenida h2 {
+    font-family: var(--font-serif);
+    font-size: 2.5rem;
+    color: var(--color-secondary);
+    margin-bottom: 2rem;
+    font-weight: 400;
+}
+
+.bienvenida p {
+    font-size: 0.95rem;
+    margin-bottom: 2.5rem;
+    color: var(--color-text);
+    line-height: 1.6;
+    letter-spacing: 0.5px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.bienvenida-image {
+    margin: 2.5rem 0;
+    display: flex;
+    justify-content: center;
+    perspective: 1000px;
+}
+
+.bienvenida-image img {
+    width: 380px;
+    height: 380px;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 8px;
+    
+    /* Efecto photocard con borde blanco */
+    padding: 15px;
+    background: white;
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.15),
+        0 2px 8px rgba(0, 0, 0, 0.1);
+    
+    /* Rotación hacia la derecha */
+    transform: rotate(8deg);
+    transition: transform 0.3s ease;
+}
+
+.bienvenida-image img:hover {
+    transform: rotate(0deg) scale(1.05);
+}
+
+.bienvenida-date-section {
+    margin-top: 2.5rem;
+}
+
+.bienvenida-date {
+    font-family: var(--font-serif);
+    font-size: 2.8rem;
+    color: var(--color-secondary);
+    margin-bottom: 1.5rem;
+    font-weight: 400;
+}
+
+.bienvenida-venue p {
+    font-size: 0.9rem;
+    color: var(--color-text);
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.5px;
+}
+
+.venue-address {
+    font-size: 0.8rem !important;
+    color: var(--color-text-light) !important;
+}

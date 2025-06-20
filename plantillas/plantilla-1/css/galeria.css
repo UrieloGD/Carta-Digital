@@ -1,0 +1,75 @@
+/* Sección Galería */
+.galeria {
+    padding: 5rem 0;
+    background: var(--color-primary);
+    overflow: hidden;
+    /* Removemos el padding del container para que ocupe todo el ancho */
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+}
+
+.galeria h2 {
+    font-family: var(--font-serif);
+    font-size: 2.5rem;
+    color: var(--color-secondary);
+    text-align: center;
+    margin-bottom: 3rem;
+    /* Mantenemos el contenedor centrado solo para el título */
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 2rem;
+}
+
+/* Contenedor del carrusel */
+.galeria-carousel {
+    width: 100%;
+    /* overflow: hidden; */
+}
+
+/* Track que contiene todas las imágenes - movimiento invertido */
+.carousel-track {
+    display: flex;
+    animation: scrollFromLeft 60s linear infinite;
+    gap: 2rem;
+    width: max-content;
+}
+
+/* Cada item de la galería */
+.galeria-item {
+    flex: 0 0 300px;
+    height: 400px;
+    position: relative;
+    transition: var(--transition);
+}
+
+.galeria-item:hover {
+    transform: scale(1.05);
+}
+
+.galeria-item img {
+    width: 300px;
+    height: 350px;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 2px;
+    
+    /* Efecto photocard con borde blanco - padding reducido */
+    padding: 15px;
+    background: white;
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.15),
+        0 2px 8px rgba(0, 0, 0, 0.1);
+    
+    transition: transform 0.3s ease;
+}
+
+/* Animación de scroll invertido (derecha a izquierda) */
+@keyframes scrollFromLeft {
+    0% {
+        transform: translateX(-3%);
+    }
+    100% {
+        transform: translateX(-100vw);
+    }
+}

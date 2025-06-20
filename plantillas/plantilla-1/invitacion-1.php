@@ -11,10 +11,10 @@ $dresscode = "Por favor, viste atuendo elegante para complementar la atmósfera 
 
 // Cronograma del evento
 $cronograma = [
-    ["hora" => "14:00", "evento" => "Ceremonia", "icono" => "💒"],
-    ["hora" => "15:30", "evento" => "Cóctel de bienvenida", "icono" => "🥂"],
-    ["hora" => "17:00", "evento" => "Banquete", "icono" => "🍽️"],
-    ["hora" => "19:30", "evento" => "Baile y celebración", "icono" => "💃"]
+    ["hora" => "14:00", "evento" => "Ceremonia", "icono"],
+    ["hora" => "15:30", "evento" => "Cóctel de bienvenida", "icono"],
+    ["hora" => "17:00", "evento" => "Banquete", "icono"],
+    ["hora" => "19:30", "evento" => "Baile y celebración", "icono"]
 ];
 
 // Preguntas frecuentes
@@ -27,14 +27,11 @@ $faqs = [
 
 // Galería de imágenes (rutas de ejemplo)
 $galeria = [
-    "img/pareja1.jpg",
-    "img/pareja2.jpg", 
-    "img/pareja3.jpg",
-    "img/pareja4.jpg",
-    "img/pareja5.jpg",
-    "img/pareja6.jpg",
-    "img/pareja7.jpg",
-    "img/pareja8.jpg"
+    "img/galeria/pareja1.jpg",
+    "img/galeria/pareja2.jpg", 
+    "img/galeria/pareja3.jpg",
+    "img/galeria/pareja4.jpg",
+    "img/galeria/pareja5.jpg"
 ];
 ?>
 
@@ -44,7 +41,22 @@ $galeria = [
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $nombres; ?> - Invitación de Boda</title>
-    <link rel="stylesheet" href="invitacion.css">
+    <!-- Estilos -->
+
+    <!-- <link rel="stylesheet" href="./css/invitacion.css"> Hoja con todos los estilos-->
+    <link rel="stylesheet" href="./css/global.css">
+    <link rel="stylesheet" href="./css/hero.css">
+    <link rel="stylesheet" href="./css/bienvenida.css">
+    <link rel="stylesheet" href="./css/historia.css">
+    <link rel="stylesheet" href="./css/cronograma.css">
+    <link rel="stylesheet" href="./css/galeria.css">
+    <link rel="stylesheet" href="./css/dresscode.css">
+    <link rel="stylesheet" href="./css/faq.css">
+    <link rel="stylesheet" href="./css/rsvp.css">
+    <link rel="stylesheet" href="./css/footer.css">
+    <link rel="stylesheet" href="./css/responsive.css">
+    
+    <!-- Fuentes -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
@@ -157,15 +169,17 @@ $galeria = [
         <h2>Momentos Especiales</h2>
         <div class="galeria-carousel">
             <div class="carousel-track">
-                <?php foreach($galeria as $index => $imagen): ?>
+                <?php 
+                // Crear un array con suficientes repeticiones para bucle infinito
+                $imagenes_infinitas = [];
+                for($i = 0; $i < 6; $i++) { // 6 repeticiones
+                    $imagenes_infinitas = array_merge($imagenes_infinitas, $galeria);
+                }
+                
+                foreach($imagenes_infinitas as $index => $imagen): 
+                ?>
                 <div class="galeria-item">
-                    <img src="<?php echo $imagen; ?>" alt="Momento especial <?php echo $index + 1; ?>" />
-                </div>
-                <?php endforeach; ?>
-                <!-- Duplicar para efecto infinito -->
-                <?php foreach($galeria as $index => $imagen): ?>
-                <div class="galeria-item">
-                    <img src="<?php echo $imagen; ?>" alt="Momento especial <?php echo $index + 1; ?>" />
+                    <img src="<?php echo $imagen; ?>" alt="Momento especial" />
                 </div>
                 <?php endforeach; ?>
             </div>
@@ -184,32 +198,31 @@ $galeria = [
                 <div class="gender-section">
                     <h3>MEN</h3>
                     <div class="color-dots">
-                        <div class="color-dot" style="background-color: #000;"></div>
-                        <div class="color-dot" style="background-color: #fff; border: 1px solid #ccc;"></div>
+                        <div class="color-dot black"></div>
+                        <div class="color-dot white"></div>
                     </div>
                 </div>
                 <div class="gender-section">
                     <h3>WOMEN</h3>
                     <div class="color-dots">
-                        <div class="color-dot" style="background-color: #8B0000;"></div>
-                        <div class="color-dot" style="background-color: #fff; border: 1px solid #ccc;"></div>
+                        <div class="color-dot burgundy"></div>
+                        <div class="color-dot white"></div>
                     </div>
                 </div>
             </div>
             
             <div class="dresscode-examples">
-                <div class="dresscode-example-image">
-                    <img src="img/dresscode-men.jpg" alt="Ejemplo vestimenta masculina" />
+                <div class="dresscode-example-image women">
+                    <img src="img/dresscode2.webp" alt="Ejemplo vestimenta femenina" />
                 </div>
-                <div class="dresscode-example-image">
-                    <img src="img/dresscode-women.jpg" alt="Ejemplo vestimenta femenina" />
+                <div class="dresscode-example-image men">
+                    <img src="img/dresscode.webp" alt="Ejemplo vestimenta masculina" />
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-    <!-- Resto del código permanece igual... -->
     <!-- Sección RSVP -->
     <section class="rsvp" id="rsvp">
         <div class="container">

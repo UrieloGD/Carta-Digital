@@ -202,7 +202,7 @@ body {
     border-radius: 8px;
     
     /* Efecto photocard con borde blanco */
-    padding: 25px;
+    padding: 15px;
     background: white;
     box-shadow: 
         0 8px 32px rgba(0, 0, 0, 0.15),
@@ -418,6 +418,10 @@ body {
 .galeria {
     padding: 5rem 0;
     background: var(--color-primary);
+    overflow: hidden;
+    /* Removemos el padding del container para que ocupe todo el ancho */
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
 }
 
 .galeria h2 {
@@ -426,118 +430,192 @@ body {
     color: var(--color-secondary);
     text-align: center;
     margin-bottom: 3rem;
+    /* Mantenemos el contenedor centrado solo para el título */
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 2rem;
 }
 
-.galeria-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+/* Contenedor del carrusel */
+.galeria-carousel {
+    width: 100%;
+    /* overflow: hidden; */
+}
+
+/* Track que contiene todas las imágenes - movimiento invertido */
+.carousel-track {
+    display: flex;
+    animation: scrollFromLeft 60s linear infinite;
     gap: 2rem;
+    width: max-content;
 }
 
+/* Cada item de la galería */
 .galeria-item {
+    flex: 0 0 300px;
+    height: 400px;
     position: relative;
-    border-radius: var(--border-radius);
-    overflow: hidden;
-    box-shadow: var(--shadow-soft);
-    cursor: pointer;
     transition: var(--transition);
-    opacity: 0;
-    animation: scaleIn 0.6s ease-out forwards;
 }
-
-.galeria-item:nth-child(1) { animation-delay: 0.1s; }
-.galeria-item:nth-child(2) { animation-delay: 0.2s; }
-.galeria-item:nth-child(3) { animation-delay: 0.3s; }
-.galeria-item:nth-child(4) { animation-delay: 0.4s; }
-.galeria-item:nth-child(5) { animation-delay: 0.5s; }
-.galeria-item:nth-child(6) { animation-delay: 0.6s; }
 
 .galeria-item:hover {
-    transform: translateY(-10px);
-    box-shadow: var(--shadow-medium);
+    transform: scale(1.05);
 }
 
 .galeria-item img {
-    width: 100%;
-    height: 250px;
+    width: 300px;
+    height: 350px;
     object-fit: cover;
-    transition: var(--transition);
+    object-position: center;
+    border-radius: 2px;
+    
+    /* Efecto photocard con borde blanco - padding reducido */
+    padding: 15px;
+    background: white;
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.15),
+        0 2px 8px rgba(0, 0, 0, 0.1);
+    
+    transition: transform 0.3s ease;
 }
 
-.galeria-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(133, 13, 35, 0.8);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: var(--transition);
-}
-
-.galeria-item:hover .galeria-overlay {
-    opacity: 1;
-}
-
-.galeria-zoom {
-    color: var(--color-white);
-    font-size: 2rem;
+/* Animación de scroll invertido (derecha a izquierda) */
+@keyframes scrollFromLeft {
+    0% {
+        transform: translateX(-3%);
+    }
+    100% {
+        transform: translateX(-100vw);
+    }
 }
 
 /* Sección Dress Code */
 .dresscode {
-    padding: 5rem 0;
-    background: var(--color-white);
+    padding: 6rem 0;
+    background: var(--color-primary);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
 }
 
 .dresscode-content {
-    max-width: 600px;
+    max-width: 800px;
     margin: 0 auto;
     text-align: center;
 }
 
 .dresscode h2 {
     font-family: var(--font-serif);
-    font-size: 2.5rem;
+    font-size: 3rem;
     color: var(--color-secondary);
     margin-bottom: 2rem;
+    font-weight: 400;
 }
 
 .dresscode p {
-    font-size: 1.1rem;
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
     color: var(--color-text-light);
-    margin-bottom: 2rem;
-    line-height: 1.8;
+    margin-bottom: 3rem;
+    line-height: 1.6;
+    letter-spacing: 1px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 3rem;
 }
 
+/* Sección de géneros y colores */
+.dresscode-gender-section {
+    display: flex;
+    justify-content: center;
+    gap: 6rem;
+    margin-bottom: 4rem;
+}
+
+.gender-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.gender-section h3 {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    color: var(--color-secondary);
+    font-weight: 500;
+    letter-spacing: 2px;
+    margin: 0;
+}
+
+.color-dots {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.color-dot {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.color-dot.black {
+    background-color: #000;
+}
+
+.color-dot.white {
+    background-color: #fff;
+    border: 2px solid #ddd;
+}
+
+.color-dot.burgundy {
+    background-color: #8B0000;
+}
+
+/* Ejemplos de imágenes con marco estilo photocard */
 .dresscode-examples {
     display: flex;
     justify-content: center;
     gap: 2rem;
-    flex-wrap: wrap;
-}
-
-.dresscode-example {
-    display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 0.5rem;
 }
 
-.example-color {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    border: 3px solid var(--color-white);
-    box-shadow: var(--shadow-soft);
+.dresscode-example-image {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
 }
 
-.dresscode-example span {
-    font-size: 0.9rem;
-    color: var(--color-text-light);
+/* Hombre - rotación a la izquierda */
+.dresscode-example-image.women {
+    transform: rotate(-8deg);
+}
+
+.dresscode-example-image.women:hover {
+    transform: rotate(-2deg) scale(1.05);
+}
+
+/* Mujer - rotación a la derecha */
+.dresscode-example-image.men {
+    transform: rotate(8deg);
+}
+
+.dresscode-example-image.men:hover {
+    transform: rotate(2deg) scale(1.05);
+}
+
+.dresscode-example-image img {
+    width: 320px;
+    height: 400px;
+    object-fit: cover;
+    display: block;
+    border-radius: 4px;
 }
 
 /* Sección RSVP */

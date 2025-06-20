@@ -1,0 +1,97 @@
+/* Reset y configuración base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --color-primary: #f5eee4;
+    --color-secondary: #850d23;
+    --color-text: #333;
+    --color-text-light: #666;
+    --color-white: #ffffff;
+    --font-serif: 'Playfair Display', Georgia, serif;
+    --font-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.1);
+    --shadow-medium: 0 8px 30px rgba(0, 0, 0, 0.15);
+    --border-radius: 12px;
+    --transition: all 0.3s ease;
+}
+
+body {
+    font-family: var(--font-sans);
+    line-height: 1.6;
+    color: var(--color-text);
+    background-color: var(--color-primary);
+    overflow-x: hidden;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* Utilidades de animación */
+.animate-fadeIn { animation: fadeIn 1s ease-out; }
+.animate-fadeInUp { animation: fadeInUp 1s ease-out; }
+.animate-slideInLeft { animation: slideInLeft 0.8s ease-out; }
+.animate-scaleIn { animation: scaleIn 0.6s ease-out; }
+
+
+/* Estados de carga y animaciones en scroll */
+.fade-in-on-scroll {
+   opacity: 0;
+   transform: translateY(30px);
+   transition: all 0.8s ease;
+}
+
+.fade-in-on-scroll.visible {
+   opacity: 1;
+   transform: translateY(0);
+}

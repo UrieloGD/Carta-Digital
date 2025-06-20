@@ -1,0 +1,132 @@
+/* Sección Cronograma */
+.cronograma {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-primary);
+    padding: 4rem 0;
+}
+
+.cronograma h2 {
+    font-family: var(--font-sans);
+    font-size: 1.5rem;
+    color: var(--color-text-light);
+    text-align: center;
+    margin-bottom: 4rem;
+    font-weight: 300;
+    letter-spacing: 2px;
+}
+
+.cronograma-timeline {
+    max-width: 800px;
+    margin: 0 auto;
+    position: relative;
+    padding: 2rem 0;
+}
+
+/* Línea vertical central - DETRÁS de los círculos */
+.timeline-line {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, 
+        transparent 0%, 
+        var(--color-secondary) 10%, 
+        var(--color-secondary) 90%, 
+        transparent 100%);
+    transform: translateX(-50%);
+    z-index: 0; /* Cambiado de 1 a 0 para que esté detrás */
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 8rem; /* Aumentado de 4rem a 8rem para mayor espaciado */
+    opacity: 0;
+    animation: fadeInUp 0.8s ease-out forwards;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 50px; /* Altura mínima para asegurar espaciado consistente */
+}
+
+.timeline-item:last-child {
+    margin-bottom: 0; /* Sin margen en el último elemento */
+}
+
+.timeline-item:nth-child(2) { animation-delay: 0.2s; }
+.timeline-item:nth-child(3) { animation-delay: 0.4s; }
+.timeline-item:nth-child(4) { animation-delay: 0.6s; }
+.timeline-item:nth-child(5) { animation-delay: 0.8s; }
+
+/* Iconos siempre centrados sobre la línea */
+.timeline-icon {
+    width: 80px;
+    height: 80px;
+    background: var(--color-white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border: 3px solid var(--color-secondary);
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3; /* Aumentado para estar por encima de la línea */
+}
+
+.timeline-icon img {
+    width: 40px;
+    height: 40px;
+    opacity: 0.8;
+}
+
+/* Contenido del timeline */
+.timeline-content {
+    width: 300px;
+    position: absolute;
+    z-index: 2; /* Asegurar que esté por encima de la línea */
+}
+
+/* Contenido del lado izquierdo */
+.timeline-content.left {
+    right: 50%;
+    margin-right: 50px;
+    text-align: right;
+}
+
+/* Contenido del lado derecho */
+.timeline-content.right {
+    left: 50%;
+    margin-left: 50px;
+    text-align: left;
+}
+
+.timeline-event {
+    font-family: var(--font-sans);
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: var(--color-secondary);
+    margin-bottom: 0.5rem;
+    letter-spacing: 1px;
+}
+
+.timeline-time {
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+    color: var(--color-text-light);
+    margin-bottom: 0.8rem;
+    font-weight: 300;
+}
+
+.timeline-description {
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    color: var(--color-text-light);
+    font-style: italic;
+    opacity: 0.8;
+    line-height: 1.4;
+}
