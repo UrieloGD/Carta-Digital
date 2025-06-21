@@ -319,6 +319,6 @@ $galeria = [
         </div>
     </div>
 
-    <script src="invitacion.js"></script>
+    <script src="./js/invitacion.js"></script>
 </body>
 </html>
