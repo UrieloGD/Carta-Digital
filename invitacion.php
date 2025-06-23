@@ -127,7 +127,7 @@ if (empty($faqs)) {
 <!-- Sección Hero -->
 <section class="hero" id="hero">
    <div class="hero-content">
-       <div class="hero-header">THE MARRIAGE OF</div>
+       <div class="hero-header">LA BODA DE</div>
        <h1 class="hero-names"><?php echo htmlspecialchars($nombres); ?></h1>
        <div class="hero-details">
            <div class="hero-date"><?php echo strtoupper($fecha); ?></div>
@@ -146,8 +146,8 @@ if (empty($faqs)) {
 <section class="bienvenida" id="bienvenida">
    <div class="container">
        <div class="bienvenida-content">
-           <h2>Dear Family & Friends,</h2>
-           <p>WE ARE THRILLED TO INVITE YOU TO CELEBRATE THE BEGINNING OF OUR FOREVER. YOUR LOVE AND SUPPORT MEAN THE WORLD TO US, AND WE CAN'T WAIT TO SHARE THIS SPECIAL DAY WITH YOU.</p>
+           <h2>Querida familia y amigos,</h2>
+           <p>Estamos encantados de invitarles a celebrar el comienzo de nuestro <b>para siempre</b>. Su amor y apoyo significan el mundo para nosotros, y no podemos esperar para compartir este día tan especial a su lado.</p>
            
            <div class="bienvenida-image">
                <img src="<?php echo $invitacion['imagen_dedicatoria'] ?: './img/dedicatoria.jpg'; ?>" alt="<?php echo htmlspecialchars($nombres); ?>" />
@@ -156,7 +156,7 @@ if (empty($faqs)) {
            <div class="bienvenida-date-section">
                <div class="bienvenida-date"><?php echo strtoupper($fecha); ?></div>
                <div class="bienvenida-venue">
-                   <p>THE GATHERING WILL BE AT <?php echo $hora_ceremonia; ?> AT <?php echo strtoupper($ubicacion); ?>.</p>
+                   <p>LA CEREMONIA SERÁ A LAS <?php echo $hora_ceremonia; ?> EN <?php echo strtoupper($ubicacion); ?>.</p>
                    <?php if ($direccion_completa): ?>
                    <p class="venue-address">(<?php echo strtoupper($direccion_completa); ?>)</p>
                    <?php endif; ?>
@@ -170,7 +170,7 @@ if (empty($faqs)) {
 <section class="historia" id="historia">
    <div class="container">
        <div class="historia-content">
-           <h2>Our Story</h2>
+           <h2>NUESTRA HISTORIA</h2>
            <div class="historia-text">
                <?php
                // Dividir la historia en párrafos si tiene saltos de línea
@@ -188,7 +188,7 @@ if (empty($faqs)) {
 
 <!-- Imagen de transición después de historia -->
 <section class="transition-image">
-   <img src="<?php echo $invitacion['imagen_hero'] ?: './img/hero.jpg'; ?>" alt="Imagen historia" />
+   <img src="<?php echo $invitacion['imagen_destacada'] ?: './img/hero.jpg'; ?>" alt="Imagen historia" />
 </section>
 
 <!-- Sección Cronograma -->
@@ -248,19 +248,19 @@ if (empty($faqs)) {
 <section class="dresscode" id="dresscode">
    <div class="container">
        <div class="dresscode-content">
-           <h2>Dresscode</h2>
+           <h2>Código de vestimenta</h2>
            <p><?php echo strtoupper(htmlspecialchars($dresscode)); ?></p>
            
            <div class="dresscode-gender-section">
                <div class="gender-section">
-                   <h3>MEN</h3>
+                   <h3>Hombre</h3>
                    <div class="color-dots">
                        <div class="color-dot black"></div>
                        <div class="color-dot white"></div>
                    </div>
                </div>
                <div class="gender-section">
-                   <h3>WOMEN</h3>
+                   <h3>Mujer</h3>
                    <div class="color-dots">
                        <div class="color-dot burgundy"></div>
                        <div class="color-dot white"></div>

@@ -1,8 +1,62 @@
 <?php
-require_once '../config/database.php';
+require_once './../config/database.php';
 
 $database = new Database();
 $db = $database->getConnection();
+
+// Procesar eliminación
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'eliminar') {
+    $id = $_POST['id'] ?? 0;
+    
+    if ($id > 0) {
+        try {
+            // Iniciar transacción
+            $db->beginTransaction();
+            
+            // Obtener información de la invitación para eliminar archivos
+            $query = "SELECT slug FROM invitaciones WHERE id = ?";
+            $stmt = $db->prepare($query);
+            $stmt->execute([$id]);
+            $invitacion = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            if ($invitacion) {
+                // Eliminar registros relacionados
+                $db->prepare("DELETE FROM invitacion_cronograma WHERE invitacion_id = ?")->execute([$id]);
+                $db->prepare("DELETE FROM invitacion_faq WHERE invitacion_id = ?")->execute([$id]);
+                $db->prepare("DELETE FROM invitacion_galeria WHERE invitacion_id = ?")->execute([$id]);
+                $db->prepare("DELETE FROM invitacion_dresscode WHERE invitacion_id = ?")->execute([$id]);
+                
+                // Eliminar la invitación principal
+                $db->prepare("DELETE FROM invitaciones WHERE id = ?")->execute([$id]);
+                
+                // Eliminar carpeta de archivos subidos (opcional)
+                $upload_dir = "../uploads/" . $invitacion['slug'];
+                if (is_dir($upload_dir)) {
+                    function eliminarDirectorio($dir) {
+                        if (is_dir($dir)) {
+                            $files = array_diff(scandir($dir), array('.', '..'));
+                            foreach ($files as $file) {
+                                $path = $dir . '/' . $file;
+                                is_dir($path) ? eliminarDirectorio($path) : unlink($path);
+                            }
+                            rmdir($dir);
+                        }
+                    }
+                    eliminarDirectorio($upload_dir);
+                }
+                
+                $db->commit();
+                $success_message = "Invitación eliminada correctamente.";
+            } else {
+                $db->rollback();
+                $error_message = "Invitación no encontrada.";
+            }
+        } catch (Exception $e) {
+            $db->rollback();
+            $error_message = "Error al eliminar la invitación: " . $e->getMessage();
+        }
+    }
+}
 
 // Obtener todas las invitaciones
 $query = "SELECT i.*, p.nombre as plantilla_nombre 
@@ -26,9 +80,19 @@ $invitaciones = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <div class="admin-container">
         <header class="admin-header">
             <h1>Panel de Administración</h1>
-            <a href="plantillas.php" class="btn btn-secondary">Gestionar Plantillas</a>
-            <a href="crear.php" class="btn btn-primary">Nueva Invitación</a>
+            <div class="header-actions">
+                <a href="plantillas.php" class="btn btn-secondary">Gestionar Plantillas</a>
+                <a href="crear.php" class="btn btn-primary">Nueva Invitación</a>
+            </div>
         </header>
+
+        <?php if (isset($success_message)): ?>
+            <div class="success-alert"><?php echo htmlspecialchars($success_message); ?></div>
+        <?php endif; ?>
+        
+        <?php if (isset($error_message)): ?>
+            <div class="error-alert"><?php echo htmlspecialchars($error_message); ?></div>
+        <?php endif; ?>
 
         <div class="invitaciones-grid">
             <?php foreach($invitaciones as $invitacion): ?>
@@ -46,10 +110,40 @@ $invitaciones = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <a href="rsvps.php?id=<?php echo $invitacion['id']; ?>" class="btn btn-info">RSVPs</a>
                     <a href="vista_previa.php?slug=<?php echo htmlspecialchars($invitacion['slug'] ?? ''); ?>" class="btn btn-view" target="_blank">Ver</a>
                     <a href="../invitacion.php?slug=<?php echo htmlspecialchars($invitacion['slug'] ?? ''); ?>" class="btn btn-preview" target="_blank">Preview</a>
+                    
+                    <form method="POST" onsubmit="return confirm('¿Estás seguro de que quieres eliminar esta invitación? Esta acción eliminará también todos los RSVPs y archivos asociados.')">
+                        <input type="hidden" name="action" value="eliminar">
+                        <input type="hidden" name="id" value="<?php echo $invitacion['id']; ?>">
+                        <button type="submit" class="btn btn-danger btn-m">Eliminar</button>
+                    </form>
                 </div>
             </div>
             <?php endforeach; ?>
         </div>
+
+        <?php if (empty($invitaciones)): ?>
+            <div class="rsvps-table">
+                <div style="text-align: center; padding: 40px;">
+                    <h3>No hay invitaciones creadas</h3>
+                    <p>Comienza creando tu primera invitación.</p>
+                    <a href="crear.php" class="btn btn-primary">+ Crear Primera Invitación</a>
+                </div>
+            </div>
+        <?php endif; ?>
     </div>
+
+    <script>
+        // Auto-ocultar mensajes de éxito después de 3 segundos
+        setTimeout(function() {
+            const alerts = document.querySelectorAll('.success-alert');
+            alerts.forEach(function(alert) {
+                alert.style.transition = 'opacity 0.5s';
+                alert.style.opacity = '0';
+                setTimeout(function() {
+                    alert.remove();
+                }, 500);
+            });
+        }, 3000);
+    </script>
 </body>
 </html>
