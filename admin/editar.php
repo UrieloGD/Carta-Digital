@@ -333,43 +333,30 @@ if ($_POST) {
                 </div>
             </div>
 
-            <div class="form-section">
-                <h3>Imágenes</h3>
-                <div class="form-group">
-                    <label for="imagen_hero">Imagen Hero</label>
-                    <?php if ($invitacion['imagen_hero']): ?>
-                        <div class="current-image">
-                            <img src="../<?php echo $invitacion['imagen_hero']; ?>" alt="Imagen actual" style="max-width: 200px; height: auto;">
-                            <p><small>Imagen actual</small></p>
-                        </div>
-                    <?php endif; ?>
-                    <input type="file" name="imagen_hero" accept="image/*">
-                    <small class="form-note">Deja vacío para mantener la imagen actual</small>
+            <div class="form-group">
+                <label for="imagen_hero">Imagen Hero</label>
+                <?php if ($invitacion['imagen_hero']): ?>
+                    <div class="current-image">
+                        <img src="../<?php echo $invitacion['imagen_hero']; ?>" alt="Imagen actual" style="max-width: 200px; height: auto;">
+                        <p><small>Imagen actual</small></p>
+                    </div>
+                <?php endif; ?>
+                
+                <div class="file-input-wrapper">
+                    <input type="file" name="imagen_hero" id="imagen_hero" accept="image/*">
+                    <label for="imagen_hero" class="file-input-label">
+                        <i>📁</i> Seleccionar nueva imagen
+                    </label>
                 </div>
                 
-                <div class="form-group">
-                    <label for="imagen_dedicatoria">Imagen Dedicatoria</label>
-                    <?php if ($invitacion['imagen_dedicatoria']): ?>
-                        <div class="current-image">
-                            <img src="../<?php echo $invitacion['imagen_dedicatoria']; ?>" alt="Imagen actual" style="max-width: 200px; height: auto;">
-                            <p><small>Imagen actual</small></p>
-                        </div>
-                    <?php endif; ?>
-                    <input type="file" name="imagen_dedicatoria" accept="image/*">
-                    <small class="form-note">Deja vacío para mantener la imagen actual</small>
+                <div class="image-preview-container" id="preview-hero">
+                    <div class="image-placeholder">
+                        <i>🖼️</i>
+                        <span>Vista previa aparecerá aquí</span>
+                    </div>
                 </div>
                 
-                <div class="form-group">
-                    <label for="imagen_destacada">Imagen Destacada</label>
-                    <?php if ($invitacion['imagen_destacada']): ?>
-                        <div class="current-image">
-                            <img src="../<?php echo $invitacion['imagen_destacada']; ?>" alt="Imagen actual" style="max-width: 200px; height: auto;">
-                            <p><small>Imagen actual</small></p>
-                        </div>
-                    <?php endif; ?>
-                    <input type="file" name="imagen_destacada" accept="image/*">
-                    <small class="form-note">Deja vacío para mantener la imagen actual</small>
-                </div>
+                <small class="form-note">Deja vacío para mantener la imagen actual</small>
             </div>
 
             <div class="form-section">
@@ -404,14 +391,17 @@ if ($_POST) {
 
             <div class="form-section">
                 <h3>Galería de Imágenes</h3>
+                
                 <?php if (!empty($galeria)): ?>
                     <div class="current-gallery">
                         <h4>Imágenes actuales:</h4>
-                        <div class="gallery-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-bottom: 20px;">
+                        <div class="gallery-grid">
                             <?php foreach ($galeria as $imagen): ?>
                                 <div class="gallery-item">
-                                    <img src="../<?php echo $imagen['ruta']; ?>" alt="Imagen galería" style="width: 100%; height: 100px; object-fit: cover;">
-                                    <button type="button" onclick="eliminarImagenGaleria(<?php echo $imagen['id']; ?>)" class="btn btn-danger btn-sm">Eliminar</button>
+                                    <img src="../<?php echo $imagen['ruta']; ?>" alt="Imagen galería">
+                                    <button type="button" onclick="eliminarImagenGaleria(<?php echo $imagen['id']; ?>)" class="btn btn-danger btn-sm">
+                                        🗑️ Eliminar
+                                    </button>
                                 </div>
                             <?php endforeach; ?>
                         </div>
@@ -419,8 +409,14 @@ if ($_POST) {
                 <?php endif; ?>
                 
                 <div class="form-group">
-                    <label for="imagenes_galeria[]">Agregar nuevas imágenes a la galería</label>
-                    <input type="file" name="imagenes_galeria[]" accept="image/*" multiple>
+                    <label for="imagenes_galeria">Agregar nuevas imágenes a la galería</label>
+                    <div class="file-input-wrapper">
+                        <input type="file" name="imagenes_galeria[]" id="imagenes_galeria" accept="image/*" multiple>
+                        <label for="imagenes_galeria" class="file-input-label">
+                            <i>📁</i> Seleccionar múltiples imágenes
+                        </label>
+                    </div>
+                    <div class="gallery-preview-container" id="gallery-previews"></div>
                     <small class="form-note">Puedes seleccionar múltiples imágenes</small>
                 </div>
             </div>
@@ -506,14 +502,18 @@ if ($_POST) {
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <button type="button" onclick="eliminarCronograma(this)" class="btn btn-danger btn-sm">Eliminar</button>
+                                    <button type="button" onclick="eliminarCronograma(this)" class="btn btn-danger btn-sm">
+                                        🗑️ Eliminar
+                                    </button>
                                 </div>
                             </div>
                         </div>
                         <?php endforeach; ?>
                     <?php endif; ?>
                 </div>
-                <button type="button" onclick="agregarCronograma()" class="btn btn-add">Agregar Evento</button>
+                <button type="button" onclick="agregarCronograma()" class="btn btn-add">
+                    ➕ Agregar Evento
+                </button>
             </div>
 
             <div class="form-section">
@@ -594,6 +594,60 @@ if ($_POST) {
             button.closest('.faq-item').remove();
         }
     }
+
+    function setupImagePreview(inputId, previewId) {
+    const input = document.getElementById(inputId);
+    const preview = document.getElementById(previewId);
+        
+        if (input && preview) {
+            input.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        preview.innerHTML = `<img src="${e.target.result}" alt="Vista previa" class="image-preview">`;
+                        preview.classList.add('has-image');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+    }
+
+    // Configurar vistas previas
+    document.addEventListener('DOMContentLoaded', function() {
+        setupImagePreview('imagen_hero', 'preview-hero');
+        setupImagePreview('imagen_dedicatoria', 'preview-dedicatoria');
+        setupImagePreview('imagen_destacada', 'preview-destacada');
+        setupImagePreview('imagen_dresscode_hombres', 'preview-dresscode-hombres');
+        setupImagePreview('imagen_dresscode_mujeres', 'preview-dresscode-mujeres');
+        
+        // Vista previa múltiple para galería
+        const galeriaInput = document.getElementById('imagenes_galeria');
+        const galeriaPreview = document.getElementById('gallery-previews');
+        
+        if (galeriaInput && galeriaPreview) {
+            galeriaInput.addEventListener('change', function(e) {
+                galeriaPreview.innerHTML = '';
+                
+                Array.from(e.target.files).forEach((file, index) => {
+                    if (file.type.startsWith('image/')) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            const div = document.createElement('div');
+                            div.className = 'gallery-preview-item';
+                            div.innerHTML = `
+                                <img src="${e.target.result}" alt="Imagen ${index + 1}">
+                                <button type="button" class="remove-btn" onclick="this.parentElement.remove()">×</button>
+                            `;
+                            galeriaPreview.appendChild(div);
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            });
+        }
+    });
 
     function eliminarImagenGaleria(imagenId) {
         if (confirm('¿Estás seguro de que quieres eliminar esta imagen?')) {
