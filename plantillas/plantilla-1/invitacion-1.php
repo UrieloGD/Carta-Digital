@@ -11,8 +11,11 @@ if (empty($slug)) {
 $database = new Database();
 $db = $database->getConnection();
 
-// Obtener datos de la invitación
-$query = "SELECT * FROM invitaciones WHERE slug = ?";
+// Obtener datos de la invitación con información de plantilla
+$query = "SELECT i.*, p.nombre as plantilla_nombre, p.carpeta as plantilla_carpeta, p.archivo_principal
+          FROM invitaciones i 
+          LEFT JOIN plantillas p ON i.plantilla_id = p.id 
+          WHERE i.slug = ?";
 $stmt = $db->prepare($query);
 $stmt->execute([$slug]);
 $invitacion = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -22,20 +25,37 @@ if (!$invitacion) {
     exit("Invitación no encontrada");
 }
 
+// Obtener ubicaciones (ceremonia y evento)
+$ubicaciones_query = "SELECT * FROM invitacion_ubicaciones WHERE invitacion_id = ? ORDER BY orden, tipo";
+$ubicaciones_stmt = $db->prepare($ubicaciones_query);
+$ubicaciones_stmt->execute([$invitacion['id']]);
+$ubicaciones_result = $ubicaciones_stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Separar ubicaciones por tipo
+$ubicacion_ceremonia = null;
+$ubicacion_evento = null;
+foreach ($ubicaciones_result as $ubicacion_item) {
+    if ($ubicacion_item['tipo'] === 'ceremonia' && !$ubicacion_ceremonia) {
+        $ubicacion_ceremonia = $ubicacion_item;
+    } elseif ($ubicacion_item['tipo'] === 'evento' && !$ubicacion_evento) {
+        $ubicacion_evento = $ubicacion_item;
+    }
+}
+
 // Obtener cronograma
-$cronograma_query = "SELECT * FROM invitacion_cronograma WHERE invitacion_id = ? ORDER BY hora";
+$cronograma_query = "SELECT * FROM invitacion_cronograma WHERE invitacion_id = ? ORDER BY orden, hora";
 $cronograma_stmt = $db->prepare($cronograma_query);
 $cronograma_stmt->execute([$invitacion['id']]);
 $cronograma = $cronograma_stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Obtener FAQs
-$faq_query = "SELECT * FROM invitacion_faq WHERE invitacion_id = ?";
+// Obtener FAQs activas
+$faq_query = "SELECT * FROM invitacion_faq WHERE invitacion_id = ? AND activa = 1 ORDER BY orden";
 $faq_stmt = $db->prepare($faq_query);
 $faq_stmt->execute([$invitacion['id']]);
 $faqs = $faq_stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Obtener galería
-$galeria_query = "SELECT * FROM invitacion_galeria WHERE invitacion_id = ?";
+// Obtener galería activa
+$galeria_query = "SELECT * FROM invitacion_galeria WHERE invitacion_id = ? AND activa = 1 ORDER BY orden";
 $galeria_stmt = $db->prepare($galeria_query);
 $galeria_stmt->execute([$invitacion['id']]);
 $galeria_result = $galeria_stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -52,31 +72,66 @@ if (empty($galeria)) {
     ];
 }
 
-// Obtener imágenes de dresscode
-$dresscode_query = "SELECT hombres, mujeres FROM invitacion_dresscode WHERE invitacion_id = ?";
+// Obtener información completa de dresscode
+$dresscode_query = "SELECT * FROM invitacion_dresscode WHERE invitacion_id = ?";
 $dresscode_stmt = $db->prepare($dresscode_query);
 $dresscode_stmt->execute([$invitacion['id']]);
-$dresscode_img = $dresscode_stmt->fetch(PDO::FETCH_ASSOC);
+$dresscode_info = $dresscode_stmt->fetch(PDO::FETCH_ASSOC);
 
-// CORRECCIÓN: Construir las rutas correctamente
-if ($dresscode_img) {
-    $img_dresscode_hombres = !empty($dresscode_img['hombres']) ? './' . ltrim($dresscode_img['hombres'], '/') : './plantillas/plantilla-1/img/dresscode.webp';
-    $img_dresscode_mujeres = !empty($dresscode_img['mujeres']) ? './' . ltrim($dresscode_img['mujeres'], '/') : './plantillas/plantilla-1/img/dresscode2.webp';
+// Construir las rutas de imágenes de dresscode
+if ($dresscode_info) {
+    $img_dresscode_hombres = !empty($dresscode_info['hombres']) ? './' . ltrim($dresscode_info['hombres'], '/') : './plantillas/plantilla-1/img/dresscode.webp';
+    $img_dresscode_mujeres = !empty($dresscode_info['mujeres']) ? './' . ltrim($dresscode_info['mujeres'], '/') : './plantillas/plantilla-1/img/dresscode2.webp';
+    $descripcion_dresscode_hombres = $dresscode_info['descripcion_hombres'] ?? '';
+    $descripcion_dresscode_mujeres = $dresscode_info['descripcion_mujeres'] ?? '';
 } else {
     // Si no hay registro en la tabla dresscode, usar imágenes por defecto
     $img_dresscode_hombres = './plantillas/plantilla-1/img/dresscode.webp';
     $img_dresscode_mujeres = './plantillas/plantilla-1/img/dresscode2.webp';
+    $descripcion_dresscode_hombres = '';
+    $descripcion_dresscode_mujeres = '';
 }
+
+// Obtener mesa de regalos activa
+$mesa_regalos_query = "SELECT * FROM invitacion_mesa_regalos WHERE invitacion_id = ? AND activa = 1 ORDER BY orden";
+$mesa_regalos_stmt = $db->prepare($mesa_regalos_query);
+$mesa_regalos_stmt->execute([$invitacion['id']]);
+$mesa_regalos = $mesa_regalos_stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Asignar variables para compatibilidad con el template original
 $nombres = $invitacion['nombres_novios'];
 $fecha = date('j \d\e F \d\e Y', strtotime($invitacion['fecha_evento']));
 $hora_ceremonia = date('H:i', strtotime($invitacion['hora_evento']));
-$ubicacion = $invitacion['ubicacion'];  
-$direccion_completa = $invitacion['direccion_completa'];
-$coordenadas = $invitacion['coordenadas'];
+
+// Variables de ubicación (priorizar nuevas ubicaciones)
+$ubicacion = $invitacion['ubicacion'] ?: ($ubicacion_ceremonia['nombre_lugar'] ?? ''); 
+$direccion_completa = $invitacion['direccion_completa'] ?: ($ubicacion_ceremonia['direccion'] ?? '');
+
+// Contenido principal con nuevos campos
 $historia_texto = $invitacion['historia'] ?: "Todo comenzó con un momento simple, que se convirtió en recuerdos, risas y amor. Cada paso de este viaje nos ha acercado más a nuestro día especial.";
+$frase_historia = $invitacion['frase_historia'] ?: '';
 $dresscode = $invitacion['dresscode'] ?: "Por favor, viste atuendo elegante para complementar la atmósfera sofisticada de nuestro día especial.";
+$texto_rsvp = $invitacion['texto_rsvp'] ?: 'Por favor, confirma tu asistencia antes del 15 de julio';
+$mensaje_footer = $invitacion['mensaje_footer'] ?: '"El amor es la fuerza más poderosa del mundo, y sin embargo, es la más humilde imaginable."';
+$firma_footer = $invitacion['firma_footer'] ?: $nombres;
+
+// Imágenes principales
+$imagen_hero = $invitacion['imagen_hero'] ?: './img/hero.jpg';
+$imagen_dedicatoria = $invitacion['imagen_dedicatoria'] ?: './img/dedicatoria.jpg';
+$imagen_destacada = $invitacion['imagen_destacada'] ?: './img/hero.jpg';
+
+// Música
+$musica_url = $invitacion['musica_url'] ?? '';
+$musica_autoplay = (bool)($invitacion['musica_autoplay'] ?? true);
+
+// Información familiar
+$padres_novia = $invitacion['padres_novia'] ?? '';
+$padres_novio = $invitacion['padres_novio'] ?? '';
+$padrinos_novia = $invitacion['padrinos_novia'] ?? '';
+$padrinos_novio = $invitacion['padrinos_novio'] ?? '';
+
+// Configuraciones
+$mostrar_contador = (bool)($invitacion['mostrar_contador'] ?? true);
 
 // Si no hay cronograma, usar el por defecto
 if (empty($cronograma)) {
@@ -93,9 +148,22 @@ if (empty($faqs)) {
     $faqs = [
         ["pregunta" => "¿Se permite la asistencia de niños?", "respuesta" => "Sí, los niños son bienvenidos. Habrá un área especial para ellos."],
         ["pregunta" => "¿Dónde puedo estacionar?", "respuesta" => "El restaurante cuenta con servicio de valet parking gratuito para todos los invitados."],
-       ["pregunta" => "¿Qué regalo podemos llevar?", "respuesta" => "Su presencia es nuestro mejor regalo. Si desean obsequiarnos algo, tenemos mesa de regalos en Macy's."],
-       ["pregunta" => "¿Hay hoteles cerca?", "respuesta" => "Sí, recomendamos Hotel Beverly Hills y The Standard, ambos a 5 minutos del restaurante."]
-   ];
+        ["pregunta" => "¿Qué regalo podemos llevar?", "respuesta" => "Su presencia es nuestro mejor regalo. Si desean obsequiarnos algo, tenemos mesa de regalos en Macy's."],
+        ["pregunta" => "¿Hay hoteles cerca?", "respuesta" => "Sí, recomendamos Hotel Beverly Hills y The Standard, ambos a 5 minutos del restaurante."]
+    ];
+}
+
+// Registrar visita en estadísticas
+try {
+    $stats_query = "INSERT INTO invitacion_estadisticas (invitacion_id, tipo_evento, ip_address, user_agent) VALUES (?, 'visita', ?, ?)";
+    $stats_stmt = $db->prepare($stats_query);
+    $stats_stmt->execute([
+        $invitacion['id'], 
+        $_SERVER['REMOTE_ADDR'] ?? null, 
+        $_SERVER['HTTP_USER_AGENT'] ?? null
+    ]);
+} catch (Exception $e) {
+    // Silenciosamente ignorar errores de estadísticas
 }
 ?>
 
@@ -122,6 +190,14 @@ if (empty($faqs)) {
    <link rel="preconnect" href="https://fonts.googleapis.com">
    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+   
+   <?php if ($musica_url): ?>
+   <!-- Audio de fondo -->
+   <audio id="backgroundMusic" loop <?php echo $musica_autoplay ? 'autoplay' : ''; ?>>
+       <source src="<?php echo htmlspecialchars($musica_url); ?>" type="audio/mpeg">
+       Tu navegador no soporta el elemento de audio.
+   </audio>
+   <?php endif; ?>
 </head>
 <body>
 <!-- Sección Hero -->
@@ -139,7 +215,7 @@ if (empty($faqs)) {
 
 <!-- Imagen de transición full-screen -->
 <section class="transition-image">
-   <img src="<?php echo $invitacion['imagen_hero'] ?: './img/hero.jpg'; ?>" alt="<?php echo htmlspecialchars($nombres); ?>" />
+   <img src="<?php echo htmlspecialchars($imagen_hero); ?>" alt="<?php echo htmlspecialchars($nombres); ?>" />
 </section>
 
 <!-- Sección Bienvenida -->
@@ -150,8 +226,26 @@ if (empty($faqs)) {
            <p>Estamos encantados de invitarles a celebrar el comienzo de nuestro <b>para siempre</b>. Su amor y apoyo significan el mundo para nosotros, y no podemos esperar para compartir este día tan especial a su lado.</p>
            
            <div class="bienvenida-image">
-               <img src="<?php echo $invitacion['imagen_dedicatoria'] ?: './img/dedicatoria.jpg'; ?>" alt="<?php echo htmlspecialchars($nombres); ?>" />
+               <img src="<?php echo htmlspecialchars($imagen_dedicatoria); ?>" alt="<?php echo htmlspecialchars($nombres); ?>" />
            </div>
+           
+           <!-- Información familiar -->
+           <?php if ($padres_novia || $padres_novio || $padrinos_novia || $padrinos_novio): ?>
+           <div class="familia-info">
+               <?php if ($padres_novia): ?>
+               <p><strong>Padres de la novia:</strong> <?php echo htmlspecialchars($padres_novia); ?></p>
+               <?php endif; ?>
+               <?php if ($padres_novio): ?>
+               <p><strong>Padres del novio:</strong> <?php echo htmlspecialchars($padres_novio); ?></p>
+               <?php endif; ?>
+               <?php if ($padrinos_novia): ?>
+               <p><strong>Padrinos de la novia:</strong> <?php echo htmlspecialchars($padrinos_novia); ?></p>
+               <?php endif; ?>
+               <?php if ($padrinos_novio): ?>
+               <p><strong>Padrinos del novio:</strong> <?php echo htmlspecialchars($padrinos_novio); ?></p>
+               <?php endif; ?>
+           </div>
+           <?php endif; ?>
            
            <div class="bienvenida-date-section">
                <div class="bienvenida-date"><?php echo strtoupper($fecha); ?></div>
@@ -171,6 +265,11 @@ if (empty($faqs)) {
    <div class="container">
        <div class="historia-content">
            <h2>NUESTRA HISTORIA</h2>
+           <?php if ($frase_historia): ?>
+           <div class="historia-frase">
+               <p><em><?php echo strtoupper(htmlspecialchars($frase_historia)); ?></em></p>
+           </div>
+           <?php endif; ?>
            <div class="historia-text">
                <?php
                // Dividir la historia en párrafos si tiene saltos de línea
@@ -188,8 +287,35 @@ if (empty($faqs)) {
 
 <!-- Imagen de transición después de historia -->
 <section class="transition-image">
-   <img src="<?php echo $invitacion['imagen_destacada'] ?: './img/hero.jpg'; ?>" alt="Imagen historia" />
+   <img src="<?php echo htmlspecialchars($imagen_destacada); ?>" alt="Imagen historia" />
 </section>
+
+<?php if ($mostrar_contador): ?>
+<!-- Contador regresivo -->
+<section class="contador" id="contador">
+   <div class="container">
+       <h2>Faltan</h2>
+       <div class="countdown" id="countdown">
+           <div class="time-unit">
+               <span class="number" id="days">0</span>
+               <span class="label">Días</span>
+           </div>
+           <div class="time-unit">
+               <span class="number" id="hours">0</span>
+               <span class="label">Horas</span>
+           </div>
+           <div class="time-unit">
+               <span class="number" id="minutes">0</span>
+               <span class="label">Minutos</span>
+           </div>
+           <div class="time-unit">
+               <span class="number" id="seconds">0</span>
+               <span class="label">Segundos</span>
+           </div>
+       </div>
+   </div>
+</section>
+<?php endif; ?>
 
 <!-- Sección Cronograma -->
 <section class="cronograma" id="cronograma">
@@ -213,12 +339,58 @@ if (empty($faqs)) {
                    <div class="timeline-description">
                        <?php echo htmlspecialchars($item['descripcion'] ?? ''); ?>
                    </div>
+                   <?php if (!empty($item['ubicacion'])): ?>
+                   <div class="timeline-location">
+                       📍 <?php echo htmlspecialchars($item['ubicacion']); ?>
+                   </div>
+                   <?php endif; ?>
                </div>
            </div>
            <?php endforeach; ?>
        </div>
    </div>
 </section>
+
+<!-- Sección Ubicaciones -->
+<?php if (!empty($ubicaciones_result)): ?>
+<section class="ubicaciones" id="ubicaciones">
+   <div class="container">
+       <h2>UBICACIONES</h2>
+       <div class="ubicaciones-grid">
+           <?php foreach($ubicaciones_result as $ubicacion_item): ?>
+           <div class="ubicacion-card">
+               <?php if ($ubicacion_item['imagen']): ?>
+               <div class="ubicacion-image">
+                   <img src="<?php echo htmlspecialchars($ubicacion_item['imagen']); ?>" alt="<?php echo htmlspecialchars($ubicacion_item['nombre_lugar']); ?>" />
+               </div>
+               <?php endif; ?>
+               <div class="ubicacion-info">
+                   <h3><?php echo strtoupper(htmlspecialchars($ubicacion_item['nombre_lugar'])); ?></h3>
+                   <p class="ubicacion-tipo"><?php echo strtoupper($ubicacion_item['tipo']); ?></p>
+                   <p class="ubicacion-direccion"><?php echo htmlspecialchars($ubicacion_item['direccion']); ?></p>
+                   <?php if ($ubicacion_item['hora_inicio']): ?>
+                   <p class="ubicacion-horario">
+                       <?php echo $ubicacion_item['hora_inicio']; ?>
+                       <?php if ($ubicacion_item['hora_fin']): ?>
+                       - <?php echo $ubicacion_item['hora_fin']; ?>
+                       <?php endif; ?>
+                   </p>
+                   <?php endif; ?>
+                   <?php if ($ubicacion_item['descripcion']): ?>
+                   <p class="ubicacion-descripcion"><?php echo htmlspecialchars($ubicacion_item['descripcion']); ?></p>
+                   <?php endif; ?>
+                   <?php if ($ubicacion_item['google_maps_url']): ?>
+                   <a href="<?php echo htmlspecialchars($ubicacion_item['google_maps_url']); ?>" target="_blank" class="ubicacion-maps">
+                       Ver en Google Maps
+                   </a>
+                   <?php endif; ?>
+               </div>
+           </div>
+           <?php endforeach; ?>
+       </div>
+   </div>
+</section>
+<?php endif; ?>
 
 <!-- Sección Galería -->
 <section class="galeria" id="galeria">
@@ -254,6 +426,9 @@ if (empty($faqs)) {
            <div class="dresscode-gender-section">
                <div class="gender-section">
                    <h3>Hombre</h3>
+                   <?php if ($descripcion_dresscode_hombres): ?>
+                   <p><?php echo htmlspecialchars($descripcion_dresscode_hombres); ?></p>
+                   <?php endif; ?>
                    <div class="color-dots">
                        <div class="color-dot black"></div>
                        <div class="color-dot white"></div>
@@ -261,6 +436,9 @@ if (empty($faqs)) {
                </div>
                <div class="gender-section">
                    <h3>Mujer</h3>
+                   <?php if ($descripcion_dresscode_mujeres): ?>
+                   <p><?php echo htmlspecialchars($descripcion_dresscode_mujeres); ?></p>
+                   <?php endif; ?>
                    <div class="color-dots">
                        <div class="color-dot burgundy"></div>
                        <div class="color-dot white"></div>
@@ -280,11 +458,47 @@ if (empty($faqs)) {
    </div>
 </section>
 
+<!-- Sección Mesa de Regalos -->
+<?php if (!empty($mesa_regalos)): ?>
+<section class="mesa-regalos" id="mesa-regalos">
+   <div class="container">
+       <h2>Mesa de Regalos</h2>
+       <p>Tu presencia es nuestro mejor regalo, pero si deseas obsequiarnos algo especial:</p>
+       <div class="regalos-grid">
+           <?php foreach($mesa_regalos as $regalo): ?>
+           <div class="regalo-card">
+               <?php if ($regalo['icono']): ?>
+               <div class="regalo-icon">
+                   <img src="<?php echo htmlspecialchars($regalo['icono']); ?>" alt="<?php echo htmlspecialchars($regalo['nombre_tienda'] ?: $regalo['tienda']); ?>" />
+               </div>
+               <?php endif; ?>
+               <h3><?php echo htmlspecialchars($regalo['nombre_tienda'] ?: ucfirst(str_replace('_', ' ', $regalo['tienda']))); ?></h3>
+               <?php if ($regalo['numero_evento']): ?>
+               <p><strong>Número de evento:</strong> <?php echo htmlspecialchars($regalo['numero_evento']); ?></p>
+               <?php endif; ?>
+               <?php if ($regalo['codigo_evento']): ?>
+               <p><strong>Código:</strong> <?php echo htmlspecialchars($regalo['codigo_evento']); ?></p>
+               <?php endif; ?>
+               <?php if ($regalo['descripcion']): ?>
+               <p><?php echo htmlspecialchars($regalo['descripcion']); ?></p>
+               <?php endif; ?>
+               <?php if ($regalo['url']): ?>
+               <a href="<?php echo htmlspecialchars($regalo['url']); ?>" target="_blank" class="regalo-link">
+                   Visitar tienda
+               </a>
+               <?php endif; ?>
+           </div>
+           <?php endforeach; ?>
+       </div>
+   </div>
+</section>
+<?php endif; ?>
+
 <!-- Sección RSVP -->
 <section class="rsvp" id="rsvp">
    <div class="container">
        <h2>Confirma tu Asistencia</h2>
-       <p><?php echo htmlspecialchars($invitacion['texto_rsvp'] ?: 'Por favor, confirma tu asistencia antes del 15 de julio'); ?></p>
+       <p><?php echo htmlspecialchars($texto_rsvp); ?></p>
        <button class="rsvp-button" onclick="openRSVPModal()">Confirmar Asistencia</button>
    </div>
 </section>
@@ -303,11 +517,20 @@ if (empty($faqs)) {
                <input type="text" id="nombre" name="nombre" required>
            </div>
            <div class="form-group">
+               <label for="telefono">Teléfono</label>
+               <input type="tel" id="telefono" name="telefono">
+           </div>
+           <div class="form-group">
+               <label for="email">Email</label>
+               <input type="email" id="email" name="email">
+           </div>
+           <div class="form-group">
                <label for="asistencia">¿Asistirás? *</label>
                <select id="asistencia" name="asistencia" required>
                    <option value="">Selecciona una opción</option>
                    <option value="si">Sí, asistiré</option>
                    <option value="no">No podré asistir</option>
+                   <option value="tal_vez">Tal vez</option>
                </select>
            </div>
            <div class="form-group">
@@ -315,8 +538,16 @@ if (empty($faqs)) {
                <input type="number" id="acompanantes" name="acompanantes" min="0" max="5" value="0">
            </div>
            <div class="form-group">
-               <label for="comentario">Comentario opcional</label>
-               <textarea id="comentario" name="comentario" rows="3" placeholder="Mensaje especial para los novios..."></textarea>
+               <label for="nombres_acompanantes">Nombres de acompañantes</label>
+               <textarea id="nombres_acompanantes" name="nombres_acompanantes" rows="2" placeholder="Nombres de las personas que te acompañarán..."></textarea>
+           </div>
+           <div class="form-group">
+               <label for="restricciones_alimentarias">Restricciones alimentarias</label>
+               <textarea id="restricciones_alimentarias" name="restricciones_alimentarias" rows="2" placeholder="Alergias, vegetariano, vegano, etc."></textarea>
+           </div>
+           <div class="form-group">
+               <label for="mensaje">Mensaje especial</label>
+               <textarea id="mensaje" name="mensaje" rows="3" placeholder="Mensaje especial para los novios..."></textarea>
            </div>
            <button type="submit" class="form-submit">Enviar Confirmación</button>
        </form>
@@ -332,50 +563,242 @@ if (empty($faqs)) {
            <div class="faq-item">
                <button class="faq-question" onclick="toggleFAQ(<?php echo $index; ?>)">
                    <span><?php echo htmlspecialchars($faq['pregunta']); ?></span>
-                   <span class="faq-arrow">▼</span>
-               </button>
-               <div class="faq-answer" id="faq-<?php echo $index; ?>">
-                   <p><?php echo htmlspecialchars($faq['respuesta']); ?></p>
-               </div>
-           </div>
-           <?php endforeach; ?>
-       </div>
-   </div>
+                  <span class="faq-arrow">▼</span>
+              </button>
+              <div class="faq-answer" id="faq-<?php echo $index; ?>">
+                  <p><?php echo htmlspecialchars($faq['respuesta']); ?></p>
+              </div>
+          </div>
+          <?php endforeach; ?>
+      </div>
+  </div>
 </section>
 
 <!-- Footer -->
 <footer class="footer">
-   <div class="container">
-       <div class="footer-content">
-           <p class="footer-message">
-               <?php echo htmlspecialchars($invitacion['mensaje_footer'] ?: '"El amor es la fuerza más poderosa del mundo, y sin embargo, es la más humilde imaginable."'); ?>
-           </p>
-           <div class="footer-actions">
-               <button class="share-button" onclick="shareWhatsApp()">
-                   <span>📱</span> Compartir por WhatsApp
-               </button>
-               <button class="copy-button" onclick="copyLink()">
-                   <span>🔗</span> Copiar enlace
-               </button>
-           </div>
-           <p class="footer-thanks">
-               Gracias por ser parte de nuestro día especial
-           </p>
-           <p class="footer-signature">
-               Con amor, <?php echo htmlspecialchars($invitacion['firma_footer'] ?: $nombres); ?>
-           </p>
-       </div>
-   </div>
+  <div class="container">
+      <div class="footer-content">
+          <p class="footer-message">
+              <?php echo htmlspecialchars($mensaje_footer); ?>
+          </p>
+          <div class="footer-actions">
+              <button class="share-button" onclick="shareWhatsApp()">
+                  <span>📱</span> Compartir por WhatsApp
+              </button>
+              <button class="copy-button" onclick="copyLink()">
+                  <span>🔗</span> Copiar enlace
+              </button>
+              <?php if ($musica_url): ?>
+              <button class="music-toggle" onclick="toggleMusic()" id="musicToggle">
+                  <span>🎵</span> <span id="musicStatus"><?php echo $musica_autoplay ? 'Pausar' : 'Reproducir'; ?> música</span>
+              </button>
+              <?php endif; ?>
+          </div>
+          <p class="footer-thanks">
+              Gracias por ser parte de nuestro día especial
+          </p>
+          <p class="footer-signature">
+              Con amor, <?php echo htmlspecialchars($firma_footer); ?>
+          </p>
+      </div>
+  </div>
 </footer>
 
 <!-- Mensaje de éxito RSVP -->
 <div class="success-message" id="successMessage">
-   <div class="success-content">
-       <span class="success-icon">✅</span>
-       <h3>¡Confirmación enviada!</h3>
-       <p>Gracias por confirmar tu asistencia. ¡Te esperamos!</p>
-   </div>
+  <div class="success-content">
+      <span class="success-icon">✅</span>
+      <h3>¡Confirmación enviada!</h3>
+      <p>Gracias por confirmar tu asistencia. ¡Te esperamos!</p>
+  </div>
 </div>
+
+<script>
+// Variables globales para JavaScript
+const invitacionData = {
+   id: <?php echo $invitacion['id']; ?>,
+   nombres: '<?php echo addslashes($nombres); ?>',
+   fecha: '<?php echo $invitacion['fecha_evento']; ?>',
+   hora: '<?php echo $invitacion['hora_evento']; ?>',
+   mostrarContador: <?php echo $mostrar_contador ? 'true' : 'false'; ?>,
+   musicaUrl: '<?php echo addslashes($musica_url); ?>',
+   musicaAutoplay: <?php echo $musica_autoplay ? 'true' : 'false'; ?>
+};
+
+<?php if ($mostrar_contador): ?>
+// Contador regresivo
+function initCountdown() {
+   const fechaEvento = new Date('<?php echo $invitacion['fecha_evento']; ?>T<?php echo $invitacion['hora_evento']; ?>').getTime();
+   
+   function updateCountdown() {
+       const ahora = new Date().getTime();
+       const distancia = fechaEvento - ahora;
+       
+       if (distancia < 0) {
+           document.getElementById('countdown').innerHTML = '<div class="time-unit"><span class="number">¡Ya es el día!</span></div>';
+           return;
+       }
+       
+       const dias = Math.floor(distancia / (1000 * 60 * 60 * 24));
+       const horas = Math.floor((distancia % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+       const minutos = Math.floor((distancia % (1000 * 60 * 60)) / (1000 * 60));
+       const segundos = Math.floor((distancia % (1000 * 60)) / 1000);
+       
+       document.getElementById('days').textContent = dias;
+       document.getElementById('hours').textContent = horas;
+       document.getElementById('minutes').textContent = minutos;
+       document.getElementById('seconds').textContent = segundos;
+   }
+   
+   updateCountdown();
+   setInterval(updateCountdown, 1000);
+}
+
+// Inicializar contador cuando se carga la página
+document.addEventListener('DOMContentLoaded', initCountdown);
+<?php endif; ?>
+
+// Control de música
+<?php if ($musica_url): ?>
+function toggleMusic() {
+   const audio = document.getElementById('backgroundMusic');
+   const toggleBtn = document.getElementById('musicToggle');
+   const status = document.getElementById('musicStatus');
+   
+   if (audio.paused) {
+       audio.play();
+       status.textContent = 'Pausar música';
+   } else {
+       audio.pause();
+       status.textContent = 'Reproducir música';
+   }
+}
+<?php endif; ?>
+
+// Funciones para compartir
+function shareWhatsApp() {
+   const url = window.location.href;
+   const texto = encodeURIComponent(`¡Estás invitado a la boda de ${invitacionData.nombres}! ${url}`);
+   window.open(`https://wa.me/?text=${texto}`, '_blank');
+   
+   // Registrar estadística
+   fetch('./api/estadisticas.php', {
+       method: 'POST',
+       headers: {'Content-Type': 'application/json'},
+       body: JSON.stringify({
+           invitacion_id: invitacionData.id,
+           tipo_evento: 'compartir',
+           datos_adicionales: {tipo: 'whatsapp'}
+       })
+   });
+}
+
+function copyLink() {
+   navigator.clipboard.writeText(window.location.href).then(() => {
+       alert('¡Enlace copiado al portapapeles!');
+       
+       // Registrar estadística
+       fetch('./api/estadisticas.php', {
+           method: 'POST',
+           headers: {'Content-Type': 'application/json'},
+           body: JSON.stringify({
+               invitacion_id: invitacionData.id,
+               tipo_evento: 'compartir',
+               datos_adicionales: {tipo: 'copy_link'}
+           })
+       });
+   });
+}
+
+// Funciones RSVP
+function openRSVPModal() {
+   document.getElementById('rsvpModal').style.display = 'flex';
+}
+
+function closeRSVPModal() {
+   document.getElementById('rsvpModal').style.display = 'none';
+}
+
+// Manejar envío de RSVP
+document.getElementById('rsvpForm').addEventListener('submit', function(e) {
+   e.preventDefault();
+   
+   const formData = new FormData(this);
+   const data = Object.fromEntries(formData);
+   
+   fetch('./api/rsvp.php', {
+       method: 'POST',
+       headers: {'Content-Type': 'application/json'},
+       body: JSON.stringify(data)
+   })
+   .then(response => response.json())
+   .then(data => {
+       if (data.success) {
+           closeRSVPModal();
+           document.getElementById('successMessage').style.display = 'flex';
+           setTimeout(() => {
+               document.getElementById('successMessage').style.display = 'none';
+           }, 3000);
+       } else {
+           alert('Error al enviar la confirmación. Por favor intenta de nuevo.');
+       }
+   })
+   .catch(error => {
+       console.error('Error:', error);
+       alert('Error al enviar la confirmación. Por favor intenta de nuevo.');
+   });
+});
+
+// Funciones FAQ
+function toggleFAQ(index) {
+   const answer = document.getElementById(`faq-${index}`);
+   const arrow = answer.previousElementSibling.querySelector('.faq-arrow');
+   
+   if (answer.style.display === 'block') {
+       answer.style.display = 'none';
+       arrow.textContent = '▼';
+   } else {
+       answer.style.display = 'block';
+       arrow.textContent = '▲';
+   }
+}
+
+// Cerrar modal al hacer clic fuera
+window.onclick = function(event) {
+   const modal = document.getElementById('rsvpModal');
+   if (event.target === modal) {
+       closeRSVPModal();
+   }
+}
+
+// Registrar clics en galería
+document.querySelectorAll('.galeria-item img').forEach(img => {
+   img.addEventListener('click', () => {
+       fetch('./api/estadisticas.php', {
+           method: 'POST',
+           headers: {'Content-Type': 'application/json'},
+           body: JSON.stringify({
+               invitacion_id: invitacionData.id,
+               tipo_evento: 'galeria_click'
+           })
+       });
+   });
+});
+
+// Registrar clics en ubicaciones
+document.querySelectorAll('.ubicacion-maps').forEach(link => {
+   link.addEventListener('click', () => {
+       fetch('./api/estadisticas.php', {
+           method: 'POST',
+           headers: {'Content-Type': 'application/json'},
+           body: JSON.stringify({
+               invitacion_id: invitacionData.id,
+               tipo_evento: 'ubicacion_click'
+           })
+       });
+   });
+});
+</script>
 
 <script src="./plantillas/plantilla-1/js/invitacion.js"></script>
 </body>

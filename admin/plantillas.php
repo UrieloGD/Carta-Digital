@@ -32,6 +32,7 @@ $plantillas = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <title>Gestor de Plantillas</title>
     <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="css/plantillas.css">
 </head>
 <body>
     <div class="admin-container">
@@ -54,11 +55,27 @@ $plantillas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <div class="invitaciones-grid">
             <?php foreach ($plantillas as $plantilla): ?>
             <div class="invitacion-card">
+                <!-- Mostrar imagen de preview -->
+                <?php if (!empty($plantilla['imagen_preview'])): ?>
+                    <?php 
+                    // Limpiar la ruta de imagen preview quitando "./" si existe al inicio
+                    $imagen_preview = ltrim($plantilla['imagen_preview'], './');
+                    // Construir ruta desde admin/ hacia la raíz: ../plantillas/carpeta/imagen
+                    $ruta_preview = '../plantillas/' . $plantilla['carpeta'] . '/' . $imagen_preview;
+                    ?>
+                <div class="card-preview">
+                    <img src="<?php echo htmlspecialchars($ruta_preview); ?>" 
+                         alt="Preview de <?php echo htmlspecialchars($plantilla['nombre']); ?>"
+                         class="preview-image"
+                         onerror="this.style.display='none'; this.parentElement.style.display='none';">
+                </div>
+                <?php endif; ?>
+                
                 <div class="card-header">
                     <h3><?php echo htmlspecialchars($plantilla['nombre']); ?></h3>
                 </div>
                 <div class="card-body">
-                    <p><strong>Archivo:</strong> <?php echo htmlspecialchars($plantilla['carpeta'] . '/' . $plantilla['archivo_php']); ?></p>
+                    <p><strong>Archivo:</strong> <?php echo htmlspecialchars($plantilla['carpeta'] . '/' . $plantilla['archivo_principal']); ?></p>
                     <p><strong>Descripción:</strong> <?php echo htmlspecialchars($plantilla['descripcion']); ?></p>
                     
                     <div class="card-actions">

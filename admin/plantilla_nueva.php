@@ -8,13 +8,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nombre = $_POST['nombre'];
     $descripcion = $_POST['descripcion'];
     $carpeta = $_POST['carpeta'];
-    $archivo_php = $_POST['archivo_php'];
+    $archivo_principal = $_POST['archivo_principal'];
     $imagen_preview = $_POST['imagen_preview'];
 
-    $query = "INSERT INTO plantillas (nombre, descripcion, carpeta, archivo_php, imagen_preview) 
+    $query = "INSERT INTO plantillas (nombre, descripcion, carpeta, archivo_principal, imagen_preview) 
               VALUES (?, ?, ?, ?, ?)";
     $stmt = $db->prepare($query);
-    $stmt->execute([$nombre, $descripcion, $carpeta, $archivo_php, $imagen_preview]);
+    $stmt->execute([$nombre, $descripcion, $carpeta, $archivo_principal, $imagen_preview]);
 
     header("Location: plantillas.php");
     exit;
@@ -49,8 +49,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <input type="text" name="carpeta" required>
             </div>
             <div class="form-group">
-                <label>Archivo PHP (ej. invitacion-1.php):</label>
-                <input type="text" name="archivo_php" required>
+                <label>Archivo Principal (ej. invitacion-1.php):</label>
+                <input type="text" name="archivo_principal" required>
             </div>
             <div class="form-group">
                 <label>Ruta de imagen preview (opcional):</label>

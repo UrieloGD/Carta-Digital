@@ -1,0 +1,21 @@
+.card-preview {
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    border-radius: 8px 8px 0 0;
+    background-color: #f8f9fa;
+}
+
+.preview-image {
+    width: 80%;
+    height: fit-content;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.3s ease;
+}
+
+.invitacion-card:hover .preview-image {
+    transform: scale(1.02);
+}
