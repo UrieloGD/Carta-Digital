@@ -9,8 +9,6 @@ const CONFIG = {
 document.addEventListener('DOMContentLoaded', function() {
     initializeAnimations();
     initializeScrollEffects();
-    initializeFAQ();
-    initializeForm();
     addSmoothScrolling();
 });
 
@@ -121,235 +119,25 @@ function animateGaleria(section) {
     });
 }
 
-// Funcionalidad de FAQ (acordeón)
-function initializeFAQ() {
-    const faqQuestions = document.querySelectorAll('.faq-question');
+// Scroll suave a secciones
+function addSmoothScrolling() {
+    // Si hay enlaces de navegación, añadir comportamiento de scroll suave
+    const navLinks = document.querySelectorAll('a[href^="#"]');
     
-    faqQuestions.forEach(question => {
-        question.addEventListener('click', function() {
-            const faqItem = this.parentElement;
-            const faqAnswer = faqItem.querySelector('.faq-answer');
-            const isActive = faqItem.classList.contains('active');
+    navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            const targetSection = document.querySelector(targetId);
             
-            // Cerrar todas las preguntas abiertas
-            document.querySelectorAll('.faq-item.active').forEach(item => {
-                item.classList.remove('active');
-                item.querySelector('.faq-answer').classList.remove('active');
-            });
-            
-            // Abrir la pregunta clickeada si no estaba activa
-            if (!isActive) {
-                faqItem.classList.add('active');
-                faqAnswer.classList.add('active');
+            if (targetSection) {
+                targetSection.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
             }
         });
     });
-}
-
-// Función específica para toggle FAQ (llamada desde PHP)
-function toggleFAQ(index) {
-    const faqItem = document.querySelectorAll('.faq-item')[index];
-    const faqAnswer = document.getElementById(`faq-${index}`);
-    const isActive = faqItem.classList.contains('active');
-    
-    // Cerrar todas las preguntas abiertas
-    document.querySelectorAll('.faq-item.active').forEach(item => {
-        item.classList.remove('active');
-        item.querySelector('.faq-answer').classList.remove('active');
-    });
-    
-    // Abrir la pregunta clickeada si no estaba activa
-    if (!isActive) {
-        faqItem.classList.add('active');
-        faqAnswer.classList.add('active');
-    }
-}
-
-// Funcionalidad del modal RSVP
-function openRSVPModal() {
-    const modal = document.getElementById('rsvpModal');
-    modal.classList.add('active');
-    document.body.style.overflow = 'hidden';
-    
-    // Focus en el primer campo
-    setTimeout(() => {
-        const firstInput = modal.querySelector('input[type="text"]');
-        if (firstInput) firstInput.focus();
-    }, 300);
-}
-
-function closeRSVPModal() {
-    const modal = document.getElementById('rsvpModal');
-    modal.classList.remove('active');
-    document.body.style.overflow = 'auto';
-    
-    // Limpiar formulario
-    const form = document.getElementById('rsvpForm');
-    if (form) form.reset();
-}
-
-// Cerrar modal al hacer clic fuera del contenido
-document.addEventListener('click', function(e) {
-    const modal = document.getElementById('rsvpModal');
-    if (e.target === modal) {
-        closeRSVPModal();
-    }
-});
-
-// Cerrar modal con tecla Escape
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-        closeRSVPModal();
-    }
-});
-
-// Inicializar formulario RSVP
-function initializeForm() {
-    const form = document.getElementById('rsvpForm');
-    if (!form) return;
-    
-    form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        // Validar formulario
-        if (!validateForm(form)) {
-            return;
-        }
-        
-        // Simular envío (aquí conectarías con tu backend)
-        const formData = new FormData(form);
-        const data = Object.fromEntries(formData);
-        
-        // Mostrar loading en el botón
-        const submitButton = form.querySelector('.form-submit');
-        const originalText = submitButton.textContent;
-        submitButton.textContent = 'Enviando...';
-        submitButton.disabled = true;
-        
-        // Simular delay de envío
-        setTimeout(() => {
-            console.log('Datos RSVP:', data);
-            
-            // Cerrar modal y mostrar mensaje de éxito
-            closeRSVPModal();
-            showSuccessMessage();
-            
-            // Restaurar botón
-            submitButton.textContent = originalText;
-            submitButton.disabled = false;
-            
-            // Aquí harías la petición real al servidor
-            // fetch('/rsvp', { method: 'POST', body: formData })
-        }, 1500);
-    });
-}
-
-// Validar formulario RSVP
-function validateForm(form) {
-    const nombre = form.querySelector('#nombre').value.trim();
-    const asistencia = form.querySelector('#asistencia').value;
-    
-    // Limpiar errores previos
-    clearFormErrors(form);
-    
-    let isValid = true;
-    
-    // Validar nombre
-    if (!nombre) {
-        showFieldError(form.querySelector('#nombre'), 'El nombre es requerido');
-        isValid = false;
-    } else if (nombre.length < 2) {
-        showFieldError(form.querySelector('#nombre'), 'El nombre debe tener al menos 2 caracteres');
-        isValid = false;
-    }
-    
-    // Validar asistencia
-    if (!asistencia) {
-        showFieldError(form.querySelector('#asistencia'), 'Por favor selecciona si asistirás');
-        isValid = false;
-    }
-    
-    return isValid;
-}
-
-// Mostrar error en campo específico
-function showFieldError(field, message) {
-    field.style.borderColor = '#dc3545';
-    
-    // Crear o actualizar mensaje de error
-    let errorDiv = field.parentNode.querySelector('.field-error');
-    if (!errorDiv) {
-        errorDiv = document.createElement('div');
-        errorDiv.className = 'field-error';
-        errorDiv.style.color = '#dc3545';
-        errorDiv.style.fontSize = '0.875rem';
-        errorDiv.style.marginTop = '0.25rem';
-        field.parentNode.appendChild(errorDiv);
-    }
-    errorDiv.textContent = message;
-}
-
-// Limpiar errores del formulario
-function clearFormErrors(form) {
-    const fields = form.querySelectorAll('input, select, textarea');
-    fields.forEach(field => {
-        field.style.borderColor = '#e0e0e0';
-    });
-    
-    const errors = form.querySelectorAll('.field-error');
-    errors.forEach(error => error.remove());
-}
-
-// Mostrar mensaje de éxito
-function showSuccessMessage() {
-    const successMessage = document.getElementById('successMessage');
-    successMessage.classList.add('show');
-    
-    // Ocultar después de 3 segundos
-    setTimeout(() => {
-        successMessage.classList.remove('show');
-    }, 3000);
-}
-
-// Funcionalidad de compartir en WhatsApp
-function shareWhatsApp() {
-    const message = `¡Estás invitado a nuestra boda! 💒❤️\n\nVisita nuestra invitación digital: ${CONFIG.siteUrl}`;
-    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, '_blank');
-}
-
-// Copiar enlace de la invitación
-function copyLink() {
-    if (navigator.clipboard) {
-        navigator.clipboard.writeText(CONFIG.siteUrl).then(() => {
-            showTemporaryMessage('¡Enlace copiado al portapapeles!');
-        }).catch(() => {
-            fallbackCopyLink();
-        });
-    } else {
-        fallbackCopyLink();
-    }
-}
-
-// Fallback para copiar enlace en navegadores antiguos
-function fallbackCopyLink() {
-    const textArea = document.createElement('textarea');
-    textArea.value = CONFIG.siteUrl;
-    textArea.style.position = 'fixed';
-    textArea.style.left = '-999999px';
-    textArea.style.top = '-999999px';
-    document.body.appendChild(textArea);
-    textArea.focus();
-    textArea.select();
-    
-    try {
-        document.execCommand('copy');
-        showTemporaryMessage('¡Enlace copiado al portapapeles!');
-    } catch (err) {
-        showTemporaryMessage('No se pudo copiar el enlace. Inténtalo manualmente.');
-    }
-    
-    document.body.removeChild(textArea);
 }
 
 // Mostrar mensaje temporal
@@ -381,27 +169,6 @@ function showTemporaryMessage(message) {
             document.body.removeChild(messageDiv);
         }, 300);
     }, 2000);
-}
-
-// Scroll suave a secciones
-function addSmoothScrolling() {
-    // Si hay enlaces de navegación, añadir comportamiento de scroll suave
-    const navLinks = document.querySelectorAll('a[href^="#"]');
-    
-    navLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const targetId = this.getAttribute('href');
-            const targetSection = document.querySelector(targetId);
-            
-            if (targetSection) {
-                targetSection.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }
-        });
-    });
 }
 
 // Función para generar código QR (opcional, requiere librería externa)

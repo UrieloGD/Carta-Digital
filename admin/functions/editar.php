@@ -100,7 +100,48 @@ function guardarImagen($campo, $plantilla_id, $slug, $seccion) {
     return null;
 }
 
-// Procesar formulario
+// FUNCIÓN para guardar archivos de música usando el slug
+function guardarMusica($campo, $plantilla_id, $slug) {
+    if (isset($_FILES[$campo]) && $_FILES[$campo]['error'] === UPLOAD_ERR_OK) {
+        // Verificar que el archivo sea de audio
+        $audioFileType = strtolower(pathinfo($_FILES[$campo]['name'], PATHINFO_EXTENSION));
+        $allowed_types = ['mp3', 'wav', 'ogg', 'm4a', 'aac'];
+        
+        if (!in_array($audioFileType, $allowed_types)) {
+            die("Solo se permiten archivos MP3, WAV, OGG, M4A y AAC.");
+        }
+        
+        // Verificar tamaño del archivo (máximo 10MB)
+        if ($_FILES[$campo]['size'] > 10 * 1024 * 1024) {
+            die("El archivo de música es demasiado grande. Máximo 10MB.");
+        }
+        
+        // RUTA FÍSICA CORREGIDA: Construir la ruta completa desde la raíz del proyecto
+        $ruta_fisica = __DIR__ . "/../../plantillas/plantilla-$plantilla_id/uploads/$slug/musica";
+        
+        // Verificar que la carpeta existe y crearla si no existe
+        if (!is_dir($ruta_fisica)) {
+            if (!mkdir($ruta_fisica, 0755, true)) {
+                die("Error: No se pudo crear la carpeta de música: $ruta_fisica");
+            }
+        }
+        
+        // Generar nombre único para evitar conflictos
+        $nombre = uniqid() . '.' . $audioFileType;
+        $destino = "$ruta_fisica/$nombre";
+        
+        // Mover el archivo
+        if (move_uploaded_file($_FILES[$campo]['tmp_name'], $destino)) {
+            // RETORNAR RUTA RELATIVA para guardar en BD
+            return "plantillas/plantilla-$plantilla_id/uploads/$slug/musica/$nombre";
+        } else {
+            die("Error al subir el archivo de música: $campo. Ruta destino: $destino");
+        }
+    }
+    return null;
+}
+
+// Procesar formulario - SECCIÓN CORREGIDA
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $db->beginTransaction();
@@ -108,28 +149,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $plantilla_id = $_POST['plantilla_id'];
         $slug = $invitacion['slug']; // Mantener el slug original
         
+        // Manejar archivo de música PRIMERO
+        $archivo_musica = guardarMusica('archivo_musica', $plantilla_id, $slug);
+        
         // Obtener valores del formulario con valores por defecto
         $frase_historia = $_POST['frase_historia'] ?? $invitacion['frase_historia'];
         $padres_novia = $_POST['padres_novia'] ?? $invitacion['padres_novia'];
         $padres_novio = $_POST['padres_novio'] ?? $invitacion['padres_novio'];
         $padrinos_novia = $_POST['padrinos_novia'] ?? $invitacion['padrinos_novia'];
         $padrinos_novio = $_POST['padrinos_novio'] ?? $invitacion['padrinos_novio'];
-        $musica_url = $_POST['musica_url'] ?? $invitacion['musica_url'];
         $musica_autoplay = $_POST['musica_autoplay'] ?? $invitacion['musica_autoplay'];
         $mostrar_contador = $_POST['mostrar_contador'] ?? $invitacion['mostrar_contador'];
 
-        // Manejar imágenes principales con estructura corregida
+        // Manejar imágenes principales
         $img_hero = guardarImagen('imagen_hero', $plantilla_id, $slug, 'hero');
         $img_dedicatoria = guardarImagen('imagen_dedicatoria', $plantilla_id, $slug, 'dedicatoria');
         $img_destacada = guardarImagen('imagen_destacada', $plantilla_id, $slug, 'destacada');
         
-        // Actualizar invitación principal con todos los campos
+        // Construir consulta SQL dinámicamente
         $update_query = "UPDATE invitaciones SET 
                         plantilla_id = ?, nombres_novios = ?, fecha_evento = ?, hora_evento = ?, 
                         ubicacion = ?, direccion_completa = ?, historia = ?, frase_historia = ?,
                         dresscode = ?, texto_rsvp = ?, mensaje_footer = ?, firma_footer = ?,
                         padres_novia = ?, padres_novio = ?, padrinos_novia = ?, padrinos_novio = ?,
-                        musica_url = ?, musica_autoplay = ?, mostrar_contador = ?";
+                        musica_autoplay = ?, mostrar_contador = ?";
         
         $params = [
             $plantilla_id,
@@ -148,21 +191,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $padres_novio,
             $padrinos_novia,
             $padrinos_novio,
-            $musica_url,
             $musica_autoplay,
             $mostrar_contador
         ];
 
+        // Agregar música solo si se subió un nuevo archivo
+        if ($archivo_musica !== null) {
+            $update_query .= ", musica_url = ?";
+            $params[] = $archivo_musica;
+        }
+
         // Agregar imágenes solo si se subieron nuevas
-        if ($img_hero) {
+        if ($img_hero !== null) {
             $update_query .= ", imagen_hero = ?";
             $params[] = $img_hero;
         }
-        if ($img_dedicatoria) {
+        if ($img_dedicatoria !== null) {
             $update_query .= ", imagen_dedicatoria = ?";
             $params[] = $img_dedicatoria;
         }
-        if ($img_destacada) {
+        if ($img_destacada !== null) {
             $update_query .= ", imagen_destacada = ?";
             $params[] = $img_destacada;
         }
@@ -437,12 +485,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <textarea id="historia" name="historia" rows="4" placeholder="Cuenta vuestra historia de amor..."><?php echo htmlspecialchars($invitacion['historia']); ?></textarea>
                 </div>
                 
-                <div class="form-group">
+                <!-- <div class="form-group">
                     <label for="frase_historia">Frase para la Historia</label>
                     <input type="text" id="frase_historia" name="frase_historia" 
-                        value="<?php echo htmlspecialchars($invitacion['frase_historia']); ?>" 
+                        value="< ?php echo htmlspecialchars($invitacion['frase_historia']); ?>" 
                         placeholder="Ej: Nuestra historia de amor">
-                </div>
+                </div> -->
                 
                 <div class="form-group">
                     <label for="dresscode">Descripción del Código de Vestimenta</label>
@@ -495,10 +543,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <h3>Configuraciones Adicionales</h3>
                 
                 <div class="form-group">
-                    <label for="musica_url">URL de Música de Fondo</label>
-                    <input type="url" id="musica_url" name="musica_url" 
-                        value="<?php echo htmlspecialchars($invitacion['musica_url']); ?>" 
-                        placeholder="https://ejemplo.com/musica.mp3">
+                    <label for="archivo_musica">Archivo de Música de Fondo</label>
+                    <?php if ($invitacion['musica_url']): ?>
+                        <div class="current-music">
+                            <p><strong>Archivo actual:</strong></p>
+                            <audio controls style="width: 100%; max-width: 400px;">
+                                <source src="../../<?php echo $invitacion['musica_url']; ?>" type="audio/mpeg">
+                                Tu navegador no soporta el elemento de audio.
+                            </audio>
+                            <p><small>Archivo actual de música</small></p>
+                        </div>
+                    <?php endif; ?>
+                    <div class="file-input-wrapper">
+                        <input type="file" name="archivo_musica" id="archivo_musica" accept="audio/*" onchange="previewAudio(this)">
+                        <label for="archivo_musica" class="file-input-label">
+                            <i>🎵</i> Seleccionar archivo de música
+                        </label>
+                    </div>
+                    <div id="music-preview" class="audio-preview-container" style="display: none;">
+                        <audio controls style="width: 100%; max-width: 400px;">
+                            Tu navegador no soporta el elemento de audio.
+                        </audio>
+                        <p><small>Vista previa del nuevo archivo</small></p>
+                    </div>
+                    <small class="form-note">Formatos permitidos: MP3, WAV, OGG, M4A, AAC. Máximo 10MB. Deja vacío para mantener el archivo actual.</small>
                 </div>
                 
                 <div class="form-row">

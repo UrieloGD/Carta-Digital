@@ -326,10 +326,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <textarea id="historia" name="historia" rows="4" placeholder="Cuenta vuestra historia de amor..."></textarea>
                 </div>
                 
-                <div class="form-group">
+                <!-- <div class="form-group">
                     <label for="frase_historia">Frase para la Historia</label>
                     <input type="text" id="frase_historia" name="frase_historia" placeholder="Ej: Nuestra historia de amor">
-                </div>
+                </div> -->
                 
                 <div class="form-group">
                     <label for="dresscode">Descripción del Código de Vestimenta</label>

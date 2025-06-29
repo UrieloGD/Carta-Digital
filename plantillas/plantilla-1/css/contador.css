@@ -1,0 +1,269 @@
+/* ========================================
+   SECCIÓN CONTADOR REGRESIVO - VERSIÓN 3
+======================================== */
+
+.contador {
+    padding: 0; /* Removemos el padding para usar flexbox */
+    background: var(--color-secondary);
+    position: relative;
+    overflow: hidden;
+    height: 105dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.contador::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 25% 25%, rgba(245, 238, 228, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 75% 75%, rgba(245, 238, 228, 0.08) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+.contador .container {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    width: 100%;
+}
+
+.contador h2 {
+    font-family: var(--font-serif);
+    font-size: clamp(2.2rem, 4vw, 3.8rem);
+    font-weight: 700;
+    color: var(--color-primary);
+    text-align: center;
+    margin-bottom: 60px; /* Reducimos un poco el margen */
+    text-transform: uppercase;
+    letter-spacing: 6px;
+    opacity: 0.95;
+    animation: fadeInUp 1s ease-out;
+}
+
+.countdown {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    max-width: 1000px;
+    margin: 0 auto;
+    background: rgba(245, 238, 228, 0.1);
+    border-radius: var(--border-radius);
+    padding: 40px;
+    backdrop-filter: blur(10px);
+    box-shadow: inset 0 0 50px rgba(245, 238, 228, 0.1);
+    animation: scaleIn 1s ease-out 0.3s both;
+}
+
+.time-unit {
+    text-align: center;
+    padding: 30px 20px;
+    position: relative;
+    transition: var(--transition);
+}
+
+.time-unit:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 20%;
+    bottom: 20%;
+    width: 1px;
+    background: linear-gradient(to bottom, 
+        transparent, 
+        rgba(245, 238, 228, 0.3) 20%, 
+        rgba(245, 238, 228, 0.6) 50%, 
+        rgba(245, 238, 228, 0.3) 80%, 
+        transparent
+    );
+}
+
+.time-unit .number {
+    display: block;
+    font-family: var(--font-serif);
+    font-size: clamp(3.5rem, 7vw, 6rem);
+    font-weight: 700;
+    color: var(--color-primary);
+    line-height: 0.9;
+    margin-bottom: 20px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: var(--transition);
+    position: relative;
+}
+
+.time-unit .number::before {
+    content: attr(data-number);
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    color: rgba(245, 238, 228, 0.2);
+    transform: translate(2px, 2px);
+    z-index: -1;
+}
+
+.time-unit .label {
+    display: block;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--color-primary);
+    opacity: 0.8;
+    transition: var(--transition);
+}
+
+.time-unit:hover {
+    transform: translateY(-5px);
+}
+
+.time-unit:hover .number {
+    transform: scale(1.05);
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.time-unit:hover .label {
+    opacity: 1;
+    transform: translateY(-2px);
+}
+
+/* Animaciones de entrada */
+.time-unit:nth-child(1) { 
+    animation: fadeInUp 0.8s ease-out 0.5s both;
+}
+.time-unit:nth-child(2) { 
+    animation: fadeInUp 0.8s ease-out 0.7s both;
+}
+.time-unit:nth-child(3) { 
+    animation: fadeInUp 0.8s ease-out 0.9s both;
+}
+.time-unit:nth-child(4) { 
+    animation: fadeInUp 0.8s ease-out 1.1s both;
+}
+
+/* Estado final cuando llega el día */
+.countdown.final-day {
+    grid-template-columns: 1fr;
+    text-align: center;
+    padding: 60px 40px;
+}
+
+.countdown.final-day .time-unit {
+    padding: 0;
+}
+
+.countdown.final-day .time-unit::after {
+    display: none;
+}
+
+.countdown.final-day .number {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    margin-bottom: 15px;
+    animation: pulse 2s infinite;
+}
+
+.countdown.final-day .label {
+    font-size: 1.3rem;
+    letter-spacing: 4px;
+    font-weight: 400;
+}
+
+/* Efecto especial para días cercanos */
+.contador.close-date .time-unit .number {
+    animation: subtlePulse 3s infinite;
+}
+
+@keyframes subtlePulse {
+    0%, 100% { 
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% { 
+        transform: scale(1.02);
+        opacity: 0.9;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .contador h2 {
+        margin-bottom: 40px; /* Ajustamos para mobile */
+        letter-spacing: 4px;
+    }
+    
+    .countdown {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        padding: 30px 20px;
+    }
+    
+    .time-unit {
+        padding: 25px 15px;
+    }
+    
+    .time-unit:nth-child(2)::after,
+    .time-unit:nth-child(4)::after {
+        display: none;
+    }
+    
+    .time-unit:nth-child(1)::after,
+    .time-unit:nth-child(3)::after {
+        right: auto;
+        left: 20%;
+        right: 20%;
+        top: auto;
+        bottom: 0;
+        width: auto;
+        height: 1px;
+        background: linear-gradient(to right, 
+            transparent, 
+            rgba(245, 238, 228, 0.3) 20%, 
+            rgba(245, 238, 228, 0.6) 50%, 
+            rgba(245, 238, 228, 0.3) 80%, 
+            transparent
+        );
+    }
+}
+
+@media (max-width: 480px) {
+    .contador h2 {
+        margin-bottom: 30px; /* Menos margen en pantallas muy pequeñas */
+    }
+    
+    .countdown {
+        grid-template-columns: 1fr;
+        gap: 15px;
+        padding: 25px 15px;
+    }
+    
+    .time-unit:not(:last-child)::after {
+        left: 30%;
+        right: 30%;
+    }
+    
+    .time-unit .number {
+        margin-bottom: 15px;
+    }
+    
+    .time-unit .label {
+        font-size: 0.9rem;
+        letter-spacing: 2px;
+    }
+}
+
+/* Transición de números */
+.time-unit .number.updating {
+    animation: numberChange 0.4s ease-in-out;
+}
+
+@keyframes numberChange {
+    0% { transform: scale(1) rotateY(0deg); }
+    50% { transform: scale(1.1) rotateY(90deg); }
+    100% { transform: scale(1) rotateY(0deg); }
+}

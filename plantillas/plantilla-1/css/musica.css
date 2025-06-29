@@ -1,0 +1,113 @@
+/* Reproductor de música flotante */
+.music-player {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    background: var(--color-secondary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: var(--shadow-medium);
+    z-index: 1000;
+    transition: var(--transition);
+    border: 3px solid var(--color-white);
+}
+
+.music-player:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 25px rgba(133, 13, 35, 0.4);
+}
+
+.music-player.playing {
+    animation: pulse 2s infinite;
+}
+
+.music-player.paused {
+    opacity: 0.7;
+}
+
+.music-icon {
+    width: 24px;
+    height: 24px;
+    color: var(--color-white);
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Animación de ondas sonoras cuando está reproduciendo */
+.music-player.playing::before {
+    content: '';
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    border: 2px solid var(--color-secondary);
+    border-radius: 50%;
+    opacity: 0;
+    animation: soundWave 2s infinite;
+}
+
+.music-player.playing::after {
+    content: '';
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    border: 2px solid var(--color-secondary);
+    border-radius: 50%;
+    opacity: 0;
+    animation: soundWave 2s infinite 1s;
+}
+
+@keyframes soundWave {
+    0% {
+        transform: scale(0.8);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1.2);
+        opacity: 0;
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .music-player {
+        width: 50px;
+        height: 50px;
+        bottom: 15px;
+        right: 15px;
+    }
+    
+    .music-icon {
+        width: 20px;
+        height: 20px;
+        font-size: 16px;
+    }
+}
+
+/* Tooltip opcional */
+.music-player::before {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 70px;
+    right: 0;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    transform: translateX(50%);
+}
+
+.music-player:hover::before {
+    opacity: 1;
+}

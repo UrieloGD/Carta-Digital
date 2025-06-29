@@ -11,6 +11,76 @@ if (empty($slug)) {
 $database = new Database();
 $db = $database->getConnection();
 
+// Función para convertir fecha a español
+function fechaEnEspanol($fecha) {
+    $meses = [
+        'January' => 'enero', 'February' => 'febrero', 'March' => 'marzo',
+        'April' => 'abril', 'May' => 'mayo', 'June' => 'junio',
+        'July' => 'julio', 'August' => 'agosto', 'September' => 'septiembre',
+        'October' => 'octubre', 'November' => 'noviembre', 'December' => 'diciembre'
+    ];
+    
+    $dias = [
+        'Monday' => 'lunes', 'Tuesday' => 'martes', 'Wednesday' => 'miércoles',
+        'Thursday' => 'jueves', 'Friday' => 'viernes', 'Saturday' => 'sábado', 'Sunday' => 'domingo'
+    ];
+    
+    $fechaIngles = date('j \d\e F \d\e Y', strtotime($fecha));
+    $fechaEspanol = str_replace(array_keys($meses), array_values($meses), $fechaIngles);
+    
+    return $fechaEspanol;
+}
+
+function formatearHora($hora) {
+    if (empty($hora)) return '';
+    
+    // Crear objeto DateTime desde la hora
+    $dateTime = DateTime::createFromFormat('H:i:s', $hora);
+    
+    // Si no funciona con segundos, intentar sin segundos
+    if (!$dateTime) {
+        $dateTime = DateTime::createFromFormat('H:i', $hora);
+    }
+    
+    // Si aún no funciona, intentar con formato completo de fecha-hora
+    if (!$dateTime) {
+        $dateTime = new DateTime($hora);
+    }
+    
+    if ($dateTime) {
+        // Formatear a 12 horas con AM/PM en español
+        $horaFormateada = $dateTime->format('g:i A');
+        
+        // Convertir AM/PM a español
+        $horaFormateada = str_replace(['AM', 'PM'], ['AM', 'PM'], $horaFormateada);
+        
+        return $horaFormateada;
+    }
+    
+    return $hora; // Devolver original si no se puede formatear
+}
+
+// Función alternativa para formato 24 horas si prefieres
+function formatearHora24($hora) {
+    if (empty($hora)) return '';
+    
+    $dateTime = DateTime::createFromFormat('H:i:s', $hora);
+    
+    if (!$dateTime) {
+        $dateTime = DateTime::createFromFormat('H:i', $hora);
+    }
+    
+    if (!$dateTime) {
+        $dateTime = new DateTime($hora);
+    }
+    
+    if ($dateTime) {
+        return $dateTime->format('H:i');
+    }
+    
+    return $hora;
+}
+
 // Obtener datos de la invitación con información de plantilla
 $query = "SELECT i.*, p.nombre as plantilla_nombre, p.carpeta as plantilla_carpeta, p.archivo_principal
           FROM invitaciones i 
@@ -100,8 +170,8 @@ $mesa_regalos = $mesa_regalos_stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Asignar variables para compatibilidad con el template original
 $nombres = $invitacion['nombres_novios'];
-$fecha = date('j \d\e F \d\e Y', strtotime($invitacion['fecha_evento']));
-$hora_ceremonia = date('H:i', strtotime($invitacion['hora_evento']));
+$fecha = fechaEnEspanol($invitacion['fecha_evento']);
+$hora_ceremonia = formatearHora($invitacion['hora_evento']);
 
 // Variables de ubicación (priorizar nuevas ubicaciones)
 $ubicacion = $invitacion['ubicacion'] ?: ($ubicacion_ceremonia['nombre_lugar'] ?? ''); 
@@ -109,7 +179,7 @@ $direccion_completa = $invitacion['direccion_completa'] ?: ($ubicacion_ceremonia
 
 // Contenido principal con nuevos campos
 $historia_texto = $invitacion['historia'] ?: "Todo comenzó con un momento simple, que se convirtió en recuerdos, risas y amor. Cada paso de este viaje nos ha acercado más a nuestro día especial.";
-$frase_historia = $invitacion['frase_historia'] ?: '';
+// $frase_historia = $invitacion['frase_historia'] ?: 'Nuestra Historia';
 $dresscode = $invitacion['dresscode'] ?: "Por favor, viste atuendo elegante para complementar la atmósfera sofisticada de nuestro día especial.";
 $texto_rsvp = $invitacion['texto_rsvp'] ?: 'Por favor, confirma tu asistencia antes del 15 de julio';
 $mensaje_footer = $invitacion['mensaje_footer'] ?: '"El amor es la fuerza más poderosa del mundo, y sin embargo, es la más humilde imaginable."';
@@ -170,34 +240,39 @@ try {
 <!DOCTYPE html>
 <html lang="es">
 <head>
-   <meta charset="UTF-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title><?php echo htmlspecialchars($nombres); ?> - Invitación de Boda</title>
-   <!-- Estilos -->
-   <link rel="stylesheet" href="./plantillas/plantilla-1/css/global.css">
-   <link rel="stylesheet" href="./plantillas/plantilla-1/css/hero.css">
-   <link rel="stylesheet" href="./plantillas/plantilla-1/css/bienvenida.css">
-   <link rel="stylesheet" href="./plantillas/plantilla-1/css/historia.css">
-   <link rel="stylesheet" href="./plantillas/plantilla-1/css/cronograma.css">
-   <link rel="stylesheet" href="./plantillas/plantilla-1/css/galeria.css">
-   <link rel="stylesheet" href="./plantillas/plantilla-1/css/dresscode.css">
-   <link rel="stylesheet" href="./plantillas/plantilla-1/css/faq.css">
-   <link rel="stylesheet" href="./plantillas/plantilla-1/css/rsvp.css">
-   <link rel="stylesheet" href="./plantillas/plantilla-1/css/footer.css">
-   <link rel="stylesheet" href="./plantillas/plantilla-1/css/responsive.css">
-   
-   <!-- Fuentes -->
-   <link rel="preconnect" href="https://fonts.googleapis.com">
-   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-   
-   <?php if ($musica_url): ?>
-   <!-- Audio de fondo -->
-   <audio id="backgroundMusic" loop <?php echo $musica_autoplay ? 'autoplay' : ''; ?>>
-       <source src="<?php echo htmlspecialchars($musica_url); ?>" type="audio/mpeg">
-       Tu navegador no soporta el elemento de audio.
-   </audio>
-   <?php endif; ?>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php echo htmlspecialchars($nombres); ?> - Invitación de Boda</title>
+    <!-- Estilos -->
+    <link rel="stylesheet" href="./plantillas/plantilla-1/css/global.css">
+    <link rel="stylesheet" href="./plantillas/plantilla-1/css/musica.css">
+    <link rel="stylesheet" href="./plantillas/plantilla-1/css/hero.css">
+    <link rel="stylesheet" href="./plantillas/plantilla-1/css/bienvenida.css">
+    <link rel="stylesheet" href="./plantillas/plantilla-1/css/padres-padrinos.css">
+    <link rel="stylesheet" href="./plantillas/plantilla-1/css/historia.css">
+    <link rel="stylesheet" href="./plantillas/plantilla-1/css/contador.css">
+    <link rel="stylesheet" href="./plantillas/plantilla-1/css/cronograma.css">
+    <link rel="stylesheet" href="./plantillas/plantilla-1/css/ubicaciones.css">
+    <link rel="stylesheet" href="./plantillas/plantilla-1/css/galeria.css">
+    <link rel="stylesheet" href="./plantillas/plantilla-1/css/dresscode.css">
+    <link rel="stylesheet" href="./plantillas/plantilla-1/css/faq.css">
+    <link rel="stylesheet" href="./plantillas/plantilla-1/css/rsvp.css">
+    <link rel="stylesheet" href="./plantillas/plantilla-1/css/footer.css">
+    <link rel="stylesheet" href="./plantillas/plantilla-1/css/responsive.css">
+    
+    <!-- Fuentes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <?php if ($musica_url): ?>
+    <!-- Audio de fondo -->
+    <audio id="backgroundMusic" loop <?php echo $musica_autoplay ? 'autoplay' : ''; ?>>
+        <source src="<?php echo htmlspecialchars($musica_url); ?>" type="audio/mpeg">
+        Tu navegador no soporta el elemento de audio.
+    </audio>
+    <?php endif; ?>
 </head>
 <body>
 <!-- Sección Hero -->
@@ -230,22 +305,49 @@ try {
            </div>
            
            <!-- Información familiar -->
-           <?php if ($padres_novia || $padres_novio || $padrinos_novia || $padrinos_novio): ?>
-           <div class="familia-info">
-               <?php if ($padres_novia): ?>
-               <p><strong>Padres de la novia:</strong> <?php echo htmlspecialchars($padres_novia); ?></p>
-               <?php endif; ?>
-               <?php if ($padres_novio): ?>
-               <p><strong>Padres del novio:</strong> <?php echo htmlspecialchars($padres_novio); ?></p>
-               <?php endif; ?>
-               <?php if ($padrinos_novia): ?>
-               <p><strong>Padrinos de la novia:</strong> <?php echo htmlspecialchars($padrinos_novia); ?></p>
-               <?php endif; ?>
-               <?php if ($padrinos_novio): ?>
-               <p><strong>Padrinos del novio:</strong> <?php echo htmlspecialchars($padrinos_novio); ?></p>
-               <?php endif; ?>
-           </div>
-           <?php endif; ?>
+            <?php if ($padres_novia || $padres_novio || $padrinos_novia || $padrinos_novio): ?>
+            <div class="familia-info">
+                <div class="familia-grid">
+                    <!-- Lado izquierdo - Novia -->
+                    <?php if ($padres_novia || $padrinos_novia): ?>
+                    <div class="familia-lado">
+                        <h4>Familia de la Novia</h4>
+                        <?php if ($padres_novia): ?>
+                        <div class="familia-item">
+                            <strong>Padres</strong>
+                            <span><?php echo htmlspecialchars($padres_novia); ?></span>
+                        </div>
+                        <?php endif; ?>
+                        <?php if ($padrinos_novia): ?>
+                        <div class="familia-item">
+                            <strong>Padrinos</strong>
+                            <span><?php echo htmlspecialchars($padrinos_novia); ?></span>
+                        </div>
+                        <?php endif; ?>
+                    </div>
+                    <?php endif; ?>
+                    
+                    <!-- Lado derecho - Novio -->
+                    <?php if ($padres_novio || $padrinos_novio): ?>
+                    <div class="familia-lado">
+                        <h4>Familia del Novio</h4>
+                        <?php if ($padres_novio): ?>
+                        <div class="familia-item">
+                            <strong>Padres</strong>
+                            <span><?php echo htmlspecialchars($padres_novio); ?></span>
+                        </div>
+                        <?php endif; ?>
+                        <?php if ($padrinos_novio): ?>
+                        <div class="familia-item">
+                            <strong>Padrinos</strong>
+                            <span><?php echo htmlspecialchars($padrinos_novio); ?></span>
+                        </div>
+                        <?php endif; ?>
+                    </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <?php endif; ?>
            
            <div class="bienvenida-date-section">
                <div class="bienvenida-date"><?php echo strtoupper($fecha); ?></div>
@@ -294,7 +396,7 @@ try {
 <!-- Contador regresivo -->
 <section class="contador" id="contador">
    <div class="container">
-       <h2>Faltan</h2>
+       <h2>Save the Date!</h2>
        <div class="countdown" id="countdown">
            <div class="time-unit">
                <span class="number" id="days">0</span>
@@ -335,7 +437,7 @@ try {
                <!-- Contenido que alterna izquierda/derecha -->
                <div class="timeline-content <?php echo ($index % 2 == 0) ? 'left' : 'right'; ?>">
                    <div class="timeline-event"><?php echo strtoupper(htmlspecialchars($item['evento'])); ?></div>
-                   <div class="timeline-time"><?php echo $item['hora']; ?></div>
+                   <div class="timeline-time"><?php echo formatearHora($item['hora']); ?></div>
                    <div class="timeline-description">
                        <?php echo htmlspecialchars($item['descripcion'] ?? ''); ?>
                    </div>
@@ -359,30 +461,34 @@ try {
        <div class="ubicaciones-grid">
            <?php foreach($ubicaciones_result as $ubicacion_item): ?>
            <div class="ubicacion-card">
-               <?php if ($ubicacion_item['imagen']): ?>
-               <div class="ubicacion-image">
-                   <img src="<?php echo htmlspecialchars($ubicacion_item['imagen']); ?>" alt="<?php echo htmlspecialchars($ubicacion_item['nombre_lugar']); ?>" />
-               </div>
-               <?php endif; ?>
-               <div class="ubicacion-info">
-                   <h3><?php echo strtoupper(htmlspecialchars($ubicacion_item['nombre_lugar'])); ?></h3>
-                   <p class="ubicacion-tipo"><?php echo strtoupper($ubicacion_item['tipo']); ?></p>
-                   <p class="ubicacion-direccion"><?php echo htmlspecialchars($ubicacion_item['direccion']); ?></p>
-                   <?php if ($ubicacion_item['hora_inicio']): ?>
-                   <p class="ubicacion-horario">
-                       <?php echo $ubicacion_item['hora_inicio']; ?>
-                       <?php if ($ubicacion_item['hora_fin']): ?>
-                       - <?php echo $ubicacion_item['hora_fin']; ?>
+               <div class="ubicacion-content">
+                   <div class="ubicacion-info">
+                       <div class="ubicacion-tipo"><?php echo strtoupper($ubicacion_item['tipo']); ?></div>
+                       <h3><?php echo htmlspecialchars($ubicacion_item['nombre_lugar']); ?></h3>
+                       <p class="ubicacion-direccion"><?php echo htmlspecialchars($ubicacion_item['direccion']); ?></p>
+                       
+                       <?php if ($ubicacion_item['hora_inicio']): ?>
+                       <p class="ubicacion-horario">
+                           <?php echo formatearHora($ubicacion_item['hora_inicio']); ?>
+                           <?php if ($ubicacion_item['hora_fin']): ?>
+                           - <?php echo formatearHora($ubicacion_item['hora_fin']); ?>
+                           <?php endif; ?>
+                       </p>
                        <?php endif; ?>
-                   </p>
-                   <?php endif; ?>
-                   <?php if ($ubicacion_item['descripcion']): ?>
-                   <p class="ubicacion-descripcion"><?php echo htmlspecialchars($ubicacion_item['descripcion']); ?></p>
-                   <?php endif; ?>
-                   <?php if ($ubicacion_item['google_maps_url']): ?>
-                   <a href="<?php echo htmlspecialchars($ubicacion_item['google_maps_url']); ?>" target="_blank" class="ubicacion-maps">
-                       Ver en Google Maps
-                   </a>
+                       
+                       <?php if ($ubicacion_item['descripcion']): ?>
+                       <p class="ubicacion-descripcion"><?php echo htmlspecialchars($ubicacion_item['descripcion']); ?></p>
+                       <?php endif; ?>
+                       <?php if ($ubicacion_item['google_maps_url']): ?>
+                       <a href="<?php echo htmlspecialchars($ubicacion_item['google_maps_url']); ?>" target="_blank" class="ubicacion-maps">
+                           Ver en Google Maps
+                       </a>
+                       <?php endif; ?>
+                   </div>
+                   <?php if ($ubicacion_item['imagen']): ?>
+                   <div class="ubicacion-image">
+                       <img src="<?php echo htmlspecialchars($ubicacion_item['imagen']); ?>" alt="<?php echo htmlspecialchars($ubicacion_item['nombre_lugar']); ?>" />
+                   </div>
                    <?php endif; ?>
                </div>
            </div>
@@ -589,10 +695,10 @@ try {
                   <span>🔗</span> Copiar enlace
               </button>
               <?php if ($musica_url): ?>
-              <button class="music-toggle" onclick="toggleMusic()" id="musicToggle">
-                  <span>🎵</span> <span id="musicStatus"><?php echo $musica_autoplay ? 'Pausar' : 'Reproducir'; ?> música</span>
-              </button>
-              <?php endif; ?>
+              <button class="music-toggle" onclick="toggleMusicFromFooter()" id="musicToggle">
+                <span>🎵</span> <span id="musicStatus">Controlar música</span>
+               </button>
+            <?php endif; ?>
           </div>
           <p class="footer-thanks">
               Gracias por ser parte de nuestro día especial
@@ -624,182 +730,14 @@ const invitacionData = {
    musicaUrl: '<?php echo addslashes($musica_url); ?>',
    musicaAutoplay: <?php echo $musica_autoplay ? 'true' : 'false'; ?>
 };
-
-<?php if ($mostrar_contador): ?>
-// Contador regresivo
-function initCountdown() {
-   const fechaEvento = new Date('<?php echo $invitacion['fecha_evento']; ?>T<?php echo $invitacion['hora_evento']; ?>').getTime();
-   
-   function updateCountdown() {
-       const ahora = new Date().getTime();
-       const distancia = fechaEvento - ahora;
-       
-       if (distancia < 0) {
-           document.getElementById('countdown').innerHTML = '<div class="time-unit"><span class="number">¡Ya es el día!</span></div>';
-           return;
-       }
-       
-       const dias = Math.floor(distancia / (1000 * 60 * 60 * 24));
-       const horas = Math.floor((distancia % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-       const minutos = Math.floor((distancia % (1000 * 60 * 60)) / (1000 * 60));
-       const segundos = Math.floor((distancia % (1000 * 60)) / 1000);
-       
-       document.getElementById('days').textContent = dias;
-       document.getElementById('hours').textContent = horas;
-       document.getElementById('minutes').textContent = minutos;
-       document.getElementById('seconds').textContent = segundos;
-   }
-   
-   updateCountdown();
-   setInterval(updateCountdown, 1000);
-}
-
-// Inicializar contador cuando se carga la página
-document.addEventListener('DOMContentLoaded', initCountdown);
-<?php endif; ?>
-
-// Control de música
-<?php if ($musica_url): ?>
-function toggleMusic() {
-   const audio = document.getElementById('backgroundMusic');
-   const toggleBtn = document.getElementById('musicToggle');
-   const status = document.getElementById('musicStatus');
-   
-   if (audio.paused) {
-       audio.play();
-       status.textContent = 'Pausar música';
-   } else {
-       audio.pause();
-       status.textContent = 'Reproducir música';
-   }
-}
-<?php endif; ?>
-
-// Funciones para compartir
-function shareWhatsApp() {
-   const url = window.location.href;
-   const texto = encodeURIComponent(`¡Estás invitado a la boda de ${invitacionData.nombres}! ${url}`);
-   window.open(`https://wa.me/?text=${texto}`, '_blank');
-   
-   // Registrar estadística
-   fetch('./api/estadisticas.php', {
-       method: 'POST',
-       headers: {'Content-Type': 'application/json'},
-       body: JSON.stringify({
-           invitacion_id: invitacionData.id,
-           tipo_evento: 'compartir',
-           datos_adicionales: {tipo: 'whatsapp'}
-       })
-   });
-}
-
-function copyLink() {
-   navigator.clipboard.writeText(window.location.href).then(() => {
-       alert('¡Enlace copiado al portapapeles!');
-       
-       // Registrar estadística
-       fetch('./api/estadisticas.php', {
-           method: 'POST',
-           headers: {'Content-Type': 'application/json'},
-           body: JSON.stringify({
-               invitacion_id: invitacionData.id,
-               tipo_evento: 'compartir',
-               datos_adicionales: {tipo: 'copy_link'}
-           })
-       });
-   });
-}
-
-// Funciones RSVP
-function openRSVPModal() {
-   document.getElementById('rsvpModal').style.display = 'flex';
-}
-
-function closeRSVPModal() {
-   document.getElementById('rsvpModal').style.display = 'none';
-}
-
-// Manejar envío de RSVP
-document.getElementById('rsvpForm').addEventListener('submit', function(e) {
-   e.preventDefault();
-   
-   const formData = new FormData(this);
-   const data = Object.fromEntries(formData);
-   
-   fetch('./api/rsvp.php', {
-       method: 'POST',
-       headers: {'Content-Type': 'application/json'},
-       body: JSON.stringify(data)
-   })
-   .then(response => response.json())
-   .then(data => {
-       if (data.success) {
-           closeRSVPModal();
-           document.getElementById('successMessage').style.display = 'flex';
-           setTimeout(() => {
-               document.getElementById('successMessage').style.display = 'none';
-           }, 3000);
-       } else {
-           alert('Error al enviar la confirmación. Por favor intenta de nuevo.');
-       }
-   })
-   .catch(error => {
-       console.error('Error:', error);
-       alert('Error al enviar la confirmación. Por favor intenta de nuevo.');
-   });
-});
-
-// Funciones FAQ
-function toggleFAQ(index) {
-   const answer = document.getElementById(`faq-${index}`);
-   const arrow = answer.previousElementSibling.querySelector('.faq-arrow');
-   
-   if (answer.style.display === 'block') {
-       answer.style.display = 'none';
-       arrow.textContent = '▼';
-   } else {
-       answer.style.display = 'block';
-       arrow.textContent = '▲';
-   }
-}
-
-// Cerrar modal al hacer clic fuera
-window.onclick = function(event) {
-   const modal = document.getElementById('rsvpModal');
-   if (event.target === modal) {
-       closeRSVPModal();
-   }
-}
-
-// Registrar clics en galería
-document.querySelectorAll('.galeria-item img').forEach(img => {
-   img.addEventListener('click', () => {
-       fetch('./api/estadisticas.php', {
-           method: 'POST',
-           headers: {'Content-Type': 'application/json'},
-           body: JSON.stringify({
-               invitacion_id: invitacionData.id,
-               tipo_evento: 'galeria_click'
-           })
-       });
-   });
-});
-
-// Registrar clics en ubicaciones
-document.querySelectorAll('.ubicacion-maps').forEach(link => {
-   link.addEventListener('click', () => {
-       fetch('./api/estadisticas.php', {
-           method: 'POST',
-           headers: {'Content-Type': 'application/json'},
-           body: JSON.stringify({
-               invitacion_id: invitacionData.id,
-               tipo_evento: 'ubicacion_click'
-           })
-       });
-   });
-});
 </script>
 
+<script src="./plantillas/plantilla-1/js/contador.js"></script>
+<script src="./plantillas/plantilla-1/js/musica.js"></script>
+<script src="./plantillas/plantilla-1/js/compartir.js"></script>
+<script src="./plantillas/plantilla-1/js/rsvp.js"></script>
+<script src="./plantillas/plantilla-1/js/faq.js"></script>
+<script src="./plantillas/plantilla-1/js/estadisticas.js"></script>
 <script src="./plantillas/plantilla-1/js/invitacion.js"></script>
 </body>
 </html>

@@ -607,6 +607,30 @@ input[readonly] {
 }
 
 /* ==========================================================================
+   Input de musica
+   ========================================================================== */
+
+.current-music {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    border-left: 4px solid #007bff;
+}
+
+.audio-preview-container {
+    background: #f0f8ff;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 10px;
+    border: 2px dashed #007bff;
+}
+
+.audio-preview-container audio {
+    margin-bottom: 10px;
+}
+
+/* ==========================================================================
    ANIMACIONES
    ========================================================================== */
 
