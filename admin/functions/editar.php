@@ -102,57 +102,89 @@ function guardarImagen($campo, $plantilla_id, $slug, $seccion) {
 
 // FUNCIÓN para guardar archivos de música usando el slug
 function guardarMusica($campo, $plantilla_id, $slug) {
-    if (isset($_FILES[$campo]) && $_FILES[$campo]['error'] === UPLOAD_ERR_OK) {
-        // Verificar que el archivo sea de audio
-        $audioFileType = strtolower(pathinfo($_FILES[$campo]['name'], PATHINFO_EXTENSION));
-        $allowed_types = ['mp3', 'wav', 'ogg', 'm4a', 'aac'];
-        
-        if (!in_array($audioFileType, $allowed_types)) {
-            die("Solo se permiten archivos MP3, WAV, OGG, M4A y AAC.");
-        }
-        
-        // Verificar tamaño del archivo (máximo 10MB)
-        if ($_FILES[$campo]['size'] > 10 * 1024 * 1024) {
-            die("El archivo de música es demasiado grande. Máximo 10MB.");
-        }
-        
-        // RUTA FÍSICA CORREGIDA: Construir la ruta completa desde la raíz del proyecto
-        $ruta_fisica = __DIR__ . "/../../plantillas/plantilla-$plantilla_id/uploads/$slug/musica";
-        
-        // Verificar que la carpeta existe y crearla si no existe
-        if (!is_dir($ruta_fisica)) {
-            if (!mkdir($ruta_fisica, 0755, true)) {
-                die("Error: No se pudo crear la carpeta de música: $ruta_fisica");
-            }
-        }
-        
-        // Generar nombre único para evitar conflictos
-        $nombre = uniqid() . '.' . $audioFileType;
-        $destino = "$ruta_fisica/$nombre";
-        
-        // Mover el archivo
-        if (move_uploaded_file($_FILES[$campo]['tmp_name'], $destino)) {
-            // RETORNAR RUTA RELATIVA para guardar en BD
-            return "plantillas/plantilla-$plantilla_id/uploads/$slug/musica/$nombre";
-        } else {
-            die("Error al subir el archivo de música: $campo. Ruta destino: $destino");
+    // Debug: Verificar si el archivo llega
+    error_log("=== DEBUG MÚSICA ===");
+    error_log("Campo: $campo");
+    error_log("Plantilla ID: $plantilla_id");
+    error_log("Slug: $slug");
+    
+    if (!isset($_FILES[$campo])) {
+        error_log("No se encontró el campo $_FILES[$campo]");
+        return null;
+    }
+    
+    if ($_FILES[$campo]['error'] !== UPLOAD_ERR_OK) {
+        error_log("Error en upload: " . $_FILES[$campo]['error']);
+        return null;
+    }
+    
+    error_log("Archivo recibido: " . $_FILES[$campo]['name']);
+    error_log("Tamaño: " . $_FILES[$campo]['size']);
+    
+    // Verificar que el archivo sea de audio
+    $audioFileType = strtolower(pathinfo($_FILES[$campo]['name'], PATHINFO_EXTENSION));
+    $allowed_types = ['mp3', 'wav', 'ogg', 'm4a', 'aac'];
+    
+    if (!in_array($audioFileType, $allowed_types)) {
+        error_log("Tipo de archivo no permitido: $audioFileType");
+        die("Solo se permiten archivos MP3, WAV, OGG, M4A y AAC.");
+    }
+    
+    // Verificar tamaño del archivo (máximo 10MB)
+    if ($_FILES[$campo]['size'] > 10 * 1024 * 1024) {
+        error_log("Archivo demasiado grande: " . $_FILES[$campo]['size']);
+        die("El archivo de música es demasiado grande. Máximo 10MB.");
+    }
+    
+    // RUTA FÍSICA: Igual que las imágenes
+    $ruta_fisica = __DIR__ . "/../../plantillas/plantilla-$plantilla_id/uploads/$slug/musica";
+    error_log("Ruta física: $ruta_fisica");
+    
+    // Verificar que la carpeta existe y crearla si no existe
+    if (!is_dir($ruta_fisica)) {
+        error_log("Creando carpeta: $ruta_fisica");
+        if (!mkdir($ruta_fisica, 0777, true)) {
+            error_log("Error al crear carpeta: $ruta_fisica");
+            die("Error: No se pudo crear la carpeta de música: $ruta_fisica");
         }
     }
-    return null;
+    
+    // Generar nombre único para evitar conflictos
+    $nombre = uniqid() . '.' . $audioFileType;
+    $destino = "$ruta_fisica/$nombre";
+    error_log("Destino final: $destino");
+    
+    // Mover el archivo
+    if (move_uploaded_file($_FILES[$campo]['tmp_name'], $destino)) {
+        // RUTA RELATIVA para BD - IGUAL QUE LAS IMÁGENES
+        $ruta_bd = "./plantillas/plantilla-$plantilla_id/uploads/$slug/musica/$nombre";
+        error_log("Archivo guardado exitosamente. Ruta BD: $ruta_bd");
+        return $ruta_bd;
+    } else {
+        error_log("Error al mover archivo de $campo a $destino");
+        die("Error al subir el archivo de música: $campo. Ruta destino: $destino");
+    }
 }
 
-// Procesar formulario - SECCIÓN CORREGIDA
+// En la sección de procesamiento del formulario:
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $db->beginTransaction();
         
         $plantilla_id = $_POST['plantilla_id'];
-        $slug = $invitacion['slug']; // Mantener el slug original
+        $slug = $invitacion['slug'];
+        
+        // Debug: Verificar datos recibidos
+        error_log("=== PROCESANDO FORMULARIO ===");
+        error_log("Plantilla ID: $plantilla_id");
+        error_log("Slug: $slug");
+        error_log("Archivos recibidos: " . print_r($_FILES, true));
         
         // Manejar archivo de música PRIMERO
         $archivo_musica = guardarMusica('archivo_musica', $plantilla_id, $slug);
+        error_log("Resultado guardarMusica: " . ($archivo_musica ? $archivo_musica : 'null'));
         
-        // Obtener valores del formulario con valores por defecto
+        // Obtener valores del formulario
         $frase_historia = $_POST['frase_historia'] ?? $invitacion['frase_historia'];
         $padres_novia = $_POST['padres_novia'] ?? $invitacion['padres_novia'];
         $padres_novio = $_POST['padres_novio'] ?? $invitacion['padres_novio'];
@@ -166,7 +198,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $img_dedicatoria = guardarImagen('imagen_dedicatoria', $plantilla_id, $slug, 'dedicatoria');
         $img_destacada = guardarImagen('imagen_destacada', $plantilla_id, $slug, 'destacada');
         
-        // Construir consulta SQL dinámicamente
+        // Construir consulta SQL
         $update_query = "UPDATE invitaciones SET 
                         plantilla_id = ?, nombres_novios = ?, fecha_evento = ?, hora_evento = ?, 
                         ubicacion = ?, direccion_completa = ?, historia = ?, frase_historia = ?,
@@ -199,6 +231,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($archivo_musica !== null) {
             $update_query .= ", musica_url = ?";
             $params[] = $archivo_musica;
+            error_log("Agregando música a la consulta: $archivo_musica");
         }
 
         // Agregar imágenes solo si se subieron nuevas
@@ -218,8 +251,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $update_query .= " WHERE id = ?";
         $params[] = $id;
         
+        error_log("Consulta SQL: $update_query");
+        error_log("Parámetros: " . print_r($params, true));
+        
         $update_stmt = $db->prepare($update_query);
-        $update_stmt->execute($params);
+        $result = $update_stmt->execute($params);
+        
+        error_log("Resultado de la consulta: " . ($result ? 'SUCCESS' : 'FAILED'));
+        
+        if (!$result) {
+            error_log("Error en la consulta: " . print_r($update_stmt->errorInfo(), true));
+        }
 
         // Eliminar y recrear ubicaciones
         $db->prepare("DELETE FROM invitacion_ubicaciones WHERE invitacion_id = ?")->execute([$id]);
