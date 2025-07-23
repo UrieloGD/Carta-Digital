@@ -152,16 +152,40 @@ try {
 
 // Determinar qué plantilla usar
 $plantilla_id = $invitacion['plantilla_id'] ?? 1;
-$plantilla_carpeta = $invitacion['plantilla_carpeta'] ?? "plantilla-{$plantilla_id}";
-$archivo_principal = $invitacion['archivo_principal'] ?? "invitacion-{$plantilla_id}.php";
+$carpeta_plantilla = $invitacion['plantilla_carpeta'] ?? "plantilla-{$plantilla_id}";
+$archivo_plantilla = $invitacion['archivo_principal'] ?? "invitacion-{$plantilla_id}.php";
 
-$plantilla_file = "./plantillas/{$plantilla_carpeta}/{$archivo_principal}";
+$ruta_plantilla = "./{$carpeta_plantilla}/{$archivo_plantilla}";
+
+// Debug: agregar estas líneas temporalmente para diagnosticar
+error_log("Plantilla ID: " . $plantilla_id);
+error_log("Carpeta: " . $carpeta_plantilla);
+error_log("Archivo: " . $archivo_plantilla);
+error_log("Ruta completa: " . $ruta_plantilla);
+error_log("¿Existe archivo?: " . (file_exists($ruta_plantilla) ? 'SÍ' : 'NO'));
+
+// Debug temporal - REMOVER después de solucionar
+echo "<!-- DEBUG INFO:\n";
+echo "Plantilla ID: " . ($invitacion['plantilla_id'] ?? 'NULL') . "\n";
+echo "Plantilla Carpeta: " . ($invitacion['plantilla_carpeta'] ?? 'NULL') . "\n";
+echo "Archivo Principal: " . ($invitacion['archivo_principal'] ?? 'NULL') . "\n";
+echo "Ruta calculada: {$ruta_plantilla}\n";
+echo "¿Existe?: " . (file_exists($ruta_plantilla) ? 'SÍ' : 'NO') . "\n";
+echo "-->";
 
 // Cargar la plantilla específica
-if (file_exists($plantilla_file)) {
-    include $plantilla_file;
+if (file_exists($ruta_plantilla)) {
+    include $ruta_plantilla;
 } else {
-    // Fallback a plantilla 1 si no existe la especificada
-    include "./plantillas/plantilla-1/invitacion-1.php";
+    // Log del error antes del fallback
+    error_log("ERROR: No se encontró la plantilla en {$ruta_plantilla}");
+    
+    // Fallback más inteligente
+    $fallback_path = "./plantillas/plantilla-1/invitacion-1.php";
+    if (file_exists($fallback_path)) {
+        include $fallback_path;
+    } else {
+        exit("Error: No se puede cargar ninguna plantilla");
+    }
 }
 ?>

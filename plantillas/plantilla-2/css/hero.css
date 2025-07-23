@@ -1,0 +1,205 @@
+/* Hero Section - Estilo Natural */
+.hero {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: var(--charcoal);
+}
+
+.hero-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: brightness(0.4) sepia(20%);
+    transform: scale(1.1);
+    transition: transform 10s ease-out;
+}
+
+.hero:hover .hero-background {
+    transform: scale(1.05);
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        135deg,
+        rgba(107, 123, 58, 0.4) 0%,
+        rgba(212, 184, 150, 0.3) 50%,
+        rgba(107, 123, 58, 0.4) 100%
+    );
+    z-index: 1;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    color: var(--warm-white);
+    max-width: 800px;
+    padding: 0 20px;
+    animation: fadeInUp 1.2s ease-out;
+}
+
+.hero-ornament {
+    width: 120px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--sand), transparent);
+    margin: 0 auto;
+    position: relative;
+}
+
+.hero-ornament::before,
+.hero-ornament::after {
+    content: '';
+    position: absolute;
+    top: -4px;
+    width: 10px;
+    height: 10px;
+    background: var(--sand);
+    border-radius: 50%;
+}
+
+.hero-ornament::before {
+    left: 20px;
+}
+
+.hero-ornament::after {
+    right: 20px;
+}
+
+.hero-ornament.top {
+    margin-bottom: 2rem;
+    animation: fadeIn 1.5s ease-out 0.3s both;
+}
+
+.hero-ornament.bottom {
+    margin-top: 2rem;
+    animation: fadeIn 1.5s ease-out 1s both;
+}
+
+.hero-text {
+    animation: fadeInUp 1.2s ease-out 0.5s both;
+}
+
+.hero-subtitle {
+    font-family: var(--font-sans);
+    font-size: 1.2rem;
+    font-weight: 300;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--light-sand);
+    margin-bottom: 1rem;
+    animation: fadeIn 1s ease-out 0.8s both;
+}
+
+.hero-names {
+    font-family: var(--font-serif);
+    font-size: clamp(3rem, 8vw, 6rem);
+    font-weight: 300;
+    line-height: 1.1;
+    margin-bottom: 2rem;
+    background: linear-gradient(45deg, var(--warm-white), var(--light-sand));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: fadeInUp 1.2s ease-out 0.7s both;
+}
+
+.hero-date {
+    font-family: var(--font-serif);
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 400;
+    color: var(--sand);
+    margin-bottom: 0.5rem;
+    animation: fadeIn 1s ease-out 1.2s both;
+}
+
+.hero-location {
+    font-family: var(--font-sans);
+    font-size: 1.1rem;
+    font-weight: 300;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--light-sand);
+    animation: fadeIn 1s ease-out 1.4s both;
+}
+
+/* Efectos de partículas flotantes */
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 20% 80%, rgba(212, 184, 150, 0.1) 2px, transparent 2px),
+        radial-gradient(circle at 80% 20%, rgba(212, 184, 150, 0.1) 2px, transparent 2px),
+        radial-gradient(circle at 40% 40%, rgba(212, 184, 150, 0.05) 2px, transparent 2px);
+    background-size: 200px 200px, 300px 300px, 400px 400px;
+    animation: float 20s ease-in-out infinite;
+    z-index: 1;
+}
+
+@keyframes float {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    25% { transform: translate(-10px, -10px) rotate(1deg); }
+    50% { transform: translate(10px, -5px) rotate(-1deg); }
+    75% { transform: translate(-5px, 10px) rotate(0.5deg); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .hero {
+        height: 100vh;
+    }
+    
+    .hero-ornament {
+        width: 80px;
+    }
+    
+    .hero-ornament::before {
+        left: 10px;
+    }
+    
+    .hero-ornament::after {
+        right: 10px;
+    }
+    
+    .hero-subtitle {
+        font-size: 1rem;
+        letter-spacing: 2px;
+    }
+    
+    .hero-location {
+        font-size: 1rem;
+        letter-spacing: 1px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-content {
+        padding: 0 15px;
+    }
+    
+    .hero-ornament {
+        width: 60px;
+    }
+    
+    .hero-subtitle {
+        font-size: 0.9rem;
+        letter-spacing: 1px;
+    }
+}
