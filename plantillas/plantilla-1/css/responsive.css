@@ -1,139 +1,376 @@
-/* Responsive Design */
+/* ======== MEDIA QUERIES PARA MÓVILES ======== */
 @media (max-width: 768px) {
-   .container {
-       padding: 0 15px;
-   }
-   
-   .hero {
-       padding: 1rem 0;
-       min-height: 80vh;
-   }
-   
-   .hero-names {
-       font-size: 2.5rem;
-   }
-   
-   .hero-details {
-       gap: 0.8rem;
-   }
-   
-   .hero-date, .hero-location, .hero-time {
-       font-size: 1rem;
-       padding: 0.6rem 1rem;
-   }
-   
-   .bienvenida, .historia, .cronograma, .galeria, .dresscode, .rsvp, .faq {
-       padding: 3rem 0;
-   }
-   
-   .bienvenida h2, .historia h2, .cronograma h2, .galeria h2, .dresscode h2, .rsvp h2, .faq h2 {
-       font-size: 2rem;
-   }
-   
-   .historia-content {
-       grid-template-columns: 1fr;
-       gap: 2rem;
-       text-align: center;
-   }
-   
-   .historia-image {
-       order: -1;
-   }
-   
-   .cronograma-timeline::before {
-       left: 20px;
-   }
-   
-   .timeline-item {
-       padding-left: 4rem;
-   }
-   
-   .timeline-icon {
-       left: 0;
-       width: 35px;
-       height: 35px;
-       font-size: 1rem;
-   }
-   
-   .galeria-grid {
-       grid-template-columns: 1fr;
-       gap: 1.5rem;
-   }
-   
-   .dresscode-examples {
-       gap: 1rem;
-   }
-   
-   .footer-actions {
-       flex-direction: column;
-       align-items: center;
-   }
-   
-   .share-button, .copy-button {
-       width: 100%;
-       max-width: 250px;
-       justify-content: center;
-   }
-   
-   .rsvp-modal {
-       padding: 1rem;
-   }
-   
-   .modal-content {
-       margin: 0;
-   }
+  /* Ajustes generales */
+  :root {
+    --border-radius: 8px;
+  }
+
+  body {
+    font-size: 14px;
+  }
+
+  .container {
+    padding: 0 15px;
+  }
+
+  /* Hero Section */
+  .hero {
+    min-height: 80vh;
+    padding: 1rem 0;
+  }
+
+  .hero-names {
+    font-size: 2.5rem;
+    line-height: 1.2;
+  }
+
+  .hero-header {
+    font-size: 0.8rem;
+  }
+
+  .hero-date,
+  .hero-location {
+    font-size: 0.8rem;
+  }
+
+  /* Bienvenida Section */
+  .bienvenida {
+    min-height: auto;
+    padding: 3rem 0;
+  }
+
+  .bienvenida h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .bienvenida-image img {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    transform: rotate(3deg) !important;
+  }
+
+  .bienvenida-date {
+    font-size: 2rem;
+  }
+
+  /* Historia Section */
+  .historia {
+    min-height: auto;
+    padding: 3rem 0;
+  }
+
+  .historia h2 {
+    font-size: 2rem;
+  }
+
+  /* Contador */
+  .contador {
+    padding: 2rem 0;
+  }
+
+  .contador h2 {
+    font-size: 1.5rem;
+  }
+
+  .countdown {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .countdown .time-unit {
+    margin: 0 5px;
+    min-width: 70px;
+  }
+
+  .countdown .number {
+    font-size: 1.8rem;
+  }
+
+  .countdown .label {
+    font-size: 0.7rem;
+  }
+
+  /* Cronograma - Rediseño completo para móviles */
+  .cronograma {
+    min-height: auto;
+    padding: 3rem 0;
+  }
+
+  .cronograma h2 {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+
+  .cronograma-timeline {
+    padding: 0;
+    position: relative;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  /* Línea vertical central */
+  .timeline-line {
+    display: block !important;
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--accent-color, #8b4b3b);
+    transform: translateX(-50%);
+    z-index: 1;
+  }
+
+  .timeline-item {
+    margin-bottom: 4rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    opacity: 1;
+    animation: none;
+    position: relative;
+  }
+
+  .timeline-item:last-child {
+    margin-bottom: 0;
+  }
+
+  .timeline-icon {
+    position: relative;
+    left: 0;
+    transform: none;
+    margin: 0 0 1rem 0;
+    z-index: 2;
+    background: white;
+    border-radius: 50%;
+    padding: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .timeline-content {
+    position: relative;
+    width: 100%;
+    max-width: 300px;
+    left: auto;
+    right: auto;
+    margin: 0;
+    text-align: center !important;
+    background: white;
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .timeline-content h3 {
+    margin-bottom: 0.5rem;
+    color: var(--accent-color, #8b4b3b);
+    font-size: 1.2rem;
+  }
+
+  .timeline-content .time {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+  }
+
+  .timeline-content p {
+    margin: 0;
+    font-style: italic;
+    color: #666;
+    font-size: 0.9rem;
+  }
+
+  .timeline-content.left {
+    left: 10%;
+    margin-right: 50px;
+    text-align: right;
+  }
+
+  .timeline-content.right {
+    left: 0%;
+    margin-right: 50px;
+    text-align: right;
+  }
+
+  /* Ubicaciones */
+  .ubicaciones {
+    padding: 3rem 0;
+  }
+
+  .ubicaciones h2 {
+    font-size: 1.8rem;
+  }
+
+  .ubicacion-card {
+    margin-bottom: 2rem;
+  }
+
+  .ubicacion-content {
+    flex-direction: column;
+  }
+
+  .ubicacion-image {
+    margin-top: 1rem;
+  }
+
+  /* Galería - Simplificar para móviles */
+  .galeria {
+    padding: 3rem 0;
+    overflow: hidden;
+  }
+
+  .galeria h2 {
+    font-size: 1.8rem;
+  }
+
+  .galeria-item {
+    flex: 0 0 250px;
+    height: 300px;
+  }
+
+  .galeria-item img {
+    width: 230px;
+    height: 280px;
+  }
+
+  /* Dresscode */
+  .dresscode {
+    min-height: auto;
+    padding: 3rem 0;
+  }
+
+  .dresscode h2 {
+    font-size: 2rem;
+  }
+
+  .dresscode-gender-section {
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .dresscode-examples {
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .dresscode-example-image.women,
+  .dresscode-example-image.men {
+    transform: rotate(0) !important;
+  }
+
+  .dresscode-example-image img {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+  }
+
+  /* Mesa de regalos */
+  .mesa-regalos {
+    padding: 3rem 0;
+  }
+
+  .mesa-regalos h2 {
+    font-size: 1.8rem;
+  }
+
+  .regalos-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* RSVP */
+  .rsvp {
+    padding: 3rem 0;
+  }
+
+  .rsvp h2 {
+    font-size: 1.8rem;
+  }
+
+  .rsvp-button {
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+  }
+
+  /* FAQ */
+  .faq {
+    padding: 3rem 0;
+  }
+
+  .faq h2 {
+    font-size: 1.8rem;
+  }
+
+  /* Footer */
+  .footer {
+    padding: 2rem 0;
+  }
+
+  .footer-actions {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .share-button,
+  .copy-button,
+  .music-toggle {
+    width: 100%;
+    max-width: 280px;
+    margin: 0 auto;
+  }
+
+  /* Modal RSVP */
+  .rsvp-modal {
+    padding: 1rem;
+  }
+
+  .modal-content {
+    width: 95%;
+  }
 }
 
+/* Ajustes adicionales para pantallas muy pequeñas */
 @media (max-width: 480px) {
-   .hero-names {
-       font-size: 2rem;
-   }
-   
-   .hero-subtitle {
-       font-size: 1rem;
-   }
-   
-   .bienvenida h2, .historia h2, .cronograma h2, .galeria h2, .dresscode h2, .rsvp h2, .faq h2 {
-       font-size: 1.8rem;
-   }
-   
-   .timeline-item {
-       padding-left: 3rem;
-   }
-   
-   .timeline-icon {
-       width: 30px;
-       height: 30px;
-       font-size: 0.9rem;
-   }
-   
-   .dresscode-examples {
-       flex-direction: column;
-       align-items: center;
-   }
-}
+  .hero-names {
+    font-size: 2rem;
+  }
 
-/* Estilos para impresión */
-@media print {
-   .rsvp, .footer-actions, .galeria-overlay, .modal-close {
-       display: none !important;
-   }
-   
-   body {
-       background: white !important;
-       color: black !important;
-   }
-   
-   .hero, .bienvenida, .historia, .cronograma, .dresscode, .faq {
-       background: white !important;
-       box-shadow: none !important;
-   }
-   
-   .hero-names, .bienvenida h2, .historia h2, .cronograma h2, .dresscode h2, .faq h2 {
-       color: #850d23 !important;
-   }
-   
-   * {
-       box-shadow: none !important;
-   }
+  .bienvenida-date {
+    font-size: 1.5rem;
+  }
+
+  .countdown .time-unit {
+    min-width: 60px;
+  }
+
+  .countdown .number {
+    font-size: 1.5rem;
+  }
+
+  .timeline-icon {
+    width: 60px;
+    height: 60px;
+  }
+
+  .timeline-icon img {
+    width: 30px;
+    height: 30px;
+  }
+
+  .galeria-item {
+    flex: 0 0 220px;
+    height: 270px;
+  }
+
+  .galeria-item img {
+    width: 200px;
+    height: 250px;
+  }
+
+  .transition-image {
+    height: 70vh;
+  }
 }

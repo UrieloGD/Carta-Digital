@@ -214,14 +214,14 @@ if (empty($cronograma)) {
 }
 
 // Si no hay FAQs, usar las por defecto
-if (empty($faqs)) {
+/* if (empty($faqs)) {
     $faqs = [
         ["pregunta" => "¿Se permite la asistencia de niños?", "respuesta" => "Sí, los niños son bienvenidos. Habrá un área especial para ellos."],
         ["pregunta" => "¿Dónde puedo estacionar?", "respuesta" => "El restaurante cuenta con servicio de valet parking gratuito para todos los invitados."],
         ["pregunta" => "¿Qué regalo podemos llevar?", "respuesta" => "Su presencia es nuestro mejor regalo. Si desean obsequiarnos algo, tenemos mesa de regalos en Macy's."],
         ["pregunta" => "¿Hay hoteles cerca?", "respuesta" => "Sí, recomendamos Hotel Beverly Hills y The Standard, ambos a 5 minutos del restaurante."]
     ];
-}
+} */
 
 // Registrar visita en estadísticas
 try {
@@ -661,24 +661,24 @@ try {
 </div>
 
 <!-- Sección FAQ -->
-<section class="faq" id="faq">
+<!-- <section class="faq" id="faq">
    <div class="container">
        <h2>Preguntas Frecuentes</h2>
        <div class="faq-list">
-           <?php foreach($faqs as $index => $faq): ?>
+           < ?php foreach($faqs as $index => $faq): ?>
            <div class="faq-item">
-               <button class="faq-question" onclick="toggleFAQ(<?php echo $index; ?>)">
-                   <span><?php echo htmlspecialchars($faq['pregunta']); ?></span>
+               <button class="faq-question" onclick="toggleFAQ(< ?php echo $index; ?>)">
+                   <span>< ?php echo htmlspecialchars($faq['pregunta']); ?></span>
                   <span class="faq-arrow">▼</span>
               </button>
-              <div class="faq-answer" id="faq-<?php echo $index; ?>">
-                  <p><?php echo htmlspecialchars($faq['respuesta']); ?></p>
+              <div class="faq-answer" id="faq-< ?php echo $index; ?>">
+                  <p>< ?php echo htmlspecialchars($faq['respuesta']); ?></p>
               </div>
           </div>
-          <?php endforeach; ?>
+          < ?php endforeach; ?>
       </div>
   </div>
-</section>
+</section> -->
 
 <!-- Footer -->
 <footer class="footer">
