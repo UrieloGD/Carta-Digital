@@ -157,6 +157,19 @@ $imagen_destacada = $invitacion['imagen_destacada'] ?: './img/hero.jpg';
 $musica_url = $invitacion['musica_url'] ?? '';
 $musica_autoplay = (bool)($invitacion['musica_autoplay'] ?? true);
 
+$musica_archivo = $invitacion['musica_archivo'] ?? '';
+$musica_nombre = $invitacion['musica_nombre'] ?? '';
+
+// Si no hay archivo local, usar URL (compatibilidad)
+if (empty($musica_archivo) && !empty($musica_url)) {
+    $musica_archivo = $musica_url;
+    $musica_nombre = $musica_nombre ?: 'Canción de boda';
+} elseif (empty($musica_archivo)) {
+    // Usar archivo por defecto si no hay ninguno
+    $musica_archivo = './music/default/wedding-song.mp3';
+    $musica_nombre = 'Canción de boda';
+}
+
 // Información familiar
 $padres_novia = $invitacion['padres_novia'] ?? '';
 $padres_novio = $invitacion['padres_novio'] ?? '';
@@ -200,6 +213,7 @@ try {
     
     <!-- Estilos -->
     <link rel="stylesheet" href="./plantillas/plantilla-2/css/global.css">
+    <link rel="stylesheet" href="./plantillas/plantilla-2/css/music-player.css">
     <link rel="stylesheet" href="./plantillas/plantilla-2/css/hero.css">
     <link rel="stylesheet" href="./plantillas/plantilla-2/css/bienvenida.css">
     <link rel="stylesheet" href="./plantillas/plantilla-2/css/historia.css">
@@ -218,12 +232,8 @@ try {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Lato:wght@300;400;500&display=swap" rel="stylesheet">
     
-    <?php if ($musica_url): ?>
-    <!-- Audio de fondo -->
-    <audio id="backgroundMusic" loop <?php echo $musica_autoplay ? 'autoplay' : ''; ?>>
-        <source src="<?php echo htmlspecialchars($musica_url); ?>" type="audio/mpeg">
-        Tu navegador no soporta el elemento de audio.
-    </audio>
+    <?php if ($musica_archivo): ?>
+    <!-- El reproductor de música se crea dinámicamente con JavaScript -->
     <?php endif; ?>
 </head>
 <body>
@@ -673,21 +683,23 @@ try {
 <script>
 // Variables globales para JavaScript
 const invitacionData = {
-   id: <?php echo $invitacion['id']; ?>,
-   nombres: '<?php echo addslashes($nombres); ?>',
-   fecha: '<?php echo $invitacion['fecha_evento']; ?>',
-   hora: '<?php echo $invitacion['hora_evento']; ?>',
-   mostrarContador: <?php echo $mostrar_contador ? 'true' : 'false'; ?>,
-   musicaUrl: '<?php echo addslashes($musica_url); ?>',
-   musicaAutoplay: <?php echo $musica_autoplay ? 'true' : 'false'; ?>
+    id: <?php echo $invitacion['id']; ?>,
+    nombres: '<?php echo addslashes($nombres); ?>',
+    fecha: '<?php echo $invitacion['fecha_evento']; ?>',
+    hora: '<?php echo $invitacion['hora_evento']; ?>',
+    mostrarContador: <?php echo $mostrar_contador ? 'true' : 'false'; ?>,
+    musicaArchivo: '<?php echo addslashes($musica_archivo); ?>',
+    musicaNombre: '<?php echo addslashes($musica_nombre); ?>',
+    musicaAutoplay: <?php echo $musica_autoplay ? 'true' : 'false'; ?>
 };
 </script>
 
-<script src="./plantillas/natural/js/contador.js"></script>
-<script src="./plantillas/natural/js/musica.js"></script>
-<script src="./plantillas/natural/js/compartir.js"></script>
-<script src="./plantillas/natural/js/rsvp.js"></script>
-<script src="./plantillas/natural/js/estadisticas.js"></script>
-<script src="./plantillas/natural/js/invitacion.js"></script>
+<script src="./plantillas/plantilla-2/js/contador.js"></script>
+<script src="./plantillas/plantilla-2/js/music-player.js"></script>
+<script src="./plantillas/plantilla-2/js/compartir.js"></script>
+<script src="./plantillas/plantilla-2/js/rsvp.js"></script>
+<script src="./plantillas/plantilla-2/js/faq.js"></script>
+<script src="./plantillas/plantilla-2/js/estadisticas.js"></script>
+<script src="./plantillas/plantilla-2/js/invitacion.js"></script>
 </body>
 </html>
