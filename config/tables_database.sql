@@ -40,10 +40,6 @@ CREATE TABLE IF NOT EXISTS invitaciones (
     imagen_dedicatoria VARCHAR(255),
     imagen_destacada VARCHAR(255),
     
-    -- Música
-    musica_url VARCHAR(255),
-    musica_autoplay TINYINT(1) DEFAULT 1,
-    
     -- Información familiar
     padres_novia VARCHAR(255),
     padres_novio VARCHAR(255),

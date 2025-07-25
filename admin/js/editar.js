@@ -227,42 +227,6 @@ function toggleOptionalSections() {
     });
 }
 
-function previewAudio(input) {
-    const preview = document.getElementById('music-preview');
-    const audio = preview.querySelector('audio');
-    
-    if (input.files && input.files[0]) {
-        const file = input.files[0];
-        
-        // Verificar que sea un archivo de audio
-        if (!file.type.startsWith('audio/')) {
-            alert('Por favor selecciona un archivo de audio válido');
-            input.value = '';
-            preview.style.display = 'none';
-            return;
-        }
-        
-        // Verificar tamaño (10MB)
-        if (file.size > 10 * 1024 * 1024) {
-            alert('El archivo es demasiado grande. Máximo 10MB.');
-            input.value = '';
-            preview.style.display = 'none';
-            return;
-        }
-        
-        const url = URL.createObjectURL(file);
-        audio.src = url;
-        preview.style.display = 'block';
-        
-        // Limpiar URL cuando el audio se carga
-        audio.onload = function() {
-            URL.revokeObjectURL(url);
-        };
-    } else {
-        preview.style.display = 'none';
-    }
-}
-
 // Hacer las funciones globales para que puedan ser llamadas desde el HTML
 window.agregarCronograma = agregarCronograma;
 window.eliminarCronograma = eliminarCronograma;

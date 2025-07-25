@@ -100,72 +100,6 @@ function guardarImagen($campo, $plantilla_id, $slug, $seccion) {
     return null;
 }
 
-// FUNCIÓN para guardar archivos de música usando el slug
-function guardarMusica($campo, $plantilla_id, $slug) {
-    // Debug: Verificar si el archivo llega
-    error_log("=== DEBUG MÚSICA ===");
-    error_log("Campo: $campo");
-    error_log("Plantilla ID: $plantilla_id");
-    error_log("Slug: $slug");
-    
-    if (!isset($_FILES[$campo])) {
-        error_log("No se encontró el campo $_FILES[$campo]");
-        return null;
-    }
-    
-    if ($_FILES[$campo]['error'] !== UPLOAD_ERR_OK) {
-        error_log("Error en upload: " . $_FILES[$campo]['error']);
-        return null;
-    }
-    
-    error_log("Archivo recibido: " . $_FILES[$campo]['name']);
-    error_log("Tamaño: " . $_FILES[$campo]['size']);
-    
-    // Verificar que el archivo sea de audio
-    $audioFileType = strtolower(pathinfo($_FILES[$campo]['name'], PATHINFO_EXTENSION));
-    $allowed_types = ['mp3', 'wav', 'ogg', 'm4a', 'aac'];
-    
-    if (!in_array($audioFileType, $allowed_types)) {
-        error_log("Tipo de archivo no permitido: $audioFileType");
-        die("Solo se permiten archivos MP3, WAV, OGG, M4A y AAC.");
-    }
-    
-    // Verificar tamaño del archivo (máximo 10MB)
-    if ($_FILES[$campo]['size'] > 10 * 1024 * 1024) {
-        error_log("Archivo demasiado grande: " . $_FILES[$campo]['size']);
-        die("El archivo de música es demasiado grande. Máximo 10MB.");
-    }
-    
-    // RUTA FÍSICA: Igual que las imágenes
-    $ruta_fisica = __DIR__ . "/../../plantillas/plantilla-$plantilla_id/uploads/$slug/musica";
-    error_log("Ruta física: $ruta_fisica");
-    
-    // Verificar que la carpeta existe y crearla si no existe
-    if (!is_dir($ruta_fisica)) {
-        error_log("Creando carpeta: $ruta_fisica");
-        if (!mkdir($ruta_fisica, 0777, true)) {
-            error_log("Error al crear carpeta: $ruta_fisica");
-            die("Error: No se pudo crear la carpeta de música: $ruta_fisica");
-        }
-    }
-    
-    // Generar nombre único para evitar conflictos
-    $nombre = uniqid() . '.' . $audioFileType;
-    $destino = "$ruta_fisica/$nombre";
-    error_log("Destino final: $destino");
-    
-    // Mover el archivo
-    if (move_uploaded_file($_FILES[$campo]['tmp_name'], $destino)) {
-        // RUTA RELATIVA para BD - IGUAL QUE LAS IMÁGENES
-        $ruta_bd = "./plantillas/plantilla-$plantilla_id/uploads/$slug/musica/$nombre";
-        error_log("Archivo guardado exitosamente. Ruta BD: $ruta_bd");
-        return $ruta_bd;
-    } else {
-        error_log("Error al mover archivo de $campo a $destino");
-        die("Error al subir el archivo de música: $campo. Ruta destino: $destino");
-    }
-}
-
 // En la sección de procesamiento del formulario:
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
@@ -178,11 +112,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         error_log("=== PROCESANDO FORMULARIO ===");
         error_log("Plantilla ID: $plantilla_id");
         error_log("Slug: $slug");
-        error_log("Archivos recibidos: " . print_r($_FILES, true));
-        
-        // Manejar archivo de música PRIMERO
-        $archivo_musica = guardarMusica('archivo_musica', $plantilla_id, $slug);
-        error_log("Resultado guardarMusica: " . ($archivo_musica ? $archivo_musica : 'null'));
         
         // Obtener valores del formulario
         $frase_historia = $_POST['frase_historia'] ?? $invitacion['frase_historia'];
@@ -190,7 +119,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $padres_novio = $_POST['padres_novio'] ?? $invitacion['padres_novio'];
         $padrinos_novia = $_POST['padrinos_novia'] ?? $invitacion['padrinos_novia'];
         $padrinos_novio = $_POST['padrinos_novio'] ?? $invitacion['padrinos_novio'];
-        $musica_autoplay = $_POST['musica_autoplay'] ?? $invitacion['musica_autoplay'];
         $mostrar_contador = $_POST['mostrar_contador'] ?? $invitacion['mostrar_contador'];
 
         // Manejar imágenes principales
@@ -203,8 +131,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         plantilla_id = ?, nombres_novios = ?, fecha_evento = ?, hora_evento = ?, 
                         ubicacion = ?, direccion_completa = ?, historia = ?, frase_historia = ?,
                         dresscode = ?, texto_rsvp = ?, mensaje_footer = ?, firma_footer = ?,
-                        padres_novia = ?, padres_novio = ?, padrinos_novia = ?, padrinos_novio = ?,
-                        musica_autoplay = ?, mostrar_contador = ?";
+                        padres_novia = ?, padres_novio = ?, padrinos_novia = ?, padrinos_novio = ?, mostrar_contador = ?";
         
         $params = [
             $plantilla_id,
@@ -223,16 +150,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $padres_novio,
             $padrinos_novia,
             $padrinos_novio,
-            $musica_autoplay,
             $mostrar_contador
         ];
-
-        // Agregar música solo si se subió un nuevo archivo
-        if ($archivo_musica !== null) {
-            $update_query .= ", musica_url = ?";
-            $params[] = $archivo_musica;
-            error_log("Agregando música a la consulta: $archivo_musica");
-        }
 
         // Agregar imágenes solo si se subieron nuevas
         if ($img_hero !== null) {
@@ -577,54 +496,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <input type="text" id="padrinos_novio" name="padrinos_novio" 
                             value="<?php echo htmlspecialchars($invitacion['padrinos_novio']); ?>" 
                             placeholder="Nombres de los padrinos del novio">
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-section">
-                <h3>Configuraciones Adicionales</h3>
-                
-                <div class="form-group">
-                    <label for="archivo_musica">Archivo de Música de Fondo</label>
-                    <?php if ($invitacion['musica_url']): ?>
-                        <div class="current-music">
-                            <p><strong>Archivo actual:</strong></p>
-                            <audio controls style="width: 100%; max-width: 400px;">
-                                <source src="../../<?php echo $invitacion['musica_url']; ?>" type="audio/mpeg">
-                                Tu navegador no soporta el elemento de audio.
-                            </audio>
-                            <p><small>Archivo actual de música</small></p>
-                        </div>
-                    <?php endif; ?>
-                    <div class="file-input-wrapper">
-                        <input type="file" name="archivo_musica" id="archivo_musica" accept="audio/*" onchange="previewAudio(this)">
-                        <label for="archivo_musica" class="file-input-label">
-                            <i>🎵</i> Seleccionar archivo de música
-                        </label>
-                    </div>
-                    <div id="music-preview" class="audio-preview-container" style="display: none;">
-                        <audio controls style="width: 100%; max-width: 400px;">
-                            Tu navegador no soporta el elemento de audio.
-                        </audio>
-                        <p><small>Vista previa del nuevo archivo</small></p>
-                    </div>
-                    <small class="form-note">Formatos permitidos: MP3, WAV, OGG, M4A, AAC. Máximo 10MB. Deja vacío para mantener el archivo actual.</small>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="musica_autoplay">Reproducir música automáticamente</label>
-                        <select id="musica_autoplay" name="musica_autoplay">
-                            <option value="1" <?php echo $invitacion['musica_autoplay'] == 1 ? 'selected' : ''; ?>>Sí</option>
-                            <option value="0" <?php echo $invitacion['musica_autoplay'] == 0 ? 'selected' : ''; ?>>No</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="mostrar_contador">Mostrar contador regresivo</label>
-                        <select id="mostrar_contador" name="mostrar_contador">
-                            <option value="1" <?php echo $invitacion['mostrar_contador'] == 1 ? 'selected' : ''; ?>>Sí</option>
-                            <option value="0" <?php echo $invitacion['mostrar_contador'] == 0 ? 'selected' : ''; ?>>No</option>
-                        </select>
                     </div>
                 </div>
             </div>

@@ -124,10 +124,6 @@ $imagen_hero = $invitacion['imagen_hero'];
 $imagen_dedicatoria = $invitacion['imagen_dedicatoria'];
 $imagen_destacada = $invitacion['imagen_destacada'];
 
-// Música
-$musica_url = $invitacion['musica_url'];
-$musica_autoplay = (bool)$invitacion['musica_autoplay'];
-
 // Información familiar
 $padres_novia = $invitacion['padres_novia'];
 $padres_novio = $invitacion['padres_novio'];

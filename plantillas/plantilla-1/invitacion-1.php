@@ -190,10 +190,6 @@ $imagen_hero = $invitacion['imagen_hero'] ?: './img/hero.jpg';
 $imagen_dedicatoria = $invitacion['imagen_dedicatoria'] ?: './img/dedicatoria.jpg';
 $imagen_destacada = $invitacion['imagen_destacada'] ?: './img/hero.jpg';
 
-// Música
-$musica_url = $invitacion['musica_url'] ?? '';
-$musica_autoplay = (bool)($invitacion['musica_autoplay'] ?? true);
-
 // Información familiar
 $padres_novia = $invitacion['padres_novia'] ?? '';
 $padres_novio = $invitacion['padres_novio'] ?? '';
@@ -246,7 +242,6 @@ try {
     <title><?php echo htmlspecialchars($nombres); ?> - Invitación de Boda</title>
     <!-- Estilos -->
     <link rel="stylesheet" href="./plantillas/plantilla-1/css/global.css">
-    <link rel="stylesheet" href="./plantillas/plantilla-1/css/musica.css">
     <link rel="stylesheet" href="./plantillas/plantilla-1/css/hero.css">
     <link rel="stylesheet" href="./plantillas/plantilla-1/css/bienvenida.css">
     <link rel="stylesheet" href="./plantillas/plantilla-1/css/padres-padrinos.css">
@@ -266,13 +261,6 @@ try {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
     
-    <?php if ($musica_url): ?>
-    <!-- Audio de fondo -->
-    <audio id="backgroundMusic" loop <?php echo $musica_autoplay ? 'autoplay' : ''; ?>>
-        <source src="<?php echo htmlspecialchars($musica_url); ?>" type="audio/mpeg">
-        Tu navegador no soporta el elemento de audio.
-    </audio>
-    <?php endif; ?>
 </head>
 <body>
 <!-- Sección Hero -->
@@ -694,11 +682,6 @@ try {
               <button class="copy-button" onclick="copyLink()">
                   <span>🔗</span> Copiar enlace
               </button>
-              <?php if ($musica_url): ?>
-              <button class="music-toggle" onclick="toggleMusicFromFooter()" id="musicToggle">
-                <span>🎵</span> <span id="musicStatus">Controlar música</span>
-               </button>
-            <?php endif; ?>
           </div>
           <p class="footer-thanks">
               Gracias por ser parte de nuestro día especial
@@ -727,13 +710,10 @@ const invitacionData = {
    fecha: '<?php echo $invitacion['fecha_evento']; ?>',
    hora: '<?php echo $invitacion['hora_evento']; ?>',
    mostrarContador: <?php echo $mostrar_contador ? 'true' : 'false'; ?>,
-   musicaUrl: '<?php echo addslashes($musica_url); ?>',
-   musicaAutoplay: <?php echo $musica_autoplay ? 'true' : 'false'; ?>
 };
 </script>
 
 <script src="./plantillas/plantilla-1/js/contador.js"></script>
-<script src="./plantillas/plantilla-1/js/musica.js"></script>
 <script src="./plantillas/plantilla-1/js/compartir.js"></script>
 <script src="./plantillas/plantilla-1/js/rsvp.js"></script>
 <script src="./plantillas/plantilla-1/js/faq.js"></script>
