@@ -213,9 +213,6 @@ try {
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Lato:wght@300;400;500&display=swap" rel="stylesheet">
-    
-    <!-- El reproductor de música se crea dinámicamente con JavaScript -->
-    <?php endif; ?>
 </head>
 <body>
 
