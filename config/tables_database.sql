@@ -48,6 +48,11 @@ CREATE TABLE IF NOT EXISTS invitaciones (
     
     -- Configuraciones
     mostrar_contador TINYINT(1) DEFAULT 1,
+
+    -- Musica
+    musica_youtube_url VARCHAR(255),
+    musica_autoplay TINYINT(1),
+    musica_volumen decimal(3.2),
     
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (plantilla_id) REFERENCES plantillas(id) ON DELETE CASCADE
