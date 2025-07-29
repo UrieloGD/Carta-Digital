@@ -227,6 +227,27 @@ function toggleOptionalSections() {
     });
 }
 
+// Agregar al final de editar.js
+document.addEventListener('DOMContentLoaded', function() {
+    const musicUrlInput = document.getElementById('musica_youtube_url');
+    const musicPreview = document.getElementById('musicPreview');
+    
+    if (musicUrlInput) {
+        musicUrlInput.addEventListener('input', function() {
+            if (this.value.trim()) {
+                musicPreview.style.display = 'block';
+            } else {
+                musicPreview.style.display = 'none';
+            }
+        });
+        
+        // Mostrar preview si ya hay URL
+        if (musicUrlInput.value.trim()) {
+            musicPreview.style.display = 'block';
+        }
+    }
+});
+
 // Hacer las funciones globales para que puedan ser llamadas desde el HTML
 window.agregarCronograma = agregarCronograma;
 window.eliminarCronograma = eliminarCronograma;

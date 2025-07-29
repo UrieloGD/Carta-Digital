@@ -148,6 +148,11 @@ $dresscode_stmt = $db->prepare($dresscode_query);
 $dresscode_stmt->execute([$invitacion['id']]);
 $dresscode_info = $dresscode_stmt->fetch(PDO::FETCH_ASSOC);
 
+// Obtener musica
+$musica_youtube_url = $invitacion['musica_youtube_url'] ?? '';
+$musica_autoplay = (bool)($invitacion['musica_autoplay'] ?? false);
+$musica_volumen = $invitacion['musica_volumen'] ?? 0.5;
+
 // Construir las rutas de imágenes de dresscode
 if ($dresscode_info) {
     $img_dresscode_hombres = !empty($dresscode_info['hombres']) ? './' . ltrim($dresscode_info['hombres'], '/') : './plantillas/plantilla-1/img/dresscode.webp';
@@ -255,6 +260,7 @@ try {
     <link rel="stylesheet" href="./plantillas/plantilla-1/css/rsvp.css">
     <link rel="stylesheet" href="./plantillas/plantilla-1/css/footer.css">
     <link rel="stylesheet" href="./plantillas/plantilla-1/css/responsive.css">
+    <link rel="stylesheet" href="./plantillas/plantilla-1/css/music.css">
     
     <!-- Fuentes -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -702,6 +708,32 @@ try {
   </div>
 </div>
 
+<?php if (!empty($musica_youtube_url)): ?>
+<link rel="stylesheet" href="./plantillas/plantilla-1/css/music-player.css">
+<script src="./plantillas/plantilla-1/js/music-player.js"></script>
+<script>
+(function() {
+    const musicConfig = {
+        youtubeUrl: '<?php echo addslashes($musica_youtube_url); ?>',
+        autoplay: true, // Siempre true para auto-reproducir
+        volume: <?php echo $musica_volumen; ?>
+    };
+    
+    console.log('Configuración de música:', musicConfig);
+    
+    if (window.initMusicPlayer) {
+        initMusicPlayer(musicConfig.youtubeUrl, musicConfig.autoplay, musicConfig.volume);
+    } else {
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.initMusicPlayer) {
+                initMusicPlayer(musicConfig.youtubeUrl, musicConfig.autoplay, musicConfig.volume);
+            }
+        });
+    }
+})();
+</script>
+<?php endif; ?>
+
 <script>
 // Variables globales para JavaScript
 const invitacionData = {
@@ -719,5 +751,6 @@ const invitacionData = {
 <script src="./plantillas/plantilla-1/js/faq.js"></script>
 <script src="./plantillas/plantilla-1/js/estadisticas.js"></script>
 <script src="./plantillas/plantilla-1/js/invitacion.js"></script>
+<script src="./plantillas/plantilla-1/js/music-player.js"></script>
 </body>
 </html>

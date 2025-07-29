@@ -125,13 +125,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $img_hero = guardarImagen('imagen_hero', $plantilla_id, $slug, 'hero');
         $img_dedicatoria = guardarImagen('imagen_dedicatoria', $plantilla_id, $slug, 'dedicatoria');
         $img_destacada = guardarImagen('imagen_destacada', $plantilla_id, $slug, 'destacada');
+
+        // Manejar Musica
+        $musica_youtube_url = $_POST['musica_youtube_url'] ?? $invitacion['musica_youtube_url'];
+        $musica_autoplay = isset($_POST['musica_autoplay']) ? 1 : 0;
+        $musica_volumen = $_POST['musica_volumen'] ?? $invitacion['musica_volumen'];
         
         // Construir consulta SQL
         $update_query = "UPDATE invitaciones SET 
-                        plantilla_id = ?, nombres_novios = ?, fecha_evento = ?, hora_evento = ?, 
-                        ubicacion = ?, direccion_completa = ?, historia = ?, frase_historia = ?,
-                        dresscode = ?, texto_rsvp = ?, mensaje_footer = ?, firma_footer = ?,
-                        padres_novia = ?, padres_novio = ?, padrinos_novia = ?, padrinos_novio = ?, mostrar_contador = ?";
+                plantilla_id = ?, nombres_novios = ?, fecha_evento = ?, hora_evento = ?, 
+                ubicacion = ?, direccion_completa = ?, historia = ?, frase_historia = ?,
+                dresscode = ?, texto_rsvp = ?, mensaje_footer = ?, firma_footer = ?,
+                padres_novia = ?, padres_novio = ?, padrinos_novia = ?, padrinos_novio = ?, 
+                mostrar_contador = ?, musica_youtube_url = ?, musica_autoplay = ?, musica_volumen = ?";
         
         $params = [
             $plantilla_id,
@@ -150,7 +156,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $padres_novio,
             $padrinos_novia,
             $padrinos_novio,
-            $mostrar_contador
+            $mostrar_contador,
+            $musica_youtube_url,
+            $musica_autoplay,
+            $musica_volumen
         ];
 
         // Agregar imágenes solo si se subieron nuevas
@@ -343,6 +352,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </option>
                         <?php endforeach; ?>
                     </select>
+                </div>
+            </div>
+
+            <!-- Después de la sección "Configuraciones" en el formulario -->
+            <div class="form-section">
+                <h3>Música de Fondo</h3>
+                
+                <div class="form-group">
+                    <label for="musica_youtube_url">URL de YouTube</label>
+                    <input type="url" id="musica_youtube_url" name="musica_youtube_url" 
+                        value="<?php echo htmlspecialchars($invitacion['musica_youtube_url'] ?? ''); ?>" 
+                        placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
+                    <small class="form-note">Pega el enlace completo del video de YouTube que quieres usar como música de fondo</small>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="musica_autoplay">
+                            <input type="checkbox" id="musica_autoplay" name="musica_autoplay" value="1" 
+                                <?php echo isset($invitacion['musica_autoplay']) && $invitacion['musica_autoplay'] ? 'checked' : ''; ?>>
+                            Reproducir automáticamente
+                        </label>
+                        <small class="form-note">Nota: Muchos navegadores bloquean la reproducción automática</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="musica_volumen">Volumen inicial</label>
+                        <input type="range" id="musica_volumen" name="musica_volumen" 
+                            min="0" max="1" step="0.1" 
+                            value="<?php echo $invitacion['musica_volumen'] ?? 0.5; ?>">
+                        <small class="form-note">0 = silencio, 1 = volumen máximo</small>
+                    </div>
+                </div>
+                
+                <div class="music-preview" id="musicPreview" style="display: none;">
+                    <h4>Vista previa:</h4>
+                    <div class="preview-player">
+                        <button type="button" id="previewPlay" class="btn btn-secondary">▶️ Reproducir vista previa</button>
+                        <button type="button" id="previewStop" class="btn btn-secondary">⏹️ Detener</button>
+                    </div>
                 </div>
             </div>
 
