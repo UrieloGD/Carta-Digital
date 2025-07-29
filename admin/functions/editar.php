@@ -355,7 +355,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
             </div>
 
-            <!-- Después de la sección "Configuraciones" en el formulario -->
+            <!-- Musica -->
             <div class="form-section">
                 <h3>Música de Fondo</h3>
                 
@@ -389,8 +389,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="music-preview" id="musicPreview" style="display: none;">
                     <h4>Vista previa:</h4>
                     <div class="preview-player">
-                        <button type="button" id="previewPlay" class="btn btn-secondary">▶️ Reproducir vista previa</button>
-                        <button type="button" id="previewStop" class="btn btn-secondary">⏹️ Detener</button>
+                        <div id="youtubePlayer"></div>
+                        <div class="player-controls" style="margin-top: 10px;">
+                            <button type="button" id="previewPlay" class="btn btn-secondary">Reproducir vista previa</button>
+                            <button type="button" id="previewPause" class="btn btn-secondary">Pausar</button>
+                            <button type="button" id="previewStop" class="btn btn-secondary">Detener</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -841,5 +845,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </form>
     </div>
     <script src="./../js/editar.js"></script>
+    <script src="./../js/musica.js"></script>
 </body>
 </html>

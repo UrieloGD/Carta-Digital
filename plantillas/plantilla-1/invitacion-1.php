@@ -260,7 +260,7 @@ try {
     <link rel="stylesheet" href="./plantillas/plantilla-1/css/rsvp.css">
     <link rel="stylesheet" href="./plantillas/plantilla-1/css/footer.css">
     <link rel="stylesheet" href="./plantillas/plantilla-1/css/responsive.css">
-    <link rel="stylesheet" href="./plantillas/plantilla-1/css/music.css">
+    <link rel="stylesheet" href="./plantillas/plantilla-1/css/music-player.css">
     
     <!-- Fuentes -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

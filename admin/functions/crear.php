@@ -83,8 +83,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $query = "INSERT INTO invitaciones (plantilla_id, slug, nombres_novios, fecha_evento, hora_evento, 
             ubicacion, direccion_completa, historia, frase_historia, dresscode, texto_rsvp, 
             mensaje_footer, firma_footer, imagen_hero, imagen_dedicatoria, imagen_destacada,
-            padres_novia, padres_novio, padrinos_novia, padrinos_novio, musica_url, musica_autoplay, mostrar_contador) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            padres_novia, padres_novio, padrinos_novia, padrinos_novio, 
+            musica_youtube_url, musica_autoplay, musica_volumen, mostrar_contador) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     $stmt = $db->prepare($query);
     $stmt->execute([
@@ -108,8 +109,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $padres_novio,
         $padrinos_novia,
         $padrinos_novio,
-        $musica_url,
-        $musica_autoplay,
+        $_POST['musica_youtube_url'] ?? '',
+        isset($_POST['musica_autoplay']) ? 1 : 0,
+        $_POST['musica_volumen'] ?? 0.5,
         $mostrar_contador
     ]);
 
@@ -228,7 +230,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <a href="./../index.php" class="btn btn-secondary">Volver</a>
         </header>
 
-        <!-- CORRECCIÓN: Una sola etiqueta form con enctype correcto -->
         <form method="POST" enctype="multipart/form-data" class="admin-form">
             <div class="form-section">
                 <h3>Plantilla Base</h3>
@@ -242,6 +243,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </option>
                         <?php endforeach; ?>
                     </select>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>Música de Fondo</h3>
+                
+                <div class="form-group">
+                    <label for="musica_youtube_url">URL de YouTube</label>
+                    <input type="url" id="musica_youtube_url" name="musica_youtube_url" 
+                        placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
+                    <small class="form-note">Pega el enlace completo del video de YouTube que quieres usar como música de fondo</small>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="musica_autoplay">
+                            <input type="checkbox" id="musica_autoplay" name="musica_autoplay" value="1">
+                            Reproducir automáticamente
+                        </label>
+                        <small class="form-note">Nota: Muchos navegadores bloquean la reproducción automática</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="musica_volumen">Volumen inicial</label>
+                        <input type="range" id="musica_volumen" name="musica_volumen" 
+                            min="0" max="1" step="0.1" value="0.5">
+                        <small class="form-note">0 = silencio, 1 = volumen máximo</small>
+                    </div>
+                </div>
+                
+                <div class="music-preview" id="musicPreview" style="display: none;">
+                    <h4>Vista previa:</h4>
+                    <div class="preview-player">
+                        <div id="youtubePlayer"></div>
+                        <div class="player-controls" style="margin-top: 10px;">
+                            <button type="button" id="previewPlay" class="btn btn-secondary">Reproducir vista previa</button>
+                            <button type="button" id="previewPause" class="btn btn-secondary">Pausar</button>
+                            <button type="button" id="previewStop" class="btn btn-secondary">Detener</button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -579,5 +620,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <script src="./../js/crear.js"></script>
+    <script src="./../js/musica.js"></script>
 </body>
 </html>
