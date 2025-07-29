@@ -1,506 +1,364 @@
-<?php
-require_once './../../config/database.php';
-
-$database = new Database();
-$db = $database->getConnection();
-
-// Obtener plantillas disponibles
-$plantilla_query = "SELECT id, nombre FROM plantillas WHERE activa = 1";
-$plantilla_stmt = $db->prepare($plantilla_query);
-$plantilla_stmt->execute();
-$plantillas = $plantilla_stmt->fetchAll(PDO::FETCH_ASSOC);
-
-// Procesar formulario
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $slug = trim($_POST['slug']);
-    $plantilla_id = $_POST['plantilla_id'];
-
-    // Verificar si ya existe una invitación con el mismo slug
-    $check_slug = $db->prepare("SELECT COUNT(*) FROM invitaciones WHERE slug = ?");
-    $check_slug->execute([$slug]);
-    if ($check_slug->fetchColumn() > 0) {
-        die("Ya existe una invitación con ese slug.");
-    }
-
-    // NUEVA ESTRUCTURA: Crear carpetas dentro de la plantilla
-    $upload_base = "./../../plantillas/plantilla-$plantilla_id/uploads/$slug";
-    $secciones = ['hero', 'dedicatoria', 'destacada', 'galeria', 'dresscode'];
-    foreach ($secciones as $sec) {
-        $path = "$upload_base/$sec";
-        if (!is_dir($path)) {
-            mkdir($path, 0777, true);
-        }
-    }
-
-    // CORREGIR: Usar valores de $_POST en lugar de $invitacion que no existe
-    $frase_historia = $_POST['frase_historia'] ?? "Nuestra historia de amor";
-    $padres_novia = $_POST['padres_novia'] ?? '';
-    $padres_novio = $_POST['padres_novio'] ?? '';
-    $padrinos_novia = $_POST['padrinos_novia'] ?? '';
-    $padrinos_novio = $_POST['padrinos_novio'] ?? '';
-    $musica_url = $_POST['musica_url'] ?? '';
-    $musica_autoplay = $_POST['musica_autoplay'] ?? 1;
-    $mostrar_contador = $_POST['mostrar_contador'] ?? 1;
-
-    // FUNCIÓN CORREGIDA para guardar imágenes con nueva estructura
-    function guardarImagen($campo, $ruta, $plantilla_id, $slug) {
-        if (isset($_FILES[$campo]) && $_FILES[$campo]['error'] === UPLOAD_ERR_OK) {
-            // Verificar que el archivo sea una imagen
-            $imageFileType = strtolower(pathinfo($_FILES[$campo]['name'], PATHINFO_EXTENSION));
-            $allowed_types = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
-            
-            if (!in_array($imageFileType, $allowed_types)) {
-                die("Solo se permiten archivos JPG, JPEG, PNG, GIF y WEBP.");
-            }
-            
-            // Generar nombre único para evitar conflictos
-            $nombre = uniqid() . '.' . $imageFileType;
-            $destino = "$ruta/$nombre";
-            
-            // Verificar que la carpeta existe
-            if (!is_dir($ruta)) {
-                mkdir($ruta, 0777, true);
-            }
-            
-            // Mover el archivo
-            if (move_uploaded_file($_FILES[$campo]['tmp_name'], $destino)) {
-                // NUEVA RUTA: Devolver ruta relativa accesible desde navegador
-                $seccion = basename($ruta);
-                return "plantillas/plantilla-$plantilla_id/uploads/$slug/$seccion/$nombre";
-            } else {
-                die("Error al subir la imagen: $campo");
-            }
-        }
-        return null;
-    }
-
-    // Guardar imágenes con nueva estructura
-    $img_hero = guardarImagen('imagen_hero', "$upload_base/hero", $plantilla_id, $slug);
-    $img_dedicatoria = guardarImagen('imagen_dedicatoria', "$upload_base/dedicatoria", $plantilla_id, $slug);
-    $img_destacada = guardarImagen('imagen_destacada', "$upload_base/destacada", $plantilla_id, $slug);
-
-    // Insertar en tabla principal - CORREGIDO: usar las variables correctas
-    $query = "INSERT INTO invitaciones (plantilla_id, slug, nombres_novios, fecha_evento, hora_evento, 
-            ubicacion, direccion_completa, historia, frase_historia, dresscode, texto_rsvp, 
-            mensaje_footer, firma_footer, imagen_hero, imagen_dedicatoria, imagen_destacada,
-            padres_novia, padres_novio, padrinos_novia, padrinos_novio, 
-            musica_youtube_url, musica_autoplay, musica_volumen, mostrar_contador) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-    $stmt = $db->prepare($query);
-    $stmt->execute([
-        $plantilla_id,
-        $slug,
-        $_POST['nombres_novios'],
-        $_POST['fecha_evento'],
-        $_POST['hora_evento'],
-        $_POST['ubicacion'] ?? '',
-        $_POST['direccion_completa'] ?? '',
-        $_POST['historia'] ?? '',
-        $frase_historia,
-        $_POST['dresscode'] ?? '',
-        $_POST['texto_rsvp'] ?? '',
-        $_POST['mensaje_footer'] ?? '',
-        $_POST['firma_footer'] ?? '',
-        $img_hero,
-        $img_dedicatoria,
-        $img_destacada,
-        $padres_novia,
-        $padres_novio,
-        $padrinos_novia,
-        $padrinos_novio,
-        $_POST['musica_youtube_url'] ?? '',
-        isset($_POST['musica_autoplay']) ? 1 : 0,
-        $_POST['musica_volumen'] ?? 0.5,
-        $mostrar_contador
-    ]);
-
-    $invitacion_id = $db->lastInsertId();
-
-    // Procesar ubicaciones
-    if (!empty($_POST['ceremonia_lugar'])) {
-        $ubicacion_stmt = $db->prepare("INSERT INTO invitacion_ubicaciones (invitacion_id, tipo, nombre_lugar, direccion, hora_inicio, google_maps_url) VALUES (?, ?, ?, ?, ?, ?)");
-        $ubicacion_stmt->execute([
-            $invitacion_id,
-            'ceremonia',
-            $_POST['ceremonia_lugar'],
-            $_POST['ceremonia_direccion'] ?? '',
-            $_POST['ceremonia_hora'] ?? null,
-            $_POST['ceremonia_maps'] ?? ''
-        ]);
-    }
-
-    if (!empty($_POST['evento_lugar'])) {
-        $ubicacion_stmt = $db->prepare("INSERT INTO invitacion_ubicaciones (invitacion_id, tipo, nombre_lugar, direccion, hora_inicio, google_maps_url) VALUES (?, ?, ?, ?, ?, ?)");
-        $ubicacion_stmt->execute([
-            $invitacion_id,
-            'evento',
-            $_POST['evento_lugar'],
-            $_POST['evento_direccion'] ?? '',
-            $_POST['evento_hora'] ?? null,
-            $_POST['evento_maps'] ?? ''
-        ]);
-    }
-
-    // Galería con nueva estructura
-    $galeria_paths = [];
-    if (!empty($_FILES['imagenes_galeria']['name'][0])) {
-        $galeria_dir = "$upload_base/galeria";
-        if (!is_dir($galeria_dir)) mkdir($galeria_dir, 0777, true);
-
-        foreach ($_FILES['imagenes_galeria']['name'] as $i => $nombre) {
-            if ($_FILES['imagenes_galeria']['error'][$i] === UPLOAD_ERR_OK) {
-                $ext = strtolower(pathinfo($nombre, PATHINFO_EXTENSION));
-                if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
-                    $nombre_final = uniqid() . ".$ext";
-                    $ruta_destino = "$galeria_dir/$nombre_final";
-                    if (move_uploaded_file($_FILES['imagenes_galeria']['tmp_name'][$i], $ruta_destino)) {
-                        // NUEVA RUTA para galería
-                        $galeria_paths[] = "plantillas/plantilla-$plantilla_id/uploads/$slug/galeria/$nombre_final";
-                    }
-                }
-            }
-        }
-
-        // Guardar en tabla (una fila por imagen)
-        if (!empty($galeria_paths)) {
-            $galeria_stmt = $db->prepare("INSERT INTO invitacion_galeria (invitacion_id, ruta) VALUES (?, ?)");
-            foreach ($galeria_paths as $ruta_img) {
-                $galeria_stmt->execute([$invitacion_id, $ruta_img]);
-            }
-        }
-    }
-
-    // Dresscode con nueva estructura
-    $img_dresscode_hombres = guardarImagen('imagen_dresscode_hombres', "$upload_base/dresscode", $plantilla_id, $slug);
-    $img_dresscode_mujeres = guardarImagen('imagen_dresscode_mujeres', "$upload_base/dresscode", $plantilla_id, $slug);
-
-    if ($img_dresscode_hombres || $img_dresscode_mujeres) {
-        $dresscode_stmt = $db->prepare("INSERT INTO invitacion_dresscode (invitacion_id, hombres, mujeres) VALUES (?, ?, ?)");
-        $dresscode_stmt->execute([$invitacion_id, $img_dresscode_hombres ?? '', $img_dresscode_mujeres ?? '']);
-    }
-    
-    // Cronograma (solo si hay datos)
-    if (isset($_POST['cronograma_hora']) && !empty(array_filter($_POST['cronograma_hora']))) {
-        $cronograma_stmt = $db->prepare("INSERT INTO invitacion_cronograma (invitacion_id, hora, evento, descripcion, icono) VALUES (?, ?, ?, ?, ?)");
-        foreach ($_POST['cronograma_hora'] as $i => $hora) {
-            if (!empty($hora) && !empty($_POST['cronograma_evento'][$i])) {
-                $cronograma_stmt->execute([
-                    $invitacion_id,
-                    $hora,
-                    $_POST['cronograma_evento'][$i],
-                    $_POST['cronograma_descripcion'][$i] ?? '',
-                    $_POST['cronograma_icono'][$i] ?? 'anillos'
-                ]);
-            }
-        }
-    }
-
-    // FAQs (solo si hay datos)
-    if (isset($_POST['faq_pregunta']) && !empty(array_filter($_POST['faq_pregunta']))) {
-        $faq_stmt = $db->prepare("INSERT INTO invitacion_faq (invitacion_id, pregunta, respuesta) VALUES (?, ?, ?)");
-        foreach ($_POST['faq_pregunta'] as $i => $pregunta) {
-            if (!empty($pregunta) && !empty($_POST['faq_respuesta'][$i])) {
-                $faq_stmt->execute([
-                    $invitacion_id,
-                    $pregunta,
-                    $_POST['faq_respuesta'][$i]
-                ]);
-            }
-        }
-    }
-
-    header("Location: ./../index.php");
-    exit;
-}
-?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crear Nueva Invitación</title>
-    <link rel="stylesheet" href="./../css/admin.css">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        
+        .form-section {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        }
+        
+        .section-title {
+            color: #6f42c1;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .image-preview {
+            max-width: 200px;
+            max-height: 200px;
+            border-radius: 10px;
+        }
+        
+        .file-input-custom {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+        }
+        
+        .file-input-custom input[type=file] {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        
+        .cronograma-item, .faq-item {
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background-color: #f8f9fa;
+        }
+    </style>
 </head>
 <body>
-    <div class="admin-container">
-        <header class="admin-header">
-            <h1>Crear Nueva Invitación</h1>
-            <a href="./../index.php" class="btn btn-secondary">Volver</a>
-        </header>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-envelope-plus me-2"></i>
+                Crear Nueva Invitación
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a href="./../index.php" class="btn btn-outline-light">
+                    <i class="bi bi-arrow-left me-1"></i>
+                    Volver al Panel
+                </a>
+            </div>
+        </div>
+    </nav>
 
-        <form method="POST" enctype="multipart/form-data" class="admin-form">
+    <div class="container py-4">
+        <form method="POST" enctype="multipart/form-data">
+            <!-- Plantilla Base -->
             <div class="form-section">
-                <h3>Plantilla Base</h3>
-                <div class="form-group">
-                    <label for="plantilla_id">Selecciona una plantilla</label>
-                    <select name="plantilla_id" id="plantilla_id" required>
-                        <option value="">-- Elegir plantilla --</option>
-                        <?php foreach ($plantillas as $plantilla): ?>
-                            <option value="<?= $plantilla['id'] ?>">
-                                <?= htmlspecialchars($plantilla['nombre']) ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
+                <h3 class="section-title">
+                    <i class="bi bi-layout-text-window-reverse me-2"></i>
+                    Plantilla Base
+                </h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="plantilla_id" class="form-label">Selecciona una plantilla</label>
+                        <select name="plantilla_id" id="plantilla_id" class="form-select" required>
+                            <option value="">-- Elegir plantilla --</option>
+                            <?php foreach ($plantillas as $plantilla): ?>
+                                <option value="<?= $plantilla['id'] ?>">
+                                    <?= htmlspecialchars($plantilla['nombre']) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
                 </div>
             </div>
 
+            <!-- Música de Fondo -->
             <div class="form-section">
-                <h3>Música de Fondo</h3>
-                
-                <div class="form-group">
-                    <label for="musica_youtube_url">URL de YouTube</label>
-                    <input type="url" id="musica_youtube_url" name="musica_youtube_url" 
-                        placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
-                    <small class="form-note">Pega el enlace completo del video de YouTube que quieres usar como música de fondo</small>
+                <h3 class="section-title">
+                    <i class="bi bi-music-note me-2"></i>
+                    Música de Fondo
+                </h3>
+                <div class="row">
+                    <div class="col-md-8">
+                        <label for="musica_youtube_url" class="form-label">URL de YouTube</label>
+                        <input type="url" id="musica_youtube_url" name="musica_youtube_url" 
+                            class="form-control" placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
+                        <div class="form-text">Pega el enlace completo del video de YouTube que quieres usar como música de fondo</div>
+                    </div>
                 </div>
                 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="musica_autoplay">
-                            <input type="checkbox" id="musica_autoplay" name="musica_autoplay" value="1">
-                            Reproducir automáticamente
-                        </label>
-                        <small class="form-note">Nota: Muchos navegadores bloquean la reproducción automática</small>
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="musica_autoplay" name="musica_autoplay" value="1">
+                            <label class="form-check-label" for="musica_autoplay">
+                                Reproducir automáticamente
+                            </label>
+                            <div class="form-text">Nota: Muchos navegadores bloquean la reproducción automática</div>
+                        </div>
                     </div>
                     
-                    <div class="form-group">
-                        <label for="musica_volumen">Volumen inicial</label>
-                        <input type="range" id="musica_volumen" name="musica_volumen" 
+                    <div class="col-md-6">
+                        <label for="musica_volumen" class="form-label">Volumen inicial</label>
+                        <input type="range" class="form-range" id="musica_volumen" name="musica_volumen" 
                             min="0" max="1" step="0.1" value="0.5">
-                        <small class="form-note">0 = silencio, 1 = volumen máximo</small>
-                    </div>
-                </div>
-                
-                <div class="music-preview" id="musicPreview" style="display: none;">
-                    <h4>Vista previa:</h4>
-                    <div class="preview-player">
-                        <div id="youtubePlayer"></div>
-                        <div class="player-controls" style="margin-top: 10px;">
-                            <button type="button" id="previewPlay" class="btn btn-secondary">Reproducir vista previa</button>
-                            <button type="button" id="previewPause" class="btn btn-secondary">Pausar</button>
-                            <button type="button" id="previewStop" class="btn btn-secondary">Detener</button>
-                        </div>
+                        <div class="form-text">0 = silencio, 1 = volumen máximo</div>
                     </div>
                 </div>
             </div>
 
+            <!-- Información Básica -->
             <div class="form-section">
-                <h3>Información Básica</h3>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="nombres_novios">Nombres de los Novios</label>
-                        <input type="text" id="nombres_novios" name="nombres_novios" required>
+                <h3 class="section-title">
+                    <i class="bi bi-info-circle me-2"></i>
+                    Información Básica
+                </h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="nombres_novios" class="form-label">Nombres de los Novios</label>
+                        <input type="text" id="nombres_novios" name="nombres_novios" class="form-control" required>
                     </div>
-                    <div class="form-group">
-                        <label for="slug">URL (slug)</label>
-                        <input type="text" id="slug" name="slug" required placeholder="ej: victoria-matthew-2025">
+                    <div class="col-md-6">
+                        <label for="slug" class="form-label">URL (slug)</label>
+                        <input type="text" id="slug" name="slug" class="form-control" required 
+                            placeholder="ej: victoria-matthew-2025">
                     </div>
                 </div>
                 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="fecha_evento">Fecha del Evento</label>
-                        <input type="date" id="fecha_evento" name="fecha_evento" required>
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <label for="fecha_evento" class="form-label">Fecha del Evento</label>
+                        <input type="date" id="fecha_evento" name="fecha_evento" class="form-control" required>
                     </div>
-                    <div class="form-group">
-                        <label for="hora_evento">Hora del Evento</label>
-                        <input type="time" id="hora_evento" name="hora_evento" required>
+                    <div class="col-md-6">
+                        <label for="hora_evento" class="form-label">Hora del Evento</label>
+                        <input type="time" id="hora_evento" name="hora_evento" class="form-control" required>
                     </div>
                 </div>
             </div>
 
+            <!-- Ubicaciones del Evento -->
             <div class="form-section">
-                <h3>Ubicaciones del Evento</h3>
+                <h3 class="section-title">
+                    <i class="bi bi-geo-alt me-2"></i>
+                    Ubicaciones del Evento
+                </h3>
                 
-                <div class="ubicacion-section">
-                    <h4>Ceremonia</h4>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="ceremonia_lugar">Lugar de la Ceremonia</label>
-                            <input type="text" id="ceremonia_lugar" name="ceremonia_lugar" placeholder="Iglesia San José">
-                        </div>
-                        <div class="form-group">
-                            <label for="ceremonia_hora">Hora de la Ceremonia</label>
-                            <input type="time" id="ceremonia_hora" name="ceremonia_hora">
-                        </div>
+                <!-- Ceremonia -->
+                <div class="row">
+                    <div class="col-12">
+                        <h5 class="text-primary mb-3">Ceremonia</h5>
                     </div>
-                    <div class="form-group">
-                        <label for="ceremonia_direccion">Dirección de la Ceremonia</label>
-                        <input type="text" id="ceremonia_direccion" name="ceremonia_direccion" placeholder="Calle Principal 123">
+                    <div class="col-md-6">
+                        <label for="ceremonia_lugar" class="form-label">Lugar de la Ceremonia</label>
+                        <input type="text" id="ceremonia_lugar" name="ceremonia_lugar" 
+                            class="form-control" placeholder="Iglesia San José">
                     </div>
-                    <div class="form-group">
-                        <label for="ceremonia_maps">URL de Google Maps (Ceremonia)</label>
-                        <input type="url" id="ceremonia_maps" name="ceremonia_maps" placeholder="https://maps.google.com/?q=...">
+                    <div class="col-md-6">
+                        <label for="ceremonia_hora" class="form-label">Hora de la Ceremonia</label>
+                        <input type="time" id="ceremonia_hora" name="ceremonia_hora" class="form-control">
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <label for="ceremonia_direccion" class="form-label">Dirección de la Ceremonia</label>
+                        <input type="text" id="ceremonia_direccion" name="ceremonia_direccion" 
+                            class="form-control" placeholder="Calle Principal 123">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="ceremonia_maps" class="form-label">URL de Google Maps (Ceremonia)</label>
+                        <input type="url" id="ceremonia_maps" name="ceremonia_maps" 
+                            class="form-control" placeholder="https://maps.google.com/?q=...">
                     </div>
                 </div>
                 
-                <div class="ubicacion-section">
-                    <h4>Evento/Recepción</h4>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="evento_lugar">Lugar del Evento</label>
-                            <input type="text" id="evento_lugar" name="evento_lugar" placeholder="Salón de Eventos Villa Jardín">
-                        </div>
-                        <div class="form-group">
-                            <label for="evento_hora">Hora del Evento</label>
-                            <input type="time" id="evento_hora" name="evento_hora">
-                        </div>
+                <hr class="my-4">
+                
+                <!-- Evento/Recepción -->
+                <div class="row">
+                    <div class="col-12">
+                        <h5 class="text-primary mb-3">Evento/Recepción</h5>
                     </div>
-                    <div class="form-group">
-                        <label for="evento_direccion">Dirección del Evento</label>
-                        <input type="text" id="evento_direccion" name="evento_direccion" placeholder="Avenida Central 456">
+                    <div class="col-md-6">
+                        <label for="evento_lugar" class="form-label">Lugar del Evento</label>
+                        <input type="text" id="evento_lugar" name="evento_lugar" 
+                            class="form-control" placeholder="Salón de Eventos Villa Jardín">
                     </div>
-                    <div class="form-group">
-                        <label for="evento_maps">URL de Google Maps (Evento)</label>
-                        <input type="url" id="evento_maps" name="evento_maps" placeholder="https://maps.google.com/?q=...">
+                    <div class="col-md-6">
+                        <label for="evento_hora" class="form-label">Hora del Evento</label>
+                        <input type="time" id="evento_hora" name="evento_hora" class="form-control">
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <label for="evento_direccion" class="form-label">Dirección del Evento</label>
+                        <input type="text" id="evento_direccion" name="evento_direccion" 
+                            class="form-control" placeholder="Avenida Central 456">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="evento_maps" class="form-label">URL de Google Maps (Evento)</label>
+                        <input type="url" id="evento_maps" name="evento_maps" 
+                            class="form-control" placeholder="https://maps.google.com/?q=...">
                     </div>
                 </div>
             </div>
 
+            <!-- Contenido Personalizado -->
             <div class="form-section">
-                <h3>Contenido Personalizado</h3>
+                <h3 class="section-title">
+                    <i class="bi bi-card-text me-2"></i>
+                    Contenido Personalizado
+                </h3>
                 
-                <div class="form-group">
-                    <label for="historia">Historia de Amor</label>
-                    <textarea id="historia" name="historia" rows="4" placeholder="Cuenta vuestra historia de amor..."></textarea>
+                <div class="mb-3">
+                    <label for="historia" class="form-label">Historia de Amor</label>
+                    <textarea id="historia" name="historia" rows="4" class="form-control" 
+                        placeholder="Cuenta vuestra historia de amor..."></textarea>
                 </div>
                 
-                <!-- <div class="form-group">
-                    <label for="frase_historia">Frase para la Historia</label>
-                    <input type="text" id="frase_historia" name="frase_historia" placeholder="Ej: Nuestra historia de amor">
-                </div> -->
-                
-                <div class="form-group">
-                    <label for="dresscode">Descripción del Código de Vestimenta</label>
-                    <textarea id="dresscode" name="dresscode" rows="2" placeholder="Por favor, viste atuendo elegante..."></textarea>
+                <div class="mb-3">
+                    <label for="dresscode" class="form-label">Descripción del Código de Vestimenta</label>
+                    <textarea id="dresscode" name="dresscode" rows="2" class="form-control" 
+                        placeholder="Por favor, viste atuendo elegante..."></textarea>
                 </div>
                 
-                <div class="form-group">
-                    <label for="texto_rsvp">Texto para RSVP</label>
-                    <input type="text" id="texto_rsvp" name="texto_rsvp" placeholder="Confirma tu asistencia antes del...">
+                <div class="mb-3">
+                    <label for="texto_rsvp" class="form-label">Texto para RSVP</label>
+                    <input type="text" id="texto_rsvp" name="texto_rsvp" class="form-control" 
+                        placeholder="Confirma tu asistencia antes del...">
                 </div>
             </div>
 
+            <!-- Información Familiar -->
             <div class="form-section">
-                <h3>Información Familiar</h3>
+                <h3 class="section-title">
+                    <i class="bi bi-people me-2"></i>
+                    Información Familiar
+                </h3>
                 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="padres_novia">Padres de la Novia</label>
-                        <input type="text" id="padres_novia" name="padres_novia" placeholder="Nombres de los padres de la novia">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="padres_novia" class="form-label">Padres de la Novia</label>
+                        <input type="text" id="padres_novia" name="padres_novia" class="form-control" 
+                            placeholder="Nombres de los padres de la novia">
                     </div>
-                    <div class="form-group">
-                        <label for="padres_novio">Padres del Novio</label>
-                        <input type="text" id="padres_novio" name="padres_novio" placeholder="Nombres de los padres del novio">
+                    <div class="col-md-6">
+                        <label for="padres_novio" class="form-label">Padres del Novio</label>
+                        <input type="text" id="padres_novio" name="padres_novio" class="form-control" 
+                            placeholder="Nombres de los padres del novio">
                     </div>
                 </div>
                 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="padrinos_novia">Padrinos de la Novia</label>
-                        <input type="text" id="padrinos_novia" name="padrinos_novia" placeholder="Nombres de los padrinos de la novia">
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <label for="padrinos_novia" class="form-label">Padrinos de la Novia</label>
+                        <input type="text" id="padrinos_novia" name="padrinos_novia" class="form-control" 
+                            placeholder="Nombres de los padrinos de la novia">
                     </div>
-                    <div class="form-group">
-                        <label for="padrinos_novio">Padrinos del Novio</label>
-                        <input type="text" id="padrinos_novio" name="padrinos_novio" placeholder="Nombres de los padrinos del novio">
-                    </div>
-                </div>
-            </div>
+                    <div class="col-md-6">
+                        <label for="padrinos_novio" class="form-label">Padrinos del Novio</label>
+                        <input type="text" id="padrinos_novio" name="padrinos_novio" class="form-control" placeholder="Nombres de los padrinos del novio">
+                   </div>
+               </div>
+           </div>
 
-            <div class="form-section">
-                <h3>Configuraciones Adicionales</h3>
-                
-                <div class="form-group">
-                    <label for="musica_url">URL de Música de Fondo</label>
-                    <input type="url" id="musica_url" name="musica_url" placeholder="https://ejemplo.com/musica.mp3">
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="musica_autoplay">Reproducir música automáticamente</label>
-                        <select id="musica_autoplay" name="musica_autoplay">
-                            <option value="1">Sí</option>
-                            <option value="0">No</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="mostrar_contador">Mostrar contador regresivo</label>
-                        <select id="mostrar_contador" name="mostrar_contador">
-                            <option value="1">Sí</option>
-                            <option value="0">No</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
+           <!-- Mensajes Personalizados -->
+           <div class="form-section">
+               <h3 class="section-title">
+                   <i class="bi bi-chat-heart me-2"></i>
+                   Mensajes Personalizados
+               </h3>
+               
+               <div class="mb-3">
+                   <label for="mensaje_footer" class="form-label">Mensaje del Footer</label>
+                   <textarea id="mensaje_footer" name="mensaje_footer" rows="2" class="form-control" 
+                       placeholder="El amor es la fuerza más poderosa del mundo..."></textarea>
+               </div>
+               
+               <div class="mb-3">
+                   <label for="firma_footer" class="form-label">Firma del Footer</label>
+                   <input type="text" id="firma_footer" name="firma_footer" class="form-control" 
+                       placeholder="Con amor, Victoria & Matthew">
+               </div>
+           </div>
 
+           <!-- Imágenes -->
             <div class="form-section">
-                <h3>Mensajes Personalizados</h3>
+                <h3 class="section-title">
+                    <i class="bi bi-images me-2"></i>
+                    Imágenes
+                </h3>
                 
-                <div class="form-group">
-                    <label for="mensaje_footer">Mensaje del Footer</label>
-                    <textarea id="mensaje_footer" name="mensaje_footer" rows="2" placeholder="El amor es la fuerza más poderosa del mundo..."></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label for="firma_footer">Firma del Footer</label>
-                    <input type="text" id="firma_footer" name="firma_footer" placeholder="Con amor, Victoria & Matthew">
-                </div>
-            </div>
-
-            <div class="form-section">
-                <h3>Imágenes</h3>
-                
-                <div class="form-group">
-                    <label for="imagen_hero">Imagen Hero</label>
-                    <div class="image-upload-container">
-                        <div class="file-input-wrapper">
-                            <input type="file" name="imagen_hero" id="imagen_hero" accept="image/*" onchange="previewImage(this, 'hero-preview')">
-                            <label for="imagen_hero" class="file-input-label">
-                                <i>📷</i> Seleccionar imagen Hero
-                            </label>
-                        </div>
-                        <div id="hero-preview" class="image-preview-container">
-                            <div class="image-placeholder">
-                                <i>🖼️</i>
-                                <span>La imagen aparecerá aquí</span>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="imagen_hero" class="form-label">Imagen Hero</label>
+                            <div class="input-group">
+                                <input type="file" name="imagen_hero" id="imagen_hero" accept="image/*" 
+                                    class="form-control" onchange="previewImage(this, 'hero-preview')">
+                                <label class="input-group-text" for="imagen_hero">
+                                    <i class="bi bi-upload"></i>
+                                </label>
+                            </div>
+                            <div id="hero-preview" class="mt-2">
+                                <img id="hero-preview-img" src="#" alt="Preview" class="img-thumbnail d-none" style="max-width: 200px;">
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="imagen_dedicatoria">Imagen Dedicatoria</label>
-                    <div class="image-upload-container">
-                        <div class="file-input-wrapper">
-                            <input type="file" name="imagen_dedicatoria" id="imagen_dedicatoria" accept="image/*" onchange="previewImage(this, 'dedicatoria-preview')">
-                            <label for="imagen_dedicatoria" class="file-input-label">
-                                <i>📷</i> Seleccionar imagen Dedicatoria
-                            </label>
-                        </div>
-                        <div id="dedicatoria-preview" class="image-preview-container">
-                            <div class="image-placeholder">
-                                <i>💕</i>
-                                <span>La imagen aparecerá aquí</span>
+                    
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="imagen_dedicatoria" class="form-label">Imagen Dedicatoria</label>
+                            <div class="input-group">
+                                <input type="file" name="imagen_dedicatoria" id="imagen_dedicatoria" accept="image/*" 
+                                    class="form-control" onchange="previewImage(this, 'dedicatoria-preview')">
+                                <label class="input-group-text" for="imagen_dedicatoria">
+                                    <i class="bi bi-upload"></i>
+                                </label>
+                            </div>
+                            <div id="dedicatoria-preview" class="mt-2">
+                                <img id="dedicatoria-preview-img" src="#" alt="Preview" class="img-thumbnail d-none" style="max-width: 200px;">
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="imagen_destacada">Imagen Destacada</label>
-                    <div class="image-upload-container">
-                        <div class="file-input-wrapper">
-                            <input type="file" name="imagen_destacada" id="imagen_destacada" accept="image/*" onchange="previewImage(this, 'destacada-preview')">
-                            <label for="imagen_destacada" class="file-input-label">
-                                <i>📷</i> Seleccionar imagen Destacada
-                            </label>
-                        </div>
-                        <div id="destacada-preview" class="image-preview-container">
-                            <div class="image-placeholder">
-                                <i>⭐</i>
-                                <span>La imagen aparecerá aquí</span>
+                    
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="imagen_destacada" class="form-label">Imagen Destacada</label>
+                            <div class="input-group">
+                                <input type="file" name="imagen_destacada" id="imagen_destacada" accept="image/*" 
+                                    class="form-control" onchange="previewImage(this, 'destacada-preview')">
+                                <label class="input-group-text" for="imagen_destacada">
+                                    <i class="bi bi-upload"></i>
+                                </label>
+                            </div>
+                            <div id="destacada-preview" class="mt-2">
+                                <img id="destacada-preview-img" src="#" alt="Preview" class="img-thumbnail d-none" style="max-width: 200px;">
                             </div>
                         </div>
                     </div>
@@ -509,117 +367,283 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <!-- Galería -->
             <div class="form-section">
-                <h3>Galería de imágenes</h3>
-                <div class="form-group">
-                    <label for="imagenes_galeria">Imágenes de Galería (puedes seleccionar varias)</label>
-                    <div class="file-input-wrapper">
-                        <input type="file" name="imagenes_galeria[]" id="imagenes_galeria" accept="image/*" multiple onchange="previewGallery(this)">
-                        <label for="imagenes_galeria" class="file-input-label">
-                            <i>🖼️</i> Seleccionar imágenes para galería
+                <h3 class="section-title">
+                    <i class="bi bi-collection me-2"></i>
+                    Galería de Imágenes
+                </h3>
+                
+                <div class="mb-3">
+                    <label for="imagenes_galeria" class="form-label">Imágenes de Galería (puedes seleccionar varias)</label>
+                    <div class="input-group">
+                        <input type="file" name="imagenes_galeria[]" id="imagenes_galeria" accept="image/*" 
+                            multiple class="form-control" onchange="previewGallery(this)">
+                        <label class="input-group-text" for="imagenes_galeria">
+                            <i class="bi bi-images"></i> Seleccionar
                         </label>
                     </div>
-                    <div id="gallery-preview" class="gallery-preview-container"></div>
+                    <div class="form-text">Puedes seleccionar múltiples imágenes manteniendo presionado Ctrl (Windows) o Cmd (Mac)</div>
                 </div>
+                <div id="gallery-preview" class="row"></div>
             </div>
 
-            <div class="form-section">
-                <h3>Cronograma</h3>
-                <div id="cronograma-container">
-                    <div class="cronograma-item">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>Hora</label>
-                                <input type="time" name="cronograma_hora[]" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Evento</label>
-                                <input type="text" name="cronograma_evento[]" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Descripción</label>
-                                <input type="text" name="cronograma_descripcion[]">
-                            </div>
-                            <div class="form-group">
-                                <label>Icono</label>
-                                <select name="cronograma_icono[]">
-                                    <option value="anillos">Anillos</option>
-                                    <option value="cena">Cena</option>
-                                    <option value="fiesta">Fiesta</option>
-                                    <option value="luna">Luna</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <button type="button" onclick="agregarCronograma()" class="btn btn-add">Agregar Evento</button>
-            </div>
+           <!-- Cronograma -->
+           <div class="form-section">
+               <h3 class="section-title">
+                   <i class="bi bi-clock me-2"></i>
+                   Cronograma del Evento
+               </h3>
+               
+               <div id="cronograma-container">
+                   <div class="cronograma-item">
+                       <div class="row">
+                           <div class="col-md-3">
+                               <label class="form-label">Hora</label>
+                               <input type="time" name="cronograma_hora[]" class="form-control">
+                           </div>
+                           <div class="col-md-3">
+                               <label class="form-label">Evento</label>
+                               <input type="text" name="cronograma_evento[]" class="form-control" 
+                                   placeholder="Ceremonia">
+                           </div>
+                           <div class="col-md-4">
+                               <label class="form-label">Descripción</label>
+                               <input type="text" name="cronograma_descripcion[]" class="form-control" 
+                                   placeholder="Descripción del evento">
+                           </div>
+                           <div class="col-md-2">
+                               <label class="form-label">Icono</label>
+                               <select name="cronograma_icono[]" class="form-select">
+                                   <option value="anillos">Anillos</option>
+                                   <option value="cena">Cena</option>
+                                   <option value="fiesta">Fiesta</option>
+                                   <option value="luna">Luna</option>
+                               </select>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+               <button type="button" onclick="agregarCronograma()" class="btn btn-outline-primary mt-2">
+                   <i class="bi bi-plus-circle me-1"></i>
+                   Agregar Evento
+               </button>
+           </div>
 
-            <!-- Dresscode -->
-            <div class="form-section">
-                <h3>Imágenes para DressCode</h3>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="imagen_dresscode_hombres">Imagen Dresscode Hombres</label>
-                        <div class="image-upload-container">
-                            <div class="file-input-wrapper">
-                                <input type="file" name="imagen_dresscode_hombres" id="imagen_dresscode_hombres" accept="image/*" onchange="previewImage(this, 'dresscode-hombres-preview')">
-                                <label for="imagen_dresscode_hombres" class="file-input-label">
-                                    <i>👔</i> Seleccionar imagen Hombres
+           <!-- Dresscode -->
+           <div class="form-section">
+                <h3 class="section-title">
+                    <i class="bi bi-person-check me-2"></i>
+                    Código de Vestimenta
+                </h3>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="imagen_dresscode_hombres" class="form-label">Imagen Dresscode Hombres</label>
+                            <div class="input-group">
+                                <input type="file" name="imagen_dresscode_hombres" id="imagen_dresscode_hombres" 
+                                    accept="image/*" class="form-control" onchange="previewImage(this, 'dresscode-hombres-preview')">
+                                <label class="input-group-text" for="imagen_dresscode_hombres">
+                                    <i class="bi bi-person-fill"></i>
                                 </label>
                             </div>
-                            <div id="dresscode-hombres-preview" class="image-preview-container">
-                                <div class="image-placeholder">
-                                    <i>👨</i>
-                                    <span>Imagen para hombres</span>
-                                </div>
+                            <div id="dresscode-hombres-preview" class="mt-2">
+                                <img id="dresscode-hombres-preview-img" src="#" alt="Preview" class="img-thumbnail d-none" style="max-width: 150px;">
                             </div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label for="imagen_dresscode_mujeres">Imagen Dresscode Mujeres</label>
-                        <div class="image-upload-container">
-                            <div class="file-input-wrapper">
-                                <input type="file" name="imagen_dresscode_mujeres" id="imagen_dresscode_mujeres" accept="image/*" onchange="previewImage(this, 'dresscode-mujeres-preview')">
-                                <label for="imagen_dresscode_mujeres" class="file-input-label">
-                                    <i>👗</i> Seleccionar imagen Mujeres
+                    
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="imagen_dresscode_mujeres" class="form-label">Imagen Dresscode Mujeres</label>
+                            <div class="input-group">
+                                <input type="file" name="imagen_dresscode_mujeres" id="imagen_dresscode_mujeres" 
+                                    accept="image/*" class="form-control" onchange="previewImage(this, 'dresscode-mujeres-preview')">
+                                <label class="input-group-text" for="imagen_dresscode_mujeres">
+                                    <i class="bi bi-person-dress"></i>
                                 </label>
                             </div>
-                            <div id="dresscode-mujeres-preview" class="image-preview-container">
-                                <div class="image-placeholder">
-                                    <i>👩</i>
-                                    <span>Imagen para mujeres</span>
-                                </div>
+                            <div id="dresscode-mujeres-preview" class="mt-2">
+                                <img id="dresscode-mujeres-preview-img" src="#" alt="Preview" class="img-thumbnail d-none" style="max-width: 150px;">
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="form-section">
-                <h3>Preguntas Frecuentes</h3>
-                <div id="faq-container">
-                    <div class="faq-item">
-                        <div class="form-group">
-                            <label>Pregunta</label>
-                            <input type="text" name="faq_pregunta[]">
-                        </div>
-                        <div class="form-group">
-                            <label>Respuesta</label>
-                            <textarea name="faq_respuesta[]" rows="2"></textarea>
-                        </div>
-                    </div>
-                </div>
-                <button type="button" onclick="agregarFAQ()" class="btn btn-add">Agregar FAQ</button>
-            </div>
+           <!-- Preguntas Frecuentes -->
+           <div class="form-section">
+               <h3 class="section-title">
+                   <i class="bi bi-question-circle me-2"></i>
+                   Preguntas Frecuentes
+               </h3>
+               
+               <div id="faq-container">
+                   <div class="faq-item">
+                       <div class="row">
+                           <div class="col-md-6">
+                               <label class="form-label">Pregunta</label>
+                               <input type="text" name="faq_pregunta[]" class="form-control" 
+                                   placeholder="¿Habrá servicio de transporte?">
+                           </div>
+                           <div class="col-md-6">
+                               <label class="form-label">Respuesta</label>
+                               <textarea name="faq_respuesta[]" rows="2" class="form-control" 
+                                   placeholder="Sí, habrá servicio de transporte desde..."></textarea>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+               <button type="button" onclick="agregarFAQ()" class="btn btn-outline-primary mt-2">
+                   <i class="bi bi-plus-circle me-1"></i>
+                   Agregar FAQ
+               </button>
+           </div>
 
-            <div class="form-actions">
-                <button type="submit" class="btn btn-primary">Crear Invitación</button>
-                <a href="./../index.php" class="btn btn-secondary">Cancelar</a>
-            </div>
-        </form>
-    </div>
+           <!-- Botones de acción -->
+           <div class="form-section">
+               <div class="d-flex gap-2 justify-content-end">
+                   <a href="./../index.php" class="btn btn-outline-secondary btn-lg">
+                       <i class="bi bi-x-circle me-1"></i>
+                       Cancelar
+                   </a>
+                   <button type="submit" class="btn btn-primary btn-lg">
+                       <i class="bi bi-check-circle me-1"></i>
+                       Crear Invitación
+                   </button>
+               </div>
+           </div>
+       </form>
+   </div>
 
-    <script src="./../js/crear.js"></script>
-    <script src="./../js/musica.js"></script>
+   <!-- Bootstrap 5 JS -->
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+   
+   <script>
+       // Función para previsualizar imágenes individuales
+       function previewImage(input, previewId) {
+           const preview = document.getElementById(previewId + '-img');
+           if (input.files && input.files[0]) {
+               const reader = new FileReader();
+               reader.onload = function(e) {
+                   preview.src = e.target.result;
+                   preview.classList.remove('d-none');
+               }
+               reader.readAsDataURL(input.files[0]);
+           }
+       }
+
+       // Función para previsualizar galería de imágenes
+       function previewGallery(input) {
+           const preview = document.getElementById('gallery-preview');
+           preview.innerHTML = '';
+           
+           if (input.files) {
+               Array.from(input.files).forEach((file, index) => {
+                   if (file.type.startsWith('image/')) {
+                       const reader = new FileReader();
+                       reader.onload = function(e) {
+                           const col = document.createElement('div');
+                           col.className = 'col-md-3 mb-3';
+                           col.innerHTML = `
+                               <div class="card">
+                                   <img src="${e.target.result}" class="card-img-top" style="height: 150px; object-fit: cover;">
+                                   <div class="card-body p-2">
+                                       <small class="text-muted">${file.name}</small>
+                                   </div>
+                               </div>
+                           `;
+                           preview.appendChild(col);
+                       }
+                       reader.readAsDataURL(file);
+                   }
+               });
+           }
+       }
+
+       // Función para agregar elementos al cronograma
+       function agregarCronograma() {
+           const container = document.getElementById('cronograma-container');
+           const newItem = document.createElement('div');
+           newItem.className = 'cronograma-item';
+           newItem.innerHTML = `
+               <div class="row">
+                   <div class="col-md-3">
+                       <label class="form-label">Hora</label>
+                       <input type="time" name="cronograma_hora[]" class="form-control">
+                   </div>
+                   <div class="col-md-3">
+                       <label class="form-label">Evento</label>
+                       <input type="text" name="cronograma_evento[]" class="form-control" placeholder="Evento">
+                   </div>
+                   <div class="col-md-4">
+                       <label class="form-label">Descripción</label>
+                       <input type="text" name="cronograma_descripcion[]" class="form-control" placeholder="Descripción">
+                   </div>
+                   <div class="col-md-1">
+                       <label class="form-label">Icono</label>
+                       <select name="cronograma_icono[]" class="form-select">
+                           <option value="anillos">Anillos</option>
+                           <option value="cena">Cena</option>
+                           <option value="fiesta">Fiesta</option>
+                           <option value="luna">Luna</option>
+                       </select>
+                   </div>
+                   <div class="col-md-1">
+                       <label class="form-label">&nbsp;</label>
+                       <button type="button" onclick="eliminarCronograma(this)" class="btn btn-outline-danger btn-sm d-block">
+                           <i class="bi bi-trash"></i>
+                       </button>
+                   </div>
+               </div>
+           `;
+           container.appendChild(newItem);
+       }
+
+       // Función para eliminar elementos del cronograma
+       function eliminarCronograma(button) {
+           button.closest('.cronograma-item').remove();
+       }
+
+       // Función para agregar FAQs
+       function agregarFAQ() {
+           const container = document.getElementById('faq-container');
+           const newItem = document.createElement('div');
+           newItem.className = 'faq-item';
+           newItem.innerHTML = `
+               <div class="row">
+                   <div class="col-md-5">
+                       <label class="form-label">Pregunta</label>
+                       <input type="text" name="faq_pregunta[]" class="form-control" placeholder="Pregunta">
+                   </div>
+                   <div class="col-md-6">
+                       <label class="form-label">Respuesta</label>
+                       <textarea name="faq_respuesta[]" rows="2" class="form-control" placeholder="Respuesta"></textarea>
+                   </div>
+                   <div class="col-md-1">
+                       <label class="form-label">&nbsp;</label>
+                       <button type="button" onclick="eliminarFAQ(this)" class="btn btn-outline-danger btn-sm d-block">
+                           <i class="bi bi-trash"></i>
+                       </button>
+                   </div>
+               </div>
+           `;
+           container.appendChild(newItem);
+       }
+
+       // Función para eliminar FAQs
+       function eliminarFAQ(button) {
+           button.closest('.faq-item').remove();
+       }
+
+       // Generar slug automáticamente basado en nombres de novios
+       document.getElementById('nombres_novios').addEventListener('input', function(e) {
+           const nombres = e.target.value;
+           const slug = nombres.toLowerCase()
+               .replace(/[^a-z0-9\s-]/g, '') // Remover caracteres especiales
+               .replace(/\s+/g, '-') // Reemplazar espacios con guiones
+               .replace(/-+/g, '-'); // Evitar múltiples guiones seguidos
+           document.getElementById('slug').value = slug;
+       });
+   </script>
 </body>
 </html>

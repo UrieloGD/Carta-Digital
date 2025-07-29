@@ -76,139 +76,233 @@ $invitaciones = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de Administración - Invitaciones</title>
-    <link rel="stylesheet" href="css/admin.css">
-    <link rel="stylesheet" href="css/index.css">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="./css/index.css">
 </head>
 <body>
-    <div class="admin-container">
-        <header class="admin-header">
-            <h1>Panel de Administración</h1>
-            <div class="header-actions">
-                <a href="plantillas.php" class="btn btn-secondary">Gestionar Plantillas</a>
-                <a href="./functions/crear.php" class="btn btn-primary">Nueva Invitación</a>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-envelope-heart me-2"></i>
+                Panel de Administración
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a href="plantillas.php" class="btn btn-outline-light me-2">
+                    <i class="bi bi-layout-text-window-reverse me-1"></i>
+                    Gestionar Plantillas
+                </a>
+                <a href="./functions/crear.php" class="btn btn-light">
+                    <i class="bi bi-plus-circle me-1"></i>
+                    Nueva Invitación
+                </a>
             </div>
-        </header>
+        </div>
+    </nav>
 
+    <div class="container-fluid py-4">
+        <!-- Alertas -->
         <?php if (isset($success_message)): ?>
-            <div class="success-alert"><?php echo htmlspecialchars($success_message); ?></div>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="bi bi-check-circle me-2"></i>
+                <?php echo htmlspecialchars($success_message); ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
         <?php endif; ?>
         
         <?php if (isset($error_message)): ?>
-            <div class="error-alert"><?php echo htmlspecialchars($error_message); ?></div>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle me-2"></i>
+                <?php echo htmlspecialchars($error_message); ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
         <?php endif; ?>
 
-        <div class="invitaciones-grid">
-            <?php foreach($invitaciones as $invitacion): ?>
-            <div class="invitacion-card">
-                <!-- Imagen hero si existe -->
-                <?php if (!empty($invitacion['imagen_hero'])): ?>
-                <div class="card-preview">
-                    <img src="<?php echo htmlspecialchars('../uploads/' . $invitacion['slug'] . '/' . $invitacion['imagen_hero']); ?>" 
-                         alt="Imagen de <?php echo htmlspecialchars($invitacion['nombres_novios']); ?>"
-                         class="preview-image"
-                         onerror="this.style.display='none'; this.parentElement.style.display='none';">
-                </div>
-                <?php endif; ?>
-                
-                <div class="card-header">
-                    <h3><?php echo htmlspecialchars($invitacion['nombres_novios'] ?? 'Sin nombre'); ?></h3>
-                </div>
-                
-                <div class="card-body">
-                    <div class="info-row">
-                        <p><strong>Fecha:</strong> 
-                        <?php 
-                        if ($invitacion['fecha_evento']) {
-                            $fecha = new DateTime($invitacion['fecha_evento']);
-                            echo $fecha->format('d/m/Y');
-                            if ($invitacion['hora_evento']) {
-                                echo ' - ' . date('H:i', strtotime($invitacion['hora_evento']));
+        <?php if (!empty($invitaciones)): ?>
+            <!-- Grid de invitaciones -->
+            <div class="row g-4">
+                <?php foreach($invitaciones as $invitacion): ?>
+                <div class="col-xl-3 col-lg-4 col-md-6">
+                    <div class="card h-100">
+                        <!-- Imagen hero si existe -->
+                        <?php if (!empty($invitacion['imagen_hero'])): ?>
+                        <img src="<?php echo htmlspecialchars('../uploads/' . $invitacion['slug'] . '/' . $invitacion['imagen_hero']); ?>" 
+                             alt="Imagen de <?php echo htmlspecialchars($invitacion['nombres_novios']); ?>"
+                             class="preview-image"
+                             onerror="this.style.display='none';">
+                        <?php else: ?>
+                        <div class="preview-image bg-light d-flex align-items-center justify-content-center">
+                            <i class="bi bi-image text-muted" style="font-size: 3rem;"></i>
+                        </div>
+                        <?php endif; ?>
+                        
+                        <div class="card-body">
+                            <h5 class="card-title mb-3">
+                                <?php echo htmlspecialchars($invitacion['nombres_novios'] ?? 'Sin nombre'); ?>
+                            </h5>
+                            
+                            <div class="mb-2">
+                                <small class="text-muted">
+                                    <i class="bi bi-calendar-event me-1"></i>
+                                    <?php 
+                                    if ($invitacion['fecha_evento']) {
+                                        $fecha = new DateTime($invitacion['fecha_evento']);
+                                        echo $fecha->format('d/m/Y');
+                                        if ($invitacion['hora_evento']) {
+                                            echo ' - ' . date('H:i', strtotime($invitacion['hora_evento']));
+                                        }
+                                    } else {
+                                        echo 'No definida';
+                                    }
+                                    ?>
+                                </small>
+                            </div>
+                            
+                            <div class="mb-2">
+                                <small class="text-muted">
+                                    <i class="bi bi-palette me-1"></i>
+                                    <?php echo htmlspecialchars($invitacion['plantilla_nombre'] ?? 'Sin plantilla'); ?>
+                                </small>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <code class="small bg-light px-2 py-1 rounded">
+                                    <?php echo htmlspecialchars($invitacion['slug'] ?? 'sin-slug'); ?>
+                                </code>
+                            </div>
+                            
+                            <!-- Estadísticas de RSVPs -->
+                            <div class="d-flex gap-2 mb-3">
+                                <span class="badge bg-secondary">
+                                    <i class="bi bi-people me-1"></i>
+                                    <?php echo $invitacion['total_rsvps'] ?? 0; ?> RSVPs
+                                </span>
+                                <span class="badge bg-success">
+                                    <i class="bi bi-check-circle me-1"></i>
+                                    <?php echo $invitacion['confirmados'] ?? 0; ?> Confirmados
+                                </span>
+                            </div>
+                            
+                            <!-- Estado basado en fecha -->
+                            <?php 
+                            $estado = 'activa';
+                            $estado_texto = 'Activa';
+                            $estado_class = 'bg-primary';
+                            if ($invitacion['fecha_evento']) {
+                                $hoy = new DateTime();
+                                $fecha_evento = new DateTime($invitacion['fecha_evento']);
+                                if ($fecha_evento < $hoy) {
+                                    $estado = 'finalizada';
+                                    $estado_texto = 'Finalizada';
+                                    $estado_class = 'bg-secondary';
+                                } elseif ($fecha_evento->diff($hoy)->days <= 7) {
+                                    $estado = 'proxima';
+                                    $estado_texto = 'Próxima';
+                                    $estado_class = 'bg-warning';
+                                }
                             }
-                        } else {
-                            echo 'No definida';
-                        }
-                        ?>
-                        </p>
+                            ?>
+                            <div class="mb-3">
+                                <span class="badge <?php echo $estado_class; ?>">
+                                    <?php echo $estado_texto; ?>
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div class="card-footer bg-transparent">
+                            <div class="d-grid gap-2">
+                                <div class="btn-group" role="group">
+                                    <a href="./functions/editar.php?id=<?php echo $invitacion['id']; ?>" 
+                                       class="btn btn-outline-primary btn-sm">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a href="rsvps.php?id=<?php echo $invitacion['id']; ?>" 
+                                       class="btn btn-outline-info btn-sm">
+                                        <i class="bi bi-people"></i>
+                                        RSVPs (<?php echo $invitacion['total_rsvps'] ?? 0; ?>)
+                                    </a>
+                                    <!-- <a href="vista_previa.php?slug=<?php echo htmlspecialchars($invitacion['slug'] ?? ''); ?>" 
+                                       class="btn btn-outline-secondary btn-sm" target="_blank">
+                                        <i class="bi bi-eye"></i>
+                                    </a> -->
+                                    <a href="../invitacion.php?slug=<?php echo htmlspecialchars($invitacion['slug'] ?? ''); ?>" 
+                                       class="btn btn-outline-success btn-sm" target="_blank">
+                                        <i class="bi bi-box-arrow-up-right"></i>
+                                    </a>
+                                </div>
+                                
+                                <button type="button" class="btn btn-outline-danger btn-sm" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#deleteModal<?php echo $invitacion['id']; ?>">
+                                    <i class="bi bi-trash me-1"></i>
+                                    Eliminar
+                                </button>
+                            </div>
+                        </div>
                     </div>
                     
-                    <div class="info-row">
-                        <p><strong>Plantilla:</strong> <?php echo htmlspecialchars($invitacion['plantilla_nombre'] ?? 'Sin plantilla'); ?></p>
-                    </div>
-                    
-                    <div class="info-row">
-                        <p><strong>Slug:</strong> <code><?php echo htmlspecialchars($invitacion['slug'] ?? 'sin-slug'); ?></code></p>
-                    </div>
-                    
-                    <!-- Estadísticas de RSVPs -->
-                    <div class="rsvp-stats">
-                        <span class="stat-item">
-                            <strong><?php echo $invitacion['total_rsvps'] ?? 0; ?></strong> RSVPs
-                        </span>
-                        <span class="stat-item confirmados">
-                            <strong><?php echo $invitacion['confirmados'] ?? 0; ?></strong> Confirmados
-                        </span>
-                    </div>
-                    
-                    <!-- Estado basado en fecha -->
-                    <?php 
-                    $estado = 'activa';
-                    $estado_texto = 'Activa';
-                    if ($invitacion['fecha_evento']) {
-                        $hoy = new DateTime();
-                        $fecha_evento = new DateTime($invitacion['fecha_evento']);
-                        if ($fecha_evento < $hoy) {
-                            $estado = 'finalizada';
-                            $estado_texto = 'Finalizada';
-                        } elseif ($fecha_evento->diff($hoy)->days <= 7) {
-                            $estado = 'proxima';
-                            $estado_texto = 'Próxima';
-                        }
-                    }
-                    ?>
-                    <div class="estado-badge <?php echo $estado; ?>">
-                        <?php echo $estado_texto; ?>
+                    <!-- Modal de confirmación de eliminación -->
+                    <div class="modal fade" id="deleteModal<?php echo $invitacion['id']; ?>" tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Confirmar eliminación</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>¿Estás seguro de que quieres eliminar la invitación de <strong><?php echo htmlspecialchars($invitacion['nombres_novios']); ?></strong>?</p>
+                                    <div class="alert alert-warning">
+                                        <i class="bi bi-exclamation-triangle me-2"></i>
+                                        Esta acción eliminará también todos los RSVPs y archivos asociados.
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                    <form method="POST" class="d-inline">
+                                        <input type="hidden" name="action" value="eliminar">
+                                        <input type="hidden" name="id" value="<?php echo $invitacion['id']; ?>">
+                                        <button type="submit" class="btn btn-danger">
+                                            <i class="bi bi-trash me-1"></i>
+                                            Eliminar definitivamente
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                
-                <div class="card-actions">
-                    <a href="./functions/editar.php?id=<?php echo $invitacion['id']; ?>" class="btn btn-edit">Editar</a>
-                    <a href="rsvps.php?id=<?php echo $invitacion['id']; ?>" class="btn btn-info">RSVPs (<?php echo $invitacion['total_rsvps'] ?? 0; ?>)</a>
-                    <a href="vista_previa.php?slug=<?php echo htmlspecialchars($invitacion['slug'] ?? ''); ?>" class="btn btn-view" target="_blank">Ver</a>
-                    <a href="../invitacion.php?slug=<?php echo htmlspecialchars($invitacion['slug'] ?? ''); ?>" class="btn btn-preview" target="_blank">Preview</a>
-                    
-                    <form method="POST" onsubmit="return confirm('¿Estás seguro de que quieres eliminar esta invitación? Esta acción eliminará también todos los RSVPs y archivos asociados.')">
-                        <input type="hidden" name="action" value="eliminar">
-                        <input type="hidden" name="id" value="<?php echo $invitacion['id']; ?>">
-                        <button type="submit" class="btn btn-danger btn-m">Eliminar</button>
-                    </form>
-                </div>
+                <?php endforeach; ?>
             </div>
-            <?php endforeach; ?>
-        </div>
-
-        <?php if (empty($invitaciones)): ?>
-            <div class="rsvps-table">
-                <div style="text-align: center; padding: 40px;">
-                    <h3>No hay invitaciones creadas</h3>
-                    <p>Comienza creando tu primera invitación.</p>
-                    <a href="./functions/crear.php" class="btn btn-primary">+ Crear Primera Invitación</a>
-                </div>
+        <?php else: ?>
+            <!-- Estado vacío -->
+            <div class="empty-state text-center">
+                <i class="bi bi-envelope-plus"></i>
+                <h3 class="mt-3 mb-2">No hay invitaciones creadas</h3>
+                <p class="text-muted mb-4">Comienza creando tu primera invitación digital.</p>
+                <a href="./functions/crear.php" class="btn btn-primary btn-lg">
+                    <i class="bi bi-plus-circle me-2"></i>
+                    Crear Primera Invitación
+                </a>
             </div>
         <?php endif; ?>
     </div>
 
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
     <script>
-        // Auto-ocultar mensajes de éxito después de 3 segundos
+        // Auto-ocultar alertas después de 5 segundos
         setTimeout(function() {
-            const alerts = document.querySelectorAll('.success-alert');
+            const alerts = document.querySelectorAll('.alert:not(.alert-warning)');
             alerts.forEach(function(alert) {
-                alert.style.transition = 'opacity 0.5s';
-                alert.style.opacity = '0';
-                setTimeout(function() {
-                    alert.remove();
-                }, 500);
+                const bsAlert = new bootstrap.Alert(alert);
+                bsAlert.close();
             });
-        }, 3000);
+        }, 5000);
     </script>
 </body>
 </html>

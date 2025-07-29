@@ -65,602 +65,414 @@ foreach($ubicaciones as $ub) {
     if($ub['tipo'] == 'ceremonia') $ceremonia = $ub;
     if($ub['tipo'] == 'evento') $evento = $ub;
 }
-
-// FUNCIÓN CORREGIDA para guardar imágenes usando el slug
-function guardarImagen($campo, $plantilla_id, $slug, $seccion) {
-    if (isset($_FILES[$campo]) && $_FILES[$campo]['error'] === UPLOAD_ERR_OK) {
-        // Verificar que el archivo sea una imagen
-        $imageFileType = strtolower(pathinfo($_FILES[$campo]['name'], PATHINFO_EXTENSION));
-        $allowed_types = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
-        
-        if (!in_array($imageFileType, $allowed_types)) {
-            die("Solo se permiten archivos JPG, JPEG, PNG, GIF y WEBP.");
-        }
-        
-        // RUTA CORREGIDA: Desde la raíz del proyecto usando el slug
-        $ruta_fisica = __DIR__ . "/../../plantillas/plantilla-$plantilla_id/uploads/$slug/$seccion";
-        
-        // Verificar que la carpeta existe
-        if (!is_dir($ruta_fisica)) {
-            mkdir($ruta_fisica, 0777, true);
-        }
-        
-        // Generar nombre único para evitar conflictos
-        $nombre = uniqid() . '.' . $imageFileType;
-        $destino = "$ruta_fisica/$nombre";
-        
-        // Mover el archivo
-        if (move_uploaded_file($_FILES[$campo]['tmp_name'], $destino)) {
-            // RETORNAR RUTA RELATIVA para guardar en BD
-            return "./plantillas/plantilla-$plantilla_id/uploads/$slug/$seccion/$nombre";
-        } else {
-            die("Error al subir la imagen: $campo");
-        }
-    }
-    return null;
-}
-
-// En la sección de procesamiento del formulario:
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    try {
-        $db->beginTransaction();
-        
-        $plantilla_id = $_POST['plantilla_id'];
-        $slug = $invitacion['slug'];
-        
-        // Debug: Verificar datos recibidos
-        error_log("=== PROCESANDO FORMULARIO ===");
-        error_log("Plantilla ID: $plantilla_id");
-        error_log("Slug: $slug");
-        
-        // Obtener valores del formulario
-        $frase_historia = $_POST['frase_historia'] ?? $invitacion['frase_historia'];
-        $padres_novia = $_POST['padres_novia'] ?? $invitacion['padres_novia'];
-        $padres_novio = $_POST['padres_novio'] ?? $invitacion['padres_novio'];
-        $padrinos_novia = $_POST['padrinos_novia'] ?? $invitacion['padrinos_novia'];
-        $padrinos_novio = $_POST['padrinos_novio'] ?? $invitacion['padrinos_novio'];
-        $mostrar_contador = $_POST['mostrar_contador'] ?? $invitacion['mostrar_contador'];
-
-        // Manejar imágenes principales
-        $img_hero = guardarImagen('imagen_hero', $plantilla_id, $slug, 'hero');
-        $img_dedicatoria = guardarImagen('imagen_dedicatoria', $plantilla_id, $slug, 'dedicatoria');
-        $img_destacada = guardarImagen('imagen_destacada', $plantilla_id, $slug, 'destacada');
-
-        // Manejar Musica
-        $musica_youtube_url = $_POST['musica_youtube_url'] ?? $invitacion['musica_youtube_url'];
-        $musica_autoplay = isset($_POST['musica_autoplay']) ? 1 : 0;
-        $musica_volumen = $_POST['musica_volumen'] ?? $invitacion['musica_volumen'];
-        
-        // Construir consulta SQL
-        $update_query = "UPDATE invitaciones SET 
-                plantilla_id = ?, nombres_novios = ?, fecha_evento = ?, hora_evento = ?, 
-                ubicacion = ?, direccion_completa = ?, historia = ?, frase_historia = ?,
-                dresscode = ?, texto_rsvp = ?, mensaje_footer = ?, firma_footer = ?,
-                padres_novia = ?, padres_novio = ?, padrinos_novia = ?, padrinos_novio = ?, 
-                mostrar_contador = ?, musica_youtube_url = ?, musica_autoplay = ?, musica_volumen = ?";
-        
-        $params = [
-            $plantilla_id,
-            $_POST['nombres_novios'],
-            $_POST['fecha_evento'],
-            $_POST['hora_evento'],
-            $_POST['ubicacion'] ?? '',
-            $_POST['direccion_completa'] ?? '',
-            $_POST['historia'] ?? '',
-            $frase_historia,
-            $_POST['dresscode'] ?? '',
-            $_POST['texto_rsvp'] ?? '',
-            $_POST['mensaje_footer'] ?? '',
-            $_POST['firma_footer'] ?? '',
-            $padres_novia,
-            $padres_novio,
-            $padrinos_novia,
-            $padrinos_novio,
-            $mostrar_contador,
-            $musica_youtube_url,
-            $musica_autoplay,
-            $musica_volumen
-        ];
-
-        // Agregar imágenes solo si se subieron nuevas
-        if ($img_hero !== null) {
-            $update_query .= ", imagen_hero = ?";
-            $params[] = $img_hero;
-        }
-        if ($img_dedicatoria !== null) {
-            $update_query .= ", imagen_dedicatoria = ?";
-            $params[] = $img_dedicatoria;
-        }
-        if ($img_destacada !== null) {
-            $update_query .= ", imagen_destacada = ?";
-            $params[] = $img_destacada;
-        }
-
-        $update_query .= " WHERE id = ?";
-        $params[] = $id;
-        
-        error_log("Consulta SQL: $update_query");
-        error_log("Parámetros: " . print_r($params, true));
-        
-        $update_stmt = $db->prepare($update_query);
-        $result = $update_stmt->execute($params);
-        
-        error_log("Resultado de la consulta: " . ($result ? 'SUCCESS' : 'FAILED'));
-        
-        if (!$result) {
-            error_log("Error en la consulta: " . print_r($update_stmt->errorInfo(), true));
-        }
-
-        // Eliminar y recrear ubicaciones
-        $db->prepare("DELETE FROM invitacion_ubicaciones WHERE invitacion_id = ?")->execute([$id]);
-        
-        // Procesar ubicaciones
-        if (!empty($_POST['ceremonia_lugar'])) {
-            $ubicacion_stmt = $db->prepare("INSERT INTO invitacion_ubicaciones (invitacion_id, tipo, nombre_lugar, direccion, hora_inicio, google_maps_url) VALUES (?, ?, ?, ?, ?, ?)");
-            $ubicacion_stmt->execute([
-                $id,
-                'ceremonia',
-                $_POST['ceremonia_lugar'],
-                $_POST['ceremonia_direccion'] ?? '',
-                $_POST['ceremonia_hora'] ?? null,
-                $_POST['ceremonia_maps'] ?? ''
-            ]);
-        }
-
-        if (!empty($_POST['evento_lugar'])) {
-            $ubicacion_stmt = $db->prepare("INSERT INTO invitacion_ubicaciones (invitacion_id, tipo, nombre_lugar, direccion, hora_inicio, google_maps_url) VALUES (?, ?, ?, ?, ?, ?)");
-            $ubicacion_stmt->execute([
-                $id,
-                'evento',
-                $_POST['evento_lugar'],
-                $_POST['evento_direccion'] ?? '',
-                $_POST['evento_hora'] ?? null,
-                $_POST['evento_maps'] ?? ''
-            ]);
-        }
-        
-        // Manejar galería de imágenes nuevas con estructura corregida
-        if (!empty($_FILES['imagenes_galeria']['name'][0])) {
-            $galeria_dir = __DIR__ . "/../../plantillas/plantilla-$plantilla_id/uploads/$slug/galeria";
-            if (!is_dir($galeria_dir)) mkdir($galeria_dir, 0777, true);
-
-            foreach ($_FILES['imagenes_galeria']['name'] as $i => $nombre) {
-                if ($_FILES['imagenes_galeria']['error'][$i] === UPLOAD_ERR_OK) {
-                    $ext = strtolower(pathinfo($nombre, PATHINFO_EXTENSION));
-                    if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
-                        $nombre_final = uniqid() . ".$ext";
-                        $ruta_destino = "$galeria_dir/$nombre_final";
-                        if (move_uploaded_file($_FILES['imagenes_galeria']['tmp_name'][$i], $ruta_destino)) {
-                            // RUTA RELATIVA para BD
-                            $galeria_insert = $db->prepare("INSERT INTO invitacion_galeria (invitacion_id, ruta) VALUES (?, ?)");
-                            $galeria_insert->execute([$id, "./plantillas/plantilla-$plantilla_id/uploads/$slug/galeria/$nombre_final"]);
-                        }
-                    }
-                }
-            }
-        }
-
-        // Manejar dresscode con estructura corregida
-        $img_dresscode_hombres = guardarImagen('imagen_dresscode_hombres', $plantilla_id, $slug, 'dresscode');
-        $img_dresscode_mujeres = guardarImagen('imagen_dresscode_mujeres', $plantilla_id, $slug, 'dresscode');
-
-        if ($img_dresscode_hombres || $img_dresscode_mujeres) {
-            // Eliminar dresscode existente
-            $delete_dresscode = "DELETE FROM invitacion_dresscode WHERE invitacion_id = ?";
-            $db->prepare($delete_dresscode)->execute([$id]);
-            
-            // Insertar nuevo dresscode
-            $dresscode_stmt = $db->prepare("INSERT INTO invitacion_dresscode (invitacion_id, hombres, mujeres) VALUES (?, ?, ?)");
-            $dresscode_stmt->execute([
-                $id, 
-                $img_dresscode_hombres ?? ($dresscode_data['hombres'] ?? ''), 
-                $img_dresscode_mujeres ?? ($dresscode_data['mujeres'] ?? '')
-            ]);
-        }
-        
-        // Eliminar cronograma existente y agregar nuevo
-        $delete_cronograma = "DELETE FROM invitacion_cronograma WHERE invitacion_id = ?";
-        $db->prepare($delete_cronograma)->execute([$id]);
-        
-        // Cronograma (solo si hay datos)
-        if (isset($_POST['cronograma_hora']) && !empty(array_filter($_POST['cronograma_hora']))) {
-            $cronograma_stmt = $db->prepare("INSERT INTO invitacion_cronograma (invitacion_id, hora, evento, descripcion, icono) VALUES (?, ?, ?, ?, ?)");
-            foreach ($_POST['cronograma_hora'] as $i => $hora) {
-                if (!empty($hora) && !empty($_POST['cronograma_evento'][$i])) {
-                    $cronograma_stmt->execute([
-                        $id,
-                        $hora,
-                        $_POST['cronograma_evento'][$i],
-                        $_POST['cronograma_descripcion'][$i] ?? '',
-                        $_POST['cronograma_icono'][$i] ?? 'anillos'
-                    ]);
-                }
-            }
-        }
-        
-        // Eliminar FAQs existentes y agregar nuevos
-        $delete_faq = "DELETE FROM invitacion_faq WHERE invitacion_id = ?";
-        $db->prepare($delete_faq)->execute([$id]);
-        
-        // FAQs (solo si hay datos)
-        if (isset($_POST['faq_pregunta']) && !empty(array_filter($_POST['faq_pregunta']))) {
-            $faq_stmt = $db->prepare("INSERT INTO invitacion_faq (invitacion_id, pregunta, respuesta) VALUES (?, ?, ?)");
-            foreach ($_POST['faq_pregunta'] as $i => $pregunta) {
-                if (!empty($pregunta) && !empty($_POST['faq_respuesta'][$i])) {
-                    $faq_stmt->execute([
-                        $id,
-                        $pregunta,
-                        $_POST['faq_respuesta'][$i]
-                    ]);
-                }
-            }
-        }
-        
-        $db->commit();
-        
-        // Redirigir con mensaje de éxito
-        header("Location: editar.php?id=" . $id . "&success=1");
-        exit();
-        
-    } catch (Exception $e) {
-        $db->rollback();
-        $error = "Error al actualizar la invitación: " . $e->getMessage();
-    }
-}
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Invitación - <?php echo htmlspecialchars($invitacion['nombres_novios']); ?></title>
-    <link rel="stylesheet" href="./../css/admin.css">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="./editar.css">
 </head>
 <body>
-    <div class="admin-container">
-        <header class="admin-header">
-            <h1>Editar Invitación: <?php echo htmlspecialchars($invitacion['nombres_novios']); ?></h1>
-            <div class="header-actions">
-                <a href="./../../invitacion.php?slug=<?php echo $invitacion['slug']; ?>" class="btn btn-preview" target="_blank">Vista Previa</a>
-                <a href="./../index.php" class="btn btn-secondary">Volver</a>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-pencil-square me-2"></i>
+                Editar Invitación: <?php echo htmlspecialchars($invitacion['nombres_novios']); ?>
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a href="./../../invitacion.php?slug=<?php echo $invitacion['slug']; ?>" class="btn btn-outline-light me-2" target="_blank">
+                    <i class="bi bi-eye me-1"></i>
+                    Vista Previa
+                </a>
+                <a href="./../index.php" class="btn btn-outline-light">
+                    <i class="bi bi-arrow-left me-1"></i>
+                    Volver al Panel
+                </a>
             </div>
-        </header>
+        </div>
+    </nav>
 
+    <div class="container py-4">
         <?php if (isset($_GET['success'])): ?>
         <div class="success-alert">
-            <p>✅ Invitación actualizada correctamente</p>
+            <p class="mb-0"><i class="bi bi-check-circle-fill me-2"></i> Invitación actualizada correctamente</p>
         </div>
         <?php endif; ?>
 
         <?php if (isset($error)): ?>
         <div class="error-alert">
-            <p>❌ <?php echo $error; ?></p>
+            <p class="mb-0"><i class="bi bi-exclamation-circle-fill me-2"></i> <?php echo $error; ?></p>
         </div>
         <?php endif; ?>
 
-        <form method="POST" enctype="multipart/form-data" class="admin-form">
+        <form method="POST" enctype="multipart/form-data">
+            <!-- Plantilla Base -->
             <div class="form-section">
-                <h3>Plantilla Base</h3>
-                <div class="form-group">
-                    <label for="plantilla_id">Selecciona una plantilla</label>
-                    <select name="plantilla_id" id="plantilla_id" required>
-                        <option value="">-- Elegir plantilla --</option>
-                        <?php foreach ($plantillas as $plantilla): ?>
-                            <option value="<?= $plantilla['id'] ?>" <?= $plantilla['id'] == $invitacion['plantilla_id'] ? 'selected' : '' ?>>
-                                <?= htmlspecialchars($plantilla['nombre']) ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
+                <h3 class="section-title">
+                    <i class="bi bi-layout-text-window-reverse me-2"></i>
+                    Plantilla Base
+                </h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="plantilla_id" class="form-label">Selecciona una plantilla</label>
+                        <select name="plantilla_id" id="plantilla_id" class="form-select" required>
+                            <option value="">-- Elegir plantilla --</option>
+                            <?php foreach ($plantillas as $plantilla): ?>
+                                <option value="<?= $plantilla['id'] ?>" <?= $plantilla['id'] == $invitacion['plantilla_id'] ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars($plantilla['nombre']) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
                 </div>
             </div>
 
-            <!-- Musica -->
+            <!-- Música de Fondo -->
             <div class="form-section">
-                <h3>Música de Fondo</h3>
-                
-                <div class="form-group">
-                    <label for="musica_youtube_url">URL de YouTube</label>
-                    <input type="url" id="musica_youtube_url" name="musica_youtube_url" 
-                        value="<?php echo htmlspecialchars($invitacion['musica_youtube_url'] ?? ''); ?>" 
-                        placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
-                    <small class="form-note">Pega el enlace completo del video de YouTube que quieres usar como música de fondo</small>
+                <h3 class="section-title">
+                    <i class="bi bi-music-note me-2"></i>
+                    Música de Fondo
+                </h3>
+                <div class="row">
+                    <div class="col-md-8">
+                        <label for="musica_youtube_url" class="form-label">URL de YouTube</label>
+                        <input type="url" id="musica_youtube_url" name="musica_youtube_url" 
+                            class="form-control" placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                            value="<?php echo htmlspecialchars($invitacion['musica_youtube_url'] ?? ''); ?>">
+                        <div class="form-text">Pega el enlace completo del video de YouTube que quieres usar como música de fondo</div>
+                    </div>
                 </div>
                 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="musica_autoplay">
-                            <input type="checkbox" id="musica_autoplay" name="musica_autoplay" value="1" 
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="musica_autoplay" name="musica_autoplay" value="1"
                                 <?php echo isset($invitacion['musica_autoplay']) && $invitacion['musica_autoplay'] ? 'checked' : ''; ?>>
-                            Reproducir automáticamente
-                        </label>
-                        <small class="form-note">Nota: Muchos navegadores bloquean la reproducción automática</small>
+                            <label class="form-check-label" for="musica_autoplay">
+                                Reproducir automáticamente
+                            </label>
+                            <div class="form-text">Nota: Muchos navegadores bloquean la reproducción automática</div>
+                        </div>
                     </div>
                     
-                    <div class="form-group">
-                        <label for="musica_volumen">Volumen inicial</label>
-                        <input type="range" id="musica_volumen" name="musica_volumen" 
-                            min="0" max="1" step="0.1" 
-                            value="<?php echo $invitacion['musica_volumen'] ?? 0.5; ?>">
-                        <small class="form-note">0 = silencio, 1 = volumen máximo</small>
-                    </div>
-                </div>
-                
-                <div class="music-preview" id="musicPreview" style="display: none;">
-                    <h4>Vista previa:</h4>
-                    <div class="preview-player">
-                        <div id="youtubePlayer"></div>
-                        <div class="player-controls" style="margin-top: 10px;">
-                            <button type="button" id="previewPlay" class="btn btn-secondary">Reproducir vista previa</button>
-                            <button type="button" id="previewPause" class="btn btn-secondary">Pausar</button>
-                            <button type="button" id="previewStop" class="btn btn-secondary">Detener</button>
-                        </div>
+                    <div class="col-md-6">
+                        <label for="musica_volumen" class="form-label">Volumen inicial</label>
+                        <input type="range" class="form-range" id="musica_volumen" name="musica_volumen" 
+                            min="0" max="1" step="0.1" value="<?php echo $invitacion['musica_volumen'] ?? 0.5; ?>">
+                        <div class="form-text">0 = silencio, 1 = volumen máximo</div>
                     </div>
                 </div>
             </div>
 
+            <!-- Información Básica -->
             <div class="form-section">
-                <h3>Información Básica</h3>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="nombres_novios">Nombres de los Novios</label>
-                        <input type="text" id="nombres_novios" name="nombres_novios" 
-                            value="<?php echo htmlspecialchars($invitacion['nombres_novios']); ?>" required>
+                <h3 class="section-title">
+                    <i class="bi bi-info-circle me-2"></i>
+                    Información Básica
+                </h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="nombres_novios" class="form-label">Nombres de los Novios</label>
+                        <input type="text" id="nombres_novios" name="nombres_novios" class="form-control" required
+                            value="<?php echo htmlspecialchars($invitacion['nombres_novios']); ?>">
                     </div>
-                    <div class="form-group">
-                        <label for="slug">URL (slug)</label>
-                        <input type="text" id="slug" name="slug" 
+                    <div class="col-md-6">
+                        <label for="slug" class="form-label">URL (slug)</label>
+                        <input type="text" id="slug" name="slug" class="form-control" required 
+                            placeholder="ej: victoria-matthew-2025" 
                             value="<?php echo htmlspecialchars($invitacion['slug']); ?>" readonly>
-                        <small class="form-note">La URL no se puede modificar una vez creada</small>
+                        <div class="form-text">La URL no se puede modificar una vez creada</div>
                     </div>
                 </div>
                 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="fecha_evento">Fecha del Evento</label>
-                        <input type="date" id="fecha_evento" name="fecha_evento" 
-                            value="<?php echo $invitacion['fecha_evento']; ?>" required>
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <label for="fecha_evento" class="form-label">Fecha del Evento</label>
+                        <input type="date" id="fecha_evento" name="fecha_evento" class="form-control" required
+                            value="<?php echo $invitacion['fecha_evento']; ?>">
                     </div>
-                    <div class="form-group">
-                        <label for="hora_evento">Hora del Evento</label>
-                        <input type="time" id="hora_evento" name="hora_evento" 
-                            value="<?php echo $invitacion['hora_evento']; ?>" required>
+                    <div class="col-md-6">
+                        <label for="hora_evento" class="form-label">Hora del Evento</label>
+                        <input type="time" id="hora_evento" name="hora_evento" class="form-control" required
+                            value="<?php echo $invitacion['hora_evento']; ?>">
                     </div>
                 </div>
             </div>
 
+            <!-- Ubicaciones del Evento -->
             <div class="form-section">
-                <h3>Ubicaciones del Evento</h3>
+                <h3 class="section-title">
+                    <i class="bi bi-geo-alt me-2"></i>
+                    Ubicaciones del Evento
+                </h3>
                 
-                <div class="ubicacion-section">
-                    <h4>Ceremonia</h4>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="ceremonia_lugar">Lugar de la Ceremonia</label>
-                            <input type="text" id="ceremonia_lugar" name="ceremonia_lugar" 
-                                value="<?php echo $ceremonia ? htmlspecialchars($ceremonia['nombre_lugar']) : ''; ?>" 
-                                placeholder="Iglesia San José">
-                        </div>
-                        <div class="form-group">
-                            <label for="ceremonia_hora">Hora de la Ceremonia</label>
-                            <input type="time" id="ceremonia_hora" name="ceremonia_hora" 
-                                value="<?php echo $ceremonia ? $ceremonia['hora_inicio'] : ''; ?>">
-                        </div>
+                <!-- Ceremonia -->
+                <div class="row">
+                    <div class="col-12">
+                        <h5 class="text-primary mb-3">Ceremonia</h5>
                     </div>
-                    <div class="form-group">
-                        <label for="ceremonia_direccion">Dirección de la Ceremonia</label>
+                    <div class="col-md-6">
+                        <label for="ceremonia_lugar" class="form-label">Lugar de la Ceremonia</label>
+                        <input type="text" id="ceremonia_lugar" name="ceremonia_lugar" 
+                            class="form-control" placeholder="Iglesia San José"
+                            value="<?php echo $ceremonia ? htmlspecialchars($ceremonia['nombre_lugar']) : ''; ?>">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="ceremonia_hora" class="form-label">Hora de la Ceremonia</label>
+                        <input type="time" id="ceremonia_hora" name="ceremonia_hora" class="form-control"
+                            value="<?php echo $ceremonia ? $ceremonia['hora_inicio'] : ''; ?>">
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <label for="ceremonia_direccion" class="form-label">Dirección de la Ceremonia</label>
                         <input type="text" id="ceremonia_direccion" name="ceremonia_direccion" 
-                            value="<?php echo $ceremonia ? htmlspecialchars($ceremonia['direccion']) : ''; ?>" 
-                            placeholder="Calle Principal 123">
+                            class="form-control" placeholder="Calle Principal 123"
+                            value="<?php echo $ceremonia ? htmlspecialchars($ceremonia['direccion']) : ''; ?>">
                     </div>
-                    <div class="form-group">
-                        <label for="ceremonia_maps">URL de Google Maps (Ceremonia)</label>
+                    <div class="col-md-6">
+                        <label for="ceremonia_maps" class="form-label">URL de Google Maps (Ceremonia)</label>
                         <input type="url" id="ceremonia_maps" name="ceremonia_maps" 
-                            value="<?php echo $ceremonia ? htmlspecialchars($ceremonia['google_maps_url']) : ''; ?>" 
-                            placeholder="https://maps.google.com/?q=...">
+                            class="form-control" placeholder="https://maps.google.com/?q=..."
+                            value="<?php echo $ceremonia ? htmlspecialchars($ceremonia['google_maps_url']) : ''; ?>">
                     </div>
                 </div>
                 
-                <div class="ubicacion-section">
-                    <h4>Evento/Recepción</h4>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="evento_lugar">Lugar del Evento</label>
-                            <input type="text" id="evento_lugar" name="evento_lugar" 
-                                value="<?php echo $evento ? htmlspecialchars($evento['nombre_lugar']) : ''; ?>" 
-                                placeholder="Salón de Eventos Villa Jardín">
-                        </div>
-                        <div class="form-group">
-                            <label for="evento_hora">Hora del Evento</label>
-                            <input type="time" id="evento_hora" name="evento_hora" 
-                                value="<?php echo $evento ? $evento['hora_inicio'] : ''; ?>">
-                        </div>
+                <hr class="my-4">
+                
+                <!-- Evento/Recepción -->
+                <div class="row">
+                    <div class="col-12">
+                        <h5 class="text-primary mb-3">Evento/Recepción</h5>
                     </div>
-                    <div class="form-group">
-                        <label for="evento_direccion">Dirección del Evento</label>
+                    <div class="col-md-6">
+                        <label for="evento_lugar" class="form-label">Lugar del Evento</label>
+                        <input type="text" id="evento_lugar" name="evento_lugar" 
+                            class="form-control" placeholder="Salón de Eventos Villa Jardín"
+                            value="<?php echo $evento ? htmlspecialchars($evento['nombre_lugar']) : ''; ?>">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="evento_hora" class="form-label">Hora del Evento</label>
+                        <input type="time" id="evento_hora" name="evento_hora" class="form-control"
+                            value="<?php echo $evento ? $evento['hora_inicio'] : ''; ?>">
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <label for="evento_direccion" class="form-label">Dirección del Evento</label>
                         <input type="text" id="evento_direccion" name="evento_direccion" 
-                            value="<?php echo $evento ? htmlspecialchars($evento['direccion']) : ''; ?>" 
-                            placeholder="Avenida Central 456">
+                            class="form-control" placeholder="Avenida Central 456"
+                            value="<?php echo $evento ? htmlspecialchars($evento['direccion']) : ''; ?>">
                     </div>
-                    <div class="form-group">
-                        <label for="evento_maps">URL de Google Maps (Evento)</label>
+                    <div class="col-md-6">
+                        <label for="evento_maps" class="form-label">URL de Google Maps (Evento)</label>
                         <input type="url" id="evento_maps" name="evento_maps" 
-                            value="<?php echo $evento ? htmlspecialchars($evento['google_maps_url']) : ''; ?>" 
-                            placeholder="https://maps.google.com/?q=...">
+                            class="form-control" placeholder="https://maps.google.com/?q=..."
+                            value="<?php echo $evento ? htmlspecialchars($evento['google_maps_url']) : ''; ?>">
                     </div>
                 </div>
             </div>
 
+            <!-- Contenido Personalizado -->
             <div class="form-section">
-                <h3>Contenido Personalizado</h3>
+                <h3 class="section-title">
+                    <i class="bi bi-card-text me-2"></i>
+                    Contenido Personalizado
+                </h3>
                 
-                <div class="form-group">
-                    <label for="historia">Historia de Amor</label>
-                    <textarea id="historia" name="historia" rows="4" placeholder="Cuenta vuestra historia de amor..."><?php echo htmlspecialchars($invitacion['historia']); ?></textarea>
+                <div class="mb-3">
+                    <label for="historia" class="form-label">Historia de Amor</label>
+                    <textarea id="historia" name="historia" rows="4" class="form-control" 
+                        placeholder="Cuenta vuestra historia de amor..."><?php echo htmlspecialchars($invitacion['historia']); ?></textarea>
                 </div>
                 
-                <!-- <div class="form-group">
-                    <label for="frase_historia">Frase para la Historia</label>
-                    <input type="text" id="frase_historia" name="frase_historia" 
-                        value="< ?php echo htmlspecialchars($invitacion['frase_historia']); ?>" 
-                        placeholder="Ej: Nuestra historia de amor">
-                </div> -->
-                
-                <div class="form-group">
-                    <label for="dresscode">Descripción del Código de Vestimenta</label>
-                    <textarea id="dresscode" name="dresscode" rows="2" placeholder="Por favor, viste atuendo elegante..."><?php echo htmlspecialchars($invitacion['dresscode']); ?></textarea>
+                <div class="mb-3">
+                    <label for="dresscode" class="form-label">Descripción del Código de Vestimenta</label>
+                    <textarea id="dresscode" name="dresscode" rows="2" class="form-control" 
+                        placeholder="Por favor, viste atuendo elegante..."><?php echo htmlspecialchars($invitacion['dresscode']); ?></textarea>
                 </div>
                 
-                <div class="form-group">
-                    <label for="texto_rsvp">Texto para RSVP</label>
-                    <input type="text" id="texto_rsvp" name="texto_rsvp" 
-                        value="<?php echo htmlspecialchars($invitacion['texto_rsvp']); ?>" 
-                        placeholder="Confirma tu asistencia antes del...">
+                <div class="mb-3">
+                    <label for="texto_rsvp" class="form-label">Texto para RSVP</label>
+                    <input type="text" id="texto_rsvp" name="texto_rsvp" class="form-control" 
+                        placeholder="Confirma tu asistencia antes del..."
+                        value="<?php echo htmlspecialchars($invitacion['texto_rsvp']); ?>">
                 </div>
             </div>
 
+            <!-- Información Familiar -->
             <div class="form-section">
-                <h3>Información Familiar</h3>
+                <h3 class="section-title">
+                    <i class="bi bi-people me-2"></i>
+                    Información Familiar
+                </h3>
                 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="padres_novia">Padres de la Novia</label>
-                        <input type="text" id="padres_novia" name="padres_novia" 
-                            value="<?php echo htmlspecialchars($invitacion['padres_novia']); ?>" 
-                            placeholder="Nombres de los padres de la novia">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="padres_novia" class="form-label">Padres de la Novia</label>
+                        <input type="text" id="padres_novia" name="padres_novia" class="form-control" 
+                            placeholder="Nombres de los padres de la novia"
+                            value="<?php echo htmlspecialchars($invitacion['padres_novia']); ?>">
                     </div>
-                    <div class="form-group">
-                        <label for="padres_novio">Padres del Novio</label>
-                        <input type="text" id="padres_novio" name="padres_novio" 
-                            value="<?php echo htmlspecialchars($invitacion['padres_novio']); ?>" 
-                            placeholder="Nombres de los padres del novio">
+                    <div class="col-md-6">
+                        <label for="padres_novio" class="form-label">Padres del Novio</label>
+                        <input type="text" id="padres_novio" name="padres_novio" class="form-control" 
+                            placeholder="Nombres de los padres del novio"
+                            value="<?php echo htmlspecialchars($invitacion['padres_novio']); ?>">
                     </div>
                 </div>
                 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="padrinos_novia">Padrinos de la Novia</label>
-                        <input type="text" id="padrinos_novia" name="padrinos_novia" 
-                            value="<?php echo htmlspecialchars($invitacion['padrinos_novia']); ?>" 
-                            placeholder="Nombres de los padrinos de la novia">
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <label for="padrinos_novia" class="form-label">Padrinos de la Novia</label>
+                        <input type="text" id="padrinos_novia" name="padrinos_novia" class="form-control" 
+                            placeholder="Nombres de los padrinos de la novia"
+                            value="<?php echo htmlspecialchars($invitacion['padrinos_novia']); ?>">
                     </div>
-                    <div class="form-group">
-                        <label for="padrinos_novio">Padrinos del Novio</label>
-                        <input type="text" id="padrinos_novio" name="padrinos_novio" 
-                            value="<?php echo htmlspecialchars($invitacion['padrinos_novio']); ?>" 
-                            placeholder="Nombres de los padrinos del novio">
+                    <div class="col-md-6">
+                        <label for="padrinos_novio" class="form-label">Padrinos del Novio</label>
+                        <input type="text" id="padrinos_novio" name="padrinos_novio" class="form-control" 
+                            placeholder="Nombres de los padrinos del novio"
+                            value="<?php echo htmlspecialchars($invitacion['padrinos_novio']); ?>">
                     </div>
                 </div>
             </div>
 
+            <!-- Mensajes Personalizados -->
             <div class="form-section">
-                <h3>Mensajes Personalizados</h3>
+                <h3 class="section-title">
+                    <i class="bi bi-chat-heart me-2"></i>
+                    Mensajes Personalizados
+                </h3>
                 
-                <div class="form-group">
-                    <label for="mensaje_footer">Mensaje del Footer</label>
-                    <textarea id="mensaje_footer" name="mensaje_footer" rows="2" placeholder="El amor es la fuerza más poderosa del mundo..."><?php echo htmlspecialchars($invitacion['mensaje_footer']); ?></textarea>
+                <div class="mb-3">
+                    <label for="mensaje_footer" class="form-label">Mensaje del Footer</label>
+                    <textarea id="mensaje_footer" name="mensaje_footer" rows="2" class="form-control" 
+                        placeholder="El amor es la fuerza más poderosa del mundo..."><?php echo htmlspecialchars($invitacion['mensaje_footer']); ?></textarea>
                 </div>
                 
-                <div class="form-group">
-                    <label for="firma_footer">Firma del Footer</label>
-                    <input type="text" id="firma_footer" name="firma_footer" 
-                        value="<?php echo htmlspecialchars($invitacion['firma_footer']); ?>" 
-                        placeholder="Con amor, Victoria & Matthew">
+                <div class="mb-3">
+                    <label for="firma_footer" class="form-label">Firma del Footer</label>
+                    <input type="text" id="firma_footer" name="firma_footer" class="form-control" 
+                        placeholder="Con amor, Victoria & Matthew"
+                        value="<?php echo htmlspecialchars($invitacion['firma_footer']); ?>">
                 </div>
             </div>
 
+            <!-- Imágenes -->
             <div class="form-section">
-                <h3>Imágenes</h3>
+                <h3 class="section-title">
+                    <i class="bi bi-images me-2"></i>
+                    Imágenes
+                </h3>
                 
-                <div class="form-group">
-                    <label for="imagen_hero">Imagen Hero</label>
-                    <?php if ($invitacion['imagen_hero']): ?>
-                        <div class="current-image">
-                            <img src="../../<?php echo $invitacion['imagen_hero']; ?>" alt="Imagen actual" style="max-width: 200px; height: auto;">
-                            <p><small>Imagen actual</small></p>
-                        </div>
-                    <?php endif; ?>
-                    <div class="image-upload-container">
-                        <div class="file-input-wrapper">
-                            <input type="file" name="imagen_hero" id="imagen_hero" accept="image/*" onchange="previewImage(this, 'hero-preview')">
-                            <label for="imagen_hero" class="file-input-label">
-                                <i>📷</i> Seleccionar nueva imagen Hero
-                            </label>
-                        </div>
-                        <div id="hero-preview" class="image-preview-container">
-                            <div class="image-placeholder">
-                                <i>🖼️</i>
-                                <span>La nueva imagen aparecerá aquí</span>
+                <div class="row">
+                    <!-- Imagen Hero -->
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="imagen_hero" class="form-label">Imagen Hero</label>
+                            
+                            <?php if ($invitacion['imagen_hero']): ?>
+                                <div class="current-image mb-2">
+                                    <img src="../../<?php echo $invitacion['imagen_hero']; ?>" alt="Imagen actual" class="img-thumbnail" style="max-width: 200px;">
+                                    <div class="form-text mt-1">Imagen actual</div>
+                                </div>
+                            <?php endif; ?>
+                            
+                            <div class="input-group">
+                                <input type="file" name="imagen_hero" id="imagen_hero" accept="image/*" 
+                                    class="form-control" onchange="previewImage(this, 'hero-preview')">
+                                <label class="input-group-text" for="imagen_hero">
+                                    <i class="bi bi-upload"></i>
+                                </label>
                             </div>
-                        </div>
-                    </div>
-                    <small class="form-note">Deja vacío para mantener la imagen actual</small>
-                </div>
-
-                <div class="form-group">
-                    <label for="imagen_dedicatoria">Imagen Dedicatoria</label>
-                    <?php if ($invitacion['imagen_dedicatoria']): ?>
-                        <div class="current-image">
-                            <img src="../../<?php echo $invitacion['imagen_dedicatoria']; ?>" alt="Imagen actual" style="max-width: 200px; height: auto;">
-                            <p><small>Imagen actual</small></p>
-                        </div>
-                    <?php endif; ?>
-                    <div class="image-upload-container">
-                        <div class="file-input-wrapper">
-                            <input type="file" name="imagen_dedicatoria" id="imagen_dedicatoria" accept="image/*" onchange="previewImage(this, 'dedicatoria-preview')">
-                            <label for="imagen_dedicatoria" class="file-input-label">
-                                <i>📷</i> Seleccionar nueva imagen Dedicatoria
-                            </label>
-                        </div>
-                        <div id="dedicatoria-preview" class="image-preview-container">
-                            <div class="image-placeholder">
-                                <i>💕</i>
-                                <span>La nueva imagen aparecerá aquí</span>
+                            
+                            <div id="hero-preview" class="mt-2">
+                                <img id="hero-preview-img" src="#" alt="Preview" class="img-thumbnail d-none" style="max-width: 200px;">
                             </div>
+                            <div class="form-text">Deja vacío para mantener la imagen actual</div>
                         </div>
                     </div>
-                    <small class="form-note">Deja vacío para mantener la imagen actual</small>
-                </div>
-
-                <div class="form-group">
-                    <label for="imagen_destacada">Imagen Destacada</label>
-                    <?php if ($invitacion['imagen_destacada']): ?>
-                        <div class="current-image">
-                            <img src="../../<?php echo $invitacion['imagen_destacada']; ?>" alt="Imagen actual" style="max-width: 200px; height: auto;">
-                            <p><small>Imagen actual</small></p>
-                        </div>
-                    <?php endif; ?>
-                    <div class="image-upload-container">
-                        <div class="file-input-wrapper">
-                            <input type="file" name="imagen_destacada" id="imagen_destacada" accept="image/*" onchange="previewImage(this, 'destacada-preview')">
-                            <label for="imagen_destacada" class="file-input-label">
-                                <i>📷</i> Seleccionar nueva imagen Destacada
-                            </label>
-                        </div>
-                        <div id="destacada-preview" class="image-preview-container">
-                            <div class="image-placeholder">
-                                <i>⭐</i>
-                                <span>La nueva imagen aparecerá aquí</span>
+                    
+                    <!-- Imagen Dedicatoria -->
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="imagen_dedicatoria" class="form-label">Imagen Dedicatoria</label>
+                            
+                            <?php if ($invitacion['imagen_dedicatoria']): ?>
+                                <div class="current-image mb-2">
+                                    <img src="../../<?php echo $invitacion['imagen_dedicatoria']; ?>" alt="Imagen actual" class="img-thumbnail" style="max-width: 200px;">
+                                    <div class="form-text mt-1">Imagen actual</div>
+                                </div>
+                            <?php endif; ?>
+                            
+                            <div class="input-group">
+                                <input type="file" name="imagen_dedicatoria" id="imagen_dedicatoria" accept="image/*" 
+                                    class="form-control" onchange="previewImage(this, 'dedicatoria-preview')">
+                                <label class="input-group-text" for="imagen_dedicatoria">
+                                    <i class="bi bi-upload"></i>
+                                </label>
                             </div>
+                            
+                            <div id="dedicatoria-preview" class="mt-2">
+                                <img id="dedicatoria-preview-img" src="#" alt="Preview" class="img-thumbnail d-none" style="max-width: 200px;">
+                            </div>
+                            <div class="form-text">Deja vacío para mantener la imagen actual</div>
                         </div>
                     </div>
-                    <small class="form-note">Deja vacío para mantener la imagen actual</small>
+                    
+                    <!-- Imagen Destacada -->
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="imagen_destacada" class="form-label">Imagen Destacada</label>
+                            
+                            <?php if ($invitacion['imagen_destacada']): ?>
+                                <div class="current-image mb-2">
+                                    <img src="../../<?php echo $invitacion['imagen_destacada']; ?>" alt="Imagen actual" class="img-thumbnail" style="max-width: 200px;">
+                                    <div class="form-text mt-1">Imagen actual</div>
+                                </div>
+                            <?php endif; ?>
+                            
+                            <div class="input-group">
+                                <input type="file" name="imagen_destacada" id="imagen_destacada" accept="image/*" 
+                                    class="form-control" onchange="previewImage(this, 'destacada-preview')">
+                                <label class="input-group-text" for="imagen_destacada">
+                                    <i class="bi bi-upload"></i>
+                                </label>
+                            </div>
+                            
+                            <div id="destacada-preview" class="mt-2">
+                                <img id="destacada-preview-img" src="#" alt="Preview" class="img-thumbnail d-none" style="max-width: 200px;">
+                            </div>
+                            <div class="form-text">Deja vacío para mantener la imagen actual</div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <!-- Galería -->
             <div class="form-section">
-                <h3>Galería de imágenes</h3>
+                <h3 class="section-title">
+                    <i class="bi bi-collection me-2"></i>
+                    Galería de Imágenes
+                </h3>
                 
                 <?php if (!empty($galeria)): ?>
-                    <div class="current-gallery">
-                        <h4>Imágenes actuales:</h4>
+                    <div class="current-gallery mb-4">
+                        <h5>Imágenes actuales:</h5>
                         <div class="gallery-grid">
                             <?php foreach ($galeria as $imagen): ?>
                                 <div class="gallery-item">
                                     <img src="../../<?php echo $imagen['ruta']; ?>" alt="Imagen galería">
                                     <button type="button" onclick="eliminarImagenGaleria(<?php echo $imagen['id']; ?>)" class="btn btn-danger btn-sm">
-                                        🗑️ Eliminar
+                                        <i class="bi bi-trash"></i>
                                     </button>
                                 </div>
                             <?php endforeach; ?>
@@ -668,40 +480,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                 <?php endif; ?>
                 
-                <div class="form-group">
-                    <label for="imagenes_galeria">Agregar nuevas imágenes a la galería (puedes seleccionar varias)</label>
-                    <div class="file-input-wrapper">
-                        <input type="file" name="imagenes_galeria[]" id="imagenes_galeria" accept="image/*" multiple onchange="previewGallery(this)">
-                        <label for="imagenes_galeria" class="file-input-label">
-                            <i>🖼️</i> Seleccionar imágenes para galería
+                <div class="mb-3">
+                    <label for="imagenes_galeria" class="form-label">Agregar nuevas imágenes a la galería (puedes seleccionar varias)</label>
+                    <div class="input-group">
+                        <input type="file" name="imagenes_galeria[]" id="imagenes_galeria" accept="image/*" 
+                            multiple class="form-control" onchange="previewGallery(this)">
+                        <label class="input-group-text" for="imagenes_galeria">
+                            <i class="bi bi-images"></i> Seleccionar
                         </label>
                     </div>
-                    <div id="gallery-preview" class="gallery-preview-container"></div>
-                    <small class="form-note">Puedes seleccionar múltiples imágenes</small>
+                    <div class="form-text">Puedes seleccionar múltiples imágenes manteniendo presionado Ctrl (Windows) o Cmd (Mac)</div>
                 </div>
+                <div id="gallery-preview" class="row"></div>
             </div>
 
+            <!-- Cronograma -->
             <div class="form-section">
-                <h3>Cronograma</h3>
+                <h3 class="section-title">
+                    <i class="bi bi-clock me-2"></i>
+                    Cronograma del Evento
+                </h3>
+                
                 <div id="cronograma-container">
                     <?php if (empty($cronograma)): ?>
                     <div class="cronograma-item">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>Hora</label>
-                                <input type="time" name="cronograma_hora[]">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label class="form-label">Hora</label>
+                                <input type="time" name="cronograma_hora[]" class="form-control">
                             </div>
-                            <div class="form-group">
-                                <label>Evento</label>
-                                <input type="text" name="cronograma_evento[]">
+                            <div class="col-md-3">
+                                <label class="form-label">Evento</label>
+                                <input type="text" name="cronograma_evento[]" class="form-control" 
+                                    placeholder="Ceremonia">
                             </div>
-                            <div class="form-group">
-                                <label>Descripción</label>
-                                <input type="text" name="cronograma_descripcion[]">
+                            <div class="col-md-4">
+                                <label class="form-label">Descripción</label>
+                                <input type="text" name="cronograma_descripcion[]" class="form-control" 
+                                    placeholder="Descripción del evento">
                             </div>
-                            <div class="form-group">
-                                <label>Icono</label>
-                                <select name="cronograma_icono[]">
+                            <div class="col-md-2">
+                                <label class="form-label">Icono</label>
+                                <select name="cronograma_icono[]" class="form-select">
                                     <option value="anillos">Anillos</option>
                                     <option value="cena">Cena</option>
                                     <option value="fiesta">Fiesta</option>
@@ -713,31 +533,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <?php else: ?>
                         <?php foreach($cronograma as $item): ?>
                         <div class="cronograma-item">
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label>Hora</label>
-                                    <input type="time" name="cronograma_hora[]" value="<?php echo $item['hora']; ?>">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label class="form-label">Hora</label>
+                                    <input type="time" name="cronograma_hora[]" class="form-control" 
+                                        value="<?php echo $item['hora']; ?>">
                                 </div>
-                                <div class="form-group">
-                                    <label>Evento</label>
-                                    <input type="text" name="cronograma_evento[]" value="<?php echo htmlspecialchars($item['evento']); ?>">
+                                <div class="col-md-3">
+                                    <label class="form-label">Evento</label>
+                                    <input type="text" name="cronograma_evento[]" class="form-control" 
+                                        placeholder="Ceremonia"
+                                        value="<?php echo htmlspecialchars($item['evento']); ?>">
                                 </div>
-                                <div class="form-group">
-                                    <label>Descripción</label>
-                                    <input type="text" name="cronograma_descripcion[]" value="<?php echo htmlspecialchars($item['descripcion']); ?>">
+                                <div class="col-md-4">
+                                    <label class="form-label">Descripción</label>
+                                    <input type="text" name="cronograma_descripcion[]" class="form-control" 
+                                        placeholder="Descripción del evento"
+                                        value="<?php echo htmlspecialchars($item['descripcion']); ?>">
                                 </div>
-                                <div class="form-group">
-                                    <label>Icono</label>
-                                    <select name="cronograma_icono[]">
+                                <div class="col-md-1">
+                                    <label class="form-label">Icono</label>
+                                    <select name="cronograma_icono[]" class="form-select">
                                         <option value="anillos" <?php echo $item['icono'] == 'anillos' ? 'selected' : ''; ?>>Anillos</option>
                                         <option value="cena" <?php echo $item['icono'] == 'cena' ? 'selected' : ''; ?>>Cena</option>
                                         <option value="fiesta" <?php echo $item['icono'] == 'fiesta' ? 'selected' : ''; ?>>Fiesta</option>
                                         <option value="luna" <?php echo $item['icono'] == 'luna' ? 'selected' : ''; ?>>Luna</option>
                                     </select>
                                 </div>
-                                <div class="form-group">
-                                    <button type="button" onclick="eliminarCronograma(this)" class="btn btn-danger btn-sm">
-                                        🗑️ Eliminar
+                                <div class="col-md-1">
+                                    <label class="form-label">&nbsp;</label>
+                                    <button type="button" onclick="eliminarCronograma(this)" class="btn btn-outline-danger btn-sm d-block">
+                                        <i class="bi bi-trash"></i>
                                     </button>
                                 </div>
                             </div>
@@ -745,106 +571,279 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <?php endforeach; ?>
                     <?php endif; ?>
                 </div>
-                <button type="button" onclick="agregarCronograma()" class="btn btn-add">Agregar Evento</button>
+                <button type="button" onclick="agregarCronograma()" class="btn btn-outline-primary mt-2">
+                    <i class="bi bi-plus-circle me-1"></i>
+                    Agregar Evento
+                </button>
             </div>
 
             <!-- Dresscode -->
             <div class="form-section">
-                <h3>Imágenes para DressCode</h3>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="imagen_dresscode_hombres">Imagen Dresscode Hombres</label>
-                        <?php if ($dresscode_data && $dresscode_data['hombres']): ?>
-                            <div class="current-image">
-                                <img src="../../<?php echo $dresscode_data['hombres']; ?>" alt="Imagen actual" style="max-width: 150px; height: auto;">
-                                <p><small>Imagen actual</small></p>
-                            </div>
-                        <?php endif; ?>
-                        <div class="image-upload-container">
-                            <div class="file-input-wrapper">
-                                <input type="file" name="imagen_dresscode_hombres" id="imagen_dresscode_hombres" accept="image/*" onchange="previewImage(this, 'dresscode-hombres-preview')">
-                                <label for="imagen_dresscode_hombres" class="file-input-label">
-                                    <i>👔</i> Seleccionar imagen Hombres
+                <h3 class="section-title">
+                    <i class="bi bi-person-check me-2"></i>
+                    Código de Vestimenta
+                </h3>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="imagen_dresscode_hombres" class="form-label">Imagen Dresscode Hombres</label>
+                            
+                            <?php if ($dresscode_data && $dresscode_data['hombres']): ?>
+                                <div class="current-image mb-2">
+                                    <img src="../../<?php echo $dresscode_data['hombres']; ?>" alt="Imagen actual" class="img-thumbnail" style="max-width: 150px;">
+                                    <div class="form-text mt-1">Imagen actual</div>
+                                </div>
+                            <?php endif; ?>
+                            
+                            <div class="input-group">
+                                <input type="file" name="imagen_dresscode_hombres" id="imagen_dresscode_hombres" 
+                                    accept="image/*" class="form-control" onchange="previewImage(this, 'dresscode-hombres-preview')">
+                                <label class="input-group-text" for="imagen_dresscode_hombres">
+                                    <i class="bi bi-person-fill"></i>
                                 </label>
                             </div>
-                            <div id="dresscode-hombres-preview" class="image-preview-container">
-                                <div class="image-placeholder">
-                                    <i>👨</i>
-                                    <span>Nueva imagen para hombres</span>
-                                </div>
+                            
+                            <div id="dresscode-hombres-preview" class="mt-2">
+                                <img id="dresscode-hombres-preview-img" src="#" alt="Preview" class="img-thumbnail d-none" style="max-width: 150px;">
                             </div>
+                            <div class="form-text">Deja vacío para mantener la imagen actual</div>
                         </div>
-                        <small class="form-note">Deja vacío para mantener la imagen actual</small>
                     </div>
-                    <div class="form-group">
-                        <label for="imagen_dresscode_mujeres">Imagen Dresscode Mujeres</label>
-                        <?php if ($dresscode_data && $dresscode_data['mujeres']): ?>
-                            <div class="current-image">
-                                <img src="../../<?php echo $dresscode_data['mujeres']; ?>" alt="Imagen actual" style="max-width: 150px; height: auto;">
-                                <p><small>Imagen actual</small></p>
-                            </div>
-                        <?php endif; ?>
-                        <div class="image-upload-container">
-                            <div class="file-input-wrapper">
-                                <input type="file" name="imagen_dresscode_mujeres" id="imagen_dresscode_mujeres" accept="image/*" onchange="previewImage(this, 'dresscode-mujeres-preview')">
-                                <label for="imagen_dresscode_mujeres" class="file-input-label">
-                                    <i>👗</i> Seleccionar imagen Mujeres
+                    
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="imagen_dresscode_mujeres" class="form-label">Imagen Dresscode Mujeres</label>
+                            
+                            <?php if ($dresscode_data && $dresscode_data['mujeres']): ?>
+                                <div class="current-image mb-2">
+                                    <img src="../../<?php echo $dresscode_data['mujeres']; ?>" alt="Imagen actual" class="img-thumbnail" style="max-width: 150px;">
+                                    <div class="form-text mt-1">Imagen actual</div>
+                                </div>
+                            <?php endif; ?>
+                            
+                            <div class="input-group">
+                                <input type="file" name="imagen_dresscode_mujeres" id="imagen_dresscode_mujeres" 
+                                    accept="image/*" class="form-control" onchange="previewImage(this, 'dresscode-mujeres-preview')">
+                                <label class="input-group-text" for="imagen_dresscode_mujeres">
+                                    <i class="bi bi-person-dress"></i>
                                 </label>
                             </div>
-                            <div id="dresscode-mujeres-preview" class="image-preview-container">
-                                <div class="image-placeholder">
-                                    <i>👩</i>
-                                    <span>Nueva imagen para mujeres</span>
-                                </div>
+                            
+                            <div id="dresscode-mujeres-preview" class="mt-2">
+                                <img id="dresscode-mujeres-preview-img" src="#" alt="Preview" class="img-thumbnail d-none" style="max-width: 150px;">
                             </div>
+                            <div class="form-text">Deja vacío para mantener la imagen actual</div>
                         </div>
-                        <small class="form-note">Deja vacío para mantener la imagen actual</small>
                     </div>
                 </div>
             </div>
 
+            <!-- Preguntas Frecuentes -->
             <div class="form-section">
-                <h3>Preguntas Frecuentes</h3>
+                <h3 class="section-title">
+                    <i class="bi bi-question-circle me-2"></i>
+                    Preguntas Frecuentes
+                </h3>
+                
                 <div id="faq-container">
                     <?php if (empty($faqs)): ?>
                     <div class="faq-item">
-                        <div class="form-group">
-                            <label>Pregunta</label>
-                            <input type="text" name="faq_pregunta[]">
-                        </div>
-                        <div class="form-group">
-                            <label>Respuesta</label>
-                            <textarea name="faq_respuesta[]" rows="2"></textarea>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="form-label">Pregunta</label>
+                                <input type="text" name="faq_pregunta[]" class="form-control" 
+                                    placeholder="¿Habrá servicio de transporte?">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Respuesta</label>
+                                <textarea name="faq_respuesta[]" rows="2" class="form-control" 
+                                    placeholder="Sí, habrá servicio de transporte desde..."></textarea>
+                            </div>
                         </div>
                     </div>
                     <?php else: ?>
                         <?php foreach($faqs as $faq): ?>
                         <div class="faq-item">
-                            <div class="form-group">
-                                <label>Pregunta</label>
-                                <input type="text" name="faq_pregunta[]" value="<?php echo htmlspecialchars($faq['pregunta']); ?>">
-                            </div>
-                            <div class="form-group">
-                                <label>Respuesta</label>
-                                <textarea name="faq_respuesta[]" rows="2"><?php echo htmlspecialchars($faq['respuesta']); ?></textarea>
-                            </div>
-                            <div class="form-group">
-                                <button type="button" onclick="eliminarFAQ(this)" class="btn btn-danger btn-sm">Eliminar</button>
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <label class="form-label">Pregunta</label>
+                                    <input type="text" name="faq_pregunta[]" class="form-control" 
+                                        placeholder="¿Habrá servicio de transporte?"
+                                        value="<?php echo htmlspecialchars($faq['pregunta']); ?>">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Respuesta</label>
+                                    <textarea name="faq_respuesta[]" rows="2" class="form-control" 
+                                        placeholder="Sí, habrá servicio de transporte desde..."><?php echo htmlspecialchars($faq['respuesta']); ?></textarea>
+                                </div>
+                                <div class="col-md-1">
+                                    <label class="form-label">&nbsp;</label>
+                                    <button type="button" onclick="eliminarFAQ(this)" class="btn btn-outline-danger btn-sm d-block">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                         <?php endforeach; ?>
                     <?php endif; ?>
                 </div>
-                <button type="button" onclick="agregarFAQ()" class="btn btn-add">Agregar FAQ</button>
+                <button type="button" onclick="agregarFAQ()" class="btn btn-outline-primary mt-2">
+                    <i class="bi bi-plus-circle me-1"></i>
+                    Agregar FAQ
+                </button>
             </div>
 
-            <div class="form-actions">
-                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-                <a href="./../index.php" class="btn btn-secondary">Cancelar</a>
+            <!-- Botones de acción -->
+            <div class="form-section">
+                <div class="d-flex gap-2 justify-content-end">
+                    <a href="./../index.php" class="btn btn-outline-secondary btn-lg">
+                        <i class="bi bi-x-circle me-1"></i>
+                        Cancelar
+                    </a>
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="bi bi-check-circle me-1"></i>
+                        Guardar Cambios
+                    </button>
+                </div>
             </div>
         </form>
     </div>
-    <script src="./../js/editar.js"></script>
-    <script src="./../js/musica.js"></script>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+   
+    <script>
+        // Función para previsualizar imágenes individuales
+        function previewImage(input, previewId) {
+            const preview = document.getElementById(previewId + '-img');
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.classList.remove('d-none');
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // Función para previsualizar galería de imágenes
+        function previewGallery(input) {
+            const preview = document.getElementById('gallery-preview');
+            preview.innerHTML = '';
+            
+            if (input.files) {
+                Array.from(input.files).forEach((file, index) => {
+                    if (file.type.startsWith('image/')) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            const col = document.createElement('div');
+                            col.className = 'col-md-3 mb-3';
+                            col.innerHTML = `
+                                <div class="card">
+                                    <img src="${e.target.result}" class="card-img-top" style="height: 150px; object-fit: cover;">
+                                    <div class="card-body p-2">
+                                        <small class="text-muted">${file.name}</small>
+                                    </div>
+                                </div>
+                            `;
+                            preview.appendChild(col);
+                        }
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+        }
+
+        // Función para agregar elementos al cronograma
+        function agregarCronograma() {
+            const container = document.getElementById('cronograma-container');
+            const newItem = document.createElement('div');
+            newItem.className = 'cronograma-item';
+            newItem.innerHTML = `
+                <div class="row">
+                    <div class="col-md-3">
+                        <label class="form-label">Hora</label>
+                        <input type="time" name="cronograma_hora[]" class="form-control">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Evento</label>
+                        <input type="text" name="cronograma_evento[]" class="form-control" placeholder="Evento">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Descripción</label>
+                        <input type="text" name="cronograma_descripcion[]" class="form-control" placeholder="Descripción">
+                    </div>
+                    <div class="col-md-1">
+                        <label class="form-label">Icono</label>
+                        <select name="cronograma_icono[]" class="form-select">
+                            <option value="anillos">Anillos</option>
+                            <option value="cena">Cena</option>
+                            <option value="fiesta">Fiesta</option>
+                            <option value="luna">Luna</option>
+                        </select>
+                    </div>
+                    <div class="col-md-1">
+                        <label class="form-label">&nbsp;</label>
+                        <button type="button" onclick="eliminarCronograma(this)" class="btn btn-outline-danger btn-sm d-block">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+            container.appendChild(newItem);
+        }
+
+        // Función para eliminar elementos del cronograma
+        function eliminarCronograma(button) {
+            button.closest('.cronograma-item').remove();
+        }
+
+        // Función para agregar FAQs
+        function agregarFAQ() {
+            const container = document.getElementById('faq-container');
+            const newItem = document.createElement('div');
+            newItem.className = 'faq-item';
+            newItem.innerHTML = `
+                <div class="row">
+                    <div class="col-md-5">
+                        <label class="form-label">Pregunta</label>
+                        <input type="text" name="faq_pregunta[]" class="form-control" placeholder="Pregunta">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Respuesta</label>
+                        <textarea name="faq_respuesta[]" rows="2" class="form-control" placeholder="Respuesta"></textarea>
+                    </div>
+                    <div class="col-md-1">
+                        <label class="form-label">&nbsp;</label>
+                        <button type="button" onclick="eliminarFAQ(this)" class="btn btn-outline-danger btn-sm d-block">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+            container.appendChild(newItem);
+        }
+
+        // Función para eliminar FAQs
+        function eliminarFAQ(button) {
+            button.closest('.faq-item').remove();
+        }
+        
+        // Función para eliminar imagen de galería
+        function eliminarImagenGaleria(id) {
+            if (confirm('¿Estás seguro de que quieres eliminar esta imagen de la galería?')) {
+                fetch(`eliminar_galeria.php?id=${id}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            location.reload();
+                        } else {
+                            alert('Error al eliminar la imagen');
+                        }
+                    });
+            }
+        }
+    </script>
 </body>
 </html>
