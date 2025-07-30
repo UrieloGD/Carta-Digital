@@ -53,6 +53,9 @@ CREATE TABLE IF NOT EXISTS invitaciones (
     musica_youtube_url VARCHAR(255),
     musica_autoplay TINYINT(1),
     musica_volumen decimal(3.2),
+
+    -- Whatsapp
+    whatsapp_confirmacion VARCHAR(20) DEFAULT NULL;
     
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (plantilla_id) REFERENCES plantillas(id) ON DELETE CASCADE
@@ -180,5 +183,6 @@ CREATE TABLE IF NOT EXISTS invitacion_estadisticas (
 
 -- Insertar plantilla base
 INSERT INTO plantillas (id, nombre, descripcion, carpeta, archivo_principal, imagen_preview, activa) 
-VALUES (1, 'Elegancia Clásica', 'Plantilla elegante con diseño clásico en tonos dorados y burgundy', 'plantilla-1', 'index.php', './plantillas/plantilla-1/preview.jpg', 1)
+VALUES (1, 'Tinta', 'Plantilla elegante con diseño clásico en tonos tintos y arena', 'plantilla-1', 'plantilla-1.php', 'img/preview.png', 1)
+
 ON DUPLICATE KEY UPDATE nombre = VALUES(nombre);
