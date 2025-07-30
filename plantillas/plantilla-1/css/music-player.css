@@ -88,6 +88,10 @@
     text-align: center;
 }
 
+.span .play-icon {
+    top: 10px;
+}
+
 .volume-slider {
     width: 70px;
     height: 4px;
@@ -163,5 +167,63 @@
     
     .volume-slider {
         width: 50px;
+    }
+}
+
+/* Botón de minimizar */
+.music-minimize {
+    background: none;
+    border: none;
+    color: var(--color-text-light);
+    cursor: pointer;
+    font-size: 14px;
+    padding: 4px;
+    border-radius: 4px;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+}
+
+.music-minimize:hover {
+    background: rgba(133, 13, 35, 0.1);
+    color: var(--color-secondary);
+}
+
+/* Estado minimizado */
+.music-controls.minimized {
+    min-width: auto;
+    padding: 12px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.music-controls.minimized .music-info,
+.music-controls.minimized .music-volume {
+    display: none;
+}
+
+.music-controls.minimized .music-minimize {
+    display: none;
+}
+
+.music-controls.minimized .music-toggle {
+    width: 36px;
+    height: 36px;
+    margin: 0;
+}
+
+/* Responsive para minimizado */
+@media (max-width: 768px) {
+    .music-controls.minimized {
+        padding: 10px;
+    }
+    
+    .music-controls.minimized .music-toggle {
+        width: 32px;
+        height: 32px;
+        font-size: 13px;
     }
 }

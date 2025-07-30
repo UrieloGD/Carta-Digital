@@ -235,6 +235,9 @@ class MusicPlayer {
                     <span class="volume-icon">♪</span>
                     <input type="range" id="volumeSlider" min="0" max="100" value="${Math.round(this.volume * 100)}" class="volume-slider" title="Volumen">
                 </div>
+                <button class="music-minimize" id="musicMinimize" title="Minimizar reproductor">
+                    <span>−</span>
+                </button>
             </div>
         `;
         
@@ -242,7 +245,9 @@ class MusicPlayer {
         
         const toggleBtn = document.getElementById('musicToggle');
         const volumeSlider = document.getElementById('volumeSlider');
+        const minimizeBtn = document.getElementById('musicMinimize');
         
+        // Event listeners existentes
         toggleBtn.addEventListener('click', (e) => {
             e.preventDefault();
             this.toggle();
@@ -253,7 +258,50 @@ class MusicPlayer {
             this.setVolume(volume);
         });
         
+        // Nuevo: Event listener para minimizar
+        minimizeBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            this.toggleMinimize();
+        });
+        
+        // Nuevo: Event listener para expandir cuando está minimizado
+        toggleBtn.addEventListener('click', () => {
+            if (controls.classList.contains('minimized')) {
+                this.expandPlayer();
+            }
+        });
+        
         console.log('Controles de música creados');
+    }
+
+    // Método para alternar entre minimizado y expandido
+    toggleMinimize() {
+        const controls = document.querySelector('.music-controls');
+        if (controls) {
+            if (controls.classList.contains('minimized')) {
+                this.expandPlayer();
+            } else {
+                this.minimizePlayer();
+            }
+        }
+    }
+
+    // Método para minimizar el reproductor
+    minimizePlayer() {
+        const controls = document.querySelector('.music-controls');
+        if (controls) {
+            controls.classList.add('minimized');
+            console.log('Reproductor minimizado');
+        }
+    }
+
+    // Método para expandir el reproductor
+    expandPlayer() {
+        const controls = document.querySelector('.music-controls');
+        if (controls) {
+            controls.classList.remove('minimized');
+            console.log('Reproductor expandido');
+        }
     }
     
     play() {
