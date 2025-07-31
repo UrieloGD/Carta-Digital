@@ -12,8 +12,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $db->beginTransaction();
         
-        // Función para subir imágenes
-        function subirImagen($archivo, $carpeta = 'uploads/invitaciones/') {
+        // Función para subir imágenes con la nueva estructura de carpetas
+        function subirImagen($archivo, $plantilla_id, $slug, $seccion) {
             if (!isset($_FILES[$archivo]) || $_FILES[$archivo]['error'] !== UPLOAD_ERR_OK) {
                 return null;
             }
@@ -26,14 +26,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
             
             $nombre_archivo = uniqid() . '.' . $extension;
-            $ruta_completa = '../../' . $carpeta;
+            // Salir de admin/functions/ para llegar a la raíz del proyecto
+            $carpeta = "../../plantillas/plantilla-{$plantilla_id}/uploads/{$slug}/{$seccion}/";
             
-            if (!is_dir($ruta_completa)) {
-                mkdir($ruta_completa, 0755, true);
+            if (!is_dir($carpeta)) {
+                mkdir($carpeta, 0755, true);
             }
             
-            if (move_uploaded_file($_FILES[$archivo]['tmp_name'], $ruta_completa . $nombre_archivo)) {
-                return $carpeta . $nombre_archivo;
+            $ruta_completa = $carpeta . $nombre_archivo;
+            
+            if (move_uploaded_file($_FILES[$archivo]['tmp_name'], $ruta_completa)) {
+                // Retornar la ruta relativa desde la raíz del proyecto
+                return "plantillas/plantilla-{$plantilla_id}/uploads/{$slug}/{$seccion}/" . $nombre_archivo;
             }
             
             throw new Exception("Error al subir la imagen: {$archivo}");
@@ -53,13 +57,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         
         // Preparar datos para insertar
+        $plantilla_id = $_POST['plantilla_id'];
+        $slug = $_POST['slug'];
         $musica_autoplay = isset($_POST['musica_autoplay']) ? 1 : 0;
         $musica_volumen = $_POST['musica_volumen'] ?? 0.5;
         
-        // Subir imágenes principales
-        $imagen_hero = subirImagen('imagen_hero');
-        $imagen_dedicatoria = subirImagen('imagen_dedicatoria');
-        $imagen_destacada = subirImagen('imagen_destacada');
+        // Subir imágenes principales con la nueva estructura
+        $imagen_hero = subirImagen('imagen_hero', $plantilla_id, $slug, 'hero');
+        $imagen_dedicatoria = subirImagen('imagen_dedicatoria', $plantilla_id, $slug, 'dedicatoria');
+        $imagen_destacada = subirImagen('imagen_destacada', $plantilla_id, $slug, 'destacada');
         
         // Insertar invitación principal
         $insert_query = "INSERT INTO invitaciones (
@@ -72,8 +78,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         $stmt = $db->prepare($insert_query);
         $stmt->execute([
-            $_POST['plantilla_id'],
-            $_POST['slug'],
+            $plantilla_id,
+            $slug,
             $_POST['nombres_novios'],
             $_POST['fecha_evento'],
             $_POST['hora_evento'],
@@ -152,9 +158,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
         
-        // Subir e insertar galería de imágenes
+        // Subir e insertar galería de imágenes con la nueva estructura
         if (isset($_FILES['imagenes_galeria']) && !empty($_FILES['imagenes_galeria']['name'][0])) {
             $stmt = $db->prepare("INSERT INTO invitacion_galeria (invitacion_id, ruta) VALUES (?, ?)");
+            // Salir de admin/functions/ para llegar a la raíz del proyecto
+            $carpeta_galeria = "../../plantillas/plantilla-{$plantilla_id}/uploads/{$slug}/galeria/";
+            
+            if (!is_dir($carpeta_galeria)) {
+                mkdir($carpeta_galeria, 0755, true);
+            }
             
             foreach ($_FILES['imagenes_galeria']['name'] as $index => $nombre) {
                 if ($_FILES['imagenes_galeria']['error'][$index] === UPLOAD_ERR_OK) {
@@ -163,24 +175,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     
                     if (in_array($extension, $extensiones_permitidas)) {
                         $nombre_archivo = uniqid() . '.' . $extension;
-                        $carpeta = 'uploads/galeria/';
-                        $ruta_completa = '../../' . $carpeta;
+                        $ruta_completa = $carpeta_galeria . $nombre_archivo;
                         
-                        if (!is_dir($ruta_completa)) {
-                            mkdir($ruta_completa, 0755, true);
-                        }
-                        
-                        if (move_uploaded_file($_FILES['imagenes_galeria']['tmp_name'][$index], $ruta_completa . $nombre_archivo)) {
-                            $stmt->execute([$invitacion_id, $carpeta . $nombre_archivo]);
+                        if (move_uploaded_file($_FILES['imagenes_galeria']['tmp_name'][$index], $ruta_completa)) {
+                            // Guardar la ruta relativa desde la raíz del proyecto
+                            $ruta_relativa = "plantillas/plantilla-{$plantilla_id}/uploads/{$slug}/galeria/" . $nombre_archivo;
+                            $stmt->execute([$invitacion_id, $ruta_relativa]);
                         }
                     }
                 }
             }
         }
         
-        // Subir e insertar imágenes de dresscode
-        $imagen_dresscode_hombres = subirImagen('imagen_dresscode_hombres', 'uploads/dresscode/');
-        $imagen_dresscode_mujeres = subirImagen('imagen_dresscode_mujeres', 'uploads/dresscode/');
+        // Subir e insertar imágenes de dresscode con la nueva estructura
+        $imagen_dresscode_hombres = subirImagen('imagen_dresscode_hombres', $plantilla_id, $slug, 'dresscode');
+        $imagen_dresscode_mujeres = subirImagen('imagen_dresscode_mujeres', $plantilla_id, $slug, 'dresscode');
         
         if ($imagen_dresscode_hombres || $imagen_dresscode_mujeres) {
             $stmt = $db->prepare("INSERT INTO invitacion_dresscode (invitacion_id, hombres, mujeres) VALUES (?, ?, ?)");

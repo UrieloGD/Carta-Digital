@@ -11,6 +11,244 @@ if (!$id) {
     exit();
 }
 
+$error = null;
+$success = false;
+
+// Procesar formulario cuando se envía
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    try {
+        $db->beginTransaction();
+        
+        // Función para subir imágenes con la nueva estructura de carpetas
+        function subirImagen($archivo, $plantilla_id, $slug, $seccion) {
+            if (!isset($_FILES[$archivo]) || $_FILES[$archivo]['error'] !== UPLOAD_ERR_OK) {
+                return null;
+            }
+            
+            $extension = strtolower(pathinfo($_FILES[$archivo]['name'], PATHINFO_EXTENSION));
+            $extensiones_permitidas = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+            
+            if (!in_array($extension, $extensiones_permitidas)) {
+                throw new Exception("Formato de imagen no permitido: {$extension}");
+            }
+            
+            $nombre_archivo = uniqid() . '.' . $extension;
+            // Salir de admin/functions/ para llegar a la raíz del proyecto
+            $carpeta = "../../plantillas/plantilla-{$plantilla_id}/uploads/{$slug}/{$seccion}/";
+            
+            if (!is_dir($carpeta)) {
+                mkdir($carpeta, 0755, true);
+            }
+            
+            $ruta_completa = $carpeta . $nombre_archivo;
+            
+            if (move_uploaded_file($_FILES[$archivo]['tmp_name'], $ruta_completa)) {
+                // Retornar la ruta relativa desde la raíz del proyecto
+                return "plantillas/plantilla-{$plantilla_id}/uploads/{$slug}/{$seccion}/" . $nombre_archivo;
+            }
+            
+            throw new Exception("Error al subir la imagen: {$archivo}");
+        }
+        
+        // Validar campos requeridos
+        if (empty($_POST['plantilla_id']) || empty($_POST['nombres_novios']) || 
+            empty($_POST['fecha_evento']) || empty($_POST['hora_evento'])) {
+            throw new Exception("Por favor, completa todos los campos obligatorios");
+        }
+        
+        // Obtener datos actuales de la invitación
+        $current_query = "SELECT * FROM invitaciones WHERE id = ?";
+        $current_stmt = $db->prepare($current_query);
+        $current_stmt->execute([$id]);
+        $current_data = $current_stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if (!$current_data) {
+            throw new Exception("Invitación no encontrada");
+        }
+        
+        // Preparar datos para actualizar
+        $plantilla_id = $_POST['plantilla_id'];
+        $slug = $current_data['slug']; // El slug no se puede cambiar
+        $musica_autoplay = isset($_POST['musica_autoplay']) ? 1 : 0;
+        $musica_volumen = $_POST['musica_volumen'] ?? 0.5;
+        
+        // Subir nuevas imágenes principales si se proporcionaron
+        $imagen_hero = subirImagen('imagen_hero', $plantilla_id, $slug, 'hero') ?: $current_data['imagen_hero'];
+        $imagen_dedicatoria = subirImagen('imagen_dedicatoria', $plantilla_id, $slug, 'dedicatoria') ?: $current_data['imagen_dedicatoria'];
+        $imagen_destacada = subirImagen('imagen_destacada', $plantilla_id, $slug, 'destacada') ?: $current_data['imagen_destacada'];
+        
+        // Actualizar invitación principal
+        $update_query = "UPDATE invitaciones SET 
+            plantilla_id = ?, nombres_novios = ?, fecha_evento = ?, hora_evento = ?,
+            historia = ?, dresscode = ?, texto_rsvp = ?, mensaje_footer = ?, firma_footer = ?,
+            padres_novia = ?, padres_novio = ?, padrinos_novia = ?, padrinos_novio = ?,
+            musica_youtube_url = ?, musica_autoplay = ?, musica_volumen = ?,
+            imagen_hero = ?, imagen_dedicatoria = ?, imagen_destacada = ?
+            WHERE id = ?";
+        
+        $stmt = $db->prepare($update_query);
+        $stmt->execute([
+            $plantilla_id,
+            $_POST['nombres_novios'],
+            $_POST['fecha_evento'],
+            $_POST['hora_evento'],
+            $_POST['historia'] ?? '',
+            $_POST['dresscode'] ?? '',
+            $_POST['texto_rsvp'] ?? '',
+            $_POST['mensaje_footer'] ?? '',
+            $_POST['firma_footer'] ?? '',
+            $_POST['padres_novia'] ?? '',
+            $_POST['padres_novio'] ?? '',
+            $_POST['padrinos_novia'] ?? '',
+            $_POST['padrinos_novio'] ?? '',
+            $_POST['musica_youtube_url'] ?? '',
+            $musica_autoplay,
+            $musica_volumen,
+            $imagen_hero,
+            $imagen_dedicatoria,
+            $imagen_destacada,
+            $id
+        ]);
+        
+        // Actualizar ubicaciones (eliminar y volver a insertar)
+        $db->prepare("DELETE FROM invitacion_ubicaciones WHERE invitacion_id = ?")->execute([$id]);
+        
+        // Insertar ceremonia si se proporcionó
+        if (!empty($_POST['ceremonia_lugar'])) {
+            $stmt = $db->prepare("INSERT INTO invitacion_ubicaciones (invitacion_id, tipo, nombre_lugar, direccion, hora_inicio, google_maps_url) VALUES (?, 'ceremonia', ?, ?, ?, ?)");
+            $stmt->execute([
+                $id,
+                $_POST['ceremonia_lugar'],
+                $_POST['ceremonia_direccion'] ?? '',
+                $_POST['ceremonia_hora'] ?? null,
+                $_POST['ceremonia_maps'] ?? ''
+            ]);
+        }
+        
+        // Insertar evento si se proporcionó
+        if (!empty($_POST['evento_lugar'])) {
+            $stmt = $db->prepare("INSERT INTO invitacion_ubicaciones (invitacion_id, tipo, nombre_lugar, direccion, hora_inicio, google_maps_url) VALUES (?, 'evento', ?, ?, ?, ?)");
+            $stmt->execute([
+                $id,
+                $_POST['evento_lugar'],
+                $_POST['evento_direccion'] ?? '',
+                $_POST['evento_hora'] ?? null,
+                $_POST['evento_maps'] ?? ''
+            ]);
+        }
+        
+        // Actualizar cronograma (eliminar y volver a insertar)
+        $db->prepare("DELETE FROM invitacion_cronograma WHERE invitacion_id = ?")->execute([$id]);
+        
+        if (!empty($_POST['cronograma_hora']) && is_array($_POST['cronograma_hora'])) {
+            $stmt = $db->prepare("INSERT INTO invitacion_cronograma (invitacion_id, hora, evento, descripcion, icono) VALUES (?, ?, ?, ?, ?)");
+            
+            foreach ($_POST['cronograma_hora'] as $index => $hora) {
+                if (!empty($hora) && !empty($_POST['cronograma_evento'][$index])) {
+                    $stmt->execute([
+                        $id,
+                        $hora,
+                        $_POST['cronograma_evento'][$index],
+                        $_POST['cronograma_descripcion'][$index] ?? '',
+                        $_POST['cronograma_icono'][$index] ?? 'anillos'
+                    ]);
+                }
+            }
+        }
+        
+        // Actualizar FAQs (eliminar y volver a insertar)
+        $db->prepare("DELETE FROM invitacion_faq WHERE invitacion_id = ?")->execute([$id]);
+        
+        if (!empty($_POST['faq_pregunta']) && is_array($_POST['faq_pregunta'])) {
+            $stmt = $db->prepare("INSERT INTO invitacion_faq (invitacion_id, pregunta, respuesta) VALUES (?, ?, ?)");
+            
+            foreach ($_POST['faq_pregunta'] as $index => $pregunta) {
+                if (!empty($pregunta) && !empty($_POST['faq_respuesta'][$index])) {
+                    $stmt->execute([
+                        $id,
+                        $pregunta,
+                        $_POST['faq_respuesta'][$index]
+                    ]);
+                }
+            }
+        }
+        
+        // Agregar nuevas imágenes a la galería (sin eliminar las existentes)
+        if (isset($_FILES['imagenes_galeria']) && !empty($_FILES['imagenes_galeria']['name'][0])) {
+            $stmt = $db->prepare("INSERT INTO invitacion_galeria (invitacion_id, ruta) VALUES (?, ?)");
+            $carpeta_galeria = "../../plantillas/plantilla-{$plantilla_id}/uploads/{$slug}/galeria/";
+            
+            if (!is_dir($carpeta_galeria)) {
+                mkdir($carpeta_galeria, 0755, true);
+            }
+            
+            foreach ($_FILES['imagenes_galeria']['name'] as $index => $nombre) {
+                if ($_FILES['imagenes_galeria']['error'][$index] === UPLOAD_ERR_OK) {
+                    $extension = strtolower(pathinfo($nombre, PATHINFO_EXTENSION));
+                    $extensiones_permitidas = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+                    
+                    if (in_array($extension, $extensiones_permitidas)) {
+                        $nombre_archivo = uniqid() . '.' . $extension;
+                        $ruta_completa = $carpeta_galeria . $nombre_archivo;
+                        
+                        if (move_uploaded_file($_FILES['imagenes_galeria']['tmp_name'][$index], $ruta_completa)) {
+                            $ruta_relativa = "plantillas/plantilla-{$plantilla_id}/uploads/{$slug}/galeria/" . $nombre_archivo;
+                            $stmt->execute([$id, $ruta_relativa]);
+                        }
+                    }
+                }
+            }
+        }
+        
+        // Actualizar imágenes de dresscode
+        $dresscode_query = "SELECT * FROM invitacion_dresscode WHERE invitacion_id = ?";
+        $dresscode_stmt = $db->prepare($dresscode_query);
+        $dresscode_stmt->execute([$id]);
+        $current_dresscode = $dresscode_stmt->fetch(PDO::FETCH_ASSOC);
+        
+        $imagen_dresscode_hombres = subirImagen('imagen_dresscode_hombres', $plantilla_id, $slug, 'dresscode');
+        $imagen_dresscode_mujeres = subirImagen('imagen_dresscode_mujeres', $plantilla_id, $slug, 'dresscode');
+        
+        // Si no se subieron nuevas imágenes, mantener las actuales
+        if (!$imagen_dresscode_hombres && $current_dresscode) {
+            $imagen_dresscode_hombres = $current_dresscode['hombres'];
+        }
+        if (!$imagen_dresscode_mujeres && $current_dresscode) {
+            $imagen_dresscode_mujeres = $current_dresscode['mujeres'];
+        }
+        
+        // Actualizar o insertar dresscode
+        if ($imagen_dresscode_hombres || $imagen_dresscode_mujeres) {
+            if ($current_dresscode) {
+                $stmt = $db->prepare("UPDATE invitacion_dresscode SET hombres = ?, mujeres = ? WHERE invitacion_id = ?");
+                $stmt->execute([
+                    $imagen_dresscode_hombres,
+                    $imagen_dresscode_mujeres,
+                    $id
+                ]);
+            } else {
+                $stmt = $db->prepare("INSERT INTO invitacion_dresscode (invitacion_id, hombres, mujeres) VALUES (?, ?, ?)");
+                $stmt->execute([
+                    $id,
+                    $imagen_dresscode_hombres,
+                    $imagen_dresscode_mujeres
+                ]);
+            }
+        }
+        
+        $db->commit();
+        $success = true;
+        
+        // Redireccionar con mensaje de éxito
+        header("Location: editar.php?id=" . $id . "&success=1");
+        exit();
+        
+    } catch (Exception $e) {
+        $db->rollBack();
+        $error = $e->getMessage();
+    }
+}
+
 // Obtener plantillas disponibles
 $plantilla_query = "SELECT id, nombre FROM plantillas WHERE activa = 1";
 $plantilla_stmt = $db->prepare($plantilla_query);
@@ -106,9 +344,9 @@ foreach($ubicaciones as $ub) {
         </div>
         <?php endif; ?>
 
-        <?php if (isset($error)): ?>
+        <?php if (isset($error) && !empty($error)): ?>
         <div class="error-alert">
-            <p class="mb-0"><i class="bi bi-exclamation-circle-fill me-2"></i> <?php echo $error; ?></p>
+            <p class="mb-0"><i class="bi bi-exclamation-circle-fill me-2"></i> <?php echo htmlspecialchars($error); ?></p>
         </div>
         <?php endif; ?>
 
