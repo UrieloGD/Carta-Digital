@@ -151,21 +151,51 @@ $plantilla_id = $invitacion['plantilla_id'] ?? 1;
 $carpeta_plantilla = $invitacion['plantilla_carpeta'] ?? "plantilla-{$plantilla_id}";
 $archivo_plantilla = $invitacion['archivo_principal'] ?? "invitacion-{$plantilla_id}.php";
 
-$ruta_plantilla = "./{$carpeta_plantilla}/{$archivo_plantilla}";
+// Construir rutas posibles
+$rutas_posibles = [
+    "./plantillas/{$carpeta_plantilla}/{$archivo_plantilla}",
+    "./plantillas/plantilla-{$plantilla_id}/{$archivo_plantilla}",
+    "./{$carpeta_plantilla}/{$archivo_plantilla}",
+    "./plantillas/plantilla-{$plantilla_id}/index.php",
+    "./plantillas/plantilla-{$plantilla_id}/invitacion.php"
+];
 
-// Cargar la plantilla específica
-if (file_exists($ruta_plantilla)) {
-    include $ruta_plantilla;
-} else {
-    // Log del error antes del fallback
-    error_log("ERROR: No se encontró la plantilla en {$ruta_plantilla}");
-    
-    // Fallback más inteligente
-    $fallback_path = "./plantillas/plantilla-1/invitacion-1.php";
-    if (file_exists($fallback_path)) {
-        include $fallback_path;
+$plantilla_cargada = false;
+
+// Intentar cargar la plantilla
+foreach ($rutas_posibles as $ruta) {
+    if (file_exists($ruta)) {
+        error_log("Cargando plantilla: {$ruta}");
+        include $ruta;
+        $plantilla_cargada = true;
+        break;
     } else {
-        exit("Error: No se puede cargar ninguna plantilla");
+        error_log("No existe: {$ruta}");
+    }
+}
+
+// Fallback si no se encontró ninguna plantilla
+if (!$plantilla_cargada) {
+    error_log("ERROR: No se encontró ninguna plantilla válida");
+    
+    // Intentar fallback más completo
+    $fallbacks = [
+        "./plantillas/plantilla-1/invitacion-1.php",
+        "./plantillas/plantilla-1/index.php",
+        "./plantilla-1/invitacion-1.php"
+    ];
+    
+    foreach ($fallbacks as $fallback) {
+        if (file_exists($fallback)) {
+            error_log("Usando fallback: {$fallback}");
+            include $fallback;
+            $plantilla_cargada = true;
+            break;
+        }
+    }
+    
+    if (!$plantilla_cargada) {
+        exit("Error: No se puede cargar ninguna plantilla disponible");
     }
 }
 ?>
