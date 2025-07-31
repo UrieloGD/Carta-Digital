@@ -1,6 +1,6 @@
 <?php $page_title = "Contacto"; include './includes/header.php'; ?>
 
-<link rel="stylesheet" href="./css/contacto.css">
+<link rel="stylesheet" href="./css/contacto.css?v=<?php echo filemtime('./css/contacto.css'); ?>" />
 
 <section class="contact">
     <div class="container">

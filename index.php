@@ -1,7 +1,6 @@
 <?php require_once './includes/header.php'; ?>
 
-<link rel="stylesheet" href="./css/index.css">
-
+<link rel="stylesheet" href="./css/index.css?v=<?php echo filemtime('./css/index.css'); ?>" />
 <!-- Hero Section -->
 <section class="hero">
     <div class="hero-background">

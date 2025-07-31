@@ -99,11 +99,11 @@ $galeria = array_column($galeria_result, 'ruta');
 // Si no hay imágenes en la galería, usar las por defecto
 if (empty($galeria)) {
     $galeria = [
-        "./plantillas/natural/img/galeria/pareja1.jpg",
-        "./plantillas/natural/img/galeria/pareja2.jpg", 
-        "./plantillas/natural/img/galeria/pareja3.jpg",
-        "./plantillas/natural/img/galeria/pareja4.jpg",
-        "./plantillas/natural/img/galeria/pareja5.jpg"
+        "./plantillas/plantilla-1/img/galeria/pareja1.jpg",
+        "./plantillas/plantilla-1/img/galeria/pareja2.jpg", 
+        "./plantillas/plantilla-1/img/galeria/pareja3.jpg",
+        "./plantillas/plantilla-1/img/galeria/pareja4.jpg",
+        "./plantillas/plantilla-1/img/galeria/pareja5.jpg"
     ];
 }
 
@@ -200,20 +200,19 @@ try {
     <title><?php echo htmlspecialchars($nombres); ?> - Invitación de Boda</title>
     
     <!-- Estilos -->
-    <link rel="stylesheet" href="./plantillas/plantilla-2/css/global.css">
-    <link rel="stylesheet" href="./plantillas/plantilla-2/css/hero.css">
-    <link rel="stylesheet" href="./plantillas/plantilla-2/css/bienvenida.css">
-    <link rel="stylesheet" href="./plantillas/plantilla-2/css/historia.css">
-    <link rel="stylesheet" href="./plantillas/plantilla-2/css/contador.css">
-    <link rel="stylesheet" href="./plantillas/plantilla-2/css/cronograma.css">
-    <link rel="stylesheet" href="./plantillas/plantilla-2/css/ubicaciones.css">
-    <link rel="stylesheet" href="./plantillas/plantilla-2/css/galeria.css">
-    <link rel="stylesheet" href="./plantillas/plantilla-2/css/dresscode.css">
-    <link rel="stylesheet" href="./plantillas/plantilla-2/css/mesa-regalo.css">
-    <link rel="stylesheet" href="./plantillas/plantilla-2/css/rsvp.css">
-    <link rel="stylesheet" href="./plantillas/plantilla-2/css/footer.css">
-    <link rel="stylesheet" href="./plantillas/plantilla-2/css/responsive.css">
-    <link rel="stylesheet" href="./plantillas/plantilla-2/css/music-player.css">
+    <link rel="stylesheet" href="./plantillas/plantilla-2/css/global.css?v=<?php echo filemtime('./plantillas/plantilla-2/css/global.css'); ?>" />
+    <link rel="stylesheet" href="./plantillas/plantilla-2/css/hero.css?v=<?php echo filemtime('./plantillas/plantilla-2/css/hero.css'); ?>" />
+    <link rel="stylesheet" href="./plantillas/plantilla-2/css/bienvenida.css?v=<?php echo filemtime('./plantillas/plantilla-2/css/bienvenida.css'); ?>" />
+    <link rel="stylesheet" href="./plantillas/plantilla-2/css/historia.css?v=<?php echo filemtime('./plantillas/plantilla-2/css/historia.css'); ?>" />
+    <link rel="stylesheet" href="./plantillas/plantilla-2/css/contador.css?v=<?php echo filemtime('./plantillas/plantilla-2/css/contador.css'); ?>" />
+    <link rel="stylesheet" href="./plantillas/plantilla-2/css/cronograma.css?v=<?php echo filemtime('./plantillas/plantilla-2/css/cronograma.css'); ?>" />
+    <link rel="stylesheet" href="./plantillas/plantilla-2/css/ubicaciones.css?v=<?php echo filemtime('./plantillas/plantilla-2/css/ubicaciones.css'); ?>" />
+    <link rel="stylesheet" href="./plantillas/plantilla-2/css/galeria.css?v=<?php echo filemtime('./plantillas/plantilla-2/css/galeria.css'); ?>" />
+    <link rel="stylesheet" href="./plantillas/plantilla-2/css/dresscode.css?v=<?php echo filemtime('./plantillas/plantilla-2/css/dresscode.css'); ?>" />
+    <link rel="stylesheet" href="./plantillas/plantilla-2/css/rsvp.css?v=<?php echo filemtime('./plantillas/plantilla-2/css/rsvp.css'); ?>" />
+    <link rel="stylesheet" href="./plantillas/plantilla-2/css/footer.css?v=<?php echo filemtime('./plantillas/plantilla-2/css/footer.css'); ?>" />
+    <link rel="stylesheet" href="./plantillas/plantilla-2/css/responsive.css?v=<?php echo filemtime('./plantillas/plantilla-2/css/responsive.css'); ?>" />
+    <link rel="stylesheet" href="./plantillas/plantilla-2/css/music-player.css?v=<?php echo filemtime('./plantillas/plantilla-2/css/music-player.css'); ?>" />
     
     <!-- Fuentes -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -696,12 +695,12 @@ const invitacionData = {
 };
 </script>
 
-<script src="./plantillas/plantilla-2/js/contador.js"></script>
-<script src="./plantillas/plantilla-2/js/compartir.js"></script>
-<script src="./plantillas/plantilla-2/js/rsvp.js"></script>
-<script src="./plantillas/plantilla-2/js/faq.js"></script>
-<script src="./plantillas/plantilla-2/js/estadisticas.js"></script>
-<script src="./plantillas/plantilla-2/js/invitacion.js"></script>
-<script src="./plantillas/plantilla-2/js/music-player.js"></script>
+<script src="./plantillas/plantilla-2/js/contador.js?v=<?php echo filemtime('./plantillas/plantilla-2/js/contador.js'); ?>"></script>
+<script src="./plantillas/plantilla-2/js/compartir.js?v=<?php echo filemtime('./plantillas/plantilla-2/js/compartir.js'); ?>"></script>
+<script src="./plantillas/plantilla-2/js/rsvp.js?v=<?php echo filemtime('./plantillas/plantilla-2/js/rsvp.js'); ?>"></script>
+<script src="./plantillas/plantilla-2/js/faq.js?v=<?php echo filemtime('./plantillas/plantilla-2/js/faq.js'); ?>"></script>
+<script src="./plantillas/plantilla-2/js/estadisticas.js?v=<?php echo filemtime('./plantillas/plantilla-2/js/estadisticas.js'); ?>"></script>
+<script src="./plantillas/plantilla-2/js/invitacion.js?v=<?php echo filemtime('./plantillas/plantilla-2/js/invitacion.js'); ?>"></script>
+<script src="./plantillas/plantilla-2/js/music-player.js?v=<?php echo filemtime('./plantillas/plantilla-2/js/music-player.js'); ?>"></script>
 </body>
 </html>

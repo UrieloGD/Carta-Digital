@@ -1,5 +1,5 @@
 <?php include './includes/header.php'; ?>
-<link rel="stylesheet" href="./css/plantillas.css">
+<link rel="stylesheet" href="./css/plantillas.css?v=<?php echo filemtime('./css/plantillas.css'); ?>" />
 
 <section class="page-header">
     <div class="container">
@@ -100,6 +100,6 @@
         </div>
     </div>
 </section>
-
-<script src="./js/plantillas.js"></script>
+<script src="">
+<script src="./js/plantillas.js?v=<?php echo filemtime('./css/plantillas.css'); ?>"></script>
 <?php include './includes/footer.php'; ?>

@@ -246,21 +246,21 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($nombres); ?> - Invitación de Boda</title>
     <!-- Estilos -->
-    <link rel="stylesheet" href="./plantillas/plantilla-1/css/global.css">
-    <link rel="stylesheet" href="./plantillas/plantilla-1/css/hero.css">
-    <link rel="stylesheet" href="./plantillas/plantilla-1/css/bienvenida.css">
-    <link rel="stylesheet" href="./plantillas/plantilla-1/css/padres-padrinos.css">
-    <link rel="stylesheet" href="./plantillas/plantilla-1/css/historia.css">
-    <link rel="stylesheet" href="./plantillas/plantilla-1/css/contador.css">
-    <link rel="stylesheet" href="./plantillas/plantilla-1/css/cronograma.css">
-    <link rel="stylesheet" href="./plantillas/plantilla-1/css/ubicaciones.css">
-    <link rel="stylesheet" href="./plantillas/plantilla-1/css/galeria.css">
-    <link rel="stylesheet" href="./plantillas/plantilla-1/css/dresscode.css">
-    <link rel="stylesheet" href="./plantillas/plantilla-1/css/faq.css">
-    <link rel="stylesheet" href="./plantillas/plantilla-1/css/rsvp.css">
-    <link rel="stylesheet" href="./plantillas/plantilla-1/css/footer.css">
-    <link rel="stylesheet" href="./plantillas/plantilla-1/css/responsive.css">
-    <link rel="stylesheet" href="./plantillas/plantilla-1/css/music-player.css">
+    <link rel="stylesheet" href="./plantillas/plantilla-1/css/global.css?v=<?php echo filemtime('./plantillas/plantilla-1/css/global.css'); ?>" />
+    <link rel="stylesheet" href="./plantillas/plantilla-1/css/hero.css?v=<?php echo filemtime('./plantillas/plantilla-1/css/hero.css'); ?>" />
+    <link rel="stylesheet" href="./plantillas/plantilla-1/css/bienvenida.css?v=<?php echo filemtime('./plantillas/plantilla-1/css/bienvenida.css'); ?>" />
+    <link rel="stylesheet" href="./plantillas/plantilla-1/css/padres-padrinos.css?v=<?php echo filemtime('./plantillas/plantilla-1/css/padres-padrinos.css'); ?>" />
+    <link rel="stylesheet" href="./plantillas/plantilla-1/css/historia.css?v=<?php echo filemtime('./plantillas/plantilla-1/css/historia.css'); ?>" />
+    <link rel="stylesheet" href="./plantillas/plantilla-1/css/contador.css?v=<?php echo filemtime('./plantillas/plantilla-1/css/contador.css'); ?>" />
+    <link rel="stylesheet" href="./plantillas/plantilla-1/css/cronograma.css?v=<?php echo filemtime('./plantillas/plantilla-1/css/cronograma.css'); ?>" />
+    <link rel="stylesheet" href="./plantillas/plantilla-1/css/ubicaciones.css?v=<?php echo filemtime('./plantillas/plantilla-1/css/ubicaciones.css'); ?>" />
+    <link rel="stylesheet" href="./plantillas/plantilla-1/css/galeria.css?v=<?php echo filemtime('./plantillas/plantilla-1/css/galeria.css'); ?>" />
+    <link rel="stylesheet" href="./plantillas/plantilla-1/css/dresscode.css?v=<?php echo filemtime('./plantillas/plantilla-1/css/dresscode.css'); ?>" />
+    <link rel="stylesheet" href="./plantillas/plantilla-1/css/faq.css?v=<?php echo filemtime('./plantillas/plantilla-1/css/faq.css'); ?>" />
+    <link rel="stylesheet" href="./plantillas/plantilla-1/css/rsvp.css?v=<?php echo filemtime('./plantillas/plantilla-1/css/rsvp.css'); ?>" />
+    <link rel="stylesheet" href="./plantillas/plantilla-1/css/footer.css?v=<?php echo filemtime('./plantillas/plantilla-1/css/footer.css'); ?>" />
+    <link rel="stylesheet" href="./plantillas/plantilla-1/css/responsive.css?v=<?php echo filemtime('./plantillas/plantilla-1/css/responsive.css'); ?>" />
+    <link rel="stylesheet" href="./plantillas/plantilla-1/css/music-player.css?v=<?php echo filemtime('./plantillas/plantilla-1/css/music-player.css'); ?>" />
     
     <!-- Fuentes -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -745,12 +745,12 @@ const invitacionData = {
 };
 </script>
 
-<script src="./plantillas/plantilla-1/js/contador.js"></script>
-<script src="./plantillas/plantilla-1/js/compartir.js"></script>
-<script src="./plantillas/plantilla-1/js/rsvp.js"></script>
-<script src="./plantillas/plantilla-1/js/faq.js"></script>
-<script src="./plantillas/plantilla-1/js/estadisticas.js"></script>
-<script src="./plantillas/plantilla-1/js/invitacion.js"></script>
-<script src="./plantillas/plantilla-1/js/music-player.js"></script>
+<script src="./plantillas/plantilla-1/js/contador.js?v=<?php echo filemtime('./plantillas/plantilla-1/js/contador.js'); ?>"></script>
+<script src="./plantillas/plantilla-1/js/compartir.js?v=<?php echo filemtime('./plantillas/plantilla-1/js/compartir.js'); ?>"></script>
+<script src="./plantillas/plantilla-1/js/rsvp.js?v=<?php echo filemtime('./plantillas/plantilla-1/js/rsvp.js'); ?>"></script>
+<script src="./plantillas/plantilla-1/js/faq.js?v=<?php echo filemtime('./plantillas/plantilla-1/js/faq.js'); ?>"></script>
+<script src="./plantillas/plantilla-1/js/estadisticas.js?v=<?php echo filemtime('./plantillas/plantilla-1/js/estadisticas.js'); ?>"></script>
+<script src="./plantillas/plantilla-1/js/invitacion.js?v=<?php echo filemtime('./plantillas/plantilla-1/js/invitacion.js'); ?>"></script>
+<script src="./plantillas/plantilla-1/js/music-player.js?v=<?php echo filemtime('./plantillas/plantilla-1/js/music-player.js'); ?>"></script>
 </body>
 </html>
