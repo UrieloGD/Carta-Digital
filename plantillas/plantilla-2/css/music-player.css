@@ -250,7 +250,7 @@
 
 @media (max-width: 480px) {
     .music-controls {
-        max-width: 90dvw;
+        max-width: 90vw;
         padding: 10px 14px;
         bottom: 15px;
         right: 15px;
