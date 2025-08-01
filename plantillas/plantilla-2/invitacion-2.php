@@ -487,14 +487,16 @@ try {
             <h2>Momentos Especiales</h2>
             <div class="decorative-line"></div>
         </div>
-        <div class="galeria-grid">
-            <?php foreach(array_slice($galeria, 0, 6) as $index => $imagen): ?>
-            <div class="galeria-item item-<?php echo $index + 1; ?>">
-                <div class="image-overlay"></div>
-                <img src="<?php echo htmlspecialchars($imagen); ?>" alt="Momento especial" />
-            </div>
-            <?php endforeach; ?>
+        <div class="galeria-grid" id="galeria-grid">
+            <!-- Las imágenes se cargarán dinámicamente con JavaScript -->
         </div>
+        <?php if (count($galeria) > 6): ?>
+        <div class="galeria-controls">
+            <button class="galeria-nav-btn" id="galeria-prev">‹</button>
+            <div class="galeria-indicators" id="galeria-indicators"></div>
+            <button class="galeria-nav-btn" id="galeria-next">›</button>
+        </div>
+        <?php endif; ?>
     </div>
 </section>
 
@@ -729,6 +731,11 @@ const invitacionData = {
 window.numeroWhatsAppRSVP = '<?php echo $numero_whatsapp_rsvp; ?>';
 </script>
 
+<script>
+// Pasar las imágenes de PHP a JavaScript
+const galeriaImagenes = <?php echo json_encode($galeria); ?>;
+</script>
+
 <script src="./plantillas/plantilla-2/js/contador.js?v=<?php echo filemtime('./plantillas/plantilla-2/js/contador.js'); ?>"></script>
 <script src="./plantillas/plantilla-2/js/compartir.js?v=<?php echo filemtime('./plantillas/plantilla-2/js/compartir.js'); ?>"></script>
 <script src="./plantillas/plantilla-2/js/rsvp.js?v=<?php echo filemtime('./plantillas/plantilla-2/js/rsvp.js'); ?>"></script>
@@ -736,5 +743,7 @@ window.numeroWhatsAppRSVP = '<?php echo $numero_whatsapp_rsvp; ?>';
 <script src="./plantillas/plantilla-2/js/estadisticas.js?v=<?php echo filemtime('./plantillas/plantilla-2/js/estadisticas.js'); ?>"></script>
 <script src="./plantillas/plantilla-2/js/invitacion.js?v=<?php echo filemtime('./plantillas/plantilla-2/js/invitacion.js'); ?>"></script>
 <script src="./plantillas/plantilla-2/js/music-player.js?v=<?php echo filemtime('./plantillas/plantilla-2/js/music-player.js'); ?>"></script>
+<script src="./plantillas/plantilla-2/js/galeria-rotacion.js?v=<?php echo filemtime('./plantillas/plantilla-2/js/galeria-rotacion.js'); ?>"></script>
+
 </body>
 </html>
