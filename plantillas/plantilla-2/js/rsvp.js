@@ -1,39 +1,31 @@
-function openRSVPModal() {
-    document.getElementById('rsvpModal').style.display = 'flex';
-}
-
-function closeRSVPModal() {
-    document.getElementById('rsvpModal').style.display = 'none';
-}
-
-function initRSVP() {
-    // Manejar envío de RSVP
-    document.getElementById('rsvpForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const formData = new FormData(this);
-        const data = Object.fromEntries(formData);
-        
-        fetch('./api/rsvp.php', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(data)
+// Función para confirmar asistencia por WhatsApp
+function confirmarAsistenciaWhatsApp() {
+    // Obtener el número de teléfono de la configuración
+    const numeroWhatsApp = window.numeroWhatsAppRSVP || '3339047672'; // Número por defecto
+    
+    // Crear el mensaje
+    const mensaje = `Hola! confirmo mi asistencia a la boda de ${invitacionData.nombres}.`;
+    const mensajeCodificado = encodeURIComponent(mensaje);
+    
+    // Abrir WhatsApp
+    const urlWhatsApp = `https://wa.me/${numeroWhatsApp}?text=${mensajeCodificado}`;
+    window.open(urlWhatsApp, '_blank');
+    
+    // Registrar estadística
+    fetch('./api/estadisticas.php', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            invitacion_id: invitacionData.id,
+            tipo_evento: 'rsvp_whatsapp',
+            datos_adicionales: {tipo: 'whatsapp_confirmation'}
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                closeRSVPModal();
-                document.getElementById('successMessage').style.display = 'flex';
-                setTimeout(() => {
-                    document.getElementById('successMessage').style.display = 'none';
-                }, 3000);
-            } else {
-                alert('Error al enviar la confirmación. Por favor intenta de nuevo.');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Error al enviar la confirmación. Por favor intenta de nuevo.');
-        });
+    }).catch(error => {
+        console.log('Error al registrar estadística:', error);
     });
+}
+
+// Inicializar RSVP (función simplificada)
+function initRSVP() {
+    console.log('RSVP WhatsApp inicializado para número:', window.numeroWhatsAppRSVP);
 }

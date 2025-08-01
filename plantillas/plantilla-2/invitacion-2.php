@@ -167,6 +167,9 @@ $padrinos_novio = $invitacion['padrinos_novio'] ?? '';
 // Configuraciones
 $mostrar_contador = (bool)($invitacion['mostrar_contador'] ?? true);
 
+// Número de WhatsApp para RSVP desde la base de datos
+$numero_whatsapp_rsvp = !empty($invitacion['whatsapp_confirmacion']) ? $invitacion['whatsapp_confirmacion'] : '3339047672';
+
 // Si no hay cronograma, usar el por defecto
 if (empty($cronograma)) {
     $cronograma = [
@@ -566,12 +569,14 @@ try {
                 <div class="decorative-line"></div>
             </div>
             <p><?php echo htmlspecialchars($texto_rsvp); ?></p>
-            <button class="rsvp-button" onclick="openRSVPModal()">Confirmar Asistencia</button>
+            <button class="rsvp-button" onclick="confirmarAsistenciaWhatsApp()">
+                <span>📱</span> Confirmar por WhatsApp
+            </button>
         </div>
     </div>
 </section>
 
-<!-- Modal RSVP -->
+<!-- Modal RSVP
 <div class="rsvp-modal" id="rsvpModal">
     <div class="modal-content">
         <div class="modal-header">
@@ -620,7 +625,7 @@ try {
            <button type="submit" class="form-submit">Enviar Confirmación</button>
        </form>
    </div>
-</div>
+</div> -->
 
 <!-- Footer -->
 <footer class="footer">
@@ -649,14 +654,14 @@ try {
    </div>
 </footer>
 
-<!-- Mensaje de éxito RSVP -->
+<!-- Mensaje de éxito RSVP 
 <div class="success-message" id="successMessage">
    <div class="success-content">
        <span class="success-icon">✅</span>
        <h3>¡Confirmación enviada!</h3>
        <p>Gracias por confirmar tu asistencia. ¡Te esperamos!</p>
    </div>
-</div>
+</div>-->
 
 <?php if (!empty($musica_youtube_url)): ?>
 <link rel="stylesheet" href="./plantillas/plantilla-2/css/music-player.css">
@@ -693,6 +698,9 @@ const invitacionData = {
     hora: '<?php echo $invitacion['hora_evento']; ?>',
     mostrarContador: <?php echo $mostrar_contador ? 'true' : 'false'; ?>,
 };
+
+// Configurar número de WhatsApp para RSVP
+window.numeroWhatsAppRSVP = '<?php echo $numero_whatsapp_rsvp; ?>';
 </script>
 
 <script src="./plantillas/plantilla-2/js/contador.js?v=<?php echo filemtime('./plantillas/plantilla-2/js/contador.js'); ?>"></script>

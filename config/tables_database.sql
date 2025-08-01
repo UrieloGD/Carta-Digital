@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS invitaciones (
     musica_volumen decimal(3.2),
 
     -- Whatsapp
-    whatsapp_confirmacion VARCHAR(20) DEFAULT NULL;
+    whatsapp_confirmacion VARCHAR(20) DEFAULT NULL,
     
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (plantilla_id) REFERENCES plantillas(id) ON DELETE CASCADE

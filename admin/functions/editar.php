@@ -83,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             historia = ?, dresscode = ?, texto_rsvp = ?, mensaje_footer = ?, firma_footer = ?,
             padres_novia = ?, padres_novio = ?, padrinos_novia = ?, padrinos_novio = ?,
             musica_youtube_url = ?, musica_autoplay = ?, musica_volumen = ?,
-            imagen_hero = ?, imagen_dedicatoria = ?, imagen_destacada = ?
+            imagen_hero = ?, imagen_dedicatoria = ?, imagen_destacada = ?, whatsapp_confirmacion = ?
             WHERE id = ?";
         
         $stmt = $db->prepare($update_query);
@@ -107,6 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $imagen_hero,
             $imagen_dedicatoria,
             $imagen_destacada,
+            $_POST['whatsapp_confirmacion'] ?? '',
             $id
         ]);
         
@@ -602,6 +603,18 @@ foreach($ubicaciones as $ub) {
                         placeholder="Con amor, Victoria & Matthew"
                         value="<?php echo htmlspecialchars($invitacion['firma_footer']); ?>">
                 </div>
+                
+                <!-- NUEVO CAMPO WHATSAPP -->
+                <div class="mb-3">
+                    <label for="whatsapp_confirmacion" class="form-label">Número de WhatsApp para Confirmaciones</label>
+                    <input type="tel" id="whatsapp_confirmacion" name="whatsapp_confirmacion" class="form-control" 
+                        placeholder="3339047672" pattern="[0-9]{10,15}"
+                        value="<?php echo htmlspecialchars($invitacion['whatsapp_confirmacion'] ?? ''); ?>">
+                    <div class="form-text">
+                        <i class="bi bi-info-circle me-1"></i>
+                        Número de WhatsApp donde recibirás las confirmaciones de asistencia (solo números, sin espacios ni guiones)
+                    </div>
+                </div>
             </div>
 
             <!-- Imágenes -->
@@ -950,7 +963,27 @@ foreach($ubicaciones as $ub) {
 
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-   
+    
+    <script>
+        // Validación del número de WhatsApp
+        document.getElementById('whatsapp_confirmacion').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, ''); // Solo números
+            if (value.length > 15) {
+                value = value.substring(0, 15); // Máximo 15 dígitos
+            }
+            e.target.value = value;
+            
+            // Cambiar el color del borde según la validez
+            if (value.length >= 10 && value.length <= 15) {
+                e.target.style.borderColor = '#28a745'; // Verde si es válido
+            } else if (value.length > 0) {
+                e.target.style.borderColor = '#dc3545'; // Rojo si es inválido
+            } else {
+                e.target.style.borderColor = ''; // Default si está vacío
+            }
+        });
+    </script>
+
     <script>
         // Función para previsualizar imágenes individuales
         function previewImage(input, previewId) {
