@@ -234,7 +234,7 @@ try {
             <p class="hero-subtitle">Nos casamos</p>
             <h1 class="hero-names"><?php echo htmlspecialchars($nombres); ?></h1>
             <div class="hero-date"><?php echo $fecha; ?></div>
-            <div class="hero-location"><?php echo htmlspecialchars($ubicacion); ?></div>
+            <!-- <div class="hero-location">< ?php echo htmlspecialchars($ubicacion); ?></div> -->
         </div>
         <div class="hero-ornament bottom"></div>
     </div>
@@ -518,11 +518,11 @@ try {
                     <?php if ($descripcion_dresscode_mujeres): ?>
                     <p><?php echo htmlspecialchars($descripcion_dresscode_mujeres); ?></p>
                     <?php endif; ?>
-                    <div class="color-palette">
+                    <!-- <div class="color-palette">
                         <div class="color-dot olive"></div>
                         <div class="color-dot sand"></div>
                         <div class="color-dot cream"></div>
-                    </div>
+                    </div> -->
                 </div>
                 
                 <div class="dresscode-example">
@@ -534,11 +534,11 @@ try {
                     <?php if ($descripcion_dresscode_hombres): ?>
                     <p><?php echo htmlspecialchars($descripcion_dresscode_hombres); ?></p>
                     <?php endif; ?>
-                    <div class="color-palette">
+                    <!-- <div class="color-palette">
                         <div class="color-dot olive"></div>
                         <div class="color-dot sand"></div>
                         <div class="color-dot cream"></div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>
