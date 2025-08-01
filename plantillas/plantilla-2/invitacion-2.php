@@ -490,11 +490,6 @@ try {
         <div class="galeria-grid" id="galeria-grid">
             <!-- Las imágenes se cargarán dinámicamente con JavaScript -->
         </div>
-        <div class="galeria-controls" id="galeria-controls" style="display: none;">
-            <button class="galeria-nav-btn" id="galeria-prev">‹</button>
-            <div class="galeria-indicators" id="galeria-indicators"></div>
-            <button class="galeria-nav-btn" id="galeria-next">›</button>
-        </div>
     </div>
 </section>
 

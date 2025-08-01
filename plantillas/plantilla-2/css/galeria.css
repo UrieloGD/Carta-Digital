@@ -1,8 +1,9 @@
-/* Galería - Estilo con Rotación */
+/* Galería - Solo rotación automática */
 .galeria {
     background: var(--cream);
     position: relative;
     overflow: hidden;
+    padding: 5rem 0;
 }
 
 .galeria::before {
@@ -42,7 +43,6 @@
     position: relative;
     z-index: 1;
     min-height: 400px;
-    transition: var(--transition-smooth);
 }
 
 .galeria-item {
@@ -51,21 +51,11 @@
     border-radius: 20px;
     overflow: hidden;
     box-shadow: var(--shadow-soft);
-    transition: var(--transition-smooth);
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
     background: var(--warm-white);
     opacity: 0;
     transform: translateY(30px) scale(0.9);
-}
-
-.galeria-item.visible {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-}
-
-.galeria-item.exiting {
-    opacity: 0;
-    transform: translateY(-30px) scale(0.9);
 }
 
 .galeria-item img {
@@ -77,8 +67,13 @@
     filter: sepia(15%) saturate(120%) brightness(1.05);
 }
 
+.galeria-item:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(107, 123, 58, 0.2);
+}
+
 .galeria-item:hover img {
-    transform: scale(1.08);
+    transform: scale(1.05);
     filter: sepia(5%) saturate(130%) brightness(1.1);
 }
 
@@ -90,8 +85,8 @@
     bottom: 0;
     background: linear-gradient(
         135deg,
-        rgba(107, 123, 58, 0.6) 0%,
-        rgba(212, 184, 150, 0.4) 100%
+        rgba(107, 123, 58, 0.5) 0%,
+        rgba(212, 184, 150, 0.3) 100%
     );
     opacity: 0;
     transition: var(--transition-smooth);
@@ -119,11 +114,6 @@
     transform: scale(1);
 }
 
-.galeria-item:hover {
-    transform: translateY(-10px) scale(1);
-    box-shadow: 0 20px 40px rgba(107, 123, 58, 0.2);
-}
-
 .galeria-item::after {
     content: '';
     position: absolute;
@@ -142,81 +132,37 @@
     opacity: 1;
 }
 
-/* Controles de la galería */
-/* Mejoras para los controles */
-.galeria-controls {
-    align-items: center;
-    justify-content: center;
-    gap: 2rem;
-    margin-top: 3rem;
-    position: relative;
-    z-index: 10;
-}
-
-.galeria-nav-btn {
+/* Indicador sutil de rotación automática */
+.galeria::after {
+    content: '';
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    width: 8px;
+    height: 8px;
     background: var(--primary-olive);
-    color: var(--warm-white);
-    border: none;
-    width: 50px;
-    height: 50px;
     border-radius: 50%;
-    font-size: 1.5rem;
-    cursor: pointer;
-    transition: var(--transition-smooth);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: var(--shadow-soft);
-    position: relative;
-    user-select: none;
+    opacity: 0.3;
+    animation: pulse 2s infinite ease-in-out;
 }
 
-.galeria-nav-btn:hover {
-    background: var(--dark-olive);
-    transform: scale(1.1);
-    box-shadow: var(--shadow-medium);
-}
-
-.galeria-nav-btn:active {
-    transform: scale(0.95);
-}
-
-.galeria-indicators {
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-}
-
-.galeria-indicator {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: rgba(107, 123, 58, 0.3);
-    cursor: pointer;
-    transition: var(--transition-smooth);
-    border: 2px solid transparent;
-}
-
-.galeria-indicator:hover {
-    background: rgba(107, 123, 58, 0.6);
-    transform: scale(1.1);
-}
-
-.galeria-indicator.active {
-    background: var(--primary-olive);
-    transform: scale(1.2);
-    border-color: var(--warm-white);
-}
-
-/* Debug visual para verificar que los controles están ahí */
-.galeria-controls[style*="display: flex"] {
-    border: 2px dashed rgba(107, 123, 58, 0.3);
-    padding: 1rem;
-    border-radius: 10px;
+@keyframes pulse {
+    0%, 100% {
+        opacity: 0.3;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.8;
+        transform: scale(1.2);
+    }
 }
 
 /* Responsive */
 @media (max-width: 768px) {
+    .galeria {
+        padding: 4rem 0;
+    }
+    
     .galeria-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 1.5rem;
@@ -224,12 +170,6 @@
     
     .galeria-item {
         aspect-ratio: 1/1;
-    }
-    
-    .galeria-nav-btn {
-        width: 40px;
-        height: 40px;
-        font-size: 1.2rem;
     }
     
     .image-overlay::before {
@@ -245,10 +185,6 @@
     
     .galeria-item {
         aspect-ratio: 4/3;
-    }
-    
-    .galeria-controls {
-        gap: 1rem;
     }
     
     .image-overlay::before {
