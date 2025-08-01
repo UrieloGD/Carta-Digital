@@ -1,12 +1,27 @@
-/* Ubicaciones - Estilo Natural */
+/* Ubicaciones - Cards Flotantes Corregidas - Fix para tipo de ubicación */
 .ubicaciones {
     background: var(--warm-white);
     position: relative;
+    overflow: hidden;
+}
+
+.ubicaciones::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 25% 25%, rgba(107, 123, 58, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(212, 184, 150, 0.03) 0%, transparent 50%);
+    pointer-events: none;
 }
 
 .ubicaciones-header {
     text-align: center;
     margin-bottom: 4rem;
+    position: relative;
+    z-index: 2;
 }
 
 .ubicaciones-header h2 {
@@ -23,45 +38,39 @@
     gap: 3rem;
     max-width: 1000px;
     margin: 0 auto;
+    position: relative;
+    z-index: 2;
+}
+
+/* Contenedor para manejar el overflow del badge */
+.ubicacion-card-wrapper {
+    position: relative;
+    /* Añadimos padding top para dar espacio al badge */
+    padding-top: 20px;
 }
 
 .ubicacion-card {
     background: var(--cream);
     border-radius: 25px;
-    overflow: hidden;
-    box-shadow: var(--shadow-soft);
-    transition: var(--transition-smooth);
+    /* REMOVEMOS overflow: hidden para que el badge no se corte */
     position: relative;
-    border: 1px solid rgba(107, 123, 58, 0.1);
-}
-
-.ubicacion-card::before {
-    content: '';
-    position: absolute;
-    top: -2px;
-    left: -2px;
-    right: -2px;
-    bottom: -2px;
-    background: linear-gradient(135deg, var(--primary-olive), var(--sand));
-    border-radius: 25px;
-    z-index: -1;
-    opacity: 0;
     transition: var(--transition-smooth);
+    box-shadow: 0 10px 30px rgba(107, 123, 58, 0.08);
+    border: 1px solid rgba(107, 123, 58, 0.05);
 }
 
 .ubicacion-card:hover {
-    transform: translateY(-10px);
-    box-shadow: var(--shadow-medium);
-}
-
-.ubicacion-card:hover::before {
-    opacity: 0.1;
+    transform: translateY(-15px);
+    box-shadow: 0 25px 50px rgba(107, 123, 58, 0.15);
 }
 
 .ubicacion-image {
     position: relative;
     height: 250px;
+    /* Añadimos overflow hidden solo a la imagen */
     overflow: hidden;
+    /* Redondeamos solo las esquinas superiores */
+    border-radius: 25px 25px 0 0;
 }
 
 .ubicacion-image img {
@@ -69,54 +78,170 @@
     height: 100%;
     object-fit: cover;
     transition: var(--transition-slow);
-    filter: sepia(10%) saturate(110%);
+    filter: brightness(1.1) saturate(1.1);
 }
 
 .ubicacion-card:hover .ubicacion-image img {
     transform: scale(1.05);
 }
 
-.image-overlay {
+.ubicacion-overlay {
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    inset: 0;
     background: linear-gradient(
-        135deg, 
-        rgba(107, 123, 58, 0.2), 
-        rgba(212, 184, 150, 0.1)
+        135deg,
+        rgba(107, 123, 58, 0.7) 0%,
+        rgba(107, 123, 58, 0.4) 100%
     );
     opacity: 0;
     transition: var(--transition-smooth);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.ubicacion-card:hover .image-overlay {
+.ubicacion-card:hover .ubicacion-overlay {
     opacity: 1;
 }
 
-.ubicacion-content {
-    padding: 2rem;
-    position: relative;
+.ubicacion-overlay-icon {
+    font-size: 3rem;
+    color: var(--warm-white);
+    opacity: 0;
+    transform: scale(0.5);
+    transition: var(--transition-smooth);
 }
 
+.ubicacion-card:hover .ubicacion-overlay-icon {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.ubicacion-content {
+    padding: 2.5rem;
+    position: relative;
+    /* Añadimos padding top para compensar el badge */
+    padding-top: 5rem;
+}
+
+/* CORRECCIÓN PRINCIPAL: Nuevo posicionamiento para el badge */
 .ubicacion-tipo {
-    display: inline-block;
+    position: absolute;
+    margin-top: 10px;
+    left: 2rem;
     background: var(--primary-olive);
     color: var(--warm-white);
-    padding: 0.5rem 1rem;
+    padding: 0.8rem 1.5rem;
     border-radius: 20px;
     font-family: var(--font-sans);
-    font-size: 0.8rem;
-    font-weight: 500;
+    font-size: 0.85rem;
+    font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 1px;
-    margin-bottom: 1rem;
-    position: relative;
-    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(107, 123, 58, 0.3);
+    z-index: 10; /* Z-index alto para que aparezca encima */
+    /* border: 2px solid var(--warm-white); */
 }
 
-.ubicacion-tipo::before {
+.ubicacion-content h3 {
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    color: var(--primary-olive);
+    margin: 0 0 1rem 0; /* Removemos margin top */
+    font-weight: 500;
+    line-height: 1.3;
+}
+
+.ubicacion-info {
+    margin-bottom: 2rem;
+}
+
+.ubicacion-info-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background: rgba(107, 123, 58, 0.03);
+    border-radius: 15px;
+    border-left: 3px solid var(--primary-olive);
+}
+
+.ubicacion-info-item:last-child {
+    margin-bottom: 0;
+}
+
+.ubicacion-info-icon {
+    font-size: 1.2rem;
+    margin-top: 2px;
+    min-width: 20px;
+}
+
+.ubicacion-info-text {
+    flex: 1;
+}
+
+.ubicacion-info-label {
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--primary-olive);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.3rem;
+}
+
+.ubicacion-info-value {
+    font-size: 1rem;
+    color: var(--soft-gray);
+    line-height: 1.5;
+    margin: 0;
+}
+
+.ubicacion-descripcion {
+    font-size: 0.95rem;
+    color: var(--soft-gray);
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    font-style: italic;
+    padding: 1rem;
+    background: rgba(212, 184, 150, 0.1);
+    border-radius: 15px;
+    border-left: 3px solid var(--sand);
+}
+
+.ubicacion-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.ubicacion-maps,
+.ubicacion-compartir {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    padding: 1rem 1.5rem;
+    border-radius: 15px;
+    text-decoration: none;
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: var(--transition-smooth);
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+}
+
+.ubicacion-maps {
+    background: linear-gradient(135deg, var(--primary-olive) 0%, var(--light-olive) 100%);
+    color: var(--warm-white);
+    box-shadow: 0 5px 20px rgba(107, 123, 58, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.ubicacion-maps::before {
     content: '';
     position: absolute;
     top: 0;
@@ -127,104 +252,38 @@
     transition: var(--transition-smooth);
 }
 
-.ubicacion-card:hover .ubicacion-tipo::before {
+.ubicacion-maps:hover {
+    background: linear-gradient(135deg, var(--dark-olive) 0%, #4a5428 100%);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(107, 123, 58, 0.4);
+}
+
+.ubicacion-maps:hover::before {
     left: 100%;
 }
 
-.ubicacion-content h3 {
-    font-family: var(--font-serif);
-    font-size: 1.8rem;
+.ubicacion-compartir {
+    background: var(--warm-white);
     color: var(--primary-olive);
-    margin-bottom: 1rem;
-    font-weight: 500;
-    line-height: 1.3;
+    border: 2px solid var(--primary-olive);
+    box-shadow: 0 5px 20px rgba(107, 123, 58, 0.1);
 }
 
-.ubicacion-direccion {
-    font-size: 1rem;
-    color: var(--soft-gray);
-    margin-bottom: 1rem;
-    line-height: 1.5;
-}
-
-.ubicacion-horario {
-    font-family: var(--font-serif);
-    font-size: 1.1rem;
-    color: var(--dark-olive);
-    font-weight: 500;
-    margin-bottom: 1rem;
-    padding: 0.8rem 1.2rem;
-    background: rgba(107, 123, 58, 0.05);
-    border-radius: 15px;
-    border-left: 4px solid var(--sand);
-}
-
-.ubicacion-descripcion {
-    font-size: 0.95rem;
-    color: var(--soft-gray);
-    line-height: 1.6;
-    margin-bottom: 1.5rem;
-    font-style: italic;
-}
-
-.ubicacion-maps {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    background: var(--sand);
-    color: var(--charcoal);
-    padding: 0.8rem 1.5rem;
-    border-radius: 25px;
-    text-decoration: none;
-    font-family: var(--font-sans);
-    font-weight: 500;
-    font-size: 0.9rem;
-    transition: var(--transition-smooth);
-    position: relative;
-    overflow: hidden;
-}
-
-.ubicacion-maps::before {
-    content: '📍';
-    font-size: 1rem;
+.ubicacion-compartir:hover {
+    background: var(--primary-olive);
+    color: var(--warm-white);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(107, 123, 58, 0.3);
 }
 
 .ubicacion-maps::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-    transition: var(--transition-smooth);
+    content: '🗺️';
+    font-size: 1rem;
 }
 
-.ubicacion-maps:hover {
-    background: var(--light-sand);
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(212, 184, 150, 0.3);
-}
-
-.ubicacion-maps:hover::after {
-    left: 100%;
-}
-
-/* Efectos decorativos */
-.ubicacion-content::after {
-    content: '';
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    width: 40px;
-    height: 40px;
-    background: 
-        radial-gradient(circle, var(--sand) 2px, transparent 2px),
-        radial-gradient(circle, var(--light-olive) 1px, transparent 1px);
-    background-size: 10px 10px, 8px 8px;
-    background-position: 0 0, 4px 4px;
-    opacity: 0.2;
-    border-radius: 50%;
+.ubicacion-compartir::after {
+    content: '📱';
+    font-size: 1rem;
 }
 
 /* Responsive */
@@ -235,54 +294,71 @@
         max-width: 500px;
     }
     
+    .ubicacion-card-wrapper {
+        padding-top: 15px;
+    }
+    
     .ubicacion-image {
         height: 200px;
     }
     
     .ubicacion-content {
-        padding: 1.5rem;
+        padding: 2rem;
+        padding-top: 2.5rem;
     }
     
     .ubicacion-content h3 {
-        font-size: 1.5rem;
+        font-size: 1.7rem;
     }
     
-    .ubicacion-horario {
-        padding: 0.6rem 1rem;
-        font-size: 1rem;
+    .ubicacion-actions {
+        flex-direction: column;
+    }
+    
+    .ubicacion-maps,
+    .ubicacion-compartir {
+        flex: none;
+    }
+    
+    .ubicacion-tipo {
+        top: -10px;
+        left: 1.5rem;
     }
 }
 
 @media (max-width: 480px) {
-    .ubicaciones-grid {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-    }
-    
     .ubicacion-card {
         border-radius: 20px;
     }
     
     .ubicacion-image {
         height: 180px;
+        border-radius: 20px 20px 0 0;
     }
     
     .ubicacion-content {
-        padding: 1.2rem;
+        padding: 1.5rem;
+        padding-top: 4rem;
+    }
+    
+    .ubicacion-tipo {
+        left: 1.2rem;
+        padding: 0.6rem 1.2rem;
+        font-size: 0.8rem;
+        margin-top: 20px;
     }
     
     .ubicacion-content h3 {
-        font-size: 1.3rem;
-        margin-bottom: 0.8rem;
+        font-size: 1.5rem;
     }
     
-    .ubicacion-direccion,
-    .ubicacion-descripcion {
-        font-size: 0.9rem;
+    .ubicacion-info-item {
+        padding: 0.8rem;
     }
     
-    .ubicacion-maps {
-        padding: 0.7rem 1.2rem;
+    .ubicacion-maps,
+    .ubicacion-compartir {
+        padding: 0.9rem 1.2rem;
         font-size: 0.85rem;
     }
 }

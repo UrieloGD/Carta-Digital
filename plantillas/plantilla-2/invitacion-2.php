@@ -416,38 +416,64 @@ try {
         </div>
         <div class="ubicaciones-grid">
             <?php foreach($ubicaciones_result as $ubicacion_item): ?>
-            <div class="ubicacion-card">
-                <?php if ($ubicacion_item['imagen']): ?>
-                <div class="ubicacion-image">
-                    <div class="image-overlay"></div>
-                    <img src="<?php echo htmlspecialchars($ubicacion_item['imagen']); ?>" alt="<?php echo htmlspecialchars($ubicacion_item['nombre_lugar']); ?>" />
-                </div>
-                <?php endif; ?>
-                <div class="ubicacion-content">
+            <!-- NUEVO WRAPPER -->
+            <div class="ubicacion-card-wrapper">
+                <div class="ubicacion-card">
+                    <!-- Badge del tipo ahora está correctamente posicionado -->
                     <div class="ubicacion-tipo"><?php echo ucfirst($ubicacion_item['tipo']); ?></div>
-                    <h3><?php echo htmlspecialchars($ubicacion_item['nombre_lugar']); ?></h3>
-                    <p class="ubicacion-direccion"><?php echo htmlspecialchars($ubicacion_item['direccion']); ?></p>
                     
-                    <?php if ($ubicacion_item['hora_inicio']): ?>
-                    <p class="ubicacion-horario">
-                        <?php echo formatearHora($ubicacion_item['hora_inicio']); ?>
-                        <?php if ($ubicacion_item['hora_fin']): ?>
-                        - <?php echo formatearHora($ubicacion_item['hora_fin']); ?>
+                    <?php if ($ubicacion_item['imagen']): ?>
+                    <div class="ubicacion-image">
+                        <div class="ubicacion-overlay">
+                            <div class="ubicacion-overlay-icon">📍</div>
+                        </div>
+                        <img src="<?php echo htmlspecialchars($ubicacion_item['imagen']); ?>" alt="<?php echo htmlspecialchars($ubicacion_item['nombre_lugar']); ?>" />
+                    </div>
+                    <?php endif; ?>
+                    
+                    <div class="ubicacion-content">
+                        <h3><?php echo htmlspecialchars($ubicacion_item['nombre_lugar']); ?></h3>
+                        
+                        <div class="ubicacion-info">
+                            <div class="ubicacion-info-item">
+                                <div class="ubicacion-info-icon">📍</div>
+                                <div class="ubicacion-info-text">
+                                    <div class="ubicacion-info-label">Dirección</div>
+                                    <p class="ubicacion-info-value"><?php echo htmlspecialchars($ubicacion_item['direccion']); ?></p>
+                                </div>
+                            </div>
+                            
+                            <?php if ($ubicacion_item['hora_inicio']): ?>
+                            <div class="ubicacion-info-item">
+                                <div class="ubicacion-info-icon">🕐</div>
+                                <div class="ubicacion-info-text">
+                                    <div class="ubicacion-info-label">Horario</div>
+                                    <p class="ubicacion-info-value">
+                                        <?php echo formatearHora($ubicacion_item['hora_inicio']); ?>
+                                        <?php if ($ubicacion_item['hora_fin']): ?>
+                                        - <?php echo formatearHora($ubicacion_item['hora_fin']); ?>
+                                        <?php endif; ?>
+                                    </p>
+                                </div>
+                            </div>
+                            <?php endif; ?>
+                        </div>
+                        
+                        <?php if ($ubicacion_item['descripcion']): ?>
+                        <div class="ubicacion-descripcion"><?php echo htmlspecialchars($ubicacion_item['descripcion']); ?></div>
                         <?php endif; ?>
-                    </p>
-                    <?php endif; ?>
-                    
-                    <?php if ($ubicacion_item['descripcion']): ?>
-                    <p class="ubicacion-descripcion"><?php echo htmlspecialchars($ubicacion_item['descripcion']); ?></p>
-                    <?php endif; ?>
-                    
-                    <?php if ($ubicacion_item['google_maps_url']): ?>
-                    <a href="<?php echo htmlspecialchars($ubicacion_item['google_maps_url']); ?>" target="_blank" class="ubicacion-maps">
-                        Ver en Google Maps
-                    </a>
-                    <?php endif; ?>
+                        
+                        <div class="ubicacion-actions">
+                            <?php if ($ubicacion_item['google_maps_url']): ?>
+                            <a href="<?php echo htmlspecialchars($ubicacion_item['google_maps_url']); ?>" target="_blank" class="ubicacion-maps">
+                                Ver en Maps
+                            </a>
+                            <?php endif; ?>
+                        </div>
+                    </div>
                 </div>
             </div>
+            <!-- FIN WRAPPER -->
             <?php endforeach; ?>
         </div>
     </div>

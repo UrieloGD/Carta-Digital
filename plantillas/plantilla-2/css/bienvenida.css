@@ -11,7 +11,7 @@
     left: 0;
     width: 100%;
     height: 50px;
-    background: linear-gradient(135deg, var(--warm-white) 0%, var(--cream) 100%);
+    background: var(--cream);
     clip-path: polygon(0 0, 100% 0, 85% 100%, 0% 100%);
 }
 
@@ -27,6 +27,7 @@
     color: var(--primary-olive);
     font-weight: 400;
     margin-bottom: 1rem;
+    margin-top: 1rem;
 }
 
 .bienvenida-text {
@@ -166,7 +167,7 @@
 .date-ornament::after {
     content: '❋';
     position: absolute;
-    top: -8px;
+    top: -14px;
     font-size: 16px;
     color: var(--sand);
 }
