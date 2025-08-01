@@ -143,12 +143,14 @@
 }
 
 /* Controles de la galería */
+/* Mejoras para los controles */
 .galeria-controls {
-    display: flex;
     align-items: center;
     justify-content: center;
     gap: 2rem;
     margin-top: 3rem;
+    position: relative;
+    z-index: 10;
 }
 
 .galeria-nav-btn {
@@ -165,6 +167,8 @@
     align-items: center;
     justify-content: center;
     box-shadow: var(--shadow-soft);
+    position: relative;
+    user-select: none;
 }
 
 .galeria-nav-btn:hover {
@@ -173,9 +177,14 @@
     box-shadow: var(--shadow-medium);
 }
 
+.galeria-nav-btn:active {
+    transform: scale(0.95);
+}
+
 .galeria-indicators {
     display: flex;
     gap: 0.5rem;
+    align-items: center;
 }
 
 .galeria-indicator {
@@ -185,29 +194,25 @@
     background: rgba(107, 123, 58, 0.3);
     cursor: pointer;
     transition: var(--transition-smooth);
+    border: 2px solid transparent;
+}
+
+.galeria-indicator:hover {
+    background: rgba(107, 123, 58, 0.6);
+    transform: scale(1.1);
 }
 
 .galeria-indicator.active {
     background: var(--primary-olive);
     transform: scale(1.2);
+    border-color: var(--warm-white);
 }
 
-/* Auto-rotación indicator */
-.galeria-auto-indicator {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    background: rgba(0,0,0,0.7);
-    color: white;
-    padding: 5px 10px;
-    border-radius: 15px;
-    font-size: 0.8rem;
-    opacity: 0;
-    transition: var(--transition-smooth);
-}
-
-.galeria:hover .galeria-auto-indicator {
-    opacity: 1;
+/* Debug visual para verificar que los controles están ahí */
+.galeria-controls[style*="display: flex"] {
+    border: 2px dashed rgba(107, 123, 58, 0.3);
+    padding: 1rem;
+    border-radius: 10px;
 }
 
 /* Responsive */
