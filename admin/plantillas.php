@@ -37,7 +37,7 @@ $plantillas = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <!-- Icon page -->
-    <link rel="shortcut icon" href="./images/logo.webp" />
+    <link rel="shortcut icon" href="./../images/logo.webp" />
     <style>
         body {
             background-color: #f8f9fa;
