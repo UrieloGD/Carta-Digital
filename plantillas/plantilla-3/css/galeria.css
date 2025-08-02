@@ -1,0 +1,371 @@
+/* Plantilla 3: Vintage Romance - Galería */
+
+.galeria {
+    padding: 6rem 0;
+    background: var(--vintage-sepia);
+    color: var(--vintage-cream);
+    position: relative;
+    overflow: hidden;
+}
+
+.galeria::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        repeating-linear-gradient(
+            45deg,
+            transparent,
+            transparent 30px,
+            rgba(212, 175, 55, 0.05) 30px,
+            rgba(212, 175, 55, 0.05) 60px
+        ),
+        repeating-linear-gradient(
+            -45deg,
+            transparent,
+            transparent 30px,
+            rgba(232, 180, 184, 0.05) 30px,
+            rgba(232, 180, 184, 0.05) 60px
+        );
+}
+
+.galeria-header {
+    text-align: center;
+    margin-bottom: 4rem;
+    position: relative;
+    z-index: 2;
+}
+
+.galeria-header h2 {
+    font-family: var(--font-display);
+    font-size: 3.2rem;
+    color: var(--vintage-cream);
+    font-weight: 600;
+    letter-spacing: 2px;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    position: relative;
+}
+
+.galeria-header h2::before,
+.galeria-header h2::after {
+    content: '❦';
+    position: absolute;
+    color: var(--vintage-gold);
+    font-size: 2rem;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.galeria-header h2::before {
+    left: -60px;
+}
+
+.galeria-header h2::after {
+    right: -60px;
+}
+
+.galeria-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+}
+
+.galeria-item {
+    position: relative;
+    aspect-ratio: 4/3;
+    overflow: hidden;
+    background: var(--vintage-cream);
+    border: 4px solid var(--vintage-gold);
+    box-shadow: 
+        var(--vintage-shadow),
+        inset 0 0 20px rgba(139, 115, 85, 0.1);
+    cursor: pointer;
+    transition: all 0.4s ease;
+}
+
+.galeria-item:hover {
+    transform: translateY(-8px) rotate(1deg);
+    box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.3),
+        inset 0 0 20px rgba(139, 115, 85, 0.2);
+}
+
+.galeria-item::before {
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+    border: 2px solid var(--vintage-rose);
+    z-index: 2;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.galeria-item:hover::before {
+    opacity: 1;
+}
+
+.galeria-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: sepia(30%) saturate(1.2) brightness(1.1) contrast(1.05);
+    transition: all 0.4s ease;
+}
+
+.galeria-item:hover img {
+    filter: sepia(40%) saturate(1.3) brightness(1.2) contrast(1.1);
+    transform: scale(1.05);
+}
+
+/* Marco vintage con esquinas decorativas */
+.galeria-item::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        linear-gradient(45deg, var(--vintage-gold) 0%, transparent 15%),
+        linear-gradient(-45deg, var(--vintage-gold) 0%, transparent 15%),
+        linear-gradient(135deg, var(--vintage-gold) 0%, transparent 15%),
+        linear-gradient(-135deg, var(--vintage-gold) 0%, transparent 15%);
+    background-size: 30px 30px;
+    background-position: 
+        top left,
+        top right, 
+        bottom left,
+        bottom right;
+    background-repeat: no-repeat;
+    opacity: 0.6;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Overlay con efecto vintage */
+.galeria-item-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(
+            circle at center,
+            rgba(114, 47, 55, 0.1) 0%,
+            rgba(139, 115, 85, 0.3) 70%,
+            rgba(114, 47, 55, 0.5) 100%
+        );
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.galeria-item:hover .galeria-item-overlay {
+    opacity: 1;
+}
+
+.galeria-zoom-icon {
+    font-size: 3rem;
+    color: var(--vintage-cream);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+/* Diferentes rotaciones para efecto vintage */
+.galeria-item:nth-child(3n+1) {
+    transform: rotate(-1deg);
+}
+
+.galeria-item:nth-child(3n+2) {
+    transform: rotate(1deg);
+}
+
+.galeria-item:nth-child(3n+3) {
+    transform: rotate(-0.5deg);
+}
+
+.galeria-item:nth-child(3n+1):hover {
+    transform: translateY(-8px) rotate(0deg);
+}
+
+.galeria-item:nth-child(3n+2):hover {
+    transform: translateY(-8px) rotate(-1deg);
+}
+
+.galeria-item:nth-child(3n+3):hover {
+    transform: translateY(-8px) rotate(1deg);
+}
+
+/* Modal de galería vintage */
+.galeria-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(114, 47, 55, 0.95);
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(10px);
+}
+
+.galeria-modal.active {
+    display: flex;
+}
+
+.galeria-modal-content {
+    position: relative;
+    max-width: 90%;
+    max-height: 90%;
+    background: var(--vintage-cream);
+    border: 5px solid var(--vintage-gold);
+    box-shadow: 
+        0 0 0 2px var(--vintage-rose),
+        0 20px 60px rgba(0, 0, 0, 0.5);
+    padding: 20px;
+}
+
+.galeria-modal-content::before {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    border: 2px solid var(--vintage-rose);
+    pointer-events: none;
+}
+
+.galeria-modal img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: sepia(20%) saturate(1.1) brightness(1.05);
+}
+
+.galeria-modal-close {
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    width: 40px;
+    height: 40px;
+    background: var(--vintage-burgundy);
+    color: var(--vintage-cream);
+    border: 3px solid var(--vintage-gold);
+    border-radius: 50%;
+    font-size: 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: var(--vintage-shadow);
+}
+
+.galeria-modal-close:hover {
+    background: var(--vintage-gold);
+    color: var(--vintage-burgundy);
+    transform: scale(1.1);
+}
+
+/* Decoraciones flotantes en la galería */
+.galeria::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(2px 2px at 40px 60px, rgba(212, 175, 55, 0.3), transparent),
+        radial-gradient(1px 1px at 80px 120px, rgba(232, 180, 184, 0.2), transparent),
+        radial-gradient(2px 2px at 160px 40px, rgba(212, 175, 55, 0.2), transparent),
+        radial-gradient(1px 1px at 200px 100px, rgba(232, 180, 184, 0.3), transparent);
+    background-repeat: repeat;
+    background-size: 240px 160px;
+    animation: sparkleGallery 25s linear infinite;
+    opacity: 0.4;
+    z-index: 1;
+}
+
+@keyframes sparkleGallery {
+    0% {
+        transform: translateX(0) translateY(0);
+    }
+    100% {
+        transform: translateX(-240px) translateY(-160px);
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .galeria {
+        padding: 4rem 0;
+    }
+    
+    .galeria-header h2 {
+        font-size: 2.5rem;
+        letter-spacing: 1px;
+    }
+    
+    .galeria-header h2::before,
+    .galeria-header h2::after {
+        display: none;
+    }
+    
+    .galeria-grid {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin: 0 20px;
+    }
+    
+    .galeria-item {
+        aspect-ratio: 1;
+    }
+    
+    .galeria-modal-content {
+        max-width: 95%;
+        max-height: 85%;
+        padding: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .galeria-grid {
+        grid-template-columns: 1fr;
+        margin: 0 15px;
+    }
+    
+    .galeria-item {
+        aspect-ratio: 4/3;
+    }
+    
+    .galeria-modal-content {
+        padding: 10px;
+    }
+    
+    .galeria-modal-close {
+        width: 35px;
+        height: 35px;
+        font-size: 1.2rem;
+    }
+}

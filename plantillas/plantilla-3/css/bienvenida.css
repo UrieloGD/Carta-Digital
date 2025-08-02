@@ -1,0 +1,355 @@
+/* Plantilla 3: Vintage Romance - Sección Bienvenida */
+
+.bienvenida {
+    padding: 6rem 0;
+    background: var(--vintage-cream);
+    position: relative;
+    overflow: hidden;
+}
+
+.bienvenida::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M0,0 Q50,25 100,0 L100,20 Q50,45 0,20 Z' fill='%23F5F1E8' opacity='0.5'/%3E%3C/svg%3E");
+    background-size: 200px 40px;
+    background-repeat: repeat-x;
+    opacity: 0.3;
+}
+
+.bienvenida-content {
+    position: relative;
+    z-index: 2;
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.bienvenida-header {
+    margin-bottom: 3rem;
+}
+
+.bienvenida-header h2 {
+    font-family: var(--font-display);
+    font-size: 3rem;
+    color: var(--vintage-burgundy);
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-shadow: var(--vintage-text-shadow);
+    margin-bottom: 1rem;
+}
+
+.decorative-line {
+    width: 120px;
+    height: 3px;
+    background: var(--vintage-gold-gradient);
+    margin: 0 auto;
+    position: relative;
+}
+
+.decorative-line::before,
+.decorative-line::after {
+    content: '❦';
+    position: absolute;
+    color: var(--vintage-rose);
+    font-size: 1.2rem;
+    top: -8px;
+}
+
+.decorative-line::before {
+    left: -25px;
+}
+
+.decorative-line::after {
+    right: -25px;
+}
+
+.bienvenida-text {
+    font-size: 1.3rem;
+    line-height: 1.8;
+    color: var(--vintage-sepia);
+    margin-bottom: 3rem;
+    font-family: var(--font-body);
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.bienvenida-text p {
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+
+.bienvenida-text p::first-letter {
+    font-family: var(--font-display);
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: var(--vintage-rose);
+    float: left;
+    line-height: 0.8;
+    margin: 0.1rem 0.5rem 0 0;
+    text-shadow: 2px 2px 4px rgba(232, 180, 184, 0.3);
+}
+
+.bienvenida-image {
+    margin: 4rem 0;
+    position: relative;
+    display: inline-block;
+}
+
+.image-frame {
+    position: relative;
+    display: inline-block;
+    padding: 20px;
+    background: var(--vintage-pearl);
+    border: 3px solid var(--vintage-gold);
+    box-shadow: 
+        0 0 0 1px var(--vintage-rose),
+        var(--vintage-shadow);
+    transform: rotate(-1deg);
+    transition: transform 0.3s ease;
+}
+
+.image-frame:hover {
+    transform: rotate(0deg) scale(1.02);
+}
+
+.image-frame img {
+    display: block;
+    max-width: 400px;
+    width: 100%;
+    height: auto;
+    filter: sepia(20%) saturate(1.1) brightness(1.05);
+}
+
+.image-ornament {
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    width: 60px;
+    height: 60px;
+    background: var(--vintage-gold);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--vintage-shadow-light);
+}
+
+.image-ornament::before {
+    content: '♥';
+    color: var(--vintage-cream);
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+/* Información familiar vintage */
+.familia-info {
+    margin-top: 4rem;
+    padding: 3rem;
+    background: rgba(245, 241, 232, 0.7);
+    border: 2px solid var(--vintage-rose);
+    border-radius: 0;
+    position: relative;
+}
+
+.familia-info::before {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    border: 1px solid var(--vintage-gold);
+    pointer-events: none;
+}
+
+.familia-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    margin-top: 2rem;
+}
+
+.familia-lado h4 {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    color: var(--vintage-burgundy);
+    margin-bottom: 1.5rem;
+    text-align: center;
+    position: relative;
+}
+
+.familia-lado h4::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 2px;
+    background: var(--vintage-rose);
+}
+
+.familia-item {
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.familia-item strong {
+    display: block;
+    font-family: var(--font-script);
+    font-size: 1.3rem;
+    color: var(--vintage-rose);
+    margin-bottom: 0.5rem;
+}
+
+.familia-item span {
+    font-family: var(--font-body);
+    color: var(--vintage-sepia);
+    font-size: 1.1rem;
+    line-height: 1.4;
+}
+
+/* Sección de fecha */
+.bienvenida-date-section {
+    margin-top: 4rem;
+    padding: 3rem 2rem;
+    background: var(--vintage-gold-gradient);
+    color: var(--vintage-cream);
+    position: relative;
+    overflow: hidden;
+}
+
+.bienvenida-date-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        repeating-linear-gradient(
+            45deg,
+            transparent,
+            transparent 10px,
+            rgba(255, 255, 255, 0.1) 10px,
+            rgba(255, 255, 255, 0.1) 20px
+        );
+}
+
+.date-ornament {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 1rem 0;
+}
+
+.date-ornament::before,
+.date-ornament::after {
+    content: '';
+    width: 80px;
+    height: 2px;
+    background: var(--vintage-cream);
+    margin: 0 20px;
+}
+
+.date-ornament::before {
+    background: linear-gradient(90deg, transparent 0%, var(--vintage-cream) 100%);
+}
+
+.date-ornament::after {
+    background: linear-gradient(90deg, var(--vintage-cream) 0%, transparent 100%);
+}
+
+.bienvenida-date {
+    font-family: var(--font-display);
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-align: center;
+    letter-spacing: 2px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    margin: 1rem 0;
+}
+
+.bienvenida-venue p {
+    font-family: var(--font-body);
+    font-size: 1.2rem;
+    text-align: center;
+    margin-bottom: 0.5rem;
+    position: relative;
+    z-index: 2;
+}
+
+.venue-name {
+    font-family: var(--font-script);
+    font-size: 1.8rem !important;
+    font-weight: 600;
+    margin: 1rem 0 !important;
+}
+
+.venue-address {
+    font-style: italic;
+    opacity: 0.9;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .bienvenida {
+        padding: 4rem 0;
+    }
+    
+    .bienvenida-header h2 {
+        font-size: 2.2rem;
+        letter-spacing: 1px;
+    }
+    
+    .bienvenida-text {
+        font-size: 1.1rem;
+        padding: 0 1rem;
+    }
+    
+    .familia-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    
+    .familia-info {
+        padding: 2rem 1rem;
+    }
+    
+    .image-frame {
+        padding: 15px;
+    }
+    
+    .image-frame img {
+        max-width: 300px;
+    }
+    
+    .bienvenida-date {
+        font-size: 2rem;
+    }
+    
+    .bienvenida-date-section {
+        padding: 2rem 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .bienvenida-text p::first-letter {
+        font-size: 2.5rem;
+    }
+    
+    .image-frame img {
+        max-width: 250px;
+    }
+    
+    .bienvenida-date {
+        font-size: 1.8rem;
+        letter-spacing: 1px;
+    }
+}

@@ -1,0 +1,293 @@
+/* Responsive General - Estilo Natural */
+
+/* Breakpoints principales */
+@media (max-width: 1200px) {
+    .container {
+        max-width: 1000px;
+    }
+}
+
+@media (max-width: 992px) {
+    .container {
+        max-width: 750px;
+    }
+    
+    section {
+        padding: 60px 0;
+    }
+    
+    h2 {
+        font-size: clamp(1.8rem, 4vw, 2.5rem);
+    }
+}
+
+@media (max-width: 768px) {
+    /* Ajustes globales para tablet */
+    .container {
+        padding: 0 20px;
+        max-width: 100%;
+    }
+    
+    section {
+        padding: 50px 0;
+    }
+    
+    h1 {
+        font-size: clamp(2rem, 6vw, 3rem);
+    }
+    
+    h2 {
+        font-size: clamp(1.6rem, 4vw, 2.2rem);
+        margin-bottom: 1.5rem;
+    }
+    
+    h3 {
+        font-size: clamp(1.3rem, 3vw, 1.8rem);
+    }
+    
+    p {
+        font-size: 1rem;
+        line-height: 1.6;
+    }
+    
+    .decorative-line {
+        width: 60px;
+        margin: 1rem auto 1.5rem;
+    }
+    
+    .btn {
+        padding: 10px 25px;
+        font-size: 0.95rem;
+    }
+    
+    /* Transiciones más rápidas en móvil */
+    * {
+        transition-duration: 0.2s !important;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Ajustes específicos para móvil */
+    .container {
+        padding: 0 15px;
+    }
+    
+    section {
+        padding: 40px 0;
+    }
+    
+    h2 {
+        font-size: clamp(1.5rem, 5vw, 2rem);
+        margin-bottom: 1.2rem;
+    }
+    
+    h3 {
+        font-size: clamp(1.2rem, 4vw, 1.6rem);
+    }
+    
+    p {
+        font-size: 0.95rem;
+        line-height: 1.5;
+        margin-bottom: 0.8rem;
+    }
+    
+    .decorative-line {
+        width: 50px;
+        height: 1px;
+        margin: 0.8rem auto 1.2rem;
+    }
+    
+    .decorative-line::before,
+    .decorative-line::after {
+        width: 6px;
+        height: 6px;
+        top: -2px;
+    }
+    
+    .btn {
+        padding: 9px 20px;
+        font-size: 0.9rem;
+        border-radius: 10px;
+    }
+    
+    .transition-image {
+        height: 30vh;
+        min-height: 200px;
+    }
+}
+
+@media (max-width: 360px) {
+    /* Ajustes para pantallas muy pequeñas */
+    .container {
+        padding: 0 12px;
+    }
+    
+    section {
+        padding: 35px 0;
+    }
+    
+    h2 {
+        font-size: clamp(1.4rem, 5vw, 1.8rem);
+    }
+    
+    p {
+        font-size: 0.9rem;
+    }
+    
+    .btn {
+        padding: 8px 18px;
+        font-size: 0.85rem;
+    }
+}
+
+/* Ajustes específicos por sección en móvil */
+@media (max-width: 768px) {
+    /* Hero responsive específico */
+    .hero-content {
+        padding: 0 15px;
+    }
+    
+    /* Bienvenida responsive */
+    .bienvenida-text p {
+        font-size: 1rem;
+        line-height: 1.6;
+    }
+    
+    /* Historia responsive */
+    .historia-text {
+        padding: 1.5rem;
+        margin: 2rem 0;
+    }
+    
+    /* Contador responsive */
+    .countdown {
+        gap: 1rem;
+    }
+    
+    /* Cronograma responsive */
+    .cronograma-timeline {
+        padding: 1rem 0;
+    }
+    
+    /* Galería responsive */
+    .galeria-grid {
+        gap: 0.8rem;
+    }
+    
+    /* Dresscode responsive */
+    .dresscode-examples {
+        gap: 2rem;
+    }
+    
+    /* RSVP responsive */
+    .rsvp-button {
+        padding: 1rem 2rem;
+    }
+}
+
+/* Orientación landscape en móviles */
+@media (max-width: 768px) and (orientation: landscape) {
+    .hero {
+        height: 100vh;
+    }
+    
+    section {
+        padding: 40px 0;
+    }
+    
+    .transition-image {
+        height: 50vh;
+    }
+}
+
+/* Mejoras de rendimiento para dispositivos móviles */
+@media (max-width: 768px) {
+    /* Simplificar animaciones en móvil */
+    .hero-background {
+        animation: none;
+    }
+    
+    /* Reducir efectos de blur en móvil para mejor rendimiento */
+    .modal-content,
+    .timeline-content,
+    .historia-text {
+        backdrop-filter: none;
+    }
+    
+    /* Simplificar sombras */
+    .hover-lift:hover {
+        box-shadow: 0 4px 15px rgba(107, 123, 58, 0.15);
+    }
+}
+
+/* Accesibilidad mejorada */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+    
+    .hero-background {
+        transform: scale(1) !important;
+    }
+}
+
+/* Alto contraste */
+/* @media (prefers-contrast: high) {
+    :root {
+        --primary-olive: #4A5A28;
+        --sand: #B8945A;
+        --soft-gray: #333333;
+        --charcoal: #000000;
+    }
+    
+    .decorative-line {
+        background: var(--primary-olive);
+    }
+    
+    .image-overlay {
+        background: rgba(0, 0, 0, 0.3);
+    }
+}
+
+/* Modo oscuro (si el sistema lo prefiere) */
+/* @media (prefers-color-scheme: dark) {
+    :root {
+        --warm-white: #1a1a1a;
+        --cream: #2a2a2a;
+        --charcoal: #e0e0e0;
+        --soft-gray: #b0b0b0;
+    }
+    
+    body {
+        background-color: var(--warm-white);
+        color: var(--charcoal);
+    }
+    
+    section:nth-child(even) {
+        background: var(--cream);
+    }
+}
+
+/* Print styles */
+@media print {
+    .hero,
+    .footer,
+    .rsvp-modal,
+    .success-message,
+    .transition-image {
+        display: none !important;
+    }
+    
+    section {
+        page-break-inside: avoid;
+        padding: 20px 0;
+    }
+    
+    .container {
+        max-width: 100%;
+        padding: 0;
+    }
+}

@@ -1,0 +1,301 @@
+/* Plantilla 3: Vintage Romance - Estilos Globales */
+
+:root {
+    /* Paleta de colores vintage */
+    --vintage-cream: #FDF8F0;
+    --vintage-gold: #D4AF37;
+    --vintage-rose: #E8B4B8;
+    --vintage-sepia: #8B7355;
+    --vintage-burgundy: #722F37;
+    --vintage-pearl: #F5F1E8;
+    --vintage-bronze: #CD7F32;
+    --vintage-champagne: #F7E7CE;
+    
+    /* Gradientes vintage */
+    --vintage-gold-gradient: linear-gradient(135deg, #D4AF37 0%, #B8941F 50%, #D4AF37 100%);
+    --vintage-paper-gradient: linear-gradient(135deg, #FDF8F0 0%, #F5F1E8 100%);
+    --vintage-sepia-gradient: linear-gradient(135deg, #8B7355 0%, #A0845C 100%);
+    
+    /* Tipografías */
+    --font-display: 'Playfair Display', serif;
+    --font-script: 'Dancing Script', cursive;
+    --font-body: 'Crimson Text', serif;
+    
+    /* Sombras vintage */
+    --vintage-shadow: 0 8px 32px rgba(139, 115, 85, 0.15);
+    --vintage-shadow-light: 0 4px 16px rgba(139, 115, 85, 0.1);
+    --vintage-text-shadow: 2px 2px 4px rgba(139, 115, 85, 0.3);
+    
+    /* Bordes ornamentados */
+    --vintage-border: 2px solid var(--vintage-gold);
+    --vintage-border-light: 1px solid var(--vintage-rose);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    background: var(--vintage-paper-gradient);
+    color: var(--vintage-sepia);
+    line-height: 1.7;
+    overflow-x: hidden;
+}
+
+/* Patrón de fondo vintage */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 25% 25%, rgba(212, 175, 55, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 75% 75%, rgba(232, 180, 184, 0.03) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: -1;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Elementos decorativos vintage */
+.vintage-ornament {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 2rem 0;
+    color: var(--vintage-gold);
+}
+
+.ornament-svg {
+    width: 200px;
+    height: 40px;
+    filter: drop-shadow(var(--vintage-shadow-light));
+}
+
+.vintage-divider {
+    width: 100px;
+    height: 2px;
+    background: var(--vintage-gold-gradient);
+    margin: 1rem auto;
+    position: relative;
+}
+
+.vintage-divider::before,
+.vintage-divider::after {
+    content: '';
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: var(--vintage-gold);
+    border-radius: 50%;
+    top: -3px;
+}
+
+.vintage-divider::before {
+    left: -12px;
+}
+
+.vintage-divider::after {
+    right: -12px;
+}
+
+/* Marcos decorativos */
+.vintage-frame {
+    position: relative;
+    padding: 2rem;
+    background: rgba(253, 248, 240, 0.9);
+    border: var(--vintage-border);
+    box-shadow: var(--vintage-shadow);
+}
+
+.vintage-corners {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+}
+
+.corner {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath d='M0,0 L20,0 Q40,0 40,20 L40,40 L20,40 Q0,40 0,20 Z' fill='%23D4AF37'/%3E%3C/svg%3E");
+}
+
+.corner.top-left {
+    top: -2px;
+    left: -2px;
+}
+
+.corner.top-right {
+    top: -2px;
+    right: -2px;
+    transform: rotate(90deg);
+}
+
+.corner.bottom-left {
+    bottom: -2px;
+    left: -2px;
+    transform: rotate(-90deg);
+}
+
+.corner.bottom-right {
+    bottom: -2px;
+    right: -2px;
+    transform: rotate(180deg);
+}
+
+/* Tipografías vintage */
+h1, h2, h3 {
+    font-family: var(--font-display);
+    color: var(--vintage-burgundy);
+    text-shadow: var(--vintage-text-shadow);
+}
+
+h1 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-bottom: 1rem;
+}
+
+h2 {
+    font-size: 2.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+h3 {
+    font-size: 1.8rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+
+.script-text {
+    font-family: var(--font-script);
+    color: var(--vintage-rose);
+    font-size: 1.5rem;
+}
+
+/* Botones vintage */
+.vintage-button {
+    background: var(--vintage-gold-gradient);
+    color: var(--vintage-cream);
+    border: none;
+    padding: 1rem 2rem;
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 500;
+    letter-spacing: 1px;
+    border-radius: 0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: var(--vintage-shadow-light);
+    text-transform: uppercase;
+    position: relative;
+    overflow: hidden;
+}
+
+.vintage-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.5s ease;
+}
+
+.vintage-button:hover::before {
+    left: 100%;
+}
+
+.vintage-button:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--vintage-shadow);
+}
+
+/* Efectos de animación vintage */
+@keyframes fadeInVintage {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes floatVintage {
+    0%, 100% {
+        transform: translateY(0) rotate(0deg);
+    }
+    33% {
+        transform: translateY(-10px) rotate(1deg);
+    }
+    66% {
+        transform: translateY(5px) rotate(-1deg);
+    }
+}
+
+/* Elementos flotantes decorativos */
+.floating-rose {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Ccircle cx='30' cy='30' r='25' fill='%23E8B4B8' opacity='0.6'/%3E%3C/svg%3E");
+    animation: floatVintage 6s ease-in-out infinite;
+    opacity: 0.7;
+}
+
+.floating-lace {
+    position: absolute;
+    width: 80px;
+    height: 20px;
+    background: repeating-linear-gradient(
+        90deg,
+        var(--vintage-pearl) 0px,
+        var(--vintage-rose) 2px,
+        var(--vintage-pearl) 4px
+    );
+    animation: floatVintage 8s ease-in-out infinite reverse;
+    opacity: 0.5;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 15px;
+    }
+    
+    h1 {
+        font-size: 2.5rem;
+    }
+    
+    h2 {
+        font-size: 2rem;
+    }
+    
+    .vintage-frame {
+        padding: 1rem;
+    }
+    
+    .corner {
+        width: 25px;
+        height: 25px;
+    }
+}
