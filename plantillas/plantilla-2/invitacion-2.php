@@ -383,33 +383,6 @@ try {
 </section>
 <?php endif; ?>
 
-<!-- Sección Cronograma -->
-<section class="cronograma" id="cronograma">
-    <div class="container">
-        <div class="cronograma-header">
-            <h2>Cronograma del día</h2>
-            <div class="decorative-line"></div>
-        </div>
-        <div class="cronograma-timeline">
-            <?php foreach($cronograma as $index => $item): ?>
-            <div class="timeline-item">
-                <div class="timeline-time"><?php echo formatearHora($item['hora']); ?></div>
-                <div class="timeline-dot"></div>
-                <div class="timeline-content">
-                    <h3><?php echo htmlspecialchars($item['evento']); ?></h3>
-                    <p><?php echo htmlspecialchars($item['descripcion'] ?? ''); ?></p>
-                    <?php if (!empty($item['ubicacion'])): ?>
-                    <div class="timeline-location">
-                        📍 <?php echo htmlspecialchars($item['ubicacion']); ?>
-                    </div>
-                    <?php endif; ?>
-                </div>
-            </div>
-            <?php endforeach; ?>
-        </div>
-    </div>
-</section>
-
 <!-- Sección Ubicaciones -->
 <?php if (!empty($ubicaciones_result)): ?>
 <section class="ubicaciones" id="ubicaciones">
@@ -483,6 +456,33 @@ try {
     </div>
 </section>
 <?php endif; ?>
+
+<!-- Sección Cronograma -->
+<section class="cronograma" id="cronograma">
+    <div class="container">
+        <div class="cronograma-header">
+            <h2>Cronograma del día</h2>
+            <div class="decorative-line"></div>
+        </div>
+        <div class="cronograma-timeline">
+            <?php foreach($cronograma as $index => $item): ?>
+            <div class="timeline-item">
+                <div class="timeline-time"><?php echo formatearHora($item['hora']); ?></div>
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <h3><?php echo htmlspecialchars($item['evento']); ?></h3>
+                    <p><?php echo htmlspecialchars($item['descripcion'] ?? ''); ?></p>
+                    <?php if (!empty($item['ubicacion'])): ?>
+                    <div class="timeline-location">
+                        📍 <?php echo htmlspecialchars($item['ubicacion']); ?>
+                    </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</section>
 
 <!-- Sección Galería -->
 <section class="galeria" id="galeria">

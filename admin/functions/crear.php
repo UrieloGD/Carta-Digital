@@ -232,7 +232,7 @@ $plantillas = $plantilla_stmt->fetchAll(PDO::FETCH_ASSOC);
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="./../css/editar.css">
     <!-- Icon page -->
-    <link rel="shortcut icon" href="./images/logo.webp" />
+    <link rel="shortcut icon" href="./../../images/logo.webp" />
 </head>
 <body>
     <!-- Navbar -->
