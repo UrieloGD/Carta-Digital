@@ -82,6 +82,8 @@ $invitaciones = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="./css/index.css">
+    <!-- Icon page -->
+    <link rel="shortcut icon" href="./../images/logo.webp" />
 </head>
 <body>
     <!-- Navbar -->
