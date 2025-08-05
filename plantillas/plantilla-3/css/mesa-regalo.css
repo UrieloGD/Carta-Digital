@@ -1,8 +1,7 @@
-/* Mesa de Regalos - Estilo Natural */
 .mesa-regalos {
-    background: var(--cream);
+    padding: 6rem 0;
+    background: white;
     position: relative;
-    overflow: hidden;
 }
 
 .mesa-regalos::before {
@@ -10,282 +9,255 @@
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    background: 
-        radial-gradient(circle at 25% 25%, rgba(107, 123, 58, 0.02) 60%, transparent 60%),
-        radial-gradient(circle at 75% 75%, rgba(212, 184, 150, 0.03) 50%, transparent 50%);
-    animation: gentleFloat 30s ease-in-out infinite;
-    z-index: 0;
-}
-
-@keyframes gentleFloat {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    50% { transform: translate(2%, 1%) scale(1.02); }
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border-color), transparent);
 }
 
 .mesa-regalos-header {
     text-align: center;
     margin-bottom: 4rem;
-    position: relative;
-    z-index: 1;
-}
-
-.mesa-regalos-header h2 {
-    font-family: var(--font-serif);
-    font-size: clamp(2.5rem, 5vw, 3.5rem);
-    color: var(--primary-olive);
-    font-weight: 400;
-    margin-bottom: 1rem;
+    animation: fadeInUp 0.8s ease-out;
 }
 
 .mesa-regalos-header p {
-    font-size: 1.2rem;
-    color: var(--soft-gray);
-    line-height: 1.7;
+    font-size: 1.1rem;
+    color: var(--text-light);
     max-width: 600px;
     margin: 2rem auto 0;
-    font-style: italic;
+    line-height: 1.7;
 }
 
 .regalos-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 2rem;
-    max-width: 1000px;
-    margin: 0 auto;
-    position: relative;
-    z-index: 1;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2.5rem;
+    margin-top: 3rem;
 }
 
 .regalo-card {
-    background: var(--warm-white);
+    background: var(--background-soft);
     border-radius: 25px;
     padding: 2.5rem;
-    box-shadow: var(--shadow-soft);
-    border: 1px solid rgba(107, 123, 58, 0.1);
-    transition: var(--transition-smooth);
+    text-align: center;
+    box-shadow: var(--shadow-light);
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
-    text-align: center;
+    animation: fadeInUp 0.8s ease-out;
+    animation-delay: calc(var(--card-delay, 0) * 0.15s);
+    animation-fill-mode: both;
 }
+
+.regalo-card:nth-child(1) { --card-delay: 1; }
+.regalo-card:nth-child(2) { --card-delay: 2; }
+.regalo-card:nth-child(3) { --card-delay: 3; }
 
 .regalo-card::before {
     content: '';
     position: absolute;
-    top: -2px;
-    left: -2px;
-    right: -2px;
-    bottom: -2px;
-    background: linear-gradient(135deg, var(--primary-olive), var(--sand));
-    border-radius: 25px;
-    z-index: -2;
-    opacity: 0;
-    transition: var(--transition-smooth);
-}
-
-.regalo-card::after {
-    content: '';
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    width: 50px;
-    height: 50px;
-    background: 
-        radial-gradient(circle, var(--sand) 2px, transparent 2px),
-        radial-gradient(circle, var(--light-olive) 1px, transparent 1px);
-    background-size: 12px 12px, 8px 8px;
-    background-position: 0 0, 6px 6px;
-    opacity: 0.1;
-    border-radius: 50%;
-    transition: var(--transition-smooth);
+    top: -50%;
+    right: -50%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, transparent, rgba(52, 152, 219, 0.05), transparent);
+    transform: rotate(45deg);
+    transition: all 0.3s ease;
 }
 
 .regalo-card:hover {
-    transform: translateY(-8px);
+    transform: translateY(-10px);
     box-shadow: var(--shadow-medium);
+    background: white;
 }
 
 .regalo-card:hover::before {
-    opacity: 0.1;
+    animation: shimmer 1s ease-in-out;
 }
 
-.regalo-card:hover::after {
-    opacity: 0.2;
-    transform: rotate(45deg);
+@keyframes shimmer {
+    0% { transform: translateX(-100%) rotate(45deg); }
+    100% { transform: translateX(100%) rotate(45deg); }
 }
 
 .regalo-icon {
     width: 80px;
     height: 80px;
-    margin: 0 auto 1.5rem;
+    margin: 0 auto 2rem;
     border-radius: 50%;
-    background: var(--cream);
+    background: var(--gradient-primary);
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: var(--shadow-soft);
-    transition: var(--transition-smooth);
+    box-shadow: var(--shadow-light);
     position: relative;
-    overflow: hidden;
-}
-
-.regalo-icon::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(107, 123, 58, 0.1), transparent);
-    transition: var(--transition-smooth);
-}
-
-.regalo-card:hover .regalo-icon::before {
-    left: 100%;
+    z-index: 2;
 }
 
 .regalo-icon img {
-    width: 50px;
-    height: 50px;
-    object-fit: contain;
-    filter: sepia(30%) saturate(120%) hue-rotate(90deg);
-    transition: var(--transition-smooth);
+    width: 40px;
+    height: 40px;
+    filter: brightness(0) invert(1);
 }
 
-.regalo-card:hover .regalo-icon {
-    transform: scale(1.1);
-    background: var(--light-sand);
+.regalo-icon::after {
+    content: '🎁';
+    font-size: 2rem;
 }
 
-.regalo-card:hover .regalo-icon img {
-    transform: scale(1.1);
-    filter: sepia(10%) saturate(140%) hue-rotate(90deg);
+.regalo-content {
+    position: relative;
+    z-index: 2;
 }
 
 .regalo-content h3 {
-    font-family: var(--font-serif);
-    font-size: 1.6rem;
-    color: var(--primary-olive);
-    margin-bottom: 1rem;
+    font-size: 1.5rem;
     font-weight: 500;
-    line-height: 1.3;
+    color: var(--text-dark);
+    margin-bottom: 1.5rem;
 }
 
 .regalo-content p {
-    font-size: 1rem;
-    color: var(--soft-gray);
+    color: var(--text-light);
     line-height: 1.6;
     margin-bottom: 1rem;
+    font-size: 0.95rem;
 }
 
 .regalo-content p strong {
-    color: var(--dark-olive);
+    color: var(--text-dark);
     font-weight: 600;
+}
+
+.regalo-info {
+    background: white;
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    border: 1px solid var(--border-color);
+}
+
+.regalo-code {
+    font-family: 'Courier New', monospace;
+    background: var(--accent-color);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    display: inline-block;
+    margin: 0.5rem 0;
+    letter-spacing: 1px;
 }
 
 .regalo-link {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    background: var(--primary-olive);
-    color: var(--warm-white);
-    padding: 1rem 2rem;
-    border-radius: 25px;
+    background: var(--gradient-primary);
+    color: white;
     text-decoration: none;
-    font-family: var(--font-sans);
+    padding: 1rem 2rem;
+    border-radius: 30px;
     font-weight: 500;
-    font-size: 1rem;
-    transition: var(--transition-smooth);
+    transition: all 0.3s ease;
     margin-top: 1.5rem;
-    position: relative;
-    overflow: hidden;
-}
-
-.regalo-link::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-    transition: var(--transition-smooth);
-}
-
-.regalo-link:hover::before {
-    left: 100%;
+    box-shadow: var(--shadow-light);
 }
 
 .regalo-link:hover {
-    background: var(--dark-olive);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(107, 123, 58, 0.3);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-medium);
+    background: var(--text-dark);
 }
 
-.regalo-link::after {
-    content: '→';
-    margin-left: 0.5rem;
-    transition: var(--transition-smooth);
+.regalo-link::before {
+    content: '🛍️';
+    font-size: 1.1rem;
 }
 
-.regalo-link:hover::after {
-    transform: translateX(3px);
+/* Efectos especiales para diferentes tipos de tienda */
+.regalo-card[data-type="liverpool"] .regalo-icon {
+    background: linear-gradient(135deg, #E31837 0%, #FF6B6B 100%);
 }
 
-/* Animaciones de entrada */
-.regalo-card {
-    opacity: 0;
-    animation: fadeInUp 0.8s ease-out forwards;
+.regalo-card[data-type="palacio"] .regalo-icon {
+    background: linear-gradient(135deg, #2C3E50 0%, #3498DB 100%);
 }
 
-.regalo-card:nth-child(1) { animation-delay: 0.1s; }
-.regalo-card:nth-child(2) { animation-delay: 0.3s; }
-.regalo-card:nth-child(3) { animation-delay: 0.5s; }
-.regalo-card:nth-child(4) { animation-delay: 0.7s; }
+.regalo-card[data-type="amazon"] .regalo-icon {
+    background: linear-gradient(135deg, #FF9900 0%, #FFB84D 100%);
+}
 
-/* Responsive */
+.regalo-card[data-type="deposito"] .regalo-icon {
+    background: linear-gradient(135deg, #27AE60 0%, #2ECC71 100%);
+}
+
+/* Banco/Depósito especial */
+.regalo-banco {
+    background: linear-gradient(135deg, var(--background-soft) 0%, #E8F6F3 100%);
+    border: 2px solid var(--accent-color);
+}
+
+.regalo-banco .regalo-icon::after {
+    content: '🏦';
+}
+
+.cuenta-info {
+    background: var(--accent-color);
+    color: white;
+    padding: 1rem;
+    border-radius: 15px;
+    margin: 1rem 0;
+}
+
+.cuenta-info p {
+    color: white !important;
+    margin: 0.5rem 0;
+}
+
+.cuenta-numero {
+    font-family: 'Courier New', monospace;
+    font-size: 1.2rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    background: rgba(255,255,255,0.2);
+    padding: 0.5rem;
+    border-radius: 8px;
+    margin: 0.5rem 0;
+}
+
+/* Responsive Mesa de Regalos */
 @media (max-width: 768px) {
+    .mesa-regalos {
+        padding: 4rem 0;
+    }
+    
     .regalos-grid {
         grid-template-columns: 1fr;
-        gap: 1.5rem;
-        max-width: 400px;
+        gap: 2rem;
     }
     
     .regalo-card {
         padding: 2rem;
+        border-radius: 20px;
     }
     
     .regalo-icon {
         width: 70px;
         height: 70px;
-        margin-bottom: 1.2rem;
-    }
-    
-    .regalo-icon img {
-        width: 45px;
-        height: 45px;
+        margin-bottom: 1.5rem;
     }
     
     .regalo-content h3 {
-        font-size: 1.4rem;
-    }
-    
-    .regalo-link {
-        padding: 0.9rem 1.8rem;
-        font-size: 0.95rem;
-    }
-    
-    .mesa-regalos-header p {
-        font-size: 1.1rem;
-        padding: 0 20px;
+        font-size: 1.3rem;
     }
 }
 
 @media (max-width: 480px) {
     .regalo-card {
         padding: 1.5rem;
-        border-radius: 20px;
     }
     
     .regalo-icon {
@@ -293,28 +265,13 @@
         height: 60px;
     }
     
-    .regalo-icon img {
-        width: 40px;
-        height: 40px;
-    }
-    
-    .regalo-content h3 {
-        font-size: 1.3rem;
-        margin-bottom: 0.8rem;
-    }
-    
-    .regalo-content p {
-        font-size: 0.95rem;
-        margin-bottom: 0.8rem;
-    }
-    
     .regalo-link {
         padding: 0.8rem 1.5rem;
         font-size: 0.9rem;
-        margin-top: 1.2rem;
     }
     
-    .mesa-regalos-header p {
+    .regalo-code {
         font-size: 1rem;
+        padding: 0.4rem 0.8rem;
     }
 }

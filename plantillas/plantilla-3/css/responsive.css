@@ -1,6 +1,4 @@
-/* Responsive General - Estilo Natural */
-
-/* Breakpoints principales */
+/* Responsive General */
 @media (max-width: 1200px) {
     .container {
         max-width: 1000px;
@@ -9,285 +7,266 @@
 
 @media (max-width: 992px) {
     .container {
-        max-width: 750px;
+        max-width: 800px;
     }
     
-    section {
-        padding: 60px 0;
-    }
-    
-    h2 {
-        font-size: clamp(1.8rem, 4vw, 2.5rem);
+    :root {
+        font-size: 15px;
     }
 }
 
 @media (max-width: 768px) {
-    /* Ajustes globales para tablet */
+    :root {
+        font-size: 14px;
+    }
+    
     .container {
-        padding: 0 20px;
-        max-width: 100%;
+        padding: 0 16px;
     }
     
+    /* Ajustes generales para móvil */
     section {
-        padding: 50px 0;
+        padding: 4rem 0 !important;
     }
     
-    h1 {
-        font-size: clamp(2rem, 6vw, 3rem);
+    .section-header {
+        margin-bottom: 3rem;
     }
     
-    h2 {
-        font-size: clamp(1.6rem, 4vw, 2.2rem);
-        margin-bottom: 1.5rem;
+    .section-header h2 {
+        font-size: 2rem;
     }
     
-    h3 {
-        font-size: clamp(1.3rem, 3vw, 1.8rem);
-    }
-    
-    p {
-        font-size: 1rem;
-        line-height: 1.6;
-    }
-    
-    .decorative-line {
-        width: 60px;
-        margin: 1rem auto 1.5rem;
-    }
-    
-    .btn {
-        padding: 10px 25px;
-        font-size: 0.95rem;
-    }
-    
-    /* Transiciones más rápidas en móvil */
-    * {
-        transition-duration: 0.2s !important;
+    /* Espaciado entre secciones */
+    .hero + .bienvenida,
+    .bienvenida + .historia,
+    .historia + .transition-image,
+    .transition-image + .contador,
+    .contador + .cronograma,
+    .cronograma + .ubicaciones,
+    .ubicaciones + .galeria,
+    .galeria + .dresscode,
+    .dresscode + .mesa-regalos,
+    .mesa-regalos + .rsvp {
+        margin-top: 0;
     }
 }
 
 @media (max-width: 480px) {
-    /* Ajustes específicos para móvil */
-    .container {
-        padding: 0 15px;
+    :root {
+        font-size: 13px;
     }
     
-    section {
-        padding: 40px 0;
-    }
-    
-    h2 {
-        font-size: clamp(1.5rem, 5vw, 2rem);
-        margin-bottom: 1.2rem;
-    }
-    
-    h3 {
-        font-size: clamp(1.2rem, 4vw, 1.6rem);
-    }
-    
-    p {
-        font-size: 0.95rem;
-        line-height: 1.5;
-        margin-bottom: 0.8rem;
-    }
-    
-    .decorative-line {
-        width: 50px;
-        height: 1px;
-        margin: 0.8rem auto 1.2rem;
-    }
-    
-    .decorative-line::before,
-    .decorative-line::after {
-        width: 6px;
-        height: 6px;
-        top: -2px;
-    }
-    
-    .btn {
-        padding: 9px 20px;
-        font-size: 0.9rem;
-        border-radius: 10px;
-    }
-    
-    .transition-image {
-        height: 30vh;
-        min-height: 200px;
-    }
-}
-
-@media (max-width: 360px) {
-    /* Ajustes para pantallas muy pequeñas */
     .container {
         padding: 0 12px;
     }
     
     section {
-        padding: 35px 0;
+        padding: 3rem 0 !important;
     }
     
-    h2 {
-        font-size: clamp(1.4rem, 5vw, 1.8rem);
+    .section-header {
+        margin-bottom: 2.5rem;
     }
     
-    p {
-        font-size: 0.9rem;
-    }
-    
-    .btn {
-        padding: 8px 18px;
-        font-size: 0.85rem;
+    .section-header h2 {
+        font-size: 1.8rem;
     }
 }
 
-/* Ajustes específicos por sección en móvil */
+/* Ajustes de navegación móvil */
 @media (max-width: 768px) {
-    /* Hero responsive específico */
-    .hero-content {
-        padding: 0 15px;
+    /* Si agregas navegación */
+    .navigation {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(15px);
+        border-top: 1px solid var(--border-color);
+        padding: 1rem;
+        z-index: 100;
     }
     
-    /* Bienvenida responsive */
-    .bienvenida-text p {
-        font-size: 1rem;
-        line-height: 1.6;
+    .nav-items {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
     }
     
-    /* Historia responsive */
-    .historia-text {
-        padding: 1.5rem;
-        margin: 2rem 0;
+    .nav-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.3rem;
+        text-decoration: none;
+        color: var(--text-light);
+        font-size: 0.8rem;
+        transition: color 0.3s ease;
     }
     
-    /* Contador responsive */
-    .countdown {
-        gap: 1rem;
+    .nav-item:hover,
+    .nav-item.active {
+        color: var(--accent-color);
     }
     
-    /* Cronograma responsive */
-    .cronograma-timeline {
-        padding: 1rem 0;
-    }
-    
-    /* Galería responsive */
-    .galeria-grid {
-        gap: 0.8rem;
-    }
-    
-    /* Dresscode responsive */
-    .dresscode-examples {
-        gap: 2rem;
-    }
-    
-    /* RSVP responsive */
-    .rsvp-button {
-        padding: 1rem 2rem;
+    .nav-icon {
+        font-size: 1.2rem;
     }
 }
 
-/* Orientación landscape en móviles */
-@media (max-width: 768px) and (orientation: landscape) {
-    .hero {
-        height: 100vh;
-    }
-    
-    section {
-        padding: 40px 0;
-    }
-    
-    .transition-image {
-        height: 50vh;
-    }
-}
-
-/* Mejoras de rendimiento para dispositivos móviles */
+/* Optimizaciones de rendimiento móvil */
 @media (max-width: 768px) {
-    /* Simplificar animaciones en móvil */
-    .hero-background {
-        animation: none;
+    /* Reducir animaciones en móviles */
+    * {
+        animation-duration: 0.5s !important;
+        transition-duration: 0.3s !important;
     }
     
-    /* Reducir efectos de blur en móvil para mejor rendimiento */
-    .modal-content,
-    .timeline-content,
-    .historia-text {
-        backdrop-filter: none;
+    /* Optimizar transforms */
+    .hero-background,
+    .transition-image img {
+        transform: none !important;
     }
     
     /* Simplificar sombras */
-    .hover-lift:hover {
-        box-shadow: 0 4px 15px rgba(107, 123, 58, 0.15);
+    .ubicacion-card,
+    .regalo-card,
+    .timeline-content {
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important;
     }
 }
 
-/* Accesibilidad mejorada */
+/* Modo landscape móvil */
+@media (max-width: 768px) and (orientation: landscape) {
+    .hero {
+        height: 100vh;
+        min-height: 500px;
+    }
+    
+    .hero-names {
+        font-size: 2.5rem;
+    }
+    
+    .contador {
+        padding: 3rem 0;
+    }
+    
+    .countdown {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* Ajustes para pantallas muy pequeñas */
+@media (max-width: 320px) {
+    .container {
+        padding: 0 10px;
+    }
+    
+    :root {
+        font-size: 12px;
+    }
+    
+    .hero-names {
+        font-size: 1.8rem;
+        letter-spacing: 0.5px;
+    }
+    
+    .section-header h2 {
+        font-size: 1.6rem;
+    }
+    
+    .time-unit .number {
+        font-size: 1.8rem;
+    }
+    
+    .timeline-content {
+        padding: 1rem;
+    }
+    
+    .regalo-card {
+        padding: 1rem;
+    }
+}
+
+/* Ajustes para tablets */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .cronograma-timeline {
+        max-width: 700px;
+    }
+    
+    .ubicaciones-grid {
+        grid-template-columns: 1fr;
+        max-width: 500px;
+        margin: 3rem auto 0;
+    }
+    
+    .galeria-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .dresscode-examples {
+        max-width: 700px;
+    }
+}
+
+/* Mejoras de accesibilidad */
 @media (prefers-reduced-motion: reduce) {
     * {
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
+    }
+    
+    .hero-scroll,
+    .float,
+    .bounce {
+        animation: none !important;
+    }
+}
+
+/* Modo alto contraste */
+@media (prefers-contrast: high) {
+    :root {
+        --text-dark: #000000;
+        --text-light: #333333;
+        --border-color: #666666;
+        --accent-color: #0066cc;
     }
     
     .hero-background {
-        transform: scale(1) !important;
-    }
-}
-
-/* Alto contraste */
-/* @media (prefers-contrast: high) {
-    :root {
-        --primary-olive: #4A5A28;
-        --sand: #B8945A;
-        --soft-gray: #333333;
-        --charcoal: #000000;
+        opacity: 0.2;
     }
     
-    .decorative-line {
-        background: var(--primary-olive);
-    }
-    
-    .image-overlay {
-        background: rgba(0, 0, 0, 0.3);
-    }
-}
-
-/* Modo oscuro (si el sistema lo prefiere) */
-/* @media (prefers-color-scheme: dark) {
-    :root {
-        --warm-white: #1a1a1a;
-        --cream: #2a2a2a;
-        --charcoal: #e0e0e0;
-        --soft-gray: #b0b0b0;
-    }
-    
-    body {
-        background-color: var(--warm-white);
-        color: var(--charcoal);
-    }
-    
-    section:nth-child(even) {
-        background: var(--cream);
+    .transition-overlay {
+        background: rgba(0,0,0,0.8);
     }
 }
 
 /* Print styles */
 @media print {
-    .hero,
-    .footer,
-    .rsvp-modal,
-    .success-message,
-    .transition-image {
+    .music-player,
+    .hero-scroll,
+    .rsvp-button,
+    .share-button,
+    .copy-button,
+    .footer-actions {
         display: none !important;
     }
     
-    section {
-        page-break-inside: avoid;
-        padding: 20px 0;
+    .hero {
+        height: auto;
+        padding: 2rem 0;
     }
     
-    .container {
-        max-width: 100%;
-        padding: 0;
+    .contador,
+    .transition-image {
+        display: none;
+    }
+    
+    section {
+        padding: 1rem 0 !important;
+        break-inside: avoid;
     }
 }

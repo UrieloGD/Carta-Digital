@@ -1,106 +1,52 @@
-/* Plantilla 3: Vintage Romance - Ubicaciones */
-
 .ubicaciones {
     padding: 6rem 0;
-    background: var(--vintage-champagne);
-    position: relative;
-    overflow: hidden;
-}
-
-.ubicaciones::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: 
-        radial-gradient(circle at 30% 40%, rgba(212, 175, 55, 0.05) 0%, transparent 50%),
-        radial-gradient(circle at 70% 60%, rgba(232, 180, 184, 0.05) 0%, transparent 50%);
-}
-
-.ubicaciones-header {
-    text-align: center;
-    margin-bottom: 4rem;
-    position: relative;
-    z-index: 2;
-}
-
-.ubicaciones-header h2 {
-    font-family: var(--font-display);
-    font-size: 3.2rem;
-    color: var(--vintage-burgundy);
-    font-weight: 600;
-    letter-spacing: 2px;
-    margin-bottom: 1rem;
-    text-shadow: var(--vintage-text-shadow);
+    background: var(--background-soft);
 }
 
 .ubicaciones-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
     gap: 3rem;
-    max-width: 1000px;
-    margin: 0 auto;
-    position: relative;
-    z-index: 2;
+    margin-top: 3rem;
 }
 
 .ubicacion-card-wrapper {
-    position: relative;
+    animation: fadeInUp 0.8s ease-out;
+    animation-delay: calc(var(--card-delay, 0) * 0.2s);
+    animation-fill-mode: both;
 }
 
+.ubicacion-card-wrapper:nth-child(1) { --card-delay: 1; }
+.ubicacion-card-wrapper:nth-child(2) { --card-delay: 2; }
+
 .ubicacion-card {
-    background: var(--vintage-cream);
-    border: 3px solid var(--vintage-gold);
-    box-shadow: var(--vintage-shadow);
-    position: relative;
+    background: white;
+    border-radius: 25px;
     overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: var(--shadow-light);
+    transition: all 0.3s ease;
+    position: relative;
+    border: 1px solid var(--border-color);
 }
 
 .ubicacion-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 
-        var(--vintage-shadow),
-        0 15px 40px rgba(114, 47, 55, 0.15);
-}
-
-.ubicacion-card::before {
-    content: '';
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    right: 10px;
-    bottom: 10px;
-    border: 1px solid var(--vintage-rose);
-    pointer-events: none;
-    z-index: 1;
+    transform: translateY(-10px);
+    box-shadow: var(--shadow-medium);
 }
 
 .ubicacion-tipo {
     position: absolute;
-    top: 20px;
-    right: 20px;
-    background: var(--vintage-burgundy);
-    color: var(--vintage-cream);
+    top: 1.5rem;
+    right: 1.5rem;
+    background: var(--gradient-primary);
+    color: white;
     padding: 0.5rem 1rem;
-    font-family: var(--font-script);
-    font-size: 1.1rem;
-    font-weight: 500;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
     z-index: 3;
-    box-shadow: var(--vintage-shadow-light);
-    border: 1px solid var(--vintage-gold);
-}
-
-.ubicacion-tipo::before {
-    content: '';
-    position: absolute;
-    top: 2px;
-    left: 2px;
-    right: 2px;
-    bottom: 2px;
-    border: 1px solid rgba(253, 248, 240, 0.3);
+    box-shadow: var(--shadow-light);
 }
 
 .ubicacion-image {
@@ -113,7 +59,6 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    filter: sepia(20%) saturate(1.1) brightness(1.05);
     transition: transform 0.3s ease;
 }
 
@@ -125,14 +70,14 @@
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    background: 
-        linear-gradient(
-            135deg,
-            rgba(114, 47, 55, 0.1) 0%,
-            rgba(212, 175, 55, 0.2) 100%
-        );
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        to bottom,
+        rgba(0,0,0,0) 0%,
+        rgba(0,0,0,0.1) 50%,
+        rgba(0,0,0,0.3) 100%
+    );
     display: flex;
     align-items: center;
     justify-content: center;
@@ -145,45 +90,20 @@
 }
 
 .ubicacion-overlay-icon {
-    font-size: 3rem;
-    color: var(--vintage-cream);
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-    animation: pulse 2s ease-in-out infinite;
-}
-
-@keyframes pulse {
-    0%, 100% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(1.1);
-    }
+    font-size: 2rem;
+    color: white;
+    animation: float 2s ease-in-out infinite;
 }
 
 .ubicacion-content {
     padding: 2rem;
-    position: relative;
-    z-index: 2;
 }
 
 .ubicacion-content h3 {
-    font-family: var(--font-display);
-    font-size: 2rem;
-    color: var(--vintage-burgundy);
+    font-size: 1.6rem;
+    font-weight: 500;
+    color: var(--text-dark);
     margin-bottom: 1.5rem;
-    font-weight: 600;
-    text-shadow: var(--vintage-text-shadow);
-    position: relative;
-}
-
-.ubicacion-content h3::after {
-    content: '';
-    position: absolute;
-    bottom: -8px;
-    left: 0;
-    width: 60px;
-    height: 3px;
-    background: var(--vintage-gold-gradient);
 }
 
 .ubicacion-info {
@@ -193,32 +113,15 @@
 .ubicacion-info-item {
     display: flex;
     align-items: flex-start;
+    gap: 1rem;
     margin-bottom: 1rem;
-    padding: 1rem;
-    background: rgba(245, 241, 232, 0.6);
-    border: 1px solid var(--vintage-rose);
-    border-radius: 0;
-}
-
-.ubicacion-info-item::before {
-    content: '';
-    position: absolute;
-    top: 5px;
-    left: 5px;
-    right: 5px;
-    bottom: 5px;
-    border: 1px solid var(--vintage-gold);
-    opacity: 0.3;
-    pointer-events: none;
 }
 
 .ubicacion-info-icon {
-    font-size: 1.5rem;
-    margin-right: 1rem;
-    color: var(--vintage-rose);
+    font-size: 1.2rem;
+    color: var(--accent-color);
+    margin-top: 0.2rem;
     flex-shrink: 0;
-    width: 30px;
-    text-align: center;
 }
 
 .ubicacion-info-text {
@@ -226,131 +129,103 @@
 }
 
 .ubicacion-info-label {
-    font-family: var(--font-script);
-    font-size: 1.2rem;
-    color: var(--vintage-burgundy);
-    font-weight: 500;
-    margin-bottom: 0.3rem;
+    font-size: 0.9rem;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.2rem;
 }
 
 .ubicacion-info-value {
-    font-family: var(--font-body);
-    color: var(--vintage-sepia);
-    font-size: 1rem;
+    color: var(--text-dark);
+    font-weight: 400;
     line-height: 1.5;
-    margin: 0;
 }
 
 .ubicacion-descripcion {
-    font-family: var(--font-body);
-    color: var(--vintage-sepia);
-    font-size: 1.1rem;
+    background: var(--background-soft);
+    padding: 1rem;
+    border-radius: 15px;
+    color: var(--text-light);
+    font-size: 0.95rem;
     line-height: 1.6;
     margin-bottom: 1.5rem;
-    font-style: italic;
-    padding: 1rem;
-    background: rgba(232, 180, 184, 0.1);
-    border-left: 3px solid var(--vintage-rose);
+    border-left: 3px solid var(--accent-color);
 }
 
 .ubicacion-actions {
-    text-align: center;
+    display: flex;
+    gap: 1rem;
 }
 
 .ubicacion-maps {
-    display: inline-block;
-    background: var(--vintage-gold-gradient);
-    color: var(--vintage-cream);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--accent-color);
+    color: white;
     text-decoration: none;
-    padding: 0.8rem 2rem;
-    font-family: var(--font-display);
-    font-size: 1rem;
+    padding: 0.8rem 1.5rem;
+    border-radius: 25px;
+    font-size: 0.9rem;
     font-weight: 500;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    border: 2px solid var(--vintage-rose);
     transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-}
-
-.ubicacion-maps::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-    transition: left 0.5s ease;
-}
-
-.ubicacion-maps:hover::before {
-    left: 100%;
+    box-shadow: var(--shadow-light);
 }
 
 .ubicacion-maps:hover {
+    background: var(--text-dark);
     transform: translateY(-2px);
-    box-shadow: var(--vintage-shadow-light);
-    color: var(--vintage-cream);
+    box-shadow: var(--shadow-medium);
 }
 
-/* Responsive */
+.ubicacion-maps::before {
+    content: '📍';
+    font-size: 1rem;
+}
+
+/* Responsive Ubicaciones */
 @media (max-width: 768px) {
     .ubicaciones {
         padding: 4rem 0;
     }
     
-    .ubicaciones-header h2 {
-        font-size: 2.5rem;
-        letter-spacing: 1px;
-    }
-    
     .ubicaciones-grid {
         grid-template-columns: 1fr;
         gap: 2rem;
-        margin: 0 20px;
+    }
+    
+    .ubicacion-card {
+        border-radius: 20px;
     }
     
     .ubicacion-content {
         padding: 1.5rem;
     }
     
-    .ubicacion-content h3 {
-        font-size: 1.7rem;
-    }
-    
     .ubicacion-image {
         height: 200px;
-    }
-    
-    .ubicacion-tipo {
-        top: 15px;
-        right: 15px;
-        padding: 0.4rem 0.8rem;
-        font-size: 1rem;
     }
 }
 
 @media (max-width: 480px) {
-    .ubicaciones-grid {
-        margin: 0 10px;
-    }
-    
-    .ubicacion-content {
-        padding: 1rem;
-    }
-    
     .ubicacion-content h3 {
-        font-size: 1.5rem;
+        font-size: 1.4rem;
     }
     
-    .ubicacion-info-item {
-        padding: 0.8rem;
+    .ubicacion-tipo {
+        top: 1rem;
+        right: 1rem;
+        padding: 0.4rem 0.8rem;
+        font-size: 0.75rem;
+    }
+    
+    .ubicacion-actions {
+        flex-direction: column;
     }
     
     .ubicacion-maps {
-        padding: 0.6rem 1.5rem;
-        font-size: 0.9rem;
+        text-align: center;
+        justify-content: center;
     }
 }

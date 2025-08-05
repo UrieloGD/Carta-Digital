@@ -1,8 +1,6 @@
-/* Plantilla 3: Vintage Romance - Dress Code */
-
 .dresscode {
     padding: 6rem 0;
-    background: var(--vintage-pearl);
+    background: var(--gradient-soft);
     position: relative;
     overflow: hidden;
 }
@@ -10,218 +8,132 @@
 .dresscode::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: 
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 150 150'%3E%3Cpath d='M75,25 Q100,50 75,75 Q50,100 75,125 Q100,100 75,75 Q50,50 75,25' fill='none' stroke='%23D4AF37' stroke-width='1' opacity='0.1'/%3E%3C/svg%3E");
-    background-size: 200px 200px;
-    background-repeat: repeat;
-    opacity: 0.4;
+    top: 10%;
+    left: -10%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(52, 152, 219, 0.05) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: float 6s ease-in-out infinite;
+}
+
+.dresscode::after {
+    content: '';
+    position: absolute;
+    bottom: 10%;
+    right: -10%;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(155, 89, 182, 0.05) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: float 8s ease-in-out infinite reverse;
 }
 
 .dresscode-content {
-    max-width: 1000px;
-    margin: 0 auto;
     position: relative;
     z-index: 2;
 }
 
-.dresscode-header {
-    text-align: center;
-    margin-bottom: 3rem;
-}
-
-.dresscode-header h2 {
-    font-family: var(--font-display);
-    font-size: 3.2rem;
-    color: var(--vintage-burgundy);
-    font-weight: 600;
-    letter-spacing: 2px;
-    margin-bottom: 1rem;
-    text-shadow: var(--vintage-text-shadow);
-    position: relative;
-}
-
-.dresscode-header h2::before {
-    content: '👗';
-    position: absolute;
-    left: -60px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 2rem;
-}
-
-.dresscode-header h2::after {
-    content: '🤵';
-    position: absolute;
-    right: -60px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 2rem;
-}
-
 .dresscode-description {
-    font-family: var(--font-body);
-    font-size: 1.3rem;
-    color: var(--vintage-sepia);
     text-align: center;
-    line-height: 1.7;
-    margin-bottom: 4rem;
-    max-width: 700px;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 2rem;
-    background: rgba(253, 248, 240, 0.8);
-    border: 2px solid var(--vintage-rose);
-    position: relative;
-}
-
-.dresscode-description::before {
-    content: '';
-    position: absolute;
-    top: 8px;
-    left: 8px;
-    right: 8px;
-    bottom: 8px;
-    border: 1px solid var(--vintage-gold);
-    opacity: 0.5;
-}
-
-.dresscode-description::after {
-    content: '"';
-    position: absolute;
-    top: -15px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 3rem;
-    color: var(--vintage-rose);
-    background: var(--vintage-pearl);
-    padding: 0 10px;
-    font-family: var(--font-display);
+    font-size: 1.2rem;
+    color: var(--text-light);
+    max-width: 600px;
+    margin: 0 auto 4rem;
+    line-height: 1.8;
+    animation: fadeInUp 0.8s ease-out;
 }
 
 .dresscode-examples {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, 1fr);
     gap: 4rem;
-    margin-top: 4rem;
+    max-width: 900px;
+    margin: 0 auto;
 }
 
 .dresscode-example {
     text-align: center;
-    background: var(--vintage-cream);
-    padding: 2rem;
-    border: 3px solid var(--vintage-gold);
-    box-shadow: var(--vintage-shadow);
-    position: relative;
-    transition: transform 0.3s ease;
+    animation: fadeInUp 0.8s ease-out;
+    animation-delay: calc(var(--example-delay, 0) * 0.2s);
+    animation-fill-mode: both;
 }
 
-.dresscode-example:hover {
-    transform: translateY(-5px);
-}
-
-.dresscode-example::before {
-    content: '';
-    position: absolute;
-    top: 15px;
-    left: 15px;
-    right: 15px;
-    bottom: 15px;
-    border: 2px solid var(--vintage-rose);
-    pointer-events: none;
-    opacity: 0.6;
-}
-
-.dresscode-example:nth-child(1) {
-    transform: rotate(-1deg);
-}
-
-.dresscode-example:nth-child(2) {
-    transform: rotate(1deg);
-}
-
-.dresscode-example:nth-child(1):hover {
-    transform: rotate(0deg) translateY(-5px);
-}
-
-.dresscode-example:nth-child(2):hover {
-    transform: rotate(0deg) translateY(-5px);
-}
+.dresscode-example:nth-child(1) { --example-delay: 1; }
+.dresscode-example:nth-child(2) { --example-delay: 2; }
 
 .dresscode-image {
     position: relative;
     margin-bottom: 2rem;
+    border-radius: 25px;
     overflow: hidden;
-    border: 4px solid var(--vintage-rose);
-    display: inline-block;
-}
-
-.dresscode-image img {
-    width: 250px;
-    height: 350px;
-    object-fit: cover;
-    filter: sepia(25%) saturate(1.15) brightness(1.08) contrast(1.05);
+    box-shadow: var(--shadow-medium);
     transition: all 0.3s ease;
 }
 
-.dresscode-example:hover .dresscode-image img {
-    filter: sepia(35%) saturate(1.25) brightness(1.15) contrast(1.1);
-    transform: scale(1.02);
+.dresscode-image:hover {
+    transform: translateY(-10px) scale(1.02);
+}
+
+.dresscode-image img {
+    width: 100%;
+    height: 350px;
+    object-fit: cover;
+    transition: all 0.3s ease;
+    filter: brightness(0.95) contrast(1.05);
+}
+
+.dresscode-image:hover img {
+    transform: scale(1.05);
+    filter: brightness(1) contrast(1.1);
 }
 
 .image-overlay {
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    background: 
-        radial-gradient(
-            circle at center,
-            rgba(212, 175, 55, 0.1) 0%,
-            rgba(232, 180, 184, 0.2) 100%
-        );
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        135deg,
+        rgba(52, 152, 219, 0.2) 0%,
+        rgba(155, 89, 182, 0.2) 100%
+    );
     opacity: 0;
     transition: opacity 0.3s ease;
 }
 
-.dresscode-example:hover .image-overlay {
+.dresscode-image:hover .image-overlay {
     opacity: 1;
 }
 
 .dresscode-example h3 {
-    font-family: var(--font-display);
-    font-size: 2.2rem;
-    color: var(--vintage-burgundy);
+    font-size: 1.8rem;
+    font-weight: 300;
+    color: var(--text-dark);
     margin-bottom: 1rem;
-    font-weight: 600;
-    text-shadow: var(--vintage-text-shadow);
     position: relative;
 }
 
 .dresscode-example h3::after {
     content: '';
     position: absolute;
-    bottom: -8px;
+    bottom: -5px;
     left: 50%;
     transform: translateX(-50%);
-    width: 80px;
-    height: 3px;
-    background: var(--vintage-gold-gradient);
+    width: 40px;
+    height: 2px;
+    background: var(--accent-color);
+    border-radius: 2px;
 }
 
 .dresscode-example p {
-    font-family: var(--font-body);
-    color: var(--vintage-sepia);
-    font-size: 1.1rem;
-    line-height: 1.6;
-    margin-bottom: 1.5rem;
+    color: var(--text-light);
+    line-height: 1.7;
+    font-size: 1rem;
+    margin-bottom: 2rem;
 }
 
-/* Paleta de colores sugeridos */
 .color-palette {
     display: flex;
     justify-content: center;
@@ -230,156 +142,166 @@
 }
 
 .color-dot {
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
-    border: 3px solid var(--vintage-gold);
-    box-shadow: var(--vintage-shadow-light);
-    position: relative;
-    transition: transform 0.3s ease;
+    border: 2px solid white;
+    box-shadow: var(--shadow-light);
+    transition: all 0.3s ease;
+    cursor: pointer;
 }
 
 .color-dot:hover {
-    transform: scale(1.1);
+    transform: scale(1.2);
+    box-shadow: var(--shadow-medium);
 }
 
 .color-dot.olive {
-    background: #8B7355;
+    background: linear-gradient(135deg, #8B8D47 0%, #A8AA5C 100%);
 }
 
 .color-dot.sand {
-    background: #F5F1E8;
+    background: linear-gradient(135deg, #D4C4A8 0%, #E6D7C3 100%);
 }
 
 .color-dot.cream {
-    background: #FDF8F0;
+    background: linear-gradient(135deg, #F5F5DC 0%, #FFFDD0 100%);
 }
 
+.color-dot.navy {
+    background: linear-gradient(135deg, #2C3E50 0%, #34495E 100%);
+}
+
+.color-dot.blush {
+    background: linear-gradient(135deg, #F8BBD9 0%, #FADDE1 100%);
+}
+
+/* Tooltip para colores */
 .color-dot::before {
-    content: '';
+    content: attr(data-color);
     position: absolute;
-    top: 3px;
-    left: 3px;
-    right: 3px;
-    bottom: 3px;
-    border-radius: 50%;
-    border: 1px solid rgba(255, 255, 255, 0.5);
+    bottom: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--text-dark);
+    color: white;
+    padding: 0.3rem 0.8rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    white-space: nowrap;
 }
 
-/* Elementos decorativos */
-.dresscode-content::before {
-    content: '♥';
-    position: absolute;
-    top: 50%;
-    left: -50px;
-    font-size: 3rem;
-    color: var(--vintage-rose);
-    opacity: 0.3;
-    animation: floatVintage 6s ease-in-out infinite;
+.color-dot:hover::before {
+    opacity: 1;
+    visibility: visible;
+    bottom: -35px;
 }
 
-.dresscode-content::after {
-    content: '♥';
-    position: absolute;
-    top: 30%;
-    right: -50px;
-    font-size: 2.5rem;
-    color: var(--vintage-gold);
-    opacity: 0.4;
-    animation: floatVintage 8s ease-in-out infinite reverse;
+/* Detalles decorativos */
+.dresscode-detail {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    margin-top: 2rem;
+    box-shadow: var(--shadow-light);
+    border: 1px solid var(--border-color);
 }
 
-/* Notas adicionales */
-.dresscode-notes {
+.dresscode-tips {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
     margin-top: 3rem;
-    text-align: center;
-    font-family: var(--font-script);
-    font-size: 1.3rem;
-    color: var(--vintage-rose);
-    font-style: italic;
-    background: rgba(232, 180, 184, 0.1);
-    padding: 1.5rem;
-    border-left: 4px solid var(--vintage-rose);
-    border-right: 4px solid var(--vintage-rose);
 }
 
-/* Responsive */
+.tip-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: var(--shadow-light);
+    transition: all 0.3s ease;
+    border: 1px solid var(--border-color);
+}
+
+.tip-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-medium);
+}
+
+.tip-icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.tip-card h4 {
+    font-size: 1.1rem;
+    color: var(--text-dark);
+    margin-bottom: 0.5rem;
+}
+
+.tip-card p {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    line-height: 1.5;
+}
+
+/* Responsive Dresscode */
+@media (max-width: 968px) {
+    .dresscode-examples {
+        gap: 3rem;
+    }
+    
+    .dresscode-image img {
+        height: 300px;
+    }
+}
+
 @media (max-width: 768px) {
     .dresscode {
         padding: 4rem 0;
     }
     
-    .dresscode-header h2 {
-        font-size: 2.5rem;
-        letter-spacing: 1px;
-    }
-    
-    .dresscode-header h2::before,
-    .dresscode-header h2::after {
-        display: none;
-    }
-    
-    .dresscode-description {
-        font-size: 1.1rem;
-        padding: 1.5rem;
-        margin-bottom: 3rem;
-    }
-    
     .dresscode-examples {
         grid-template-columns: 1fr;
-        gap: 2rem;
-        margin: 0 20px;
-    }
-    
-    .dresscode-example {
-        padding: 1.5rem;
-        transform: none !important;
-    }
-    
-    .dresscode-example:hover {
-        transform: translateY(-5px) !important;
+        gap: 3rem;
+        max-width: 400px;
     }
     
     .dresscode-image img {
-        width: 200px;
-        height: 280px;
+        height: 350px;
     }
     
-    .dresscode-example h3 {
-        font-size: 1.8rem;
-    }
-    
-    .dresscode-content::before,
-    .dresscode-content::after {
-        display: none;
+    .dresscode-tips {
+        grid-template-columns: 1fr;
+        gap: 1rem;
     }
 }
 
 @media (max-width: 480px) {
     .dresscode-description {
-        padding: 1rem;
-        font-size: 1rem;
-    }
-    
-    .dresscode-examples {
-        margin: 0 10px;
-    }
-    
-    .dresscode-example {
-        padding: 1rem;
-    }
-    
-    .dresscode-image img {
-        width: 180px;
-        height: 250px;
+        font-size: 1.1rem;
+        margin-bottom: 3rem;
     }
     
     .dresscode-example h3 {
-        font-size: 1.6rem;
+        font-size: 1.5rem;
+    }
+    
+    .dresscode-image {
+        border-radius: 20px;
+    }
+    
+    .dresscode-image img {
+        height: 280px;
     }
     
     .color-dot {
-        width: 30px;
-        height: 30px;
+        width: 25px;
+        height: 25px;
     }
 }

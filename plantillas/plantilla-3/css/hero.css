@@ -1,13 +1,22 @@
-/* Plantilla 3: Vintage Romance - Hero Section */
-
-.vintage-hero {
-    min-height: 100vh;
+.hero {
+    height: 100vh;
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
+    background: var(--gradient-primary);
     overflow: hidden;
-    background: var(--vintage-paper-gradient);
+}
+
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="0.5"/></pattern></defs><rect fill="url(%23grid)" width="100%" height="100%"/></svg>');
+    z-index: 1;
 }
 
 .hero-background {
@@ -18,235 +27,132 @@
     height: 100%;
     background-size: cover;
     background-position: center;
-    background-repeat: no-repeat;
-    filter: sepia(30%) saturate(80%) brightness(1.1);
-}
-
-.hero-background::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(
-        ellipse at center,
-        rgba(253, 248, 240, 0.2) 0%,
-        rgba(139, 115, 85, 0.3) 70%,
-        rgba(114, 47, 55, 0.4) 100%
-    );
-}
-
-/* Patrón vintage superpuesto */
-.vintage-pattern-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: 
-        repeating-linear-gradient(
-            45deg,
-            transparent,
-            transparent 2px,
-            rgba(212, 175, 55, 0.03) 2px,
-            rgba(212, 175, 55, 0.03) 4px
-        ),
-        repeating-linear-gradient(
-            -45deg,
-            transparent,
-            transparent 2px,
-            rgba(232, 180, 184, 0.03) 2px,
-            rgba(232, 180, 184, 0.03) 4px
-        );
-    z-index: 1;
-}
-
-.vintage-frame {
-    position: relative;
+    opacity: 0.3;
     z-index: 2;
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 4rem 3rem;
-    background: rgba(253, 248, 240, 0.95);
-    border: 3px solid var(--vintage-gold);
-    box-shadow: 
-        0 0 0 1px var(--vintage-rose),
-        0 15px 50px rgba(114, 47, 55, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.5);
-    backdrop-filter: blur(10px);
-}
-
-.vintage-frame::before {
-    content: '';
-    position: absolute;
-    top: 15px;
-    left: 15px;
-    right: 15px;
-    bottom: 15px;
-    border: 1px solid var(--vintage-rose);
-    pointer-events: none;
+    filter: blur(1px);
 }
 
 .hero-content {
-    text-align: center;
     position: relative;
+    z-index: 3;
+    text-align: center;
+    color: white;
+    max-width: 800px;
+    padding: 2rem;
 }
 
-.vintage-ornament-top,
-.vintage-ornament-bottom {
-    margin: 2rem 0;
-    color: var(--vintage-gold);
-    filter: drop-shadow(2px 2px 4px rgba(139, 115, 85, 0.3));
+.hero-ornament {
+    width: 80px;
+    height: 2px;
+    background: rgba(255,255,255,0.6);
+    margin: 0 auto 2rem;
+    position: relative;
+    animation: fadeIn 1s ease-out 0.5s both;
+}
+
+.hero-ornament::before,
+.hero-ornament::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 8px;
+    height: 8px;
+    background: rgba(255,255,255,0.8);
+    border-radius: 50%;
+    transform: translateY(-50%);
+}
+
+.hero-ornament::before {
+    left: -15px;
+}
+
+.hero-ornament::after {
+    right: -15px;
 }
 
 .hero-subtitle {
-    font-family: var(--font-script);
-    font-size: 1.8rem;
-    color: var(--vintage-rose);
-    margin-bottom: 0.5rem;
-    font-weight: 400;
-    letter-spacing: 1px;
+    font-size: 1.2rem;
+    font-weight: 300;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    opacity: 0;
+    animation: fadeInUp 1s ease-out 0.3s both;
 }
 
 .hero-names {
-    font-family: var(--font-display);
     font-size: 4rem;
-    font-weight: 700;
-    color: var(--vintage-burgundy);
-    margin: 1rem 0;
+    font-weight: 100;
     letter-spacing: 3px;
-    text-shadow: 
-        2px 2px 4px rgba(139, 115, 85, 0.3),
-        0 0 20px rgba(212, 175, 55, 0.2);
-    line-height: 1.2;
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeInUp 1s ease-out 0.6s both;
+    background: linear-gradient(45deg, #ffffff, #e8f4f8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 .hero-date {
-    font-family: var(--font-display);
-    font-size: 1.8rem;
-    font-weight: 500;
-    color: var(--vintage-sepia);
-    margin: 1.5rem 0 0.5rem;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-}
-
-.hero-location {
-    font-family: var(--font-script);
     font-size: 1.4rem;
-    color: var(--vintage-rose);
-    font-weight: 500;
+    font-weight: 300;
     letter-spacing: 1px;
+    opacity: 0;
+    animation: fadeInUp 1s ease-out 0.9s both;
 }
 
-/* Elementos decorativos flotantes */
-.vintage-floating-elements {
+.hero-scroll {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    pointer-events: none;
-    z-index: 0;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    animation: float 2s ease-in-out infinite;
 }
 
-.rose-1 {
-    top: 15%;
-    left: 10%;
-    animation-delay: -2s;
+.hero-scroll::after {
+    content: '↓';
+    font-size: 1.2rem;
 }
 
-.rose-2 {
-    top: 70%;
-    right: 15%;
-    animation-delay: -4s;
-}
-
-.lace-1 {
-    top: 25%;
-    right: 5%;
-    animation-delay: -1s;
-}
-
-.lace-2 {
-    bottom: 30%;
-    left: 8%;
-    animation-delay: -3s;
-}
-
-/* Efectos de partículas doradas */
-.vintage-hero::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: 
-        radial-gradient(2px 2px at 20px 30px, rgba(212, 175, 55, 0.4), transparent),
-        radial-gradient(2px 2px at 40px 70px, rgba(232, 180, 184, 0.3), transparent),
-        radial-gradient(1px 1px at 90px 40px, rgba(212, 175, 55, 0.3), transparent),
-        radial-gradient(1px 1px at 130px 80px, rgba(232, 180, 184, 0.4), transparent);
-    background-repeat: repeat;
-    background-size: 150px 120px;
-    animation: sparkle 20s linear infinite;
-    opacity: 0.6;
-    z-index: 1;
-}
-
-@keyframes sparkle {
-    0% {
-        transform: translateY(0);
-    }
-    100% {
-        transform: translateY(-120px);
-    }
-}
-
-/* Responsive */
+/* Responsive Hero */
 @media (max-width: 768px) {
-    .vintage-frame {
-        padding: 2rem 1.5rem;
-        margin: 20px;
-    }
-    
     .hero-names {
         font-size: 2.8rem;
         letter-spacing: 2px;
     }
     
-    .hero-subtitle {
-        font-size: 1.4rem;
-    }
-    
     .hero-date {
-        font-size: 1.4rem;
-        letter-spacing: 1px;
-    }
-    
-    .hero-location {
         font-size: 1.2rem;
     }
     
-    .ornament-svg {
-        width: 150px;
-        height: 30px;
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+    
+    .hero-content {
+        padding: 1rem;
     }
 }
 
 @media (max-width: 480px) {
-    .vintage-frame {
-        padding: 1.5rem 1rem;
-        margin: 10px;
-    }
-    
     .hero-names {
         font-size: 2.2rem;
+        letter-spacing: 1px;
     }
     
-    .hero-subtitle {
-        font-size: 1.2rem;
+    .hero-date {
+        font-size: 1.1rem;
+    }
+    
+    .hero-ornament {
+        width: 60px;
     }
 }

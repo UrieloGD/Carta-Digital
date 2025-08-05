@@ -1,9 +1,6 @@
-/* Plantilla 3: Vintage Romance - Sección Historia */
-
 .historia {
     padding: 6rem 0;
-    background: 
-        linear-gradient(135deg, var(--vintage-pearl) 0%, var(--vintage-champagne) 100%);
+    background: white;
     position: relative;
     overflow: hidden;
 }
@@ -11,256 +8,125 @@
 .historia::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: 
-        radial-gradient(circle at 20% 20%, rgba(232, 180, 184, 0.1) 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(212, 175, 55, 0.1) 0%, transparent 50%);
-    z-index: 1;
+    top: 20%;
+    right: -5%;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(52, 152, 219, 0.1) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: float 4s ease-in-out infinite;
 }
 
-.historia-content {
-    position: relative;
-    z-index: 2;
+.historia-container {
     max-width: 800px;
     margin: 0 auto;
     text-align: center;
-    padding: 3rem;
-    background: rgba(253, 248, 240, 0.9);
-    border: 2px solid var(--vintage-rose);
-    box-shadow: var(--vintage-shadow);
-    backdrop-filter: blur(5px);
+}
+
+.historia-content {
+    background: var(--background-soft);
+    border-radius: 30px;
+    padding: 4rem;
+    position: relative;
+    box-shadow: var(--shadow-light);
+    animation: fadeInUp 0.8s ease-out;
 }
 
 .historia-content::before {
-    content: '';
-    position: absolute;
-    top: 15px;
-    left: 15px;
-    right: 15px;
-    bottom: 15px;
-    border: 1px solid var(--vintage-gold);
-    pointer-events: none;
-    opacity: 0.6;
-}
-
-.historia-header {
-    margin-bottom: 3rem;
-    position: relative;
-}
-
-.historia-header h2 {
-    font-family: var(--font-display);
-    font-size: 3.2rem;
-    color: var(--vintage-burgundy);
-    font-weight: 600;
-    letter-spacing: 2px;
-    text-shadow: var(--vintage-text-shadow);
-    margin-bottom: 1.5rem;
-    position: relative;
-}
-
-.historia-header h2::before {
     content: '"';
     position: absolute;
-    left: -40px;
-    top: -10px;
-    font-size: 4rem;
-    color: var(--vintage-rose);
-    font-family: var(--font-display);
-    opacity: 0.6;
-}
-
-.historia-header h2::after {
-    content: '"';
-    position: absolute;
-    right: -40px;
-    bottom: -20px;
-    font-size: 4rem;
-    color: var(--vintage-rose);
-    font-family: var(--font-display);
-    opacity: 0.6;
-    transform: rotate(180deg);
+    top: -20px;
+    left: 30px;
+    font-size: 6rem;
+    color: var(--accent-color);
+    opacity: 0.3;
+    font-family: serif;
+    line-height: 1;
 }
 
 .historia-text {
-    font-family: var(--font-body);
-    font-size: 1.3rem;
-    line-height: 1.9;
-    color: var(--vintage-sepia);
-    text-align: justify;
-    margin-bottom: 2rem;
-}
-
-.historia-text p {
+    font-size: 1.2rem;
+    line-height: 1.8;
+    color: var(--text-dark);
     margin-bottom: 2rem;
     position: relative;
-    text-indent: 2rem;
-}
-
-.historia-text p:first-child::first-letter {
-    font-family: var(--font-display);
-    font-size: 4rem;
-    font-weight: 700;
-    color: var(--vintage-burgundy);
-    float: left;
-    line-height: 0.8;
-    margin: 0.2rem 0.8rem 0 0;
-    text-shadow: 2px 2px 4px rgba(114, 47, 55, 0.3);
-    background: var(--vintage-gold-gradient);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.historia-text p:not(:last-child)::after {
-    content: '❦';
-    display: block;
-    text-align: center;
-    color: var(--vintage-rose);
-    font-size: 1.5rem;
-    margin: 1.5rem 0;
-    opacity: 0.7;
-}
-
-/* Ornamento central */
-.historia-ornament {
-    margin-top: 3rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-}
-
-.historia-ornament::before {
-    content: '';
-    width: 150px;
-    height: 150px;
-    background: 
-        radial-gradient(circle, var(--vintage-rose) 0%, transparent 70%),
-        conic-gradient(from 0deg, var(--vintage-gold), var(--vintage-rose), var(--vintage-gold));
-    border-radius: 50%;
-    opacity: 0.3;
-    animation: rotateOrnament 20s linear infinite;
-}
-
-.historia-ornament::after {
-    content: '♥';
-    position: absolute;
-    font-size: 2rem;
-    color: var(--vintage-burgundy);
-    font-weight: bold;
-    text-shadow: var(--vintage-text-shadow);
-}
-
-@keyframes rotateOrnament {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-/* Decoraciones laterales */
-.historia-content::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: -30px;
-    width: 60px;
-    height: 200px;
-    background: 
-        repeating-linear-gradient(
-            0deg,
-            var(--vintage-rose) 0px,
-            var(--vintage-rose) 2px,
-            transparent 2px,
-            transparent 8px
-        );
-    transform: translateY(-50%);
-    opacity: 0.4;
-}
-
-.historia::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    right: -30px;
-    width: 60px;
-    height: 200px;
-    background: 
-        repeating-linear-gradient(
-            0deg,
-            var(--vintage-gold) 0px,
-            var(--vintage-gold) 2px,
-            transparent 2px,
-            transparent 8px
-        );
-    transform: translateY(-50%);
-    opacity: 0.4;
     z-index: 2;
 }
 
-/* Responsive */
+.historia-text p {
+    margin-bottom: 1.5rem;
+}
+
+.historia-ornament {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.historia-ornament::before,
+.historia-ornament::after {
+    content: '';
+    width: 50px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent-color), transparent);
+}
+
+.historia-ornament::before {
+    transform: translateX(10px);
+}
+
+.historia-ornament::after {
+    transform: translateX(-10px);
+}
+
+.historia-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--gradient-primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+    animation: float 3s ease-in-out infinite;
+}
+
+/* Responsive Historia */
 @media (max-width: 768px) {
     .historia {
         padding: 4rem 0;
     }
     
     .historia-content {
-        margin: 0 20px;
-        padding: 2rem 1.5rem;
+        padding: 3rem 2rem;
+        border-radius: 20px;
     }
     
-    .historia-header h2 {
-        font-size: 2.5rem;
-        letter-spacing: 1px;
-    }
-    
-    .historia-header h2::before,
-    .historia-header h2::after {
-        display: none;
+    .historia-content::before {
+        font-size: 4rem;
+        top: -10px;
+        left: 20px;
     }
     
     .historia-text {
         font-size: 1.1rem;
-        line-height: 1.7;
-        text-align: left;
-    }
-    
-    .historia-text p {
-        text-indent: 1rem;
-    }
-    
-    .historia-text p:first-child::first-letter {
-        font-size: 3rem;
-        margin: 0.1rem 0.5rem 0 0;
-    }
-    
-    .historia-content::after,
-    .historia::after {
-        display: none;
     }
 }
 
 @media (max-width: 480px) {
     .historia-content {
-        margin: 0 10px;
-        padding: 1.5rem 1rem;
-    }
-    
-    .historia-header h2 {
-        font-size: 2rem;
+        padding: 2rem 1.5rem;
     }
     
     .historia-text {
         font-size: 1rem;
     }
     
-    .historia-text p:first-child::first-letter {
-        font-size: 2.5rem;
+    .historia-ornament::before,
+    .historia-ornament::after {
+        width: 30px;
     }
 }

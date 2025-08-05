@@ -1,7 +1,5 @@
-/* Plantilla 3: Vintage Romance - Imagen de Transición */
-
 .transition-image {
-    height: 60vh;
+    height: 50vh;
     position: relative;
     overflow: hidden;
     display: flex;
@@ -13,68 +11,75 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    filter: sepia(40%) saturate(1.2) brightness(1.1) contrast(1.1);
+    filter: brightness(0.7) contrast(1.1);
+    transition: transform 0.3s ease;
 }
 
 .transition-overlay {
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    background: 
-        radial-gradient(
-            ellipse at center,
-            rgba(253, 248, 240, 0.1) 0%,
-            rgba(139, 115, 85, 0.3) 50%,
-            rgba(114, 47, 55, 0.5) 100%
-        );
-    z-index: 1;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        45deg,
+        rgba(52, 152, 219, 0.7) 0%,
+        rgba(155, 89, 182, 0.7) 100%
+    );
+    z-index: 2;
 }
 
-.transition-overlay::before {
-    content: '';
+.transition-content {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: 
-        repeating-linear-gradient(
-            45deg,
-            transparent,
-            transparent 20px,
-            rgba(212, 175, 55, 0.1) 20px,
-            rgba(212, 175, 55, 0.1) 40px
-        );
+    z-index: 3;
+    color: white;
+    text-align: center;
+    padding: 2rem;
 }
 
-.transition-overlay::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 200px;
-    height: 200px;
-    border: 3px solid var(--vintage-gold);
-    border-radius: 50%;
-    background: rgba(253, 248, 240, 0.9);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: var(--vintage-shadow);
-    opacity: 0.8;
+.transition-content h3 {
+    font-size: 2rem;
+    font-weight: 300;
+    margin-bottom: 1rem;
+    animation: fadeInUp 0.8s ease-out;
 }
 
-/* Responsive */
+.transition-content p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    animation: fadeInUp 0.8s ease-out 0.2s both;
+}
+
+/* Hover effect */
+.transition-image:hover img {
+    transform: scale(1.05);
+}
+
+/* Responsive Transition */
 @media (max-width: 768px) {
     .transition-image {
         height: 40vh;
     }
     
-    .transition-overlay::after {
-        width: 150px;
-        height: 150px;
+    .transition-content h3 {
+        font-size: 1.6rem;
+    }
+    
+    .transition-content p {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .transition-image {
+        height: 30vh;
+    }
+    
+    .transition-content {
+        padding: 1rem;
+    }
+    
+    .transition-content h3 {
+        font-size: 1.4rem;
     }
 }
