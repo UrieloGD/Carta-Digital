@@ -1,4 +1,22 @@
-<?php include './includes/header.php'; ?>
+<?php 
+include './includes/header.php';
+
+try {
+    require_once './config/database.php';
+    
+    $database = new Database();
+    $db = $database->getConnection();
+    
+    $stmt = $db->prepare("SELECT * FROM plantillas WHERE activa = 1 ORDER BY fecha_creacion DESC");
+    $stmt->execute();
+    $plantillas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+} catch(Exception $e) {
+    $plantillas = [];
+    error_log("Error al obtener plantillas: " . $e->getMessage());
+}
+?>
+
 <link rel="stylesheet" href="./css/plantillas.css?v=<?php echo filemtime('./css/plantillas.css'); ?>" />
 
 <section class="page-header">
@@ -6,100 +24,53 @@
         <div class="header-content">
             <h1>Explora nuestras <span class="highlight">invitaciones</span></h1>
             <p class="header-subtitle">Descubre diseños exclusivos que harán de tu día especial un momento inolvidable.</p>
-            
-            <!-- Navigation tabs -->
-            <div class="template-nav">
-                <button class="nav-btn active" data-category="todas">Todas</button>
-                <button class="nav-btn" data-category="clasicas">Clásicas</button>
-                <button class="nav-btn" data-category="modernas">Modernas</button>
-                <button class="nav-btn" data-category="bohemias">Bohemias</button>
-            </div>
         </div>
     </div>
 </section>
 
-<!-- El resto del HTML permanece igual -->
 <section class="templates">
     <div class="container">
-        <!-- First row -->
         <div class="templates-grid">
-            <div class="template-card" data-category="clasicas">
-                <div class="template-image">
-                    <img src="images/plantilla-1.png" alt="Plantilla Clásica">
-                    <div class="template-overlay">
-                        <a href="./plantillas/plantilla-1/invitacion-1.php" class="btn btn-secondary">Ver plantilla</a>
+            <?php if (!empty($plantillas)): ?>
+                <?php foreach ($plantillas as $plantilla): ?>
+                    <?php 
+                    // Construir la ruta completa de la imagen preview
+                    $imagenRuta = './images/default-template.png'; // Por defecto
+                    
+                    if (!empty($plantilla['imagen_preview'])) {
+                        // La ruta completa sería: ./plantillas/plantilla-{id}/{imagen_preview}
+                        $imagenRuta = './plantillas/plantilla-' . $plantilla['id'] . '/' . $plantilla['imagen_preview'];
+                    }
+                    ?>
+                    <div class="template-card">
+                        <div class="template-image">
+                            <img src="<?php echo htmlspecialchars($imagenRuta); ?>" 
+                                 alt="Preview de <?php echo htmlspecialchars($plantilla['nombre']); ?>"
+                                 onerror="this.src='./images/default-template.png'">
+                            <!-- Overlay removido de aquí -->
+                        </div>
+                        <div class="template-info">
+                            <h3><?php echo htmlspecialchars($plantilla['nombre']); ?></h3>
+                            
+                            <!-- Descripción comentada temporalmente -->
+                            <?php /* if (!empty($plantilla['descripcion'])): ?>
+                                <p class="template-description"><?php echo htmlspecialchars($plantilla['descripcion']); ?></p>
+                            <?php endif; */ ?>
+                            
+                            <!-- Botón movido aquí -->
+                            <a href="./plantillas/<?php echo htmlspecialchars($plantilla['carpeta']); ?>/<?php echo htmlspecialchars($plantilla['archivo_principal']); ?>" 
+                               class="btn btn-secondary template-btn">Ver plantilla</a>
+                        </div>
                     </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <div class="no-templates">
+                    <p>No hay plantillas disponibles en este momento.</p>
+                    <small>Agrega algunas plantillas desde el panel de administración.</small>
                 </div>
-                <div class="template-info">
-                    <h3>Clásica</h3>
-                </div>
-            </div>
-
-            <div class="template-card" data-category="modernas">
-                <div class="template-image">
-                    <img src="images/plantilla-1.png" alt="Plantilla Moderna">
-                    <div class="template-overlay">
-                        <a href="./plantilla-moderna.php" class="btn btn-secondary">Ver plantilla</a>
-                    </div>
-                </div>
-                <div class="template-info">
-                    <h3>Moderna</h3>
-                </div>
-            </div>
-
-            <div class="template-card" data-category="bohemias">
-                <div class="template-image">
-                    <img src="images/plantilla-1.png" alt="Plantilla Bohemia">
-                    <div class="template-overlay">
-                        <a href="./plantilla-bohemia.php" class="btn btn-secondary">Ver plantilla</a>
-                    </div>
-                </div>
-                <div class="template-info">
-                    <h3>Bohemia</h3>
-                </div>
-            </div>
-        </div>
-
-        <!-- Second row -->
-        <div class="templates-grid">
-            <div class="template-card" data-category="clasicas">
-                <div class="template-image">
-                    <img src="images/plantilla-1.png" alt="Plantilla Elegante">
-                    <div class="template-overlay">
-                        <a href="./plantilla-elegante.php" class="btn btn-secondary">Ver plantilla</a>
-                    </div>
-                </div>
-                <div class="template-info">
-                    <h3>Elegante</h3>
-                </div>
-            </div>
-
-            <div class="template-card" data-category="modernas">
-                <div class="template-image">
-                    <img src="images/plantilla-1.png" alt="Plantilla Minimalista">
-                    <div class="template-overlay">
-                        <a href="./plantilla-minimalista.php" class="btn btn-secondary">Ver plantilla</a>
-                    </div>
-                </div>
-                <div class="template-info">
-                    <h3>Minimalista</h3>
-                </div>
-            </div>
-
-            <div class="template-card" data-category="bohemias">
-                <div class="template-image">
-                    <img src="images/plantilla-1.png" alt="Plantilla Vintage">
-                    <div class="template-overlay">
-                        <a href="./plantilla-vintage.php" class="btn btn-secondary">Ver plantilla</a>
-                    </div>
-                </div>
-                <div class="template-info">
-                    <h3>Vintage</h3>
-                </div>
-            </div>
+            <?php endif; ?>
         </div>
     </div>
 </section>
-<script src="">
-<script src="./js/plantillas.js?v=<?php echo filemtime('./css/plantillas.css'); ?>"></script>
+
 <?php include './includes/footer.php'; ?>

@@ -77,7 +77,7 @@
                             <span>WhatsApp</span>
                         </a>
                         <a href="#" class="contact-social-btn messenger">
-                            <img src="./images/logos/Messenger.webp" alt="Messenger" class="contact-social-icon">
+                            <img src="./images/logos/messenger.webp" alt="Messenger" class="contact-social-icon">
                             <span>Messenger</span>
                         </a>
                     </div>
