@@ -1,4 +1,4 @@
-// Galería con solo rotación automática
+// Galería con solo rotación automática y estructura estable
 class GaleriaRotativa {
     constructor(imagenes, contenedor = 'galeria-grid') {
         this.imagenes = imagenes || [];
@@ -27,6 +27,12 @@ class GaleriaRotativa {
         return 6;
     }
     
+    // NUEVA FUNCIÓN: Obtener imagen cíclica para llenar espacios vacíos
+    getImagenCiclica(indice) {
+        if (this.imagenes.length === 0) return null;
+        return this.imagenes[indice % this.imagenes.length];
+    }
+    
     init() {
         this.mostrarPagina(0);
         this.configurarEventos();
@@ -52,10 +58,8 @@ class GaleriaRotativa {
     mostrarPagina(numeroPagina) {
         if (!this.contenedor) return;
         
-        // Calcular rango de imágenes
-        const inicio = numeroPagina * this.imagenesPorPagina;
-        const fin = Math.min(inicio + this.imagenesPorPagina, this.imagenes.length);
-        const imagenesActuales = this.imagenes.slice(inicio, fin);
+        // CAMBIO PRINCIPAL: Siempre mostrar el número fijo de imágenes por página
+        const imagenesAMostrar = this.imagenesPorPagina;
         
         // Animación de salida para imágenes actuales
         const itemsActuales = this.contenedor.querySelectorAll('.galeria-item');
@@ -70,24 +74,27 @@ class GaleriaRotativa {
         setTimeout(() => {
             this.contenedor.innerHTML = '';
             
-            // Crear nuevos elementos
-            imagenesActuales.forEach((imagen, index) => {
+            // MODIFICACIÓN: Crear elementos usando distribución cíclica
+            for (let i = 0; i < imagenesAMostrar; i++) {
+                const indiceImagen = (numeroPagina * this.imagenesPorPagina + i);
+                const imagenSrc = this.getImagenCiclica(indiceImagen);
+                
                 const item = document.createElement('div');
                 item.className = 'galeria-item';
                 item.innerHTML = `
                     <div class="image-overlay"></div>
-                    <img src="${imagen}" alt="Momento especial ${inicio + index + 1}" 
+                    <img src="${imagenSrc}" alt="Momento especial ${(indiceImagen % this.imagenes.length) + 1}" 
                          onerror="console.error('Error cargando imagen:', this.src)" />
                 `;
                 
                 this.contenedor.appendChild(item);
                 
-                // Animación de entrada escalonada
+                // Animación de entrada escalonada (manteniendo la original)
                 setTimeout(() => {
                     item.style.opacity = '1';
                     item.style.transform = 'translateY(0) scale(1)';
-                }, index * 100);
-            });
+                }, i * 100);
+            }
         }, 300);
         
         this.paginaActual = numeroPagina;
