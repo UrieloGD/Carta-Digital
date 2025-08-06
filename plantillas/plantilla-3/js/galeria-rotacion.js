@@ -1,4 +1,4 @@
-// Galería con rotación automática y estructura estable
+// Galería con rotación automática y estructura estable - SIN PLACEHOLDERS
 class GaleriaRotativa {
     constructor(imagenes, contenedor = 'galeria-grid') {
         this.imagenes = imagenes || [];
@@ -11,7 +11,8 @@ class GaleriaRotativa {
         
         this.imagenesPorPagina = this.calcularImagenesPorPagina();
         this.paginaActual = 0;
-        this.totalPaginas = Math.ceil(this.imagenes.length / this.imagenesPorPagina);
+        // Cambio importante: calculamos páginas basándose en las imágenes visibles
+        this.totalPaginas = Math.max(1, Math.ceil(this.imagenes.length / this.imagenesPorPagina));
         this.autoRotacion = null;
         this.tiempoRotacion = 4000; // 4 segundos
         
@@ -25,16 +26,22 @@ class GaleriaRotativa {
     
     calcularImagenesPorPagina() {
         const width = window.innerWidth;
-        if (width < 480) return 4; // Aumentado para mejor estabilidad
+        if (width < 480) return 4;
         if (width < 768) return 6;
         return 8;
     }
     
     calcularElementosMinimos() {
         const width = window.innerWidth;
-        if (width < 480) return 4; // Siempre mostrar mínimo 4 elementos en móvil
+        if (width < 480) return 4;
         if (width < 768) return 6;
         return 8;
+    }
+    
+    // NUEVA FUNCIÓN: Obtener imagen cíclica para evitar placeholders
+    getImagenCiclica(indice) {
+        if (this.imagenes.length === 0) return null;
+        return this.imagenes[indice % this.imagenes.length];
     }
     
     init() {
@@ -42,8 +49,8 @@ class GaleriaRotativa {
         this.mostrarPagina(0);
         this.configurarEventos();
         
-        // Iniciar auto-rotación si hay múltiples páginas
-        if (this.totalPaginas > 1) {
+        // Solo iniciar auto-rotación si hay suficientes imágenes para mostrar diferentes páginas
+        if (this.imagenes.length > this.imagenesPorPagina) {
             this.iniciarAutoRotacion();
         }
         
@@ -58,7 +65,7 @@ class GaleriaRotativa {
                 if (nuevasImagenesPorPagina !== this.imagenesPorPagina || nuevosElementosMinimos !== this.elementosMinimos) {
                     this.imagenesPorPagina = nuevasImagenesPorPagina;
                     this.elementosMinimos = nuevosElementosMinimos;
-                    this.totalPaginas = Math.ceil(this.imagenes.length / this.imagenesPorPagina);
+                    this.totalPaginas = Math.max(1, Math.ceil(this.imagenes.length / this.imagenesPorPagina));
                     this.paginaActual = 0;
                     this.crearEstructuraEstable();
                     this.mostrarPagina(0);
@@ -90,20 +97,15 @@ class GaleriaRotativa {
         }
     }
     
+    // FUNCIÓN MODIFICADA: Siempre mostrar imágenes reales
     mostrarPagina(numeroPagina) {
-        if (!this.contenedor) return;
-        
-        // Calcular rango de imágenes para esta página
-        const inicio = numeroPagina * this.imagenesPorPagina;
-        const fin = Math.min(inicio + this.imagenesPorPagina, this.imagenes.length);
-        const imagenesActuales = this.imagenes.slice(inicio, fin);
+        if (!this.contenedor || this.imagenes.length === 0) return;
         
         const items = this.contenedor.querySelectorAll('.galeria-item');
         
         // Animar salida de imágenes actuales
         items.forEach((item, index) => {
             const img = item.querySelector('img');
-            const overlay = item.querySelector('.galeria-overlay');
             
             setTimeout(() => {
                 if (img) {
@@ -117,32 +119,35 @@ class GaleriaRotativa {
         setTimeout(() => {
             items.forEach((item, index) => {
                 const img = item.querySelector('img');
-                const overlay = item.querySelector('.galeria-overlay');
                 
-                if (index < imagenesActuales.length) {
-                    // Mostrar imagen real
-                    const imagenSrc = imagenesActuales[index];
+                // CAMBIO CLAVE: Calcular índice de imagen de forma cíclica
+                const indiceImagen = (numeroPagina * this.imagenesPorPagina + index) % this.imagenes.length;
+                const imagenSrc = this.getImagenCiclica(numeroPagina * this.imagenesPorPagina + index);
+                
+                if (img && imagenSrc) {
+                    img.src = imagenSrc;
+                    img.alt = `Momento especial ${indiceImagen + 1}`;
+                    img.style.opacity = '0';
+                    img.style.transform = 'scale(0.95)';
                     
-                    if (img) {
-                        img.src = imagenSrc;
-                        img.alt = `Momento especial ${inicio + index + 1}`;
-                        img.style.opacity = '0';
-                        img.style.transform = 'scale(0.95)';
-                        
-                        // Manejar errores de carga
-                        img.onerror = function() {
-                            console.error('Error cargando imagen:', this.src);
-                            this.style.display = 'none';
-                        };
-                        
-                        img.onload = function() {
-                            this.style.display = 'block';
-                        };
-                    }
+                    // Manejar errores de carga
+                    img.onerror = function() {
+                        console.error('Error cargando imagen:', this.src);
+                        // En caso de error, intentar con la primera imagen disponible
+                        if (this.src !== this.imagenes[0]) {
+                            this.src = this.imagenes[0];
+                        }
+                    };
+                    
+                    img.onload = function() {
+                        this.style.display = 'block';
+                    };
                     
                     // Hacer el item clickeable
                     item.onclick = () => this.abrirImagenModal(imagenSrc);
                     item.style.cursor = 'pointer';
+                    
+                    // ELIMINAR cualquier clase de placeholder
                     item.classList.remove('galeria-placeholder');
                     
                     // Animación de entrada
@@ -152,18 +157,6 @@ class GaleriaRotativa {
                             img.style.transform = 'scale(1)';
                         }
                     }, index * 100);
-                    
-                } else {
-                    // Convertir en placeholder
-                    if (img) {
-                        img.src = '';
-                        img.alt = '';
-                        img.style.opacity = '0';
-                    }
-                    
-                    item.onclick = null;
-                    item.style.cursor = 'default';
-                    item.classList.add('galeria-placeholder');
                 }
             });
         }, 300);
@@ -226,7 +219,8 @@ class GaleriaRotativa {
     }
     
     siguientePagina() {
-        const siguiente = (this.paginaActual + 1) % this.totalPaginas;
+        // MODIFICACIÓN: Usar páginas infinitas basadas en imágenes disponibles
+        const siguiente = (this.paginaActual + 1) % Math.max(1, Math.ceil(this.imagenes.length / this.imagenesPorPagina));
         this.mostrarPagina(siguiente);
     }
     
@@ -255,7 +249,8 @@ class GaleriaRotativa {
     }
     
     iniciarAutoRotacion() {
-        if (this.totalPaginas <= 1) return;
+        // MODIFICACIÓN: Solo iniciar si hay suficientes imágenes para rotar
+        if (this.imagenes.length <= this.imagenesPorPagina) return;
         
         this.pausarAutoRotacion(); // Limpiar cualquier intervalo existente
         
@@ -276,7 +271,7 @@ class GaleriaRotativa {
     
     reiniciarAutoRotacion() {
         this.pausarAutoRotacion();
-        if (!document.querySelector('.galeria-modal.active')) {
+        if (!document.querySelector('.galeria-modal.active') && this.imagenes.length > this.imagenesPorPagina) {
             this.iniciarAutoRotacion();
         }
     }
