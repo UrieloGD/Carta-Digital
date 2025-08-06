@@ -2,6 +2,7 @@
     padding: 6rem 0;
     background: white;
     overflow: hidden;
+    min-height: 80vh; /* Altura mínima fija para evitar movimiento */
 }
 
 .galeria-grid {
@@ -9,6 +10,9 @@
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 2rem;
     margin-top: 3rem;
+    /* Altura mínima para mantener espacio consistente */
+    min-height: 400px;
+    align-items: start;
 }
 
 .galeria-item {
@@ -21,6 +25,10 @@
     animation: fadeInUp 0.8s ease-out;
     animation-delay: calc(var(--item-delay, 0) * 0.1s);
     animation-fill-mode: both;
+    /* Asegurar que mantenga su espacio */
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
 }
 
 .galeria-item:hover {
@@ -94,7 +102,7 @@
     opacity: 0;
 }
 
-/* Patrón de disposición especial */
+/* Patrón de disposición especial - MODIFICADO para estabilidad */
 .galeria-item:nth-child(3n+1) {
     grid-row: span 1;
 }
@@ -159,17 +167,24 @@
     transform: rotate(90deg);
 }
 
-/* Responsive Galería */
+/* Responsive Galería - MEJORADO */
 @media (max-width: 768px) {
     .galeria {
         padding: 4rem 0;
+        min-height: 60vh; /* Altura mínima reducida para móvil */
     }
     
     .galeria-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2, 1fr); /* Siempre 2 columnas en tablet */
         gap: 1rem;
+        min-height: 350px; /* Altura mínima reducida */
     }
     
+    .galeria-item {
+        max-width: none; /* Quitar límite de ancho */
+    }
+    
+    /* Resetear transformaciones en móvil para mejor estabilidad */
     .galeria-item:nth-child(3n+2),
     .galeria-item:nth-child(3n+3) {
         transform: none;
@@ -185,13 +200,19 @@
 }
 
 @media (max-width: 480px) {
+    .galeria {
+        min-height: 50vh; /* Altura mínima aún más reducida */
+    }
+    
     .galeria-grid {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
+        grid-template-columns: repeat(2, 1fr); /* Mantener 2 columnas en móvil */
+        gap: 0.8rem;
+        min-height: 300px;
     }
     
     .galeria-item {
-        aspect-ratio: 4/3;
+        aspect-ratio: 1; /* Mantener aspecto cuadrado */
+        border-radius: 15px; /* Radio reducido */
     }
     
     .galeria-close {
@@ -200,5 +221,82 @@
         width: 40px;
         height: 40px;
         font-size: 1.5rem;
+    }
+}
+
+/* Placeholder para espacios vacíos si hay pocas imágenes */
+.galeria-placeholder {
+    aspect-ratio: 1;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+.galeria-placeholder::after {
+    content: '📷';
+    font-size: 2rem;
+    color: #6c757d;
+}
+
+/* Placeholder mejorado para espacios vacíos */
+.galeria-item.galeria-placeholder {
+    background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0.05) 100%);
+    border: 2px dashed rgba(155, 89, 182, 0.2);
+    cursor: default !important;
+}
+
+.galeria-item.galeria-placeholder::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" fill="rgba(155,89,182,0.3)" viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>') center/contain no-repeat;
+    opacity: 0.3;
+}
+
+.galeria-item.galeria-placeholder:hover {
+    transform: none !important;
+}
+
+.galeria-item.galeria-placeholder .galeria-overlay {
+    display: none;
+}
+
+/* Transiciones suaves para el contenido de las imágenes */
+.galeria-item img {
+    transition: all 0.3s ease;
+}
+
+/* Mejorar la carga de imágenes */
+.galeria-item img[src=""] {
+    display: none;
+}
+
+/* Animación mejorada para carga */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Animación flotante para el ícono */
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
     }
 }
