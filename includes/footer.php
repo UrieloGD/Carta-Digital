@@ -41,4 +41,5 @@
             <p>&copy; <?php echo date('Y'); ?> Carta Digital. Todos los derechos reservados.</p>
         </div>
     </div>
+<script src="./js/main.js?v=<?php echo filemtime('./js/main.js'); ?>"></script>
 </footer>
