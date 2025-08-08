@@ -239,7 +239,7 @@
   }
 
   .carousel-track {
-    animation: scrollInfiniteMobile 100s linear infinite; /* VELOCIDAD MUY REDUCIDA */
+    animation: scrollInfiniteMobile 150s linear infinite; /* VELOCIDAD MUY REDUCIDA */
     gap: 1.5rem;
   }
 
@@ -389,7 +389,7 @@
   }
 
   .carousel-track {
-    animation: scrollInfiniteMobile 120s linear infinite; /* SÚPER LENTO */
+    animation: scrollInfiniteMobile 150s linear infinite; /* SÚPER LENTO */
     gap: 1rem;
   }
 
@@ -401,7 +401,7 @@
 /* Optimizaciones para rendimiento */
 @media (prefers-reduced-motion: reduce) {
   .carousel-track {
-    animation-duration: 200s; /* EXTREMADAMENTE LENTO */
+    animation-duration: 230s; /* EXTREMADAMENTE LENTO */
   }
   
   .galeria-item:hover {
