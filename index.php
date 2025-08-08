@@ -80,7 +80,7 @@
                     <i class="fas fa-images"></i>
                 </div>
                 <h3>Galería de fotos</h3>
-                <p>Incluye vuestras mejores fotografías para compartir.</p>
+                <p>Incluye tus mejores fotografías para compartir.</p>
             </div>
             
             <div class="benefit-card">
@@ -97,34 +97,83 @@
 <!-- Templates Preview -->
 <section class="templates-preview">
     <div class="container">
-        <h2>Nuestras Plantillas</h2>
+        <h2>Nuestras Plantillas Más Populares</h2>
         <p>Explora nuestra colección de invitaciones digitales y encuentra la que mejor se adapte a tu estilo.</p>
         
         <div class="templates-grid">
-            <div class="template-card">
-                <img src="./images/plantilla-1.png" alt="Elegancia Dorada">
-                <div class="template-info">
-                    <h3>Elegancia Dorada</h3>
-                    <a href="#" class="btn-template">Ver plantilla</a>
-                </div>
-            </div>
-            
-            <div class="template-card">
-                <img src="./images/plantilla-1.png" alt="Elegancia Dorada">
-                <div class="template-info">
-                    <h3>Elegancia Dorada</h3>
-                    <a href="#" class="btn-template">Ver plantilla</a>
-                </div>
-            </div>
-            
-            <div class="template-card">
-                <img src="./images/plantilla-1.png" alt="Elegancia Dorada">
-                <div class="template-info">
-                    <h3>Elegancia Dorada</h3>
-                    <a href="#" class="btn-template">Ver plantilla</a>
-                </div>
-            </div>
-            
+            <?php
+            // Obtener las 3 plantillas más utilizadas
+            try {
+                require_once './config/database.php';
+                
+                $database = new Database();
+                $db = $database->getConnection();
+                
+                // Query para obtener las plantillas más utilizadas
+                $stmt = $db->prepare("
+                    SELECT p.*, COUNT(i.id) as total_invitaciones
+                    FROM plantillas p 
+                    LEFT JOIN invitaciones i ON p.id = i.plantilla_id 
+                    WHERE p.activa = 1 
+                    GROUP BY p.id 
+                    ORDER BY total_invitaciones DESC, p.fecha_creacion DESC 
+                    LIMIT 3
+                ");
+                $stmt->execute();
+                $plantillasPopulares = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                
+                if (!empty($plantillasPopulares)):
+                    foreach ($plantillasPopulares as $plantilla):
+                        // Construir la ruta de la imagen
+                        $imagenRuta = './images/default-template.png';
+                        if (!empty($plantilla['imagen_preview'])) {
+                            $imagenRuta = './plantillas/plantilla-' . $plantilla['id'] . '/' . $plantilla['imagen_preview'];
+                        }
+                ?>
+                        <div class="template-card">
+                            <img src="<?php echo htmlspecialchars($imagenRuta); ?>" 
+                                 alt="<?php echo htmlspecialchars($plantilla['nombre']); ?>"
+                                 onerror="this.src='./images/default-template.png'">
+                            <div class="template-info">
+                                <h3><?php echo htmlspecialchars($plantilla['nombre']); ?></h3>
+                                <a href="./plantillas/<?php echo htmlspecialchars($plantilla['carpeta']); ?>/<?php echo htmlspecialchars($plantilla['archivo_principal']); ?>" 
+                                   class="btn-template">Ver plantilla</a>
+                            </div>
+                        </div>
+                <?php 
+                    endforeach;
+                else: 
+                    // Si no hay plantillas con invitaciones, mostrar las 3 más recientes
+                    $stmt = $db->prepare("SELECT * FROM plantillas WHERE activa = 1 ORDER BY fecha_creacion DESC LIMIT 3");
+                    $stmt->execute();
+                    $plantillasRecientes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    
+                    foreach ($plantillasRecientes as $plantilla):
+                        $imagenRuta = './images/default-template.png';
+                        if (!empty($plantilla['imagen_preview'])) {
+                            $imagenRuta = './plantillas/plantilla-' . $plantilla['id'] . '/' . $plantilla['imagen_preview'];
+                        }
+                ?>
+                        <div class="template-card">
+                            <img src="<?php echo htmlspecialchars($imagenRuta); ?>" 
+                                 alt="<?php echo htmlspecialchars($plantilla['nombre']); ?>"
+                                 onerror="this.src='./images/default-template.png'">
+                            <div class="template-info">
+                                <h3><?php echo htmlspecialchars($plantilla['nombre']); ?></h3>
+                                <a href="./plantillas/<?php echo htmlspecialchars($plantilla['carpeta']); ?>/<?php echo htmlspecialchars($plantilla['archivo_principal']); ?>" 
+                                   class="btn-template">Ver plantilla</a>
+                            </div>
+                        </div>
+                <?php 
+                    endforeach;
+                endif;
+                
+            } catch(Exception $e) {
+                error_log("Error al obtener plantillas populares: " . $e->getMessage());
+                // Mostrar mensaje de error básico
+                echo '<div class="no-templates"><p>No se pudieron cargar las plantillas en este momento.</p></div>';
+            }
+            ?>
         </div>
         
         <div class="templates-cta">

@@ -191,9 +191,9 @@ $mensaje_footer = $invitacion['mensaje_footer'] ?: '"El amor es la fuerza más p
 $firma_footer = $invitacion['firma_footer'] ?: $nombres;
 
 // Imágenes principales
-$imagen_hero = $invitacion['imagen_hero'] ?: './img/hero.jpg';
-$imagen_dedicatoria = $invitacion['imagen_dedicatoria'] ?: './img/dedicatoria.jpg';
-$imagen_destacada = $invitacion['imagen_destacada'] ?: './img/hero.jpg';
+$imagen_hero = $invitacion['imagen_hero'] ?: './plantillas/plantilla-1/img/hero.jpg';
+$imagen_dedicatoria = $invitacion['imagen_dedicatoria'] ?: './plantillas/plantilla-1/img/dedicatoria.jpg';
+$imagen_destacada = $invitacion['imagen_destacada'] ?: './plantillas/plantilla-1/img/hero.jpg';
 
 // Información familiar
 $padres_novia = $invitacion['padres_novia'] ?? '';

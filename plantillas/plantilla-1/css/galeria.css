@@ -3,7 +3,6 @@
     padding: 5rem 0;
     background: var(--color-primary);
     overflow: hidden;
-    /* Removemos el padding del container para que ocupe todo el ancho */
     width: 100vw;
     margin-left: calc(50% - 50vw);
 }
@@ -14,7 +13,6 @@
     color: var(--color-secondary);
     text-align: center;
     margin-bottom: 3rem;
-    /* Mantenemos el contenedor centrado solo para el título */
     max-width: 1200px;
     margin-left: auto;
     margin-right: auto;
@@ -24,13 +22,13 @@
 /* Contenedor del carrusel */
 .galeria-carousel {
     width: 100%;
-    /* overflow: hidden; */
+    overflow: hidden;
 }
 
-/* Track que contiene todas las imágenes - movimiento invertido */
+/* Track que contiene todas las imágenes */
 .carousel-track {
     display: flex;
-    animation: scrollFromLeft 60s linear infinite;
+    animation: scrollInfinite 45s linear infinite; /* Aumentado de 30s a 45s */
     gap: 2rem;
     width: max-content;
 }
@@ -54,7 +52,7 @@
     object-position: center;
     border-radius: 2px;
     
-    /* Efecto photocard con borde blanco - padding reducido */
+    /* Efecto photocard con borde blanco */
     padding: 15px;
     background: white;
     box-shadow: 
@@ -64,12 +62,68 @@
     transition: transform 0.3s ease;
 }
 
-/* Animación de scroll invertido (derecha a izquierda) */
-@keyframes scrollFromLeft {
+/* Animación de scroll infinito */
+@keyframes scrollInfinite {
     0% {
-        transform: translateX(-3%);
+        transform: translateX(0);
     }
     100% {
-        transform: translateX(-100vw);
+        transform: translateX(-50%);
     }
+}
+
+/* Media queries para tablet */
+@media (max-width: 1024px) {
+    .galeria {
+        padding: 4rem 0;
+    }
+
+    .galeria h2 {
+        font-size: 2.2rem;
+        margin-bottom: 2.5rem;
+    }
+
+    .galeria-item {
+        flex: 0 0 280px;
+        height: 380px;
+    }
+
+    .galeria-item img {
+        width: 280px;
+        height: 330px;
+    }
+
+    .carousel-track {
+        animation: scrollInfinite 40s linear infinite; /* Aumentado de 25s a 40s */
+        gap: 1.8rem;
+    }
+}
+
+/* Optimizaciones adicionales */
+@media (prefers-reduced-motion: reduce) {
+    .carousel-track {
+        animation-duration: 80s; /* Aumentado de 60s a 80s */
+    }
+    
+    .galeria-item:hover {
+        transform: none;
+    }
+}
+
+/* Mejoras de accesibilidad */
+.galeria-item:focus-within {
+    outline: 2px solid var(--color-secondary);
+    outline-offset: 2px;
+}
+
+/* Estados de carga para imágenes */
+.galeria-item img.loading {
+    opacity: 0.5;
+    filter: blur(2px);
+}
+
+.galeria-item img.loaded {
+    opacity: 1;
+    filter: none;
+    transition: opacity 0.3s ease, filter 0.3s ease;
 }

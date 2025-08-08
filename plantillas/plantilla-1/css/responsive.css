@@ -15,7 +15,7 @@
 
   /* Hero Section */
   .hero {
-    min-height: 80vh;
+    min-height: 100vh;
     padding: 1rem 0;
   }
 
@@ -216,7 +216,7 @@
     margin-top: 1rem;
   }
 
-  /* Galería - Simplificar para móviles */
+  /* Galería - Optimizada para móviles */
   .galeria {
     padding: 3rem 0;
     overflow: hidden;
@@ -224,6 +224,7 @@
 
   .galeria h2 {
     font-size: 1.8rem;
+    margin-bottom: 2rem;
   }
 
   .galeria-item {
@@ -234,6 +235,22 @@
   .galeria-item img {
     width: 230px;
     height: 280px;
+    padding: 10px;
+  }
+
+  .carousel-track {
+    animation: scrollInfiniteMobile 50s linear infinite;
+    gap: 1.5rem;
+  }
+
+  /* Animación específica para móviles */
+  @keyframes scrollInfiniteMobile {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
   }
 
   /* Dresscode */
@@ -360,6 +377,16 @@
     height: 30px;
   }
 
+  /* Galería para pantallas muy pequeñas */
+  .galeria {
+    padding: 2.5rem 0;
+  }
+
+  .galeria h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
   .galeria-item {
     flex: 0 0 220px;
     height: 270px;
@@ -368,9 +395,48 @@
   .galeria-item img {
     width: 200px;
     height: 250px;
+    padding: 8px;
+  }
+
+  .carousel-track {
+    animation: scrollInfiniteMobile 45s linear infinite;
+    gap: 1rem;
   }
 
   .transition-image {
     height: 70vh;
+  }
+}
+
+/* Media query para pantallas extra grandes */
+@media (min-width: 1400px) {
+  .galeria-item {
+    flex: 0 0 320px;
+    height: 420px;
+  }
+
+  .galeria-item img {
+    width: 320px;
+    height: 370px;
+  }
+
+  .carousel-track {
+    animation: scrollInfinite 50s linear infinite;
+    gap: 2.5rem;
+  }
+}
+
+/* Optimizaciones para rendimiento */
+@media (prefers-reduced-motion: reduce) {
+  .carousel-track {
+    animation-duration: 80s;
+  }
+  
+  .galeria-item:hover {
+    transform: none;
+  }
+  
+  .timeline-item {
+    animation: none;
   }
 }
