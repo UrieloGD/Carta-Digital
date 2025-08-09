@@ -9,9 +9,11 @@ CREATE TABLE IF NOT EXISTS plantillas (
     descripcion TEXT,
     carpeta VARCHAR(100) NOT NULL,
     archivo_principal VARCHAR(100) NOT NULL,
+    invitacion_ejemplo_id INT NULL,
     imagen_preview VARCHAR(255),
     activa TINYINT(1) DEFAULT 1,
-    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (invitacion_ejemplo_id) REFERENCES invitaciones(id) ON DELETE SET NULL;
 );
 
 -- Tabla de invitaciones (estructura completa actualizada)

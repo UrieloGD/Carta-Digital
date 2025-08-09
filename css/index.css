@@ -332,6 +332,17 @@
     margin-top: 3rem;
 }
 
+.template-example-info {
+    margin: 5px 0;
+    color: #666;
+    font-style: italic;
+}
+
+.template-example-info i {
+    margin-right: 5px;
+    color: #007bff;
+}
+
 /* Quote Section */
 .quote {
     position: relative;

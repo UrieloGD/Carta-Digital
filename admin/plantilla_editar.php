@@ -17,6 +17,12 @@ if (!$plantilla) {
     exit("Plantilla no encontrada");
 }
 
+// Obtener invitaciones disponibles para usar como ejemplo
+$invitaciones_query = "SELECT id, nombres_novios, slug FROM invitaciones ORDER BY nombres_novios ASC";
+$invitaciones_stmt = $db->prepare($invitaciones_query);
+$invitaciones_stmt->execute();
+$invitaciones = $invitaciones_stmt->fetchAll(PDO::FETCH_ASSOC);
+
 // Función para limpiar rutas de imagen
 function limpiarRutaImagen($ruta) {
     if (empty($ruta)) return '';
@@ -31,17 +37,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $archivo_principal = trim($_POST['archivo_principal']);
     $imagen_preview = trim($_POST['imagen_preview']);
     $activa = isset($_POST['activa']) ? 1 : 0;
+    $invitacion_ejemplo_id = !empty($_POST['invitacion_ejemplo_id']) ? $_POST['invitacion_ejemplo_id'] : null;
     
     $imagen_preview = limpiarRutaImagen($imagen_preview);
     
     if (empty($nombre) || empty($carpeta) || empty($archivo_principal)) {
         $error = "Los campos Nombre, Carpeta y Archivo PHP son obligatorios.";
     } else {
-        $update_query = "UPDATE plantillas SET nombre = ?, descripcion = ?, carpeta = ?, archivo_principal = ?, imagen_preview = ?, activa = ? WHERE id = ?";
+        $update_query = "UPDATE plantillas SET nombre = ?, descripcion = ?, carpeta = ?, archivo_principal = ?, imagen_preview = ?, activa = ?, invitacion_ejemplo_id = ? WHERE id = ?";
         $update_stmt = $db->prepare($update_query);
         
-        if ($update_stmt->execute([$nombre, $descripcion, $carpeta, $archivo_principal, $imagen_preview, $activa, $id])) {
+        if ($update_stmt->execute([$nombre, $descripcion, $carpeta, $archivo_principal, $imagen_preview, $activa, $invitacion_ejemplo_id, $id])) {
             $success = "Plantilla actualizada correctamente.";
+            // Refrescar datos de la plantilla
             $stmt->execute([$id]);
             $plantilla = $stmt->fetch(PDO::FETCH_ASSOC);
         } else {
@@ -217,6 +225,54 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                            value="<?php echo htmlspecialchars($plantilla['imagen_preview']); ?>">
                     <div class="form-text">Ejemplo: img/preview.png (relativo a la carpeta de la plantilla)</div>
                 </div>
+
+                <!-- NUEVO CAMPO: Invitación Ejemplo -->
+                <div class="mb-3">
+                    <label for="invitacion_ejemplo_id" class="form-label">
+                        <i class="bi bi-eye me-1"></i>
+                        Invitación de Ejemplo
+                    </label>
+                    <select class="form-select" 
+                            id="invitacion_ejemplo_id" 
+                            name="invitacion_ejemplo_id">
+                        <option value="">-- Seleccionar invitación ejemplo (opcional) --</option>
+                        <?php foreach ($invitaciones as $invitacion): ?>
+                            <option value="<?= $invitacion['id'] ?>" 
+                                    <?= ($plantilla['invitacion_ejemplo_id'] == $invitacion['id']) ? 'selected' : '' ?>>
+                                <?= htmlspecialchars($invitacion['nombres_novios']) ?> 
+                                (<?= htmlspecialchars($invitacion['slug']) ?>)
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                    <div class="form-text">
+                        <i class="bi bi-info-circle me-1"></i>
+                        Selecciona una invitación existente que sirva como ejemplo para mostrar esta plantilla. 
+                        Los usuarios podrán ver esta invitación cuando hagan clic en "Ver Plantilla".
+                        <?php if (!empty($plantilla['invitacion_ejemplo_id'])): ?>
+                            <br><strong>Ejemplo actual:</strong> 
+                            <?php 
+                            $ejemplo_actual = array_filter($invitaciones, function($inv) use ($plantilla) {
+                                return $inv['id'] == $plantilla['invitacion_ejemplo_id'];
+                            });
+                            if (!empty($ejemplo_actual)) {
+                                $ejemplo = reset($ejemplo_actual);
+                                echo htmlspecialchars($ejemplo['nombres_novios']) . ' (' . htmlspecialchars($ejemplo['slug']) . ')';
+                            } else {
+                                echo '<span class="text-warning">Invitación no encontrada</span>';
+                            }
+                            ?>
+                        <?php endif; ?>
+                    </div>
+                </div>
+
+                <?php if (empty($invitaciones)): ?>
+                <div class="alert alert-info" role="alert">
+                    <i class="bi bi-info-circle me-2"></i>
+                    <strong>Nota:</strong> No hay invitaciones creadas aún. 
+                    <a href="functions/crear.php" class="alert-link">Crea una invitación</a> 
+                    primero para poder usarla como ejemplo.
+                </div>
+                <?php endif; ?>
             </div>
 
             <!-- Preview de la imagen actual -->
@@ -303,6 +359,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 badge.className = 'badge bg-secondary';
                 icon.className = 'bi bi-pause-circle me-1';
                 badge.innerHTML = '<i class="bi bi-pause-circle me-1"></i>Inactiva';
+            }
+        });
+
+        // Mejorar el selector de invitación con información adicional
+        document.getElementById('invitacion_ejemplo_id').addEventListener('change', function() {
+            if (this.value) {
+                const selectedOption = this.options[this.selectedIndex];
+                const slug = selectedOption.text.match(/\(([^)]+)\)$/)[1];
+                console.log('Invitación seleccionada:', selectedOption.text);
+                console.log('URL que se usará:', `/invitacion/${slug}`);
             }
         });
     </script>

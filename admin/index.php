@@ -81,7 +81,7 @@ $invitaciones = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="./css/index.css">
+    <link rel="stylesheet" href="./css/index.css?v=<?php echo filemtime('./css/index.css'); ?>" />
     <!-- Icon page -->
     <link rel="shortcut icon" href="./../images/logo.webp" />
 </head>
@@ -132,7 +132,7 @@ $invitaciones = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <div class="card h-100">
                         <!-- Imagen hero si existe -->
                         <?php if (!empty($invitacion['imagen_hero'])): ?>
-                        <img src="<?php echo htmlspecialchars('../uploads/' . $invitacion['slug'] . '/' . $invitacion['imagen_hero']); ?>" 
+                        <img src="<?php echo htmlspecialchars('../' . $invitacion['imagen_hero']); ?>"
                              alt="Imagen de <?php echo htmlspecialchars($invitacion['nombres_novios']); ?>"
                              class="preview-image"
                              onerror="this.style.display='none';">

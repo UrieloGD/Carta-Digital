@@ -4,17 +4,24 @@ require_once '../config/database.php';
 $database = new Database();
 $db = $database->getConnection();
 
+// Obtener invitaciones disponibles para usar como ejemplo
+$invitaciones_query = "SELECT id, nombres_novios, slug FROM invitaciones ORDER BY nombres_novios ASC";
+$invitaciones_stmt = $db->prepare($invitaciones_query);
+$invitaciones_stmt->execute();
+$invitaciones = $invitaciones_stmt->fetchAll(PDO::FETCH_ASSOC);
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nombre = $_POST['nombre'];
     $descripcion = $_POST['descripcion'];
     $carpeta = $_POST['carpeta'];
     $archivo_principal = $_POST['archivo_principal'];
     $imagen_preview = $_POST['imagen_preview'];
+    $invitacion_ejemplo_id = !empty($_POST['invitacion_ejemplo_id']) ? $_POST['invitacion_ejemplo_id'] : null;
 
-    $query = "INSERT INTO plantillas (nombre, descripcion, carpeta, archivo_principal, imagen_preview) 
-              VALUES (?, ?, ?, ?, ?)";
+    $query = "INSERT INTO plantillas (nombre, descripcion, carpeta, archivo_principal, imagen_preview, invitacion_ejemplo_id) 
+              VALUES (?, ?, ?, ?, ?, ?)";
     $stmt = $db->prepare($query);
-    $stmt->execute([$nombre, $descripcion, $carpeta, $archivo_principal, $imagen_preview]);
+    $stmt->execute([$nombre, $descripcion, $carpeta, $archivo_principal, $imagen_preview, $invitacion_ejemplo_id]);
 
     header("Location: plantillas.php");
     exit;
@@ -147,6 +154,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                     </div>
                 </div>
+
+                <!-- NUEVO CAMPO: Invitación Ejemplo -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="mb-3">
+                            <label for="invitacion_ejemplo_id" class="form-label">
+                                <i class="bi bi-eye me-1"></i>
+                                Invitación de Ejemplo
+                            </label>
+                            <select class="form-select" 
+                                    id="invitacion_ejemplo_id" 
+                                    name="invitacion_ejemplo_id">
+                                <option value="">-- Seleccionar invitación ejemplo (opcional) --</option>
+                                <?php foreach ($invitaciones as $invitacion): ?>
+                                    <option value="<?= $invitacion['id'] ?>">
+                                        <?= htmlspecialchars($invitacion['nombres_novios']) ?> 
+                                        (<?= htmlspecialchars($invitacion['slug']) ?>)
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                            <div class="form-text">
+                                <i class="bi bi-info-circle me-1"></i>
+                                Selecciona una invitación existente que sirva como ejemplo para mostrar esta plantilla. 
+                                Los usuarios podrán ver esta invitación cuando hagan clic en "Ver Plantilla".
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <?php if (empty($invitaciones)): ?>
+                <div class="alert alert-info" role="alert">
+                    <i class="bi bi-info-circle me-2"></i>
+                    <strong>Nota:</strong> No hay invitaciones creadas aún. 
+                    <a href="functions/crear.php" class="alert-link">Crea una invitación</a> 
+                    primero para poder usarla como ejemplo.
+                </div>
+                <?php endif; ?>
             </div>
 
             <!-- Botones de acción -->
@@ -194,6 +238,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 .replace(/\s+/g, '-')
                 .replace(/-+/g, '-');
             document.getElementById('carpeta').value = carpeta;
+        });
+
+        // Mejorar el selector de invitación con búsqueda (opcional)
+        document.getElementById('invitacion_ejemplo_id').addEventListener('change', function() {
+            if (this.value) {
+                const selectedOption = this.options[this.selectedIndex];
+                const slug = selectedOption.text.match(/\(([^)]+)\)$/)[1];
+                console.log('Invitación seleccionada:', selectedOption.text);
+                console.log('URL que se usará:', `/invitacion/${slug}`);
+            }
         });
     </script>
 </body>
