@@ -35,7 +35,7 @@ class GaleriaRotativa {
         const width = window.innerWidth;
         if (width < 480) return 4;
         if (width < 768) return 6;
-        return 8;
+        return 6;
     }
     
     // NUEVA FUNCIÓN: Obtener imagen cíclica para evitar placeholders

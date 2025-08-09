@@ -97,6 +97,7 @@
 
 .ubicacion-content {
     padding: 2rem;
+    margin-top: 2rem;
 }
 
 .ubicacion-content h3 {
@@ -201,6 +202,7 @@
     
     .ubicacion-content {
         padding: 1.5rem;
+        margin-top: 2rem;
     }
     
     .ubicacion-image {
