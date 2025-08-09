@@ -66,7 +66,9 @@
 
 .image-frame img {
     width: 100%;
-    height: auto;
+    height: 350px; /* Altura fija para consistencia */
+    object-fit: cover;
+    object-position: center 20%; /* Enfoca en la parte superior */
     display: block;
     filter: sepia(10%) saturate(110%);
 }
@@ -231,6 +233,11 @@
         max-width: 400px;
         transform: rotate(0deg);
     }
+
+    .image-frame img {
+        height: 300px;
+        object-position: center 25%;
+    }
     
     .bienvenida-text p {
         font-size: 1.1rem;
@@ -252,6 +259,11 @@
     
     .image-frame {
         max-width: 300px;
+    }
+
+    .image-frame img {
+        height: 250px;
+        object-position: center 30%;
     }
     
     .date-ornament {

@@ -169,9 +169,11 @@ p {
 
 .transition-image img {
     width: 100%;
-    height: 100%;
+    height: 110%;
     object-fit: cover;
+    object-position: center 25%; /* Agregado - enfoca en la parte superior */
     filter: sepia(20%) saturate(80%);
+    transition: var(--transition-slow); /* Agregado para transiciones suaves */
 }
 
 .transition-overlay {
@@ -274,6 +276,14 @@ section:nth-child(even) {
     p {
         font-size: 1rem;
     }
+
+    .transition-image {
+        height: 40vh;
+    }
+    
+    .transition-image img {
+        object-position: center 30%; /* Diferente posición en móvil */
+    }
 }
 
 @media (max-width: 480px) {
@@ -283,5 +293,9 @@ section:nth-child(even) {
     
     .decorative-line {
         width: 60px;
+    }
+    
+    .transition-image img {
+        object-position: center 25%; /* Aún más centrado en pantallas pequeñas */
     }
 }

@@ -40,23 +40,27 @@
     margin: 0 auto;
     position: relative;
     z-index: 2;
+    align-items: stretch; /* Asegura que todas las tarjetas tengan la misma altura */
 }
 
 /* Contenedor para manejar el overflow del badge */
 .ubicacion-card-wrapper {
     position: relative;
-    /* Añadimos padding top para dar espacio al badge */
     padding-top: 20px;
+    height: 100%; /* Asegura que el wrapper ocupe toda la altura disponible */
 }
 
+/* CORRECCIÓN PRINCIPAL: Tarjeta con altura uniforme */
 .ubicacion-card {
     background: var(--cream);
     border-radius: 25px;
-    /* REMOVEMOS overflow: hidden para que el badge no se corte */
     position: relative;
     transition: var(--transition-smooth);
     box-shadow: 0 10px 30px rgba(107, 123, 58, 0.08);
     border: 1px solid rgba(107, 123, 58, 0.05);
+    display: flex; /* Usamos flex para control interno */
+    flex-direction: column; /* Organización vertical */
+    height: 100%; /* Toma toda la altura del contenedor padre */
 }
 
 .ubicacion-card:hover {
@@ -67,10 +71,9 @@
 .ubicacion-image {
     position: relative;
     height: 250px;
-    /* Añadimos overflow hidden solo a la imagen */
     overflow: hidden;
-    /* Redondeamos solo las esquinas superiores */
     border-radius: 25px 25px 0 0;
+    flex-shrink: 0; /* Evita que la imagen se reduzca */
 }
 
 .ubicacion-image img {
@@ -120,14 +123,15 @@
 .ubicacion-content {
     padding: 2.5rem;
     position: relative;
-    /* Añadimos padding top para compensar el badge */
     padding-top: 5rem;
+    flex-grow: 1; /* Permite que el contenido ocupe el espacio restante */
+    display: flex; /* Flex interno para control de espacio */
+    flex-direction: column; /* Organización vertical */
 }
 
-/* CORRECCIÓN PRINCIPAL: Nuevo posicionamiento para el badge */
 .ubicacion-tipo {
     position: absolute;
-    margin-top: 10px;
+    top: 15px; /* Posición corregida */
     left: 2rem;
     background: var(--primary-olive);
     color: var(--warm-white);
@@ -139,17 +143,22 @@
     text-transform: uppercase;
     letter-spacing: 1px;
     box-shadow: 0 5px 15px rgba(107, 123, 58, 0.3);
-    z-index: 10; /* Z-index alto para que aparezca encima */
-    /* border: 2px solid var(--warm-white); */
+    z-index: 10;
 }
 
 .ubicacion-content h3 {
     font-family: var(--font-serif);
     font-size: 2rem;
     color: var(--primary-olive);
-    margin: 0 0 1rem 0; /* Removemos margin top */
+    margin: 0 0 1rem 0;
     font-weight: 500;
     line-height: 1.3;
+    min-height: 2.4em; /* Altura mínima para 2 líneas */
+    overflow: hidden; /* Evita desbordamiento */
+    text-overflow: ellipsis; /* Añade puntos suspensivos si es necesario */
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Limita a 2 líneas */
+    -webkit-box-orient: vertical;
 }
 
 .ubicacion-info {
@@ -208,6 +217,14 @@
     background: rgba(212, 184, 150, 0.1);
     border-radius: 15px;
     border-left: 3px solid var(--sand);
+    flex-grow: 1; /* Permite que la descripción ocupe espacio adicional */
+    overflow: hidden; /* Previene desbordamiento */
+}
+
+/* CORRECCIÓN: Contenedor de botones al final */
+.ubicacion-actions-container {
+    margin-top: auto; /* Empuja los botones hacia abajo */
+    padding-top: 1rem; /* Espaciado adicional */
 }
 
 .ubicacion-actions {
