@@ -197,6 +197,19 @@
     font-weight: 500;
 }
 
+/* Estilo para botón deshabilitado */
+.template-btn.disabled {
+    background: var(--primary-color);
+    color: var(--background-light) !important;
+    cursor: not-allowed !important;
+}
+
+.template-btn.disabled:hover {
+    background: var(--primary-hover);
+    color: var(--background-light) !important;
+    transform: none !important;
+}
+
 /* ========================================
    BUTTONS
 ======================================== */

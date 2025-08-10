@@ -109,13 +109,17 @@
                 $database = new Database();
                 $db = $database->getConnection();
                 
-                // Query para obtener las plantillas más utilizadas
+                // Query para obtener las plantillas más utilizadas con sus invitaciones de ejemplo
                 $stmt = $db->prepare("
-                    SELECT p.*, COUNT(i.id) as total_invitaciones
+                    SELECT p.*, 
+                           COUNT(DISTINCT i.id) as total_invitaciones, 
+                           ie.slug as ejemplo_slug,
+                           ie.nombres_novios as ejemplo_nombres
                     FROM plantillas p 
                     LEFT JOIN invitaciones i ON p.id = i.plantilla_id 
+                    LEFT JOIN invitaciones ie ON p.invitacion_ejemplo_id = ie.id
                     WHERE p.activa = 1 
-                    GROUP BY p.id 
+                    GROUP BY p.id, ie.slug, ie.nombres_novios
                     ORDER BY total_invitaciones DESC, p.fecha_creacion DESC 
                     LIMIT 3
                 ");
@@ -127,41 +131,108 @@
                         // Construir la ruta de la imagen
                         $imagenRuta = './images/default-template.png';
                         if (!empty($plantilla['imagen_preview'])) {
-                            $imagenRuta = './plantillas/plantilla-' . $plantilla['id'] . '/' . $plantilla['imagen_preview'];
+                            $imagenCompleta = './plantillas/' . $plantilla['carpeta'] . '/' . $plantilla['imagen_preview'];
+                            if (file_exists($imagenCompleta)) {
+                                $imagenRuta = $imagenCompleta;
+                            }
                         }
+                        
+                        // Determinar la URL de destino y texto del botón
+                        $tieneEjemplo = !empty($plantilla['ejemplo_slug']);
+                        $urlDestino = $tieneEjemplo 
+                            ? './invitacion.php?slug=' . urlencode($plantilla['ejemplo_slug'])
+                            : '#';
+                        $textoBoton = $tieneEjemplo ? 'Ver ejemplo' : 'Próximamente';
+                        $claseBoton = $tieneEjemplo ? 'btn-template' : 'btn-template disabled';
+                        
+                        // Mostrar información adicional si hay ejemplo
+                        $infoEjemplo = $tieneEjemplo ? ' - ' . htmlspecialchars($plantilla['ejemplo_nombres']) : '';
                 ?>
                         <div class="template-card">
                             <img src="<?php echo htmlspecialchars($imagenRuta); ?>" 
                                  alt="<?php echo htmlspecialchars($plantilla['nombre']); ?>"
-                                 onerror="this.src='./images/default-template.png'">
+                                 onerror="this.src='./images/default-template.png'"
+                                 loading="lazy">
                             <div class="template-info">
                                 <h3><?php echo htmlspecialchars($plantilla['nombre']); ?></h3>
-                                <a href="./plantillas/<?php echo htmlspecialchars($plantilla['carpeta']); ?>/<?php echo htmlspecialchars($plantilla['archivo_principal']); ?>" 
-                                   class="btn-template">Ver plantilla</a>
+                                <?php if ($plantilla['descripcion']): ?>
+                                    <p class="template-description"><?php echo htmlspecialchars($plantilla['descripcion']); ?></p>
+                                <?php endif; ?>
+                                
+                                <div class="template-actions">
+                                    <?php if ($tieneEjemplo): ?>
+                                        <a href="<?php echo $urlDestino; ?>" 
+                                           class="<?php echo $claseBoton; ?>"
+                                           target="_blank"
+                                           rel="noopener"><?php echo $textoBoton; ?></a>
+                                        <a href="./contacto.php?plantilla=<?php echo $plantilla['id']; ?>" 
+                                           class="btn-template btn-secondary">Solicitar</a>
+                                    <?php else: ?>
+                                        <span class="<?php echo $claseBoton; ?>"><?php echo $textoBoton; ?></span>
+                                        <a href="./contacto.php?plantilla=<?php echo $plantilla['id']; ?>" 
+                                           class="btn-template btn-primary">Solicitar</a>
+                                    <?php endif; ?>
+                                </div>
                             </div>
                         </div>
                 <?php 
                     endforeach;
                 else: 
                     // Si no hay plantillas con invitaciones, mostrar las 3 más recientes
-                    $stmt = $db->prepare("SELECT * FROM plantillas WHERE activa = 1 ORDER BY fecha_creacion DESC LIMIT 3");
+                    $stmt = $db->prepare("
+                        SELECT p.*, 
+                               ie.slug as ejemplo_slug,
+                               ie.nombres_novios as ejemplo_nombres
+                        FROM plantillas p 
+                        LEFT JOIN invitaciones ie ON p.invitacion_ejemplo_id = ie.id
+                        WHERE p.activa = 1 
+                        ORDER BY p.fecha_creacion DESC 
+                        LIMIT 3
+                    ");
                     $stmt->execute();
                     $plantillasRecientes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     
                     foreach ($plantillasRecientes as $plantilla):
                         $imagenRuta = './images/default-template.png';
                         if (!empty($plantilla['imagen_preview'])) {
-                            $imagenRuta = './plantillas/plantilla-' . $plantilla['id'] . '/' . $plantilla['imagen_preview'];
+                            $imagenCompleta = './plantillas/' . $plantilla['carpeta'] . '/' . $plantilla['imagen_preview'];
+                            if (file_exists($imagenCompleta)) {
+                                $imagenRuta = $imagenCompleta;
+                            }
                         }
+                        
+                        $tieneEjemplo = !empty($plantilla['ejemplo_slug']);
+                        $urlDestino = $tieneEjemplo 
+                            ? './invitacion.php?slug=' . urlencode($plantilla['ejemplo_slug'])
+                            : '#';
+                        $textoBoton = $tieneEjemplo ? 'Ver ejemplo' : 'Próximamente';
+                        $claseBoton = $tieneEjemplo ? 'btn-template' : 'btn-template disabled';
                 ?>
                         <div class="template-card">
                             <img src="<?php echo htmlspecialchars($imagenRuta); ?>" 
                                  alt="<?php echo htmlspecialchars($plantilla['nombre']); ?>"
-                                 onerror="this.src='./images/default-template.png'">
+                                 onerror="this.src='./images/default-template.png'"
+                                 loading="lazy">
                             <div class="template-info">
                                 <h3><?php echo htmlspecialchars($plantilla['nombre']); ?></h3>
-                                <a href="./plantillas/<?php echo htmlspecialchars($plantilla['carpeta']); ?>/<?php echo htmlspecialchars($plantilla['archivo_principal']); ?>" 
-                                   class="btn-template">Ver plantilla</a>
+                                <?php if ($plantilla['descripcion']): ?>
+                                    <p class="template-description"><?php echo htmlspecialchars($plantilla['descripcion']); ?></p>
+                                <?php endif; ?>
+                                
+                                <div class="template-actions">
+                                    <?php if ($tieneEjemplo): ?>
+                                        <a href="<?php echo $urlDestino; ?>" 
+                                           class="<?php echo $claseBoton; ?>"
+                                           target="_blank"
+                                           rel="noopener"><?php echo $textoBoton; ?></a>
+                                        <a href="./contacto.php?plantilla=<?php echo $plantilla['id']; ?>" 
+                                           class="btn-template btn-secondary">Solicitar</a>
+                                    <?php else: ?>
+                                        <span class="<?php echo $claseBoton; ?>"><?php echo $textoBoton; ?></span>
+                                        <a href="./contacto.php?plantilla=<?php echo $plantilla['id']; ?>" 
+                                           class="btn-template btn-primary">Solicitar</a>
+                                    <?php endif; ?>
+                                </div>
                             </div>
                         </div>
                 <?php 

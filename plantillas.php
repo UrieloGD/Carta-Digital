@@ -7,7 +7,15 @@ try {
     $database = new Database();
     $db = $database->getConnection();
     
-    $stmt = $db->prepare("SELECT * FROM plantillas WHERE activa = 1 ORDER BY fecha_creacion DESC");
+    // Obtener plantillas con información de invitaciones de ejemplo
+    $stmt = $db->prepare("
+        SELECT p.*, 
+               ie.slug as ejemplo_slug
+        FROM plantillas p 
+        LEFT JOIN invitaciones ie ON p.invitacion_ejemplo_id = ie.id
+        WHERE p.activa = 1 
+        ORDER BY p.fecha_creacion DESC
+    ");
     $stmt->execute();
     $plantillas = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
@@ -41,25 +49,31 @@ try {
                         // La ruta completa sería: ./plantillas/plantilla-{id}/{imagen_preview}
                         $imagenRuta = './plantillas/plantilla-' . $plantilla['id'] . '/' . $plantilla['imagen_preview'];
                     }
+                    
+                    // Determinar si tiene ejemplo
+                    $tieneEjemplo = !empty($plantilla['ejemplo_slug']);
+                    $urlDestino = $tieneEjemplo 
+                        ? './invitacion.php?slug=' . urlencode($plantilla['ejemplo_slug'])
+                        : '#';
+                    $textoBoton = $tieneEjemplo ? 'Ver ejemplo' : 'Próximamente';
+                    $claseBoton = $tieneEjemplo ? 'btn btn-secondary template-btn' : 'btn btn-secondary template-btn disabled';
                     ?>
                     <div class="template-card">
                         <div class="template-image">
                             <img src="<?php echo htmlspecialchars($imagenRuta); ?>" 
                                  alt="Preview de <?php echo htmlspecialchars($plantilla['nombre']); ?>"
                                  onerror="this.src='./images/default-template.png'">
-                            <!-- Overlay removido de aquí -->
                         </div>
                         <div class="template-info">
                             <h3><?php echo htmlspecialchars($plantilla['nombre']); ?></h3>
                             
-                            <!-- Descripción comentada temporalmente -->
-                            <?php /* if (!empty($plantilla['descripcion'])): ?>
-                                <p class="template-description"><?php echo htmlspecialchars($plantilla['descripcion']); ?></p>
-                            <?php endif; */ ?>
-                            
-                            <!-- Botón movido aquí -->
-                            <a href="./plantillas/<?php echo htmlspecialchars($plantilla['carpeta']); ?>/<?php echo htmlspecialchars($plantilla['archivo_principal']); ?>" 
-                               class="btn btn-secondary template-btn">Ver plantilla</a>
+                            <?php if ($tieneEjemplo): ?>
+                                <a href="<?php echo $urlDestino; ?>" 
+                                   class="<?php echo $claseBoton; ?>"
+                                   target="_blank"><?php echo $textoBoton; ?></a>
+                            <?php else: ?>
+                                <span class="<?php echo $claseBoton; ?>"><?php echo $textoBoton; ?></span>
+                            <?php endif; ?>
                         </div>
                     </div>
                 <?php endforeach; ?>
