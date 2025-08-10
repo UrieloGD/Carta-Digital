@@ -142,7 +142,7 @@
                         $urlDestino = $tieneEjemplo 
                             ? './invitacion.php?slug=' . urlencode($plantilla['ejemplo_slug'])
                             : '#';
-                        $textoBoton = $tieneEjemplo ? 'Ver ejemplo' : 'Próximamente';
+                        $textoBoton = $tieneEjemplo ? 'Ver Plantilla' : 'Próximamente';
                         $claseBoton = $tieneEjemplo ? 'btn-template' : 'btn-template disabled';
                         
                         // Mostrar información adicional si hay ejemplo

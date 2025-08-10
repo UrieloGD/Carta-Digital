@@ -43,14 +43,14 @@
                     <h2>Información de contacto</h2>
                     
                     <div class="contact-details">
-                        <div class="contact-item">
+                        <!-- <div class="contact-item">
                             <i class="fa fa-map-marker contact-icon"></i>
                             <span>Av. Insurgentes Sur 1234, Col. Del Valle, Ciudad de México</span>
-                        </div>
+                        </div> -->
                         
                         <div class="contact-item">
                             <i class="fa fa-phone contact-icon"></i>
-                            <span>+52 55 1234 5678</span>
+                            <span>+52 3339047672</span>
                         </div>
                         
                         <div class="contact-item">
