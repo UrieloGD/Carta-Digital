@@ -947,18 +947,16 @@ foreach($ubicaciones as $ub) {
                 </button>
             </div>
 
-            <!-- Botones de acción -->
-            <div class="form-section">
-                <div class="d-flex gap-2 justify-content-end">
-                    <a href="./../index.php" class="btn btn-outline-secondary btn-lg">
-                        <i class="bi bi-x-circle me-1"></i>
-                        Cancelar
-                    </a>
-                    <button type="submit" class="btn btn-primary btn-lg">
-                        <i class="bi bi-check-circle me-1"></i>
-                        Guardar Cambios
-                    </button>
-                </div>
+            <!-- Botones de acción flotantes -->
+            <div class="floating-buttons">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-check-circle me-1"></i>
+                    Guardar Cambios
+                </button>
+                <a href="./../index.php" class="btn btn-outline-secondary">
+                    <i class="bi bi-x-circle me-1"></i>
+                    Cancelar
+                </a>
             </div>
         </form>
     </div>

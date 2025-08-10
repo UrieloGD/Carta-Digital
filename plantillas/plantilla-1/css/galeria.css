@@ -1,156 +1,156 @@
 /* Sección Galería */
 .galeria {
-    padding: 5rem 0;
-    background: var(--color-primary);
-    overflow: hidden;
-    width: 100vw;
-    margin-left: calc(50% - 50vw);
+  padding: 5rem 0;
+  background: var(--color-primary);
+  overflow: hidden;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
 }
 
 .galeria h2 {
-    font-family: var(--font-serif);
-    font-size: 2.5rem;
-    color: var(--color-secondary);
-    text-align: center;
-    margin-bottom: 3rem;
-    max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 0 2rem;
+  font-family: var(--font-serif);
+  font-size: 2.5rem;
+  color: var(--color-secondary);
+  text-align: center;
+  margin-bottom: 3rem;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 2rem;
 }
 
 /* Contenedor del carrusel */
 .galeria-carousel {
-    width: 100%;
-    overflow: hidden;
+  width: 100%;
+  overflow: hidden;
 }
 
 /* Track que contiene todas las imágenes */
 .carousel-track {
-    display: flex;
-    animation: scrollInfinite 90s linear infinite;
-    gap: 2rem;
-    width: max-content;
+  display: flex;
+  animation: scrollInfinite 90s linear infinite;
+  gap: 2rem;
+  width: max-content;
 }
 
 /* Cada item de la galería */
 .galeria-item {
-    flex: 0 0 300px;
-    height: 400px;
-    position: relative;
-    transition: var(--transition);
+  flex: 0 0 300px;
+  height: 400px;
+  position: relative;
+  transition: var(--transition);
 }
 
 .galeria-item:hover {
-    transform: scale(1.05);
+  transform: scale(1.05);
 }
 
 .galeria-item img {
-    width: 300px;
-    height: 350px;
-    object-fit: cover;
-    object-position: center;
-    border-radius: 2px;
-    
-    /* Efecto photocard con borde blanco */
-    padding: 15px;
-    background: white;
-    box-shadow: 
-        0 8px 32px rgba(0, 0, 0, 0.15),
-        0 2px 8px rgba(0, 0, 0, 0.1);
-    
-    transition: transform 0.3s ease;
+  width: 300px;
+  height: 350px;
+  object-fit: cover;
+  object-position: center 20%; /* Enfoca en la parte superior */
+  border-radius: 2px;
+
+  /* Efecto photocard con borde blanco */
+  padding: 15px;
+  background: white;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 0 2px 8px rgba(0, 0, 0, 0.1);
+
+  transition: transform 0.3s ease;
 }
 
 /* Animación de scroll infinito */
 @keyframes scrollInfinite {
-    0% {
-        transform: translateX(0);
-    }
-    100% {
-        transform: translateX(-50%);
-    }
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
 }
 
 @keyframes scrollInfiniteMobile {
-    0% {
-        transform: translateX(0);
-    }
-    100% {
-        transform: translateX(-50%);
-    }
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
 }
 
 /* Media queries para tablet */
 @media (max-width: 1024px) {
-    .galeria {
-        padding: 4rem 0;
-    }
+  .galeria {
+    padding: 4rem 0;
+  }
 
-    .galeria h2 {
-        font-size: 2.2rem;
-        margin-bottom: 2.5rem;
-    }
+  .galeria h2 {
+    font-size: 2.2rem;
+    margin-bottom: 2.5rem;
+  }
 
-    .galeria-item {
-        flex: 0 0 280px;
-        height: 380px;
-    }
+  .galeria-item {
+    flex: 0 0 280px;
+    height: 380px;
+  }
 
-    .galeria-item img {
-        width: 280px;
-        height: 330px;
-    }
+  .galeria-item img {
+    width: 280px;
+    height: 330px;
+    object-position: center 25%; /* Ajuste para tablet */
+  }
 
-    .carousel-track {
-        animation: scrollInfinite 85s linear infinite;
-        gap: 1.8rem;
-    }
+  .carousel-track {
+    animation: scrollInfinite 85s linear infinite;
+    gap: 1.8rem;
+  }
 }
 
 /* Media query para pantallas extra grandes */
 @media (min-width: 1400px) {
-    .galeria-item {
-        flex: 0 0 320px;
-        height: 420px;
-    }
+  .galeria-item {
+    flex: 0 0 320px;
+    height: 420px;
+  }
 
-    .galeria-item img {
-        width: 320px;
-        height: 370px;
-    }
+  .galeria-item img {
+    width: 320px;
+    height: 370px;
+    object-position: center 15%; /* Más enfoque superior en pantallas grandes */
+  }
 
-    .carousel-track {
-        animation: scrollInfinite 95s linear infinite;
-        gap: 2.5rem;
-    }
+  .carousel-track {
+    animation: scrollInfinite 95s linear infinite;
+    gap: 2.5rem;
+  }
 }
 
 /* Optimizaciones adicionales */
 @media (prefers-reduced-motion: reduce) {
-    .carousel-track {
-        animation-duration: 200s;
-    }
-    
-    .galeria-item:hover {
-        transform: none;
-    }
+  .carousel-track {
+    animation-duration: 200s;
+  }
+
+  .galeria-item:hover {
+    transform: none;
+  }
 }
 
 /* Mejoras de accesibilidad */
 .galeria-item:focus-within {
-    outline: 2px solid var(--color-secondary);
-    outline-offset: 2px;
+  outline: 2px solid var(--color-secondary);
+  outline-offset: 2px;
 }
 
 /* Estados de carga para imágenes */
 .galeria-item img.loading {
-    opacity: 0.5;
-    filter: blur(2px);
+  opacity: 0.5;
+  filter: blur(2px);
 }
 
 .galeria-item img.loaded {
-    opacity: 1;
-    filter: none;
-    transition: opacity 0.3s ease, filter 0.3s ease;
+  opacity: 1;
+  filter: none;
+  transition: opacity 0.3s ease, filter 0.3s ease;
 }
