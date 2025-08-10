@@ -55,7 +55,7 @@ try {
                     $urlDestino = $tieneEjemplo 
                         ? './invitacion.php?slug=' . urlencode($plantilla['ejemplo_slug'])
                         : '#';
-                    $textoBoton = $tieneEjemplo ? 'Ver ejemplo' : 'Próximamente';
+                    $textoBoton = $tieneEjemplo ? 'Ver plantilla' : 'Próximamente';
                     $claseBoton = $tieneEjemplo ? 'btn btn-secondary template-btn' : 'btn btn-secondary template-btn disabled';
                     ?>
                     <div class="template-card">
