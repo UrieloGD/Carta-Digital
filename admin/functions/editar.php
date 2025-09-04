@@ -157,22 +157,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
         
-        // Actualizar FAQs (eliminar y volver a insertar)
-        $db->prepare("DELETE FROM invitacion_faq WHERE invitacion_id = ?")->execute([$id]);
-        
-        if (!empty($_POST['faq_pregunta']) && is_array($_POST['faq_pregunta'])) {
-            $stmt = $db->prepare("INSERT INTO invitacion_faq (invitacion_id, pregunta, respuesta) VALUES (?, ?, ?)");
-            
-            foreach ($_POST['faq_pregunta'] as $index => $pregunta) {
-                if (!empty($pregunta) && !empty($_POST['faq_respuesta'][$index])) {
-                    $stmt->execute([
-                        $id,
-                        $pregunta,
-                        $_POST['faq_respuesta'][$index]
-                    ]);
-                }
-            }
-        }
         
         // Agregar nuevas imágenes a la galería (sin eliminar las existentes)
         if (isset($_FILES['imagenes_galeria']) && !empty($_FILES['imagenes_galeria']['name'][0])) {
@@ -272,12 +256,6 @@ $cronograma_query = "SELECT * FROM invitacion_cronograma WHERE invitacion_id = ?
 $cronograma_stmt = $db->prepare($cronograma_query);
 $cronograma_stmt->execute([$id]);
 $cronograma = $cronograma_stmt->fetchAll(PDO::FETCH_ASSOC);
-
-// Obtener FAQs
-$faq_query = "SELECT * FROM invitacion_faq WHERE invitacion_id = ?";
-$faq_stmt = $db->prepare($faq_query);
-$faq_stmt->execute([$id]);
-$faqs = $faq_stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Obtener galería
 $galeria_query = "SELECT * FROM invitacion_galeria WHERE invitacion_id = ?";
@@ -892,61 +870,6 @@ foreach($ubicaciones as $ub) {
                 </div>
             </div>
 
-            <!-- Preguntas Frecuentes -->
-            <div class="form-section">
-                <h3 class="section-title">
-                    <i class="bi bi-question-circle me-2"></i>
-                    Preguntas Frecuentes
-                </h3>
-                
-                <div id="faq-container">
-                    <?php if (empty($faqs)): ?>
-                    <div class="faq-item">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label class="form-label">Pregunta</label>
-                                <input type="text" name="faq_pregunta[]" class="form-control" 
-                                    placeholder="¿Habrá servicio de transporte?">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Respuesta</label>
-                                <textarea name="faq_respuesta[]" rows="2" class="form-control" 
-                                    placeholder="Sí, habrá servicio de transporte desde..."></textarea>
-                            </div>
-                        </div>
-                    </div>
-                    <?php else: ?>
-                        <?php foreach($faqs as $faq): ?>
-                        <div class="faq-item">
-                            <div class="row">
-                                <div class="col-md-5">
-                                    <label class="form-label">Pregunta</label>
-                                    <input type="text" name="faq_pregunta[]" class="form-control" 
-                                        placeholder="¿Habrá servicio de transporte?"
-                                        value="<?php echo htmlspecialchars($faq['pregunta']); ?>">
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label">Respuesta</label>
-                                    <textarea name="faq_respuesta[]" rows="2" class="form-control" 
-                                        placeholder="Sí, habrá servicio de transporte desde..."><?php echo htmlspecialchars($faq['respuesta']); ?></textarea>
-                                </div>
-                                <div class="col-md-1">
-                                    <label class="form-label">&nbsp;</label>
-                                    <button type="button" onclick="eliminarFAQ(this)" class="btn btn-outline-danger btn-sm d-block">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
-                </div>
-                <button type="button" onclick="agregarFAQ()" class="btn btn-outline-primary mt-2">
-                    <i class="bi bi-plus-circle me-1"></i>
-                    Agregar FAQ
-                </button>
-            </div>
-
             <!-- Botones de acción flotantes -->
             <div class="floating-buttons">
                 <button type="submit" class="btn btn-primary">
@@ -1068,37 +991,6 @@ foreach($ubicaciones as $ub) {
         // Función para eliminar elementos del cronograma
         function eliminarCronograma(button) {
             button.closest('.cronograma-item').remove();
-        }
-
-        // Función para agregar FAQs
-        function agregarFAQ() {
-            const container = document.getElementById('faq-container');
-            const newItem = document.createElement('div');
-            newItem.className = 'faq-item';
-            newItem.innerHTML = `
-                <div class="row">
-                    <div class="col-md-5">
-                        <label class="form-label">Pregunta</label>
-                        <input type="text" name="faq_pregunta[]" class="form-control" placeholder="Pregunta">
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Respuesta</label>
-                        <textarea name="faq_respuesta[]" rows="2" class="form-control" placeholder="Respuesta"></textarea>
-                    </div>
-                    <div class="col-md-1">
-                        <label class="form-label">&nbsp;</label>
-                        <button type="button" onclick="eliminarFAQ(this)" class="btn btn-outline-danger btn-sm d-block">
-                            <i class="bi bi-trash"></i>
-                        </button>
-                    </div>
-                </div>
-            `;
-            container.appendChild(newItem);
-        }
-
-        // Función para eliminar FAQs
-        function eliminarFAQ(button) {
-            button.closest('.faq-item').remove();
         }
         
         // Función para eliminar imagen de galería

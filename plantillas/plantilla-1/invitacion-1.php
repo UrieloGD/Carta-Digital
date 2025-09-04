@@ -1,6 +1,6 @@
 <?php
 require_once './config/database.php';
-
+// ./plantillas/plantilla-1/invitacion-1.php
 $slug = $_GET['slug'] ?? '';
 
 if (empty($slug)) {
@@ -118,12 +118,6 @@ $cronograma_stmt = $db->prepare($cronograma_query);
 $cronograma_stmt->execute([$invitacion['id']]);
 $cronograma = $cronograma_stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Obtener FAQs activas
-$faq_query = "SELECT * FROM invitacion_faq WHERE invitacion_id = ? AND activa = 1 ORDER BY orden";
-$faq_stmt = $db->prepare($faq_query);
-$faq_stmt->execute([$invitacion['id']]);
-$faqs = $faq_stmt->fetchAll(PDO::FETCH_ASSOC);
-
 // Obtener galería activa
 $galeria_query = "SELECT * FROM invitacion_galeria WHERE invitacion_id = ? AND activa = 1 ORDER BY orden";
 $galeria_stmt = $db->prepare($galeria_query);
@@ -214,16 +208,6 @@ if (empty($cronograma)) {
     ];
 }
 
-// Si no hay FAQs, usar las por defecto
-/* if (empty($faqs)) {
-    $faqs = [
-        ["pregunta" => "¿Se permite la asistencia de niños?", "respuesta" => "Sí, los niños son bienvenidos. Habrá un área especial para ellos."],
-        ["pregunta" => "¿Dónde puedo estacionar?", "respuesta" => "El restaurante cuenta con servicio de valet parking gratuito para todos los invitados."],
-        ["pregunta" => "¿Qué regalo podemos llevar?", "respuesta" => "Su presencia es nuestro mejor regalo. Si desean obsequiarnos algo, tenemos mesa de regalos en Macy's."],
-        ["pregunta" => "¿Hay hoteles cerca?", "respuesta" => "Sí, recomendamos Hotel Beverly Hills y The Standard, ambos a 5 minutos del restaurante."]
-    ];
-} */
-
 // Registrar visita en estadísticas
 try {
     $stats_query = "INSERT INTO invitacion_estadisticas (invitacion_id, tipo_evento, ip_address, user_agent) VALUES (?, 'visita', ?, ?)";
@@ -256,7 +240,6 @@ try {
     <link rel="stylesheet" href="./plantillas/plantilla-1/css/ubicaciones.css?v=<?php echo filemtime('./plantillas/plantilla-1/css/ubicaciones.css'); ?>" />
     <link rel="stylesheet" href="./plantillas/plantilla-1/css/galeria.css?v=<?php echo filemtime('./plantillas/plantilla-1/css/galeria.css'); ?>" />
     <link rel="stylesheet" href="./plantillas/plantilla-1/css/dresscode.css?v=<?php echo filemtime('./plantillas/plantilla-1/css/dresscode.css'); ?>" />
-    <link rel="stylesheet" href="./plantillas/plantilla-1/css/faq.css?v=<?php echo filemtime('./plantillas/plantilla-1/css/faq.css'); ?>" />
     <link rel="stylesheet" href="./plantillas/plantilla-1/css/rsvp.css?v=<?php echo filemtime('./plantillas/plantilla-1/css/rsvp.css'); ?>" />
     <link rel="stylesheet" href="./plantillas/plantilla-1/css/footer.css?v=<?php echo filemtime('./plantillas/plantilla-1/css/footer.css'); ?>" />
     <link rel="stylesheet" href="./plantillas/plantilla-1/css/responsive.css?v=<?php echo filemtime('./plantillas/plantilla-1/css/responsive.css'); ?>" />
@@ -657,26 +640,6 @@ try {
    </div>
 </div>
 
-<!-- Sección FAQ -->
-<!-- <section class="faq" id="faq">
-   <div class="container">
-       <h2>Preguntas Frecuentes</h2>
-       <div class="faq-list">
-           < ?php foreach($faqs as $index => $faq): ?>
-           <div class="faq-item">
-               <button class="faq-question" onclick="toggleFAQ(< ?php echo $index; ?>)">
-                   <span>< ?php echo htmlspecialchars($faq['pregunta']); ?></span>
-                  <span class="faq-arrow">▼</span>
-              </button>
-              <div class="faq-answer" id="faq-< ?php echo $index; ?>">
-                  <p>< ?php echo htmlspecialchars($faq['respuesta']); ?></p>
-              </div>
-          </div>
-          < ?php endforeach; ?>
-      </div>
-  </div>
-</section> -->
-
 <!-- Footer -->
 <footer class="footer">
   <div class="container">
@@ -751,7 +714,6 @@ const invitacionData = {
 <script src="./plantillas/plantilla-1/js/contador.js?v=<?php echo filemtime('./plantillas/plantilla-1/js/contador.js'); ?>"></script>
 <script src="./plantillas/plantilla-1/js/compartir.js?v=<?php echo filemtime('./plantillas/plantilla-1/js/compartir.js'); ?>"></script>
 <script src="./plantillas/plantilla-1/js/rsvp.js?v=<?php echo filemtime('./plantillas/plantilla-1/js/rsvp.js'); ?>"></script>
-<script src="./plantillas/plantilla-1/js/faq.js?v=<?php echo filemtime('./plantillas/plantilla-1/js/faq.js'); ?>"></script>
 <script src="./plantillas/plantilla-1/js/estadisticas.js?v=<?php echo filemtime('./plantillas/plantilla-1/js/estadisticas.js'); ?>"></script>
 <script src="./plantillas/plantilla-1/js/invitacion.js?v=<?php echo filemtime('./plantillas/plantilla-1/js/invitacion.js'); ?>"></script>
 <script src="./plantillas/plantilla-1/js/music-player.js?v=<?php echo filemtime('./plantillas/plantilla-1/js/music-player.js'); ?>"></script>

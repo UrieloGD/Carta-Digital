@@ -59,9 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 }
 
 // Obtener todas las invitaciones con información adicional
-$query = "SELECT i.*, p.nombre as plantilla_nombre, 
-          (SELECT COUNT(*) FROM rsvps r WHERE r.invitacion_id = i.id) as total_rsvps,
-          (SELECT COUNT(*) FROM rsvps r WHERE r.invitacion_id = i.id AND r.asistencia = 'si') as confirmados
+$query = "SELECT i.*, p.nombre as plantilla_nombre
           FROM invitaciones i 
           LEFT JOIN plantillas p ON i.plantilla_id = p.id 
           ORDER BY i.fecha_creacion DESC";
@@ -177,18 +175,6 @@ $invitaciones = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 </code>
                             </div>
                             
-                            <!-- Estadísticas de RSVPs -->
-                            <div class="d-flex gap-2 mb-3">
-                                <span class="badge bg-secondary">
-                                    <i class="bi bi-people me-1"></i>
-                                    <?php echo $invitacion['total_rsvps'] ?? 0; ?> RSVPs
-                                </span>
-                                <span class="badge bg-success">
-                                    <i class="bi bi-check-circle me-1"></i>
-                                    <?php echo $invitacion['confirmados'] ?? 0; ?> Confirmados
-                                </span>
-                            </div>
-                            
                             <!-- Estado basado en fecha -->
                             <?php 
                             $estado = 'activa';
@@ -222,15 +208,6 @@ $invitaciones = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                        class="btn btn-outline-primary btn-sm">
                                         <i class="bi bi-pencil"></i>
                                     </a>
-                                    <a href="rsvps.php?id=<?php echo $invitacion['id']; ?>" 
-                                       class="btn btn-outline-info btn-sm">
-                                        <i class="bi bi-people"></i>
-                                        RSVPs (<?php echo $invitacion['total_rsvps'] ?? 0; ?>)
-                                    </a>
-                                    <!-- <a href="vista_previa.php?slug=<?php echo htmlspecialchars($invitacion['slug'] ?? ''); ?>" 
-                                       class="btn btn-outline-secondary btn-sm" target="_blank">
-                                        <i class="bi bi-eye"></i>
-                                    </a> -->
                                     <a href="../invitacion.php?slug=<?php echo htmlspecialchars($invitacion['slug'] ?? ''); ?>" 
                                        class="btn btn-outline-success btn-sm" target="_blank">
                                         <i class="bi bi-box-arrow-up-right"></i>
@@ -259,7 +236,7 @@ $invitaciones = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                     <p>¿Estás seguro de que quieres eliminar la invitación de <strong><?php echo htmlspecialchars($invitacion['nombres_novios']); ?></strong>?</p>
                                     <div class="alert alert-warning">
                                         <i class="bi bi-exclamation-triangle me-2"></i>
-                                        Esta acción eliminará también todos los RSVPs y archivos asociados.
+                                        Esta acción eliminará también todos los archivos asociados.
                                     </div>
                                 </div>
                                 <div class="modal-footer">
