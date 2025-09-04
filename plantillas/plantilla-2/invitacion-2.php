@@ -736,7 +736,6 @@ const galeriaImagenes = <?php echo json_encode($galeria); ?>;
 <script src="./plantillas/plantilla-2/js/contador.js?v=<?php echo filemtime('./plantillas/plantilla-2/js/contador.js'); ?>"></script>
 <script src="./plantillas/plantilla-2/js/compartir.js?v=<?php echo filemtime('./plantillas/plantilla-2/js/compartir.js'); ?>"></script>
 <script src="./plantillas/plantilla-2/js/rsvp.js?v=<?php echo filemtime('./plantillas/plantilla-2/js/rsvp.js'); ?>"></script>
-<script src="./plantillas/plantilla-2/js/faq.js?v=<?php echo filemtime('./plantillas/plantilla-2/js/faq.js'); ?>"></script>
 <script src="./plantillas/plantilla-2/js/estadisticas.js?v=<?php echo filemtime('./plantillas/plantilla-2/js/estadisticas.js'); ?>"></script>
 <script src="./plantillas/plantilla-2/js/invitacion.js?v=<?php echo filemtime('./plantillas/plantilla-2/js/invitacion.js'); ?>"></script>
 <script src="./plantillas/plantilla-2/js/music-player.js?v=<?php echo filemtime('./plantillas/plantilla-2/js/music-player.js'); ?>"></script>

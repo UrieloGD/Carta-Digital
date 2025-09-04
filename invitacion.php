@@ -51,12 +51,6 @@ $cronograma_stmt = $db->prepare($cronograma_query);
 $cronograma_stmt->execute([$invitacion['id']]);
 $cronograma = $cronograma_stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Obtener FAQs activas
-$faq_query = "SELECT * FROM invitacion_faq WHERE invitacion_id = ? AND activa = 1 ORDER BY orden";
-$faq_stmt = $db->prepare($faq_query);
-$faq_stmt->execute([$invitacion['id']]);
-$faqs = $faq_stmt->fetchAll(PDO::FETCH_ASSOC);
-
 // Obtener galería activa
 $galeria_query = "SELECT * FROM invitacion_galeria WHERE invitacion_id = ? AND activa = 1 ORDER BY orden";
 $galeria_stmt = $db->prepare($galeria_query);
@@ -76,31 +70,6 @@ $mesa_regalos_query = "SELECT * FROM invitacion_mesa_regalos WHERE invitacion_id
 $mesa_regalos_stmt = $db->prepare($mesa_regalos_query);
 $mesa_regalos_stmt->execute([$invitacion['id']]);
 $mesa_regalos = $mesa_regalos_stmt->fetchAll(PDO::FETCH_ASSOC);
-
-// Obtener configuraciones adicionales
-$config_query = "SELECT clave, valor, tipo FROM invitacion_configuraciones WHERE invitacion_id = ?";
-$config_stmt = $db->prepare($config_query);
-$config_stmt->execute([$invitacion['id']]);
-$configuraciones_result = $config_stmt->fetchAll(PDO::FETCH_ASSOC);
-
-// Convertir configuraciones a array asociativo
-$configuraciones = [];
-foreach ($configuraciones_result as $config) {
-    $valor = $config['valor'];
-    // Convertir según el tipo
-    switch ($config['tipo']) {
-        case 'numero':
-            $valor = (int)$valor;
-            break;
-        case 'booleano':
-            $valor = (bool)$valor;
-            break;
-        case 'json':
-            $valor = json_decode($valor, true);
-            break;
-    }
-    $configuraciones[$config['clave']] = $valor;
-}
 
 // Preparar variables globales para las plantillas (manteniendo compatibilidad)
 $nombres = $invitacion['nombres_novios'];
