@@ -256,57 +256,101 @@ try {
     </div>
 </section>
 
-<!-- Sección Bienvenida Elegante Minimalista -->
+<!-- Sección Bienvenida Elegante Minimalista Mejorada -->
 <section class="bienvenida" id="bienvenida">
     <div class="container">
+        <!-- Elemento decorativo de fondo -->
+        <div class="bienvenida-bg-decoration"></div>
+        
         <div class="bienvenida-content">
             <div class="bienvenida-header">
+                <div class="header-ornament"></div>
                 <h2>Querida Familia y Amigos</h2>
-                <div class="decorative-line"></div>
+                <p class="header-subtitle">Les invitamos a ser testigos de nuestro amor</p>
             </div>
             
             <div class="bienvenida-main">
                 <div class="bienvenida-text">
-                    <p class="bienvenida-intro">Con el corazón rebosante de alegría y el alma llena de gratitud, les extendemos esta formal invitación para que nos acompañen en el momento más sagrado y trascendental de nuestras vidas.</p>
-                    
-                    <p class="bienvenida-message">Su presencia, sus bendiciones y el amor que han depositado en nosotros a lo largo de los años, son los pilares que sostienen este sueño que hoy se hace realidad.</p>
+                    <div class="text-content">
+                        <p class="bienvenida-intro">Con el corazón rebosante de alegría y el alma llena de gratitud, les extendemos esta formal invitación para que nos acompañen en el momento más sagrado y trascendental de nuestras vidas.</p>
+                        
+                        <div class="quote-decoration">
+                            <span class="quote-mark">"</span>
+                            <p class="bienvenida-message">Su presencia, sus bendiciones y el amor que han depositado en nosotros a lo largo de los años, son los pilares que sostienen este sueño que hoy se hace realidad.</p>
+                            <span class="quote-mark quote-mark-end">"</span>
+                        </div>
+                    </div>
                 </div>
 
                 <?php if ($imagen_dedicatoria): ?>
                 <div class="bienvenida-image">
                     <div class="image-container">
-                        <img src="<?php echo htmlspecialchars($imagen_dedicatoria); ?>" alt="<?php echo htmlspecialchars($nombres); ?>" />
-                        <div class="image-overlay"></div>
+                        <div class="image-frame">
+                            <img src="<?php echo htmlspecialchars($imagen_dedicatoria); ?>" 
+                                 alt="<?php echo htmlspecialchars($nombres); ?>" 
+                                 loading="lazy" />
+                            <div class="image-overlay">
+                                <div class="overlay-content">
+                                    <span class="overlay-text"><?php echo htmlspecialchars($nombres); ?></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="image-decoration"></div>
                     </div>
                 </div>
                 <?php endif; ?>
 
-                <!-- Información de ceremonia destacada -->
+                <!-- Información de ceremonia destacada mejorada -->
                 <div class="bienvenida-ceremony">
-                    <div class="ceremony-date"><?php echo $fecha; ?></div>
-                    <div class="ceremony-details">
-                        <div class="ceremony-time"><?php echo $hora_ceremonia; ?></div>
-                        <div class="ceremony-venue"><?php echo htmlspecialchars($ubicacion); ?></div>
-                        <?php if ($direccion_completa): ?>
-                        <div class="ceremony-address"><?php echo htmlspecialchars($direccion_completa); ?></div>
-                        <?php endif; ?>
+                    <div class="ceremony-ornament"></div>
+                    
+                    <div class="ceremony-main">
+                        <div class="ceremony-date-container">
+                            <span class="ceremony-label">Nos casamos el</span>
+                            <div class="ceremony-date"><?php echo $fecha; ?></div>
+                        </div>
+                        
+                        <div class="ceremony-details">
+                            <div class="ceremony-time">
+                                <i class="icon-clock"></i>
+                                <span><?php echo $hora_ceremonia; ?></span>
+                            </div>
+                            <div class="ceremony-venue">
+                                <i class="icon-location"></i>
+                                <span><?php echo htmlspecialchars($ubicacion); ?></span>
+                            </div>
+                            <?php if ($direccion_completa): ?>
+                            <div class="ceremony-address">
+                                <span><?php echo htmlspecialchars($direccion_completa); ?></span>
+                            </div>
+                            <?php endif; ?>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Información familiar -->
+                <!-- Información familiar mejorada -->
                 <?php if ($padres_novia || $padres_novio || $padrinos_novia || $padrinos_novio): ?>
                 <div class="familia-section">
-                    <div class="decorative-line"></div>
+                    <div class="familia-header">
+                        <h3>Nuestras Familias</h3>
+                        <div class="decorative-line">
+                            <span class="line-accent"></span>
+                        </div>
+                    </div>
+                    
                     <div class="familia-grid">
                         <?php if ($padres_novia || $padrinos_novia): ?>
-                        <div class="familia-column">
-                            <h3>Familia de la Novia</h3>
+                        <div class="familia-column" data-side="novia">
+                            <div class="familia-icon">👰</div>
+                            <h4>Familia de la Novia</h4>
+                            
                             <?php if ($padres_novia): ?>
                             <div class="familia-item">
                                 <span class="familia-label">Padres</span>
                                 <span class="familia-names"><?php echo htmlspecialchars($padres_novia); ?></span>
                             </div>
                             <?php endif; ?>
+                            
                             <?php if ($padrinos_novia): ?>
                             <div class="familia-item">
                                 <span class="familia-label">Padrinos</span>
@@ -317,14 +361,17 @@ try {
                         <?php endif; ?>
                         
                         <?php if ($padres_novio || $padrinos_novio): ?>
-                        <div class="familia-column">
-                            <h3>Familia del Novio</h3>
+                        <div class="familia-column" data-side="novio">
+                            <div class="familia-icon">🤵</div>
+                            <h4>Familia del Novio</h4>
+                            
                             <?php if ($padres_novio): ?>
                             <div class="familia-item">
                                 <span class="familia-label">Padres</span>
                                 <span class="familia-names"><?php echo htmlspecialchars($padres_novio); ?></span>
                             </div>
                             <?php endif; ?>
+                            
                             <?php if ($padrinos_novio): ?>
                             <div class="familia-item">
                                 <span class="familia-label">Padrinos</span>
@@ -346,26 +393,50 @@ try {
     <div class="container">
         <div class="historia-content">
             <div class="historia-header">
+                <div class="section-ornament top"></div>
                 <h2>Nuestra Historia</h2>
-                <div class="decorative-line"></div>
+                <p class="section-subtitle">El camino que nos trajo hasta aquí</p>
             </div>
             
             <div class="historia-main">
-                <div class="historia-text">
-                    <?php
-                    $historia_parrafos = explode("\n", $historia_texto);
-                    foreach ($historia_parrafos as $parrafo) {
-                        if (trim($parrafo)) {
-                            echo '<p class="historia-paragraph">' . htmlspecialchars(trim($parrafo)) . '</p>';
+                <div class="historia-timeline">
+                    <div class="timeline-decoration"></div>
+                    
+                    <div class="historia-text">
+                        <?php
+                        $historia_parrafos = explode("\n", $historia_texto);
+                        $contador = 0;
+                        foreach ($historia_parrafos as $parrafo) {
+                            if (trim($parrafo)) {
+                                $contador++;
+                                $delay = $contador * 0.2;
+                                echo '<div class="historia-item" style="animation-delay: ' . $delay . 's;">';
+                                echo '<div class="timeline-dot"></div>';
+                                echo '<p class="historia-paragraph">' . htmlspecialchars(trim($parrafo)) . '</p>';
+                                echo '</div>';
+                            }
                         }
-                    }
-                    ?>
+                        ?>
+                    </div>
                 </div>
                 
-                <div class="historia-accent">
-                    <div class="accent-quote">
-                        <div class="quote-mark">"</div>
-                        <p class="quote-text">Cada día compartido nos ha llevado hasta este momento especial</p>
+                <div class="historia-highlight">
+                    <div class="highlight-card">
+                        <div class="quote-ornament"></div>
+                        
+                        <blockquote class="historia-quote">
+                            <div class="quote-marks-container">
+                                <span class="quote-mark opening">"</span>
+                                <p class="quote-text">Cada día compartido nos ha llevado hasta este momento especial</p>
+                                <span class="quote-mark closing">"</span>
+                            </div>
+                        </blockquote>
+                        
+                        <div class="hearts-decoration">
+                            <span class="heart">♥</span>
+                            <span class="heart">♥</span>
+                            <span class="heart">♥</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -418,8 +489,6 @@ try {
                         </div>
                     </div>
                     
-                    <div class="countdown-separator">:</div>
-                    
                     <div class="time-unit">
                         <div class="time-card">
                             <div class="time-number" id="hours">0</div>
@@ -427,16 +496,12 @@ try {
                         </div>
                     </div>
                     
-                    <div class="countdown-separator">:</div>
-                    
                     <div class="time-unit">
                         <div class="time-card">
                             <div class="time-number" id="minutes">0</div>
                             <div class="time-label">Minutos</div>
                         </div>
                     </div>
-                    
-                    <div class="countdown-separator">:</div>
                     
                     <div class="time-unit">
                         <div class="time-card">
@@ -724,7 +789,7 @@ try {
     </div>
 </section>
 
-<!-- Sección Mesa de Regalos Elegante Minimalista -->
+<!-- Sección Mesa de Regalos Elegante Minimalista 
 <?php if (!empty($mesa_regalos)): ?>
 <section class="mesa-regalos" id="mesa-regalos">
     <div class="container">
@@ -787,7 +852,7 @@ try {
         </div>
     </div>
 </section>
-<?php endif; ?>
+<?php endif; ?> -->
 
 <!-- Sección RSVP Elegante Minimalista -->
 <section class="rsvp" id="rsvp">
@@ -808,35 +873,33 @@ try {
                     <button class="rsvp-button" onclick="confirmarAsistenciaWhatsApp()">
                         <span class="button-icon">💬</span>
                         <span class="button-text">Confirmar por WhatsApp</span>
-                        <span class="button-ripple"></span>
+                        <div class="button-shimmer"></div>
                     </button>
                 </div>
                 
-                <div class="rsvp-info">
-                    <div class="info-grid">
-                        <div class="info-item">
-                            <div class="info-icon">📅</div>
-                            <div class="info-content">
-                                <span class="info-label">Fecha límite</span>
-                                <span class="info-value"><?php echo fechaEnEspanol(date('Y-m-d', strtotime($invitacion['fecha_evento'] . ' -7 days'))); ?></span>
+                <div class="rsvp-details">
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <div class="detail-icon">📅</div>
+                            <div class="detail-content">
+                                <span class="detail-label">Fecha límite</span>
+                                <span class="detail-value"><?php echo fechaEnEspanol(date('Y-m-d', strtotime($invitacion['fecha_evento'] . ' -7 days'))); ?></span>
                             </div>
                         </div>
                         
-                        <div class="info-item">
-                            <div class="info-icon">🍽️</div>
-                            <div class="info-content">
-                                <span class="info-label">Restricciones alimentarias</span>
-                                <span class="info-value">Favor de mencionarlas al confirmar</span>
+                        <div class="detail-item">
+                            <div class="detail-icon">👨‍👩‍👧‍👦</div>
+                            <div class="detail-content">
+                                <span class="detail-label">Solo adultos</span>
+                                <span class="detail-value">Celebración exclusiva para adultos</span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             
-            <div class="rsvp-decoration">
-                <div class="decoration-element"></div>
-                <div class="decoration-element"></div>
-                <div class="decoration-element"></div>
+            <div class="rsvp-ornament">
+                <div class="ornament-line"></div>
             </div>
         </div>
     </div>
@@ -846,7 +909,7 @@ try {
 <footer class="footer">
     <div class="container">
         <div class="footer-content">
-            <div class="footer-main" data-animate="fadeInUp" data-delay="0.2s">
+            <div class="footer-main" data-animate="fadeInUp" data-delay="0.2">
                 <div class="footer-quote">
                     <blockquote class="quote-text">
                         <?php echo htmlspecialchars($mensaje_footer); ?>
@@ -855,12 +918,12 @@ try {
                 </div>
                 
                 <div class="footer-actions">
-                    <button class="footer-button" onclick="shareWhatsApp()">
-                        <span class="button-icon">📱</span>
+                    <button class="footer-button" onclick="shareWhatsApp()" type="button">
+                        <span class="button-icon" style="font-size: 1.1em;">📱</span>
                         <span class="button-text">Compartir invitación</span>
                     </button>
-                    <button class="footer-button" onclick="copyLink()">
-                        <span class="button-icon">🔗</span>
+                    <button class="footer-button" onclick="copyLink()" type="button">
+                        <span class="button-icon" style="font-size: 1.1em;">🔗</span>
                         <span class="button-text">Copiar enlace</span>
                     </button>
                 </div>
@@ -911,6 +974,33 @@ try {
         });
     }
 })();
+
+// Agrega este JavaScript
+document.addEventListener('DOMContentLoaded', function() {
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const element = entry.target;
+                const delay = element.dataset.delay || '0s';
+                
+                setTimeout(() => {
+                    element.classList.add('animate-in');
+                }, parseFloat(delay) * 1000);
+                
+                observer.unobserve(element);
+            }
+        });
+    }, observerOptions);
+
+    document.querySelectorAll('[data-animate]').forEach(el => {
+        observer.observe(el);
+    });
+});
 </script>
 <?php endif; ?>
 

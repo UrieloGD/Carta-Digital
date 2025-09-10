@@ -1,8 +1,11 @@
-/* Contador - Elegante Minimalista */
+/* Contador - Elegante Minimalista Mejorado */
 .contador {
     background: var(--bg-dark-light);
     position: relative;
     overflow: hidden;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
 }
 
 .contador::before {
@@ -14,10 +17,11 @@
     height: 200%;
     background: radial-gradient(
         circle at center,
-        rgba(212, 196, 168, 0.03) 0%,
+        rgba(212, 196, 168, 0.05) 0%,
+        rgba(201, 169, 110, 0.02) 50%,
         transparent 70%
     );
-    animation: rotateGradient 20s linear infinite;
+    animation: rotateGradient 25s linear infinite;
     pointer-events: none;
     z-index: 1;
 }
@@ -25,7 +29,8 @@
 .contador-content {
     position: relative;
     z-index: 2;
-    max-width: 900px;
+    width: 100%;
+    max-width: 1000px;
     margin: 0 auto;
 }
 
@@ -37,19 +42,21 @@
 }
 
 .contador-header h2 {
-    font-family: var(--font-serif);
-    font-size: clamp(2rem, 4vw, 2.75rem);
-    color: var(--text-primary);
-    font-weight: 300;
+    font-family: var(--font-script);
+    font-size: clamp(2.5rem, 6vw, 3.5rem);
+    color: var(--accent-beige);
+    font-weight: 400;
     margin-bottom: 1.5rem;
-    letter-spacing: -0.01em;
+    letter-spacing: 0.02em;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .contador-subtitle {
-    font-family: var(--font-sans);
-    font-size: 1rem;
+    font-family: var(--font-serif);
+    font-size: clamp(1rem, 2.5vw, 1.2rem);
     color: var(--text-muted);
     font-weight: 300;
+    font-style: italic;
     letter-spacing: 0.5px;
     margin: 0;
 }
@@ -61,21 +68,40 @@
 
 .countdown-grid {
     display: grid;
-    grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
-    gap: 1rem;
-    align-items: center;
-    justify-content: center;
-    max-width: 600px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: clamp(1rem, 3vw, 2rem);
+    max-width: 800px;
     margin: 0 auto 3rem;
-    padding: 2rem;
-    background: var(--bg-card);
+    padding: clamp(1.5rem, 4vw, 3rem);
+    background: linear-gradient(135deg, 
+        rgba(21, 21, 21, 0.9) 0%, 
+        rgba(26, 26, 26, 0.8) 100%);
     border: 1px solid var(--border-subtle);
+    backdrop-filter: blur(10px);
     transition: var(--transition-smooth);
+    position: relative;
+}
+
+.countdown-grid::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, 
+        transparent 30%, 
+        rgba(212, 196, 168, 0.03) 50%, 
+        transparent 70%);
+    pointer-events: none;
+    z-index: -1;
 }
 
 .countdown-grid:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-card);
+    transform: translateY(-5px);
+    box-shadow: 
+        0 10px 30px rgba(0, 0, 0, 0.4),
+        0 0 0 1px rgba(212, 196, 168, 0.1);
     border-color: rgba(212, 196, 168, 0.2);
 }
 
@@ -83,38 +109,67 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    position: relative;
 }
 
 .time-card {
     text-align: center;
     transition: var(--transition-smooth);
+    width: 100%;
+    position: relative;
 }
 
 .time-card:hover {
     transform: scale(1.05);
 }
 
+.time-card::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    background: radial-gradient(circle at center, 
+        rgba(212, 196, 168, 0.1) 0%, 
+        transparent 70%);
+    border-radius: 50%;
+    opacity: 0;
+    transition: var(--transition-smooth);
+    z-index: -1;
+}
+
+.time-card:hover::before {
+    opacity: 1;
+}
+
 .time-number {
     font-family: var(--font-serif);
-    font-size: clamp(2rem, 5vw, 3rem);
+    font-size: clamp(2.5rem, 8vw, 4rem);
     color: var(--accent-beige);
     font-weight: 400;
     line-height: 1;
     margin-bottom: 0.5rem;
     position: relative;
     transition: var(--transition-smooth);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .time-number::after {
     content: '';
     position: absolute;
-    bottom: -5px;
+    bottom: -8px;
     left: 50%;
     transform: translateX(-50%);
     width: 0;
-    height: 1px;
-    background: var(--gold-accent);
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold-accent), transparent);
     transition: var(--transition-smooth);
+}
+
+.time-card:hover .time-number {
+    color: var(--gold-accent);
+    transform: translateY(-2px);
 }
 
 .time-card:hover .time-number::after {
@@ -123,134 +178,78 @@
 
 .time-label {
     font-family: var(--font-sans);
-    font-size: 0.85rem;
+    font-size: clamp(0.8rem, 2vw, 1rem);
     color: var(--text-secondary);
     font-weight: 300;
     letter-spacing: 1px;
     text-transform: uppercase;
+    opacity: 0.8;
+    transition: var(--transition-smooth);
 }
 
-.countdown-separator {
-    font-family: var(--font-serif);
-    font-size: clamp(1.5rem, 4vw, 2rem);
-    color: var(--text-muted);
-    font-weight: 300;
-    animation: pulse 2s infinite ease-in-out;
+.time-card:hover .time-label {
+    color: var(--accent-beige);
+    opacity: 1;
 }
 
 .countdown-message {
     text-align: center;
     opacity: 0;
     animation: fadeInUp 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.6s both;
+    max-width: 600px;
+    margin: 0 auto;
 }
 
 .countdown-message .script-text {
     font-family: var(--font-script);
-    font-size: clamp(1.125rem, 2.5vw, 1.375rem);
+    font-size: clamp(1.3rem, 3.5vw, 1.8rem);
     color: var(--gold-accent);
     font-weight: 400;
     margin: 0;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    line-height: 1.4;
 }
 
-/* Animaciones */
+/* Animaciones mejoradas */
 @keyframes rotateGradient {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 @keyframes pulse {
     0%, 100% {
-        opacity: 0.5;
+        opacity: 0.6;
         transform: scale(1);
     }
     50% {
         opacity: 1;
-        transform: scale(1.1);
+        transform: scale(1.02);
     }
 }
 
-/* Efectos de actualización de números */
+/* Efectos de actualización de números mejorados */
 .time-number.updating {
-    animation: numberFlip 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    animation: numberFlip 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 @keyframes numberFlip {
     0% {
-        transform: rotateX(0deg);
+        transform: rotateY(0deg);
+        opacity: 1;
     }
     50% {
-        transform: rotateX(90deg);
+        transform: rotateY(90deg);
+        opacity: 0.7;
         color: var(--gold-accent);
+        text-shadow: 0 0 15px rgba(201, 169, 110, 0.5);
     }
     100% {
-        transform: rotateX(0deg);
+        transform: rotateY(0deg);
+        opacity: 1;
     }
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    .contador-header {
-        margin-bottom: 3rem;
-    }
-    
-    .countdown-grid {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-        padding: 1.5rem;
-        margin-bottom: 2rem;
-    }
-    
-    .time-unit {
-        padding: 1rem;
-        background: rgba(21, 21, 21, 0.5);
-        border: 1px solid var(--border-subtle);
-        transition: var(--transition-smooth);
-    }
-    
-    .time-unit:hover {
-        background: rgba(21, 21, 21, 0.8);
-        border-color: rgba(212, 196, 168, 0.2);
-    }
-    
-    .countdown-separator {
-        display: none;
-    }
-    
-    .time-number {
-        font-size: clamp(1.5rem, 6vw, 2.5rem);
-        margin-bottom: 0.25rem;
-    }
-    
-    .time-label {
-        font-size: 0.8rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .countdown-grid {
-        padding: 1rem;
-        gap: 1rem;
-    }
-    
-    .time-unit {
-        padding: 0.75rem;
-    }
-    
-    .time-number {
-        font-size: clamp(1.25rem, 5vw, 2rem);
-    }
-    
-    .time-label {
-        font-size: 0.75rem;
-        letter-spacing: 0.5px;
-    }
-}
-
-/* Estados especiales */
+/* Estados especiales mejorados */
 .countdown-expired .time-number {
     color: var(--gold-accent);
     animation: celebrate 2s infinite ease-in-out;
@@ -261,46 +260,285 @@
 }
 
 .countdown-expired .countdown-message .script-text::after {
-    content: ' 🎉';
+    content: ' ✨';
 }
 
 @keyframes celebrate {
     0%, 100% {
         transform: scale(1);
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
     }
     50% {
-        transform: scale(1.1);
-        text-shadow: 0 0 10px rgba(212, 196, 168, 0.5);
+        transform: scale(1.08);
+        text-shadow: 0 0 20px rgba(212, 196, 168, 0.6);
+    }
+}
+
+/* Responsive Design Mejorado */
+@media (max-width: 992px) {
+    .contador {
+        min-height: 90vh;
+    }
+    
+    .countdown-grid {
+        max-width: 700px;
+        gap: 1.5rem;
+    }
+    
+    .time-number {
+        font-size: clamp(2.2rem, 7vw, 3.5rem);
+    }
+}
+
+@media (max-width: 768px) {
+    .contador {
+        min-height: auto;
+        padding: 3rem 0;
+    }
+    
+    .contador-header {
+        margin-bottom: 3rem;
+    }
+    
+    .countdown-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+        padding: 2rem 1.5rem;
+        margin-bottom: 2.5rem;
+        max-width: 500px;
+    }
+    
+    .time-unit {
+        padding: 1.5rem 1rem;
+        background: rgba(10, 10, 10, 0.6);
+        border: 1px solid var(--border-subtle);
+        transition: var(--transition-smooth);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .time-unit::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, 
+            rgba(212, 196, 168, 0.02) 0%, 
+            transparent 100%);
+        opacity: 0;
+        transition: var(--transition-smooth);
+    }
+    
+    .time-unit:hover {
+        background: rgba(10, 10, 10, 0.8);
+        border-color: rgba(212, 196, 168, 0.2);
+        transform: translateY(-3px);
+    }
+    
+    .time-unit:hover::before {
+        opacity: 1;
+    }
+    
+    .time-number {
+        font-size: clamp(2rem, 6vw, 3rem);
+        margin-bottom: 0.5rem;
+    }
+    
+    .time-label {
+        font-size: clamp(0.75rem, 2vw, 0.9rem);
+    }
+}
+
+@media (max-width: 480px) {
+    .contador {
+        padding: 2rem 0;
+    }
+    
+    .contador-header {
+        margin-bottom: 2rem;
+    }
+    
+    .countdown-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        padding: 1.5rem 1rem;
+        margin-bottom: 2rem;
+        max-width: 300px;
+    }
+    
+    .time-unit {
+        padding: 1.25rem 0.75rem;
+        margin: 0;
+    }
+    
+    .time-number {
+        font-size: clamp(1.8rem, 5vw, 2.5rem);
+        margin-bottom: 0.25rem;
+    }
+    
+    .time-label {
+        font-size: 0.8rem;
+        letter-spacing: 0.5px;
+    }
+    
+    .countdown-message .script-text {
+        font-size: clamp(1.1rem, 4vw, 1.4rem);
+        padding: 0 1rem;
+    }
+}
+
+@media (max-width: 320px) {
+    .countdown-grid {
+        padding: 1rem 0.5rem;
+        max-width: 280px;
+    }
+    
+    .time-unit {
+        padding: 1rem 0.5rem;
+    }
+    
+    .time-number {
+        font-size: 1.6rem;
+    }
+    
+    .time-label {
+        font-size: 0.75rem;
     }
 }
 
 /* Mejoras de accesibilidad */
 @media (prefers-reduced-motion: reduce) {
-    .countdown-separator {
-        animation: none;
-    }
-    
-    .time-number.updating {
-        animation: none;
-    }
-    
-    .contador::before {
-        animation: none;
-    }
-    
+    .countdown-separator,
+    .time-number.updating,
+    .contador::before,
     .countdown-expired .time-number {
         animation: none;
     }
+    
+    .countdown-grid:hover,
+    .time-card:hover {
+        transform: none;
+    }
 }
 
-/* Estados de carga */
+/* Estados de carga mejorados */
 .loading .countdown-wrapper {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(50px);
 }
 
 .loaded .countdown-wrapper {
     opacity: 1;
     transform: translateY(0);
-    transition: var(--transition-smooth);
+    transition: all 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Efectos adicionales para pantallas grandes */
+@media (min-width: 1200px) {
+    .countdown-grid {
+        padding: 3.5rem;
+    }
+    
+    .time-number {
+        font-size: 4.5rem;
+    }
+    
+    .time-label {
+        font-size: 1.1rem;
+    }
+}
+
+/* Estados especiales mejorados */
+.contador.very-close {
+    background: linear-gradient(135deg, 
+        var(--bg-dark-light) 0%, 
+        rgba(201, 169, 110, 0.05) 100%);
+}
+
+.contador.final-countdown::before {
+    animation-duration: 15s;
+    background: radial-gradient(
+        circle at center,
+        rgba(212, 196, 168, 0.08) 0%,
+        rgba(201, 169, 110, 0.03) 50%,
+        transparent 70%
+    );
+}
+
+/* Animación de partículas de celebración */
+@keyframes celebrate-particle {
+    0% {
+        opacity: 1;
+        transform: translateY(0) scale(0);
+    }
+    50% {
+        opacity: 1;
+        transform: translateY(-100px) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-200px) scale(0);
+    }
+}
+
+/* Estados de celebración */
+.celebration-content {
+    text-align: center;
+    padding: 2rem;
+}
+
+.celebration-emoji {
+    font-size: 4rem;
+    display: block;
+    margin-bottom: 1rem;
+    animation: bounce 1s infinite;
+}
+
+.celebration-text {
+    font-family: var(--font-script);
+    font-size: clamp(2rem, 5vw, 3rem);
+    color: var(--gold-accent);
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.celebration-subtitle {
+    font-family: var(--font-serif);
+    font-size: 1.2rem;
+    color: var(--accent-beige);
+    font-style: italic;
+}
+
+@keyframes bounce {
+    0%, 20%, 53%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40%, 43% {
+        transform: translateY(-15px);
+    }
+    70% {
+        transform: translateY(-7px);
+    }
+    90% {
+        transform: translateY(-3px);
+    }
+}
+
+/* Estados de error */
+.error-message {
+    text-align: center;
+    padding: 2rem;
+    color: #ff6b6b;
+}
+
+/* Transiciones del mensaje */
+.countdown-message .script-text {
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* Layout móvil optimizado */
+.contador.mobile-layout .countdown-grid {
+    gap: 1rem;
 }

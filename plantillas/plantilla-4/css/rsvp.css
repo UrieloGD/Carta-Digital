@@ -1,6 +1,6 @@
 /* Sección RSVP Elegante Minimalista */
 .rsvp {
-    padding: 8rem 0;
+    padding: 2rem 0;
     background: var(--bg-dark);
     position: relative;
     overflow: hidden;
@@ -30,9 +30,9 @@
 }
 
 .rsvp-header .section-title {
-    font-family: var(--font-serif);
+    font-family: var(--font-script);
     font-size: clamp(2.5rem, 4vw, 3.5rem);
-    font-weight: 300;
+    font-weight: 400;
     color: var(--text-primary);
     margin-bottom: 1.5rem;
     letter-spacing: 0.02em;
@@ -43,23 +43,33 @@
     height: 1px;
     background: linear-gradient(90deg, transparent, var(--accent-beige), transparent);
     margin: 0 auto 1.5rem;
+    position: relative;
+}
+
+.rsvp-header .decorative-line::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 4px;
+    background: var(--accent-beige);
+    border-radius: 50%;
 }
 
 .rsvp-header .section-subtitle {
-    font-family: var(--font-script);
-    font-size: 1.4rem;
+    font-family: var(--font-serif);
+    font-size: 1.2rem;
     color: var(--accent-beige);
+    font-style: italic;
+    font-weight: 300;
 }
 
 .rsvp-main {
     text-align: center;
-    opacity: 0;
-    transform: translateY(30px);
-}
-
-.rsvp-main.animate-in {
-    opacity: 1;
-    transform: translateY(0);
+    /* Removido opacity: 0 y transform para que sea visible por defecto */
+    animation: fadeInUp 1s ease-out forwards;
 }
 
 .rsvp-message {
@@ -77,7 +87,7 @@
 }
 
 .rsvp-action {
-    margin-bottom: 3rem;
+    margin-bottom: 4rem;
 }
 
 .rsvp-button {
@@ -98,23 +108,22 @@
     position: relative;
     overflow: hidden;
     box-shadow: 0 8px 25px rgba(212, 196, 168, 0.2);
+    text-decoration: none;
 }
 
-.button-ripple {
+.rsvp-button::before {
+    content: '';
     position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    background: rgba(255, 255, 255, 0.3);
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    transition: width 0.6s, height 0.6s;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
 }
 
-.rsvp-button:hover .button-ripple {
-    width: 300px;
-    height: 300px;
+.rsvp-button:hover::before {
+    left: 100%;
 }
 
 .rsvp-button:hover {
@@ -124,28 +133,70 @@
 
 .button-icon {
     font-size: 1.3rem;
+    z-index: 2;
+    position: relative;
 }
 
-.rsvp-info {
+.button-text {
+    z-index: 2;
+    position: relative;
+}
+
+.button-shimmer {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.rsvp-button:hover .button-shimmer {
+    left: 100%;
+}
+
+.rsvp-details {
     background: var(--bg-card);
     border-radius: 15px;
     padding: 2.5rem;
     border: 1px solid rgba(212, 196, 168, 0.1);
+    margin-top: 2rem;
 }
 
-.info-grid {
+.detail-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 2rem;
 }
 
-.info-item {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
+.detail-item {
+    position: relative;
+    padding-bottom: 1.5rem; /* Espacio para la línea */
+    margin-bottom: 1.5rem;
 }
 
-.info-icon {
+.detail-item::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 20%;
+    right: 20%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent-beige), transparent);
+}
+
+.detail-item:nth-child(2)::after {
+    content: '';
+    position: absolute;
+    bottom: 24px;
+    left: 0%;
+    right: 5%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent-beige), transparent);
+}
+
+.detail-icon {
     width: 50px;
     height: 50px;
     background: rgba(212, 196, 168, 0.1);
@@ -157,11 +208,11 @@
     flex-shrink: 0;
 }
 
-.info-content {
+.detail-content {
     flex: 1;
 }
 
-.info-label {
+.detail-label {
     display: block;
     font-family: var(--font-sans);
     font-size: 0.9rem;
@@ -171,59 +222,180 @@
     letter-spacing: 0.05em;
 }
 
-.info-value {
+.detail-value {
     display: block;
     font-family: var(--font-serif);
     font-size: 1rem;
     color: var(--text-primary);
     font-weight: 400;
+    line-height: 1.4;
 }
 
-.rsvp-decoration {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: -1;
-    opacity: 0.1;
+
+
+.rsvp-ornament {
+    margin-top: 4rem;
+    text-align: center;
 }
 
-.decoration-element {
-    position: absolute;
-    width: 200px;
+.ornament-line {
+    width: 120px;
     height: 1px;
     background: linear-gradient(90deg, transparent, var(--accent-beige), transparent);
+    margin: 0 auto;
+    position: relative;
 }
 
-.decoration-element:nth-child(1) {
-    transform: rotate(0deg);
+.ornament-line::before,
+.ornament-line::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    width: 4px;
+    height: 4px;
+    background: var(--accent-beige);
+    border-radius: 50%;
 }
 
-.decoration-element:nth-child(2) {
-    transform: rotate(60deg);
+.ornament-line::before {
+    left: 20px;
 }
 
-.decoration-element:nth-child(3) {
-    transform: rotate(120deg);
+.ornament-line::after {
+    right: 20px;
+}
+
+/* Animación de entrada */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* Responsive */
 @media (max-width: 768px) {
     .rsvp {
-        padding: 6rem 0;
+        padding: 4rem 0; /* Reducido de 6rem */
+    }
+    
+    .rsvp-header {
+        margin-bottom: 2.5rem; /* Reducido de 4rem */
+    }
+    
+    .rsvp-message {
+        margin-bottom: 2rem; /* Reducido de 3rem */
+    }
+    
+    .rsvp-action {
+        margin-bottom: 2.5rem; /* Reducido de 4rem */
     }
     
     .rsvp-button {
         padding: 1rem 2rem;
         font-size: 1rem;
+        gap: 0.8rem;
     }
     
-    .rsvp-info {
+    .rsvp-details {
         padding: 2rem;
+        margin-top: 1.5rem; /* Reducido de 2rem */
     }
     
-    .info-grid {
+    .detail-grid {
         grid-template-columns: 1fr;
-        gap: 1.5rem;
+        gap: 1rem; /* Reducido de 1.5rem */
+    }
+    
+    .detail-item {
+        display: flex;
+        flex-direction: row; /* Cambio importante: mantener horizontal */
+        align-items: center;
+        text-align: left; /* Cambio importante: alineación izquierda */
+        gap: 1rem;
+        padding-bottom: 1rem;
+    }
+    
+    .detail-icon {
+        width: 45px; /* Aumentado de 32px */
+        height: 45px; /* Aumentado de 32px */
+        font-size: 1.4rem; /* Aumentado de 1.1rem */
+        margin-top: 0;
+        flex-shrink: 0; /* Evita que se reduzca */
+    }
+
+    .detail-item:nth-child(2)::after {
+        content: '';
+        position: absolute;
+        bottom: 0px;
+        left: 0%;
+        right: 5%;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--accent-beige), transparent);
+    }
+    
+    .rsvp-ornament {
+        margin-top: 2.5rem; /* Reducido de 4rem */
+    }
+}
+
+@media (max-width: 480px) {
+    .rsvp {
+        padding: 3rem 0; /* Reducido de 5rem */
+    }
+    
+    .rsvp-content {
+        padding: 0 1rem;
+    }
+    
+    .rsvp-header {
+        margin-bottom: 2rem; /* Reducido */
+    }
+    
+    .rsvp-message {
+        margin-bottom: 1.5rem; /* Reducido */
+    }
+    
+    .rsvp-action {
+        margin-bottom: 2rem; /* Reducido */
+    }
+    
+    .rsvp-button {
+        padding: 0.9rem 1.8rem;
+        font-size: 0.95rem;
+    }
+    
+    .rsvp-details {
+        padding: 1.5rem;
+        margin-top: 1rem; /* Reducido */
+    }
+    
+    .detail-grid {
+        gap: 0.8rem; /* Reducido */
+    }
+    
+    .detail-item {
+        display: flex;
+        flex-direction: row; /* Mantener horizontal */
+        align-items: center;
+        text-align: left;
+        gap: 1rem;
+        padding-bottom: 0.8rem;
+    }
+
+    .detail-icon {
+        width: 50px; /* Más grande que en tablet */
+        height: 50px; /* Más grande que en tablet */
+        font-size: 1.5rem; /* Más grande que en tablet */
+        margin-top: 0;
+        flex-shrink: 0;
+    }
+    
+    .rsvp-ornament {
+        margin-top: 2rem; /* Reducido */
     }
 }

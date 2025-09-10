@@ -19,9 +19,21 @@
     position: absolute;
     width: 300px;
     height: 300px;
-    border: 1px solid rgba(212, 196, 168, 0.05);
+    border: 2px solid rgba(212, 196, 168, 0.15); /* Aumentado de 0.05 a 0.15 */
     border-radius: 50%;
-    opacity: 0.3;
+    opacity: 0.6; /* Aumentado de 0.3 a 0.6 */
+}
+
+.bg-ornament::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    height: 80%;
+    border: 1px solid rgba(212, 196, 168, 0.08);
+    border-radius: 50%;
 }
 
 .bg-ornament-1 {
