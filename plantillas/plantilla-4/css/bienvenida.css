@@ -1,0 +1,304 @@
+/* Sección Bienvenida - Elegante Minimalista */
+.bienvenida {
+    background: var(--bg-dark-light);
+    position: relative;
+}
+
+.bienvenida-content {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.bienvenida-header {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.bienvenida-header h2 {
+    font-family: var(--font-serif);
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    color: var(--text-primary);
+    font-weight: 300;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.01em;
+}
+
+.bienvenida-main {
+    display: grid;
+    gap: 4rem;
+    align-items: center;
+}
+
+.bienvenida-text {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.bienvenida-intro {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    color: var(--text-primary);
+    font-weight: 300;
+    margin-bottom: 2rem;
+}
+
+.bienvenida-message {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: var(--text-secondary);
+    font-weight: 300;
+    font-style: italic;
+}
+
+.bienvenida-image {
+    display: flex;
+    justify-content: center;
+    margin: 3rem 0;
+}
+
+.image-container {
+    position: relative;
+    max-width: 500px;
+    width: 100%;
+    overflow: hidden;
+    border: 1px solid var(--border-subtle);
+}
+
+.image-container img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    object-position: center;
+    filter: grayscale(20%) brightness(0.9);
+    transition: var(--transition-smooth);
+}
+
+.image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        135deg,
+        rgba(10, 10, 10, 0.1) 0%,
+        rgba(212, 196, 168, 0.05) 100%
+    );
+    opacity: 0;
+    transition: var(--transition-smooth);
+}
+
+.image-container:hover img {
+    filter: grayscale(10%) brightness(1);
+    transform: scale(1.02);
+}
+
+.image-container:hover .image-overlay {
+    opacity: 1;
+}
+
+.bienvenida-ceremony {
+    text-align: center;
+    padding: 3rem 0;
+    border-top: 1px solid var(--border-subtle);
+    border-bottom: 1px solid var(--border-subtle);
+    margin: 3rem 0;
+}
+
+.ceremony-date {
+    font-family: var(--font-serif);
+    font-size: clamp(1.75rem, 4vw, 2.25rem);
+    color: var(--accent-beige);
+    font-weight: 300;
+    margin-bottom: 1.5rem;
+    font-style: italic;
+}
+
+.ceremony-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.ceremony-time {
+    font-family: var(--font-sans);
+    font-size: 1.125rem;
+    color: var(--text-primary);
+    font-weight: 300;
+    letter-spacing: 0.5px;
+}
+
+.ceremony-venue {
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    color: var(--gold-accent);
+    font-weight: 400;
+    font-style: italic;
+}
+
+.ceremony-address {
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    font-weight: 300;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.familia-section {
+    margin-top: 4rem;
+}
+
+.familia-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 3rem;
+    margin-top: 3rem;
+}
+
+.familia-column {
+    text-align: center;
+    padding: 2rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    transition: var(--transition-smooth);
+}
+
+.familia-column:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-card);
+    border-color: rgba(212, 196, 168, 0.2);
+}
+
+.familia-column h3 {
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    color: var(--accent-beige);
+    font-weight: 400;
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.5px;
+}
+
+.familia-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.familia-item:last-child {
+    margin-bottom: 0;
+}
+
+.familia-label {
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-weight: 300;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.familia-names {
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    color: var(--text-primary);
+    font-weight: 300;
+    font-style: italic;
+}
+
+/* Animaciones de entrada */
+.bienvenida-header {
+    opacity: 0;
+    animation: fadeInUp 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s both;
+}
+
+.bienvenida-text {
+    opacity: 0;
+    animation: fadeInUp 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.4s both;
+}
+
+.bienvenida-image {
+    opacity: 0;
+    animation: fadeInUp 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.6s both;
+}
+
+.bienvenida-ceremony {
+    opacity: 0;
+    animation: fadeInUp 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.8s both;
+}
+
+.familia-section {
+    opacity: 0;
+    animation: fadeInUp 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 1s both;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .bienvenida-header {
+        margin-bottom: 3rem;
+    }
+    
+    .bienvenida-main {
+        gap: 3rem;
+    }
+    
+    .image-container img {
+        height: 300px;
+    }
+    
+    .ceremony-details {
+        gap: 1rem;
+    }
+    
+    .familia-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+    
+    .familia-column {
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .bienvenida-intro,
+    .bienvenida-message {
+        font-size: 1rem;
+    }
+    
+    .image-container img {
+        height: 250px;
+    }
+    
+    .ceremony-details {
+        gap: 0.5rem;
+    }
+    
+    .ceremony-time {
+        font-size: 1rem;
+    }
+    
+    .ceremony-venue {
+        font-size: 1.125rem;
+    }
+    
+    .ceremony-address {
+        font-size: 0.9rem;
+    }
+}
+
+/* Estados de carga */
+.loading {
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.loaded {
+    opacity: 1;
+    transform: translateY(0);
+    transition: var(--transition-smooth);
+}

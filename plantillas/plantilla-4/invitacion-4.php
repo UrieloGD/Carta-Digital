@@ -1,0 +1,946 @@
+<?php
+require_once './config/database.php';
+
+$slug = $_GET['slug'] ?? '';
+
+if (empty($slug)) {
+    header("HTTP/1.0 404 Not Found");
+    exit("Invitación no encontrada");
+}
+
+$database = new Database();
+$db = $database->getConnection();
+
+// Función para convertir fecha a español
+function fechaEnEspanol($fecha) {
+    $meses = [
+        'January' => 'enero', 'February' => 'febrero', 'March' => 'marzo',
+        'April' => 'abril', 'May' => 'mayo', 'June' => 'junio',
+        'July' => 'julio', 'August' => 'agosto', 'September' => 'septiembre',
+        'October' => 'octubre', 'November' => 'noviembre', 'December' => 'diciembre'
+    ];
+    
+    $dias = [
+        'Monday' => 'lunes', 'Tuesday' => 'martes', 'Wednesday' => 'miércoles',
+        'Thursday' => 'jueves', 'Friday' => 'viernes', 'Saturday' => 'sábado', 'Sunday' => 'domingo'
+    ];
+    
+    $fechaIngles = date('j \d\e F \d\e Y', strtotime($fecha));
+    $fechaEspanol = str_replace(array_keys($meses), array_values($meses), $fechaIngles);
+    
+    return $fechaEspanol;
+}
+
+function formatearHora($hora) {
+    if (empty($hora)) return '';
+    
+    $dateTime = DateTime::createFromFormat('H:i:s', $hora);
+    
+    if (!$dateTime) {
+        $dateTime = DateTime::createFromFormat('H:i', $hora);
+    }
+    
+    if (!$dateTime) {
+        $dateTime = new DateTime($hora);
+    }
+    
+    if ($dateTime) {
+        $horaFormateada = $dateTime->format('g:i A');
+        return $horaFormateada;
+    }
+    
+    return $hora;
+}
+
+// Obtener datos de la invitación con información de plantilla
+$query = "SELECT i.*, p.nombre as plantilla_nombre, p.carpeta as plantilla_carpeta, p.archivo_principal
+          FROM invitaciones i 
+          LEFT JOIN plantillas p ON i.plantilla_id = p.id 
+          WHERE i.slug = ?";
+$stmt = $db->prepare($query);
+$stmt->execute([$slug]);
+$invitacion = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if (!$invitacion) {
+    header("HTTP/1.0 404 Not Found");
+    exit("Invitación no encontrada");
+}
+
+// Obtener ubicaciones (ceremonia y evento)
+$ubicaciones_query = "SELECT * FROM invitacion_ubicaciones WHERE invitacion_id = ? ORDER BY orden, tipo";
+$ubicaciones_stmt = $db->prepare($ubicaciones_query);
+$ubicaciones_stmt->execute([$invitacion['id']]);
+$ubicaciones_result = $ubicaciones_stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Separar ubicaciones por tipo
+$ubicacion_ceremonia = null;
+$ubicacion_evento = null;
+foreach ($ubicaciones_result as $ubicacion_item) {
+    if ($ubicacion_item['tipo'] === 'ceremonia' && !$ubicacion_ceremonia) {
+        $ubicacion_ceremonia = $ubicacion_item;
+    } elseif ($ubicacion_item['tipo'] === 'evento' && !$ubicacion_evento) {
+        $ubicacion_evento = $ubicacion_item;
+    }
+}
+
+// Obtener cronograma
+$cronograma_query = "SELECT * FROM invitacion_cronograma WHERE invitacion_id = ? ORDER BY orden, hora";
+$cronograma_stmt = $db->prepare($cronograma_query);
+$cronograma_stmt->execute([$invitacion['id']]);
+$cronograma = $cronograma_stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Obtener galería activa
+$galeria_query = "SELECT * FROM invitacion_galeria WHERE invitacion_id = ? AND activa = 1 ORDER BY orden";
+$galeria_stmt = $db->prepare($galeria_query);
+$galeria_stmt->execute([$invitacion['id']]);
+$galeria_result = $galeria_stmt->fetchAll(PDO::FETCH_ASSOC);
+$galeria = array_column($galeria_result, 'ruta');
+
+// Si no hay imágenes en la galería, usar las por defecto
+if (empty($galeria)) {
+    $galeria = [
+        "./plantillas/plantilla-1/img/galeria/pareja1.jpg",
+        "./plantillas/plantilla-1/img/galeria/pareja2.jpg", 
+        "./plantillas/plantilla-1/img/galeria/pareja3.jpg",
+        "./plantillas/plantilla-1/img/galeria/pareja4.jpg",
+        "./plantillas/plantilla-1/img/galeria/pareja5.jpg"
+    ];
+}
+
+// Obtener información completa de dresscode
+$dresscode_query = "SELECT * FROM invitacion_dresscode WHERE invitacion_id = ?";
+$dresscode_stmt = $db->prepare($dresscode_query);
+$dresscode_stmt->execute([$invitacion['id']]);
+$dresscode_info = $dresscode_stmt->fetch(PDO::FETCH_ASSOC);
+
+// Obtener musica
+$musica_youtube_url = $invitacion['musica_youtube_url'] ?? '';
+$musica_autoplay = (bool)($invitacion['musica_autoplay'] ?? false);
+$musica_volumen = $invitacion['musica_volumen'] ?? 0.5;
+
+// Construir las rutas de imágenes de dresscode
+if ($dresscode_info) {
+    $img_dresscode_hombres = !empty($dresscode_info['hombres']) ? './' . ltrim($dresscode_info['hombres'], '/') : './plantillas/plantilla-4/img/dresscode-hombre.jpg';
+    $img_dresscode_mujeres = !empty($dresscode_info['mujeres']) ? './' . ltrim($dresscode_info['mujeres'], '/') : './plantillas/plantilla-4/img/dresscode-mujer.jpg';
+    $descripcion_dresscode_hombres = $dresscode_info['descripcion_hombres'] ?? '';
+    $descripcion_dresscode_mujeres = $dresscode_info['descripcion_mujeres'] ?? '';
+} else {
+    $img_dresscode_hombres = './plantillas/plantilla-4/img/dresscode-hombre.jpg';
+    $img_dresscode_mujeres = './plantillas/plantilla-4/img/dresscode-mujer.jpg';
+    $descripcion_dresscode_hombres = '';
+    $descripcion_dresscode_mujeres = '';
+}
+
+// Obtener mesa de regalos activa
+$mesa_regalos_query = "SELECT * FROM invitacion_mesa_regalos WHERE invitacion_id = ? AND activa = 1 ORDER BY orden";
+$mesa_regalos_stmt = $db->prepare($mesa_regalos_query);
+$mesa_regalos_stmt->execute([$invitacion['id']]);
+$mesa_regalos = $mesa_regalos_stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Asignar variables para compatibilidad con el template original
+$nombres = $invitacion['nombres_novios'];
+$fecha = fechaEnEspanol($invitacion['fecha_evento']);
+$hora_ceremonia = formatearHora($invitacion['hora_evento']);
+
+// Variables de ubicación (priorizar nuevas ubicaciones)
+$ubicacion = $invitacion['ubicacion'] ?: ($ubicacion_ceremonia['nombre_lugar'] ?? ''); 
+$direccion_completa = $invitacion['direccion_completa'] ?: ($ubicacion_ceremonia['direccion'] ?? '');
+
+// Contenido principal con nuevos campos
+$historia_texto = $invitacion['historia'] ?: "Nuestra historia comenzó de manera inesperada, pero desde el primer momento supimos que estábamos destinados a estar juntos. Cada día compartido nos ha llevado hasta este momento especial que queremos celebrar junto a ustedes.";
+$dresscode = $invitacion['dresscode'] ?: "Elegante formal. Tonos oscuros y colores profundos que armonicen con la solemnidad de la ocasión.";
+$texto_rsvp = $invitacion['texto_rsvp'] ?: 'Tu presencia es importante para nosotros. Por favor confirma tu asistencia para este día tan especial.';
+$mensaje_footer = $invitacion['mensaje_footer'] ?: '"El amor es la fuerza más imponente del mundo y, sin embargo, la más humilde que se pueda imaginar."';
+$firma_footer = $invitacion['firma_footer'] ?: $nombres;
+
+// Imágenes principales
+$imagen_hero = $invitacion['imagen_hero'] ?: './plantillas/plantilla-4/img/hero.jpg';
+$imagen_dedicatoria = $invitacion['imagen_dedicatoria'] ?: './plantillas/plantilla-4/img/dedicatoria.jpg';
+$imagen_destacada = $invitacion['imagen_destacada'] ?: './plantillas/plantilla-4/img/destacada.jpg';
+
+// Información familiar
+$padres_novia = $invitacion['padres_novia'] ?? '';
+$padres_novio = $invitacion['padres_novio'] ?? '';
+$padrinos_novia = $invitacion['padrinos_novia'] ?? '';
+$padrinos_novio = $invitacion['padrinos_novio'] ?? '';
+
+// Configuraciones
+$mostrar_contador = (bool)($invitacion['mostrar_contador'] ?? true);
+
+// Número de WhatsApp para RSVP desde la base de datos
+$numero_whatsapp_rsvp = !empty($invitacion['whatsapp_confirmacion']) ? $invitacion['whatsapp_confirmacion'] : '3339047672';
+
+// Si no hay cronograma, usar el por defecto
+if (empty($cronograma)) {
+    $cronograma = [
+        ["hora" => "14:00", "evento" => "Ceremonia Religiosa", "icono" => "church", "descripcion" => "Nos uniremos en matrimonio ante Dios y nuestros seres queridos."],
+        ["hora" => "15:30", "evento" => "Sesión de fotos", "icono" => "camera", "descripcion" => "Capturaremos los momentos más especiales del día."],
+        ["hora" => "17:00", "evento" => "Cóctel de recepción", "icono" => "glass", "descripcion" => "Brindemos juntos por nuestro nuevo comienzo."],
+        ["hora" => "19:30", "evento" => "Cena de gala", "icono" => "dinner", "descripcion" => "Compartamos una elegante cena en familia."],
+        ["hora" => "22:00", "evento" => "Baile y celebración", "icono" => "dance", "descripcion" => "Celebremos hasta altas horas de la madrugada."]
+    ];
+}
+
+// Registrar visita en estadísticas
+try {
+    $stats_query = "INSERT INTO invitacion_estadisticas (invitacion_id, tipo_evento, ip_address, user_agent) VALUES (?, 'visita', ?, ?)";
+    $stats_stmt = $db->prepare($stats_query);
+    $stats_stmt->execute([
+        $invitacion['id'], 
+        $_SERVER['REMOTE_ADDR'] ?? null, 
+        $_SERVER['HTTP_USER_AGENT'] ?? null
+    ]);
+} catch (Exception $e) {
+    // Silenciosamente ignorar errores de estadísticas
+}
+?>
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php echo htmlspecialchars($nombres); ?> - Invitación de Boda</title>
+    
+    <!-- Estilos Plantilla Gótica -->
+    <link rel="stylesheet" href="./plantillas/plantilla-4/css/global.css?v=<?php echo filemtime('./plantillas/plantilla-4/css/global.css'); ?>" />
+    <link rel="stylesheet" href="./plantillas/plantilla-4/css/hero.css?v=<?php echo filemtime('./plantillas/plantilla-4/css/hero.css'); ?>" />
+    <link rel="stylesheet" href="./plantillas/plantilla-4/css/bienvenida.css?v=<?php echo filemtime('./plantillas/plantilla-4/css/bienvenida.css'); ?>" />
+    <link rel="stylesheet" href="./plantillas/plantilla-4/css/historia.css?v=<?php echo filemtime('./plantillas/plantilla-4/css/historia.css'); ?>" />
+    <link rel="stylesheet" href="./plantillas/plantilla-4/css/transition-image.css?v=<?php echo filemtime('./plantillas/plantilla-4/css/transition-image.css'); ?>" />
+    <link rel="stylesheet" href="./plantillas/plantilla-4/css/contador.css?v=<?php echo filemtime('./plantillas/plantilla-4/css/contador.css'); ?>" />
+    <link rel="stylesheet" href="./plantillas/plantilla-4/css/cronograma.css?v=<?php echo filemtime('./plantillas/plantilla-4/css/cronograma.css'); ?>" />
+    <link rel="stylesheet" href="./plantillas/plantilla-4/css/ubicaciones.css?v=<?php echo filemtime('./plantillas/plantilla-4/css/ubicaciones.css'); ?>" />
+    <link rel="stylesheet" href="./plantillas/plantilla-4/css/galeria.css?v=<?php echo filemtime('./plantillas/plantilla-4/css/galeria.css'); ?>" />
+    <link rel="stylesheet" href="./plantillas/plantilla-4/css/dresscode.css?v=<?php echo filemtime('./plantillas/plantilla-4/css/dresscode.css'); ?>" />
+    <link rel="stylesheet" href="./plantillas/plantilla-4/css/rsvp.css?v=<?php echo filemtime('./plantillas/plantilla-4/css/rsvp.css'); ?>" />
+    <link rel="stylesheet" href="./plantillas/plantilla-4/css/footer.css?v=<?php echo filemtime('./plantillas/plantilla-4/css/footer.css'); ?>" />
+    <link rel="stylesheet" href="./plantillas/plantilla-4/css/music-player.css?v=<?php echo filemtime('./plantillas/plantilla-4/css/music-player.css'); ?>">
+    
+    <!-- Fuentes cursivas mejoradas -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&family=Pacifico&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=Lato:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Icon page -->
+    <link rel="shortcut icon" href="./../../images/logo.webp" />
+</head>
+<body>
+
+<!-- Sección Hero Elegante Minimalista -->
+<section class="hero" id="hero">
+    <div class="hero-background">
+        <div class="hero-image" style="background-image: url('<?php echo htmlspecialchars($imagen_hero); ?>')"></div>
+        <div class="hero-overlay"></div>
+    </div>
+    
+    <div class="hero-content">
+        <div class="container">
+            <div class="hero-text">
+                <p class="hero-invitation">Nos unimos en matrimonio</p>
+                <h1 class="hero-names"><?php echo htmlspecialchars($nombres); ?></h1>
+                
+                <div class="hero-details">
+                    <div class="hero-date"><?php echo $fecha; ?></div>
+                    <?php if ($ubicacion): ?>
+                    <div class="hero-location"><?php echo htmlspecialchars($ubicacion); ?></div>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="hero-scroll-indicator">
+        <div class="scroll-line"></div>
+    </div>
+</section>
+
+<!-- Sección Bienvenida Elegante Minimalista -->
+<section class="bienvenida" id="bienvenida">
+    <div class="container">
+        <div class="bienvenida-content">
+            <div class="bienvenida-header">
+                <h2>Querida Familia y Amigos</h2>
+                <div class="decorative-line"></div>
+            </div>
+            
+            <div class="bienvenida-main">
+                <div class="bienvenida-text">
+                    <p class="bienvenida-intro">Con el corazón rebosante de alegría y el alma llena de gratitud, les extendemos esta formal invitación para que nos acompañen en el momento más sagrado y trascendental de nuestras vidas.</p>
+                    
+                    <p class="bienvenida-message">Su presencia, sus bendiciones y el amor que han depositado en nosotros a lo largo de los años, son los pilares que sostienen este sueño que hoy se hace realidad.</p>
+                </div>
+
+                <?php if ($imagen_dedicatoria): ?>
+                <div class="bienvenida-image">
+                    <div class="image-container">
+                        <img src="<?php echo htmlspecialchars($imagen_dedicatoria); ?>" alt="<?php echo htmlspecialchars($nombres); ?>" />
+                        <div class="image-overlay"></div>
+                    </div>
+                </div>
+                <?php endif; ?>
+
+                <!-- Información de ceremonia destacada -->
+                <div class="bienvenida-ceremony">
+                    <div class="ceremony-date"><?php echo $fecha; ?></div>
+                    <div class="ceremony-details">
+                        <div class="ceremony-time"><?php echo $hora_ceremonia; ?></div>
+                        <div class="ceremony-venue"><?php echo htmlspecialchars($ubicacion); ?></div>
+                        <?php if ($direccion_completa): ?>
+                        <div class="ceremony-address"><?php echo htmlspecialchars($direccion_completa); ?></div>
+                        <?php endif; ?>
+                    </div>
+                </div>
+
+                <!-- Información familiar -->
+                <?php if ($padres_novia || $padres_novio || $padrinos_novia || $padrinos_novio): ?>
+                <div class="familia-section">
+                    <div class="decorative-line"></div>
+                    <div class="familia-grid">
+                        <?php if ($padres_novia || $padrinos_novia): ?>
+                        <div class="familia-column">
+                            <h3>Familia de la Novia</h3>
+                            <?php if ($padres_novia): ?>
+                            <div class="familia-item">
+                                <span class="familia-label">Padres</span>
+                                <span class="familia-names"><?php echo htmlspecialchars($padres_novia); ?></span>
+                            </div>
+                            <?php endif; ?>
+                            <?php if ($padrinos_novia): ?>
+                            <div class="familia-item">
+                                <span class="familia-label">Padrinos</span>
+                                <span class="familia-names"><?php echo htmlspecialchars($padrinos_novia); ?></span>
+                            </div>
+                            <?php endif; ?>
+                        </div>
+                        <?php endif; ?>
+                        
+                        <?php if ($padres_novio || $padrinos_novio): ?>
+                        <div class="familia-column">
+                            <h3>Familia del Novio</h3>
+                            <?php if ($padres_novio): ?>
+                            <div class="familia-item">
+                                <span class="familia-label">Padres</span>
+                                <span class="familia-names"><?php echo htmlspecialchars($padres_novio); ?></span>
+                            </div>
+                            <?php endif; ?>
+                            <?php if ($padrinos_novio): ?>
+                            <div class="familia-item">
+                                <span class="familia-label">Padrinos</span>
+                                <span class="familia-names"><?php echo htmlspecialchars($padrinos_novio); ?></span>
+                            </div>
+                            <?php endif; ?>
+                        </div>
+                        <?php endif; ?>
+                    </div>
+                </div>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Sección Historia Elegante Minimalista -->
+<section class="historia" id="historia">
+    <div class="container">
+        <div class="historia-content">
+            <div class="historia-header">
+                <h2>Nuestra Historia</h2>
+                <div class="decorative-line"></div>
+            </div>
+            
+            <div class="historia-main">
+                <div class="historia-text">
+                    <?php
+                    $historia_parrafos = explode("\n", $historia_texto);
+                    foreach ($historia_parrafos as $parrafo) {
+                        if (trim($parrafo)) {
+                            echo '<p class="historia-paragraph">' . htmlspecialchars(trim($parrafo)) . '</p>';
+                        }
+                    }
+                    ?>
+                </div>
+                
+                <div class="historia-accent">
+                    <div class="accent-quote">
+                        <div class="quote-mark">"</div>
+                        <p class="quote-text">Cada día compartido nos ha llevado hasta este momento especial</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Imagen de transición elegante minimalista -->
+<section class="transition-image">
+    <div class="transition-container">
+        <div class="transition-background" style="background-image: url('<?php echo htmlspecialchars($imagen_destacada); ?>')">
+            <div class="transition-overlay"></div>
+        </div>
+        
+        <div class="transition-content">
+            <div class="container">
+                <div class="transition-text">
+                    <h3 class="transition-title">Un Momento Eterno</h3>
+                    <p class="transition-subtitle">Cada segundo juntos es un tesoro que atesoramos</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Elementos decorativos minimalistas -->
+        <div class="transition-ornaments">
+            <div class="ornament ornament-1"></div>
+            <div class="ornament ornament-2"></div>
+            <div class="ornament ornament-3"></div>
+        </div>
+    </div>
+</section>
+
+<?php if ($mostrar_contador): ?>
+<!-- Contador regresivo elegante minimalista -->
+<section class="contador" id="contador">
+    <div class="container">
+        <div class="contador-content">
+            <div class="contador-header">
+                <h2>Cuenta Regresiva</h2>
+                <div class="decorative-line"></div>
+                <p class="contador-subtitle">Hasta nuestro día especial</p>
+            </div>
+            
+            <div class="countdown-wrapper">
+                <div class="countdown-grid" id="countdown">
+                    <div class="time-unit">
+                        <div class="time-card">
+                            <div class="time-number" id="days">0</div>
+                            <div class="time-label">Días</div>
+                        </div>
+                    </div>
+                    
+                    <div class="countdown-separator">:</div>
+                    
+                    <div class="time-unit">
+                        <div class="time-card">
+                            <div class="time-number" id="hours">0</div>
+                            <div class="time-label">Horas</div>
+                        </div>
+                    </div>
+                    
+                    <div class="countdown-separator">:</div>
+                    
+                    <div class="time-unit">
+                        <div class="time-card">
+                            <div class="time-number" id="minutes">0</div>
+                            <div class="time-label">Minutos</div>
+                        </div>
+                    </div>
+                    
+                    <div class="countdown-separator">:</div>
+                    
+                    <div class="time-unit">
+                        <div class="time-card">
+                            <div class="time-number" id="seconds">0</div>
+                            <div class="time-label">Segundos</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="countdown-message">
+                    <p class="script-text">Faltan muy pocos días para celebrar juntos</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<?php endif; ?>
+
+<!-- Sección Ubicaciones Elegante Minimalista -->
+<?php if (!empty($ubicaciones_result)): ?>
+<section class="ubicaciones" id="ubicaciones">
+    <div class="container">
+        <div class="ubicaciones-content">
+            <div class="ubicaciones-header">
+                <h2>Ubicaciones</h2>
+                <div class="decorative-line"></div>
+                <p class="ubicaciones-subtitle">Lugares sagrados donde celebraremos</p>
+            </div>
+            
+            <div class="ubicaciones-grid">
+                <?php foreach($ubicaciones_result as $index => $ubicacion_item): ?>
+                <div class="ubicacion-card" data-index="<?php echo $index; ?>">
+                    <div class="ubicacion-card-inner">
+                        <!-- Imagen de ubicación -->
+                        <?php if ($ubicacion_item['imagen']): ?>
+                        <div class="ubicacion-image">
+                            <img src="<?php echo htmlspecialchars($ubicacion_item['imagen']); ?>" 
+                                 alt="<?php echo htmlspecialchars($ubicacion_item['nombre_lugar']); ?>" />
+                            <div class="ubicacion-overlay">
+                                <div class="ubicacion-icon">
+                                    <?php echo $ubicacion_item['tipo'] === 'ceremonia' ? '⛪' : '🏛️'; ?>
+                                </div>
+                            </div>
+                        </div>
+                        <?php endif; ?>
+                        
+                        <!-- Contenido de ubicación -->
+                        <div class="ubicacion-content">
+                            <div class="ubicacion-badge">
+                                <?php echo ucfirst($ubicacion_item['tipo']); ?>
+                            </div>
+                            
+                            <h3 class="ubicacion-nombre"><?php echo htmlspecialchars($ubicacion_item['nombre_lugar']); ?></h3>
+                            
+                            <!-- Información principal -->
+                            <div class="ubicacion-details">
+                                <div class="detail-item">
+                                    <div class="detail-icon">📍</div>
+                                    <div class="detail-content">
+                                        <span class="detail-label">Dirección</span>
+                                        <p class="detail-text"><?php echo htmlspecialchars($ubicacion_item['direccion']); ?></p>
+                                    </div>
+                                </div>
+                                
+                                <?php if ($ubicacion_item['hora_inicio']): ?>
+                                <div class="detail-item">
+                                    <div class="detail-icon">🕐</div>
+                                    <div class="detail-content">
+                                        <span class="detail-label">Horario</span>
+                                        <p class="detail-text">
+                                            <?php echo formatearHora($ubicacion_item['hora_inicio']); ?>
+                                            <?php if ($ubicacion_item['hora_fin']): ?>
+                                            - <?php echo formatearHora($ubicacion_item['hora_fin']); ?>
+                                            <?php endif; ?>
+                                        </p>
+                                    </div>
+                                </div>
+                                <?php endif; ?>
+                            </div>
+                            
+                            <!-- Descripción -->
+                            <?php if ($ubicacion_item['descripcion']): ?>
+                            <p class="ubicacion-descripcion"><?php echo htmlspecialchars($ubicacion_item['descripcion']); ?></p>
+                            <?php endif; ?>
+                            
+                            <!-- Acciones -->
+                            <div class="ubicacion-actions">
+                                <?php if ($ubicacion_item['google_maps_url']): ?>
+                                <a href="<?php echo htmlspecialchars($ubicacion_item['google_maps_url']); ?>" 
+                                   target="_blank" 
+                                   class="ubicacion-button">
+                                    <span class="button-icon">📍</span>
+                                    <span class="button-text">Ver en Maps</span>
+                                </a>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </div>
+</section>
+<?php endif; ?>
+
+<!-- Sección Cronograma Elegante Minimalista -->
+<section class="cronograma" id="cronograma">
+    <div class="container">
+        <div class="cronograma-content">
+            <div class="cronograma-header">
+                <h2>Cronograma de la Celebración</h2>
+                <div class="decorative-line"></div>
+                <p class="cronograma-subtitle">Momentos especiales que compartiremos</p>
+            </div>
+            
+            <div class="timeline-container">
+                <div class="timeline-line"></div>
+                
+                <?php foreach($cronograma as $index => $item): ?>
+                <div class="timeline-item" data-index="<?php echo $index; ?>">
+                    <div class="timeline-time">
+                        <div class="time-card">
+                            <span class="time-text"><?php echo formatearHora($item['hora']); ?></span>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-dot">
+                        <div class="dot-inner"></div>
+                    </div>
+                    
+                    <div class="timeline-content">
+                        <div class="content-card">
+                            <h3 class="event-title"><?php echo htmlspecialchars($item['evento']); ?></h3>
+                            
+                            <?php if (!empty($item['descripcion'])): ?>
+                            <p class="event-description"><?php echo htmlspecialchars($item['descripcion']); ?></p>
+                            <?php endif; ?>
+                            
+                            <?php if (!empty($item['ubicacion'])): ?>
+                            <div class="event-location">
+                                <span class="location-icon">📍</span>
+                                <span class="location-text"><?php echo htmlspecialchars($item['ubicacion']); ?></span>
+                            </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Sección Galería Elegante Minimalista -->
+<section class="galeria" id="galeria">
+    <div class="container">
+        <div class="galeria-content">
+            <div class="galeria-header">
+                <h2>Momentos Eternos</h2>
+                <div class="decorative-line"></div>
+                <p class="galeria-subtitle">Recuerdos que atesoramos en nuestro corazón</p>
+            </div>
+            
+            <!-- Grid de galería -->
+            <div class="galeria-grid" id="galeria-grid">
+                <!-- Las imágenes se cargarán dinámicamente con JavaScript -->
+            </div>
+            
+            <!-- Modal de imagen ampliada -->
+            <div class="galeria-modal" id="galeria-modal">
+                <div class="modal-backdrop" onclick="closeGaleriaModal()"></div>
+                <div class="modal-content">
+                    <button class="modal-close" onclick="closeGaleriaModal()">
+                        <span>&times;</span>
+                    </button>
+                    <div class="modal-image-container">
+                        <img id="modal-image" src="" alt="Imagen ampliada" />
+                    </div>
+                    <div class="modal-nav">
+                        <button class="nav-btn nav-prev" onclick="prevImage()">
+                            <span>&larr;</span>
+                        </button>
+                        <button class="nav-btn nav-next" onclick="nextImage()">
+                            <span>&rarr;</span>
+                        </button>
+                    </div>
+                    <div class="modal-counter">
+                        <span id="modal-counter-text">1 / 5</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Sección Dress Code Elegante Minimalista -->
+<section class="dresscode" id="dresscode">
+    <div class="container">
+        <div class="dresscode-content">
+            <div class="dresscode-header">
+                <h2 class="section-title">Código de Vestimenta</h2>
+                <div class="decorative-line"></div>
+                <p class="section-subtitle">Elegancia que honre la solemnidad del momento</p>
+            </div>
+            
+            <div class="dresscode-description">
+                <p class="dresscode-text"><?php echo htmlspecialchars($dresscode); ?></p>
+            </div>
+            
+            <div class="dresscode-examples">
+                <div class="dresscode-card" data-animate="fadeInUp" data-delay="0.2s">
+                    <div class="dresscode-image-container">
+                        <div class="dresscode-image">
+                            <img src="<?php echo htmlspecialchars($img_dresscode_mujeres); ?>" alt="Vestimenta femenina" />
+                            <div class="image-overlay"></div>
+                        </div>
+                        <div class="dresscode-icon">
+                            <span class="icon-symbol">♀</span>
+                        </div>
+                    </div>
+                    
+                    <div class="dresscode-info">
+                        <h3 class="dresscode-title">Mujeres</h3>
+                        <div class="dresscode-text-content">
+                            <?php if ($descripcion_dresscode_mujeres): ?>
+                            <p class="dresscode-description-text"><?php echo htmlspecialchars($descripcion_dresscode_mujeres); ?></p>
+                            <?php else: ?>
+                            <p class="dresscode-description-text">Vestidos elegantes en tonos sofisticados. Evita colores muy llamativos que puedan competir con la novia.</p>
+                            <?php endif; ?>
+                        </div>
+                        
+                        <div class="color-palette">
+                            <div class="palette-title">Paleta recomendada</div>
+                            <div class="color-dots">
+                                <div class="color-dot" style="background-color: #8B7355;" title="Marrón elegante"></div>
+                                <div class="color-dot" style="background-color: #D4C4A8;" title="Beige sofisticado"></div>
+                                <div class="color-dot" style="background-color: #2C3E50;" title="Azul marino"></div>
+                                <div class="color-dot" style="background-color: #5D4E75;" title="Ciruela"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="dresscode-card" data-animate="fadeInUp" data-delay="0.4s">
+                    <div class="dresscode-image-container">
+                        <div class="dresscode-image">
+                            <img src="<?php echo htmlspecialchars($img_dresscode_hombres); ?>" alt="Vestimenta masculina" />
+                            <div class="image-overlay"></div>
+                        </div>
+                        <div class="dresscode-icon">
+                            <span class="icon-symbol">♂</span>
+                        </div>
+                    </div>
+                    
+                    <div class="dresscode-info">
+                        <h3 class="dresscode-title">Hombres</h3>
+                        <div class="dresscode-text-content">
+                            <?php if ($descripcion_dresscode_hombres): ?>
+                            <p class="dresscode-description-text"><?php echo htmlspecialchars($descripcion_dresscode_hombres); ?></p>
+                            <?php else: ?>
+                            <p class="dresscode-description-text">Traje formal oscuro con corbata o moño. Camisa blanca o en tonos claros complementan la elegancia requerida.</p>
+                            <?php endif; ?>
+                        </div>
+                        
+                        <div class="color-palette">
+                            <div class="palette-title">Paleta recomendada</div>
+                            <div class="color-dots">
+                                <div class="color-dot" style="background-color: #1C1C1C;" title="Negro clásico"></div>
+                                <div class="color-dot" style="background-color: #2C3E50;" title="Azul marino"></div>
+                                <div class="color-dot" style="background-color: #4A4A4A;" title="Gris carbón"></div>
+                                <div class="color-dot" style="background-color: #8B7355;" title="Marrón elegante"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="dresscode-footer" data-animate="fadeInUp" data-delay="0.6s">
+                <div class="dresscode-note">
+                    <p class="note-text">La elegancia reside en la sobriedad. Tu presencia es el verdadero regalo.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Sección Mesa de Regalos Elegante Minimalista -->
+<?php if (!empty($mesa_regalos)): ?>
+<section class="mesa-regalos" id="mesa-regalos">
+    <div class="container">
+        <div class="mesa-regalos-content">
+            <div class="mesa-regalos-header">
+                <h2 class="section-title">Mesa de Regalos</h2>
+                <div class="decorative-line"></div>
+                <p class="section-subtitle">Tu presencia es nuestro mejor regalo</p>
+                <p class="section-description">Si deseas obsequiarnos algo especial, hemos preparado estas opciones con mucho cariño</p>
+            </div>
+            
+            <div class="regalos-grid">
+                <?php foreach($mesa_regalos as $index => $regalo): ?>
+                <div class="regalo-card" data-animate="fadeInUp" data-delay="<?php echo ($index * 0.2); ?>s">
+                    <div class="regalo-card-inner">
+                        <?php if ($regalo['icono']): ?>
+                        <div class="regalo-icon">
+                            <img src="<?php echo htmlspecialchars($regalo['icono']); ?>" alt="<?php echo htmlspecialchars($regalo['nombre_tienda'] ?: $regalo['tienda']); ?>" />
+                        </div>
+                        <?php endif; ?>
+                        
+                        <div class="regalo-content">
+                            <h3 class="regalo-title"><?php echo htmlspecialchars($regalo['nombre_tienda'] ?: ucfirst(str_replace('_', ' ', $regalo['tienda']))); ?></h3>
+                            
+                            <div class="regalo-details">
+                                <?php if ($regalo['numero_evento']): ?>
+                                <div class="regalo-detail">
+                                    <span class="detail-label">Número de evento</span>
+                                    <span class="detail-value"><?php echo htmlspecialchars($regalo['numero_evento']); ?></span>
+                                </div>
+                                <?php endif; ?>
+                                
+                                <?php if ($regalo['codigo_evento']): ?>
+                                <div class="regalo-detail">
+                                    <span class="detail-label">Código</span>
+                                    <span class="detail-value"><?php echo htmlspecialchars($regalo['codigo_evento']); ?></span>
+                                </div>
+                                <?php endif; ?>
+                            </div>
+                            
+                            <?php if ($regalo['descripcion']): ?>
+                            <p class="regalo-descripcion"><?php echo htmlspecialchars($regalo['descripcion']); ?></p>
+                            <?php endif; ?>
+                            
+                            <?php if ($regalo['url']): ?>
+                            <a href="<?php echo htmlspecialchars($regalo['url']); ?>" target="_blank" class="regalo-button">
+                                <span class="button-text">Visitar tienda</span>
+                                <span class="button-arrow">→</span>
+                            </a>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+                <?php endforeach; ?>
+            </div>
+            
+            <div class="mesa-regalos-footer" data-animate="fadeInUp" data-delay="0.8s">
+                <p class="footer-note">Con amor y gratitud por acompañarnos en este momento tan especial</p>
+            </div>
+        </div>
+    </div>
+</section>
+<?php endif; ?>
+
+<!-- Sección RSVP Elegante Minimalista -->
+<section class="rsvp" id="rsvp">
+    <div class="container">
+        <div class="rsvp-content">
+            <div class="rsvp-header">
+                <h2 class="section-title">Confirma tu Asistencia</h2>
+                <div class="decorative-line"></div>
+                <p class="section-subtitle">Tu presencia hace que este día sea perfecto</p>
+            </div>
+            
+            <div class="rsvp-main" data-animate="fadeInUp" data-delay="0.2s">
+                <div class="rsvp-message">
+                    <p class="rsvp-text"><?php echo htmlspecialchars($texto_rsvp); ?></p>
+                </div>
+                
+                <div class="rsvp-action">
+                    <button class="rsvp-button" onclick="confirmarAsistenciaWhatsApp()">
+                        <span class="button-icon">💬</span>
+                        <span class="button-text">Confirmar por WhatsApp</span>
+                        <span class="button-ripple"></span>
+                    </button>
+                </div>
+                
+                <div class="rsvp-info">
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-icon">📅</div>
+                            <div class="info-content">
+                                <span class="info-label">Fecha límite</span>
+                                <span class="info-value"><?php echo fechaEnEspanol(date('Y-m-d', strtotime($invitacion['fecha_evento'] . ' -7 days'))); ?></span>
+                            </div>
+                        </div>
+                        
+                        <div class="info-item">
+                            <div class="info-icon">🍽️</div>
+                            <div class="info-content">
+                                <span class="info-label">Restricciones alimentarias</span>
+                                <span class="info-value">Favor de mencionarlas al confirmar</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="rsvp-decoration">
+                <div class="decoration-element"></div>
+                <div class="decoration-element"></div>
+                <div class="decoration-element"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer Elegante Minimalista -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-main" data-animate="fadeInUp" data-delay="0.2s">
+                <div class="footer-quote">
+                    <blockquote class="quote-text">
+                        <?php echo htmlspecialchars($mensaje_footer); ?>
+                    </blockquote>
+                    <cite class="quote-author">— <?php echo htmlspecialchars($firma_footer); ?></cite>
+                </div>
+                
+                <div class="footer-actions">
+                    <button class="footer-button" onclick="shareWhatsApp()">
+                        <span class="button-icon">📱</span>
+                        <span class="button-text">Compartir invitación</span>
+                    </button>
+                    <button class="footer-button" onclick="copyLink()">
+                        <span class="button-icon">🔗</span>
+                        <span class="button-text">Copiar enlace</span>
+                    </button>
+                </div>
+                
+                <div class="footer-thanks">
+                    <p class="thanks-text">Gracias por ser parte de nuestro día especial</p>
+                    <div class="thanks-ornament"></div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <div class="footer-signature">
+                    <p class="signature-text">Con todo nuestro amor</p>
+                    <p class="signature-names"><?php echo htmlspecialchars($nombres); ?></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Elementos decorativos de fondo -->
+    <div class="footer-background">
+        <div class="bg-ornament bg-ornament-1"></div>
+        <div class="bg-ornament bg-ornament-2"></div>
+        <div class="bg-ornament bg-ornament-3"></div>
+    </div>
+</footer>
+
+<?php if (!empty($musica_youtube_url)): ?>
+<link rel="stylesheet" href="./plantillas/plantilla-4/css/music-player.css">
+<script src="./plantillas/plantilla-4/js/music-player.js"></script>
+<script>
+(function() {
+    const musicConfig = {
+        youtubeUrl: '<?php echo addslashes($musica_youtube_url); ?>',
+        autoplay: true, // Siempre true para auto-reproducir
+        volume: <?php echo $musica_volumen; ?>
+    };
+    
+    console.log('Configuración de música:', musicConfig);
+    
+    if (window.initMusicPlayer) {
+        initMusicPlayer(musicConfig.youtubeUrl, musicConfig.autoplay, musicConfig.volume);
+    } else {
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.initMusicPlayer) {
+                initMusicPlayer(musicConfig.youtubeUrl, musicConfig.autoplay, musicConfig.volume);
+            }
+        });
+    }
+})();
+</script>
+<?php endif; ?>
+
+<script>
+// Variables globales para JavaScript
+const invitacionData = {
+    id: <?php echo $invitacion['id']; ?>,
+    nombres: '<?php echo addslashes($nombres); ?>',
+    fecha: '<?php echo $invitacion['fecha_evento']; ?>',
+    hora: '<?php echo $invitacion['hora_evento']; ?>',
+    mostrarContador: <?php echo $mostrar_contador ? 'true' : 'false'; ?>,
+};
+
+// Configurar número de WhatsApp para RSVP
+window.numeroWhatsAppRSVP = '<?php echo $numero_whatsapp_rsvp; ?>';
+</script>
+
+<script>
+// Pasar las imágenes de PHP a JavaScript
+const galeriaImagenes = <?php echo json_encode($galeria); ?>;
+</script>
+
+<script src="./plantillas/plantilla-4/js/contador.js?v=<?php echo filemtime('./plantillas/plantilla-4/js/contador.js'); ?>"></script>
+<script src="./plantillas/plantilla-4/js/compartir.js?v=<?php echo filemtime('./plantillas/plantilla-4/js/compartir.js'); ?>"></script>
+<script src="./plantillas/plantilla-4/js/rsvp.js?v=<?php echo filemtime('./plantillas/plantilla-4/js/rsvp.js'); ?>"></script>
+<script src="./plantillas/plantilla-4/js/faq.js?v=<?php echo filemtime('./plantillas/plantilla-4/js/faq.js'); ?>"></script>
+<script src="./plantillas/plantilla-4/js/estadisticas.js?v=<?php echo filemtime('./plantillas/plantilla-4/js/estadisticas.js'); ?>"></script>
+<script src="./plantillas/plantilla-4/js/invitacion.js?v=<?php echo filemtime('./plantillas/plantilla-4/js/invitacion.js'); ?>"></script>
+<script src="./plantillas/plantilla-4/js/music-player.js?v=<?php echo filemtime('./plantillas/plantilla-4/js/music-player.js'); ?>"></script>
+<script src="./plantillas/plantilla-4/js/galeria-rotacion.js?v=<?php echo filemtime('./plantillas/plantilla-4/js/galeria-rotacion.js'); ?>"></script>
+
+</body>
+</html>

@@ -1,0 +1,218 @@
+/* Footer Elegante Minimalista */
+.footer {
+    padding: 6rem 0 3rem;
+    background: var(--bg-dark-light);
+    position: relative;
+    overflow: hidden;
+}
+
+.footer-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+}
+
+.bg-ornament {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border: 1px solid rgba(212, 196, 168, 0.05);
+    border-radius: 50%;
+    opacity: 0.3;
+}
+
+.bg-ornament-1 {
+    top: -150px;
+    left: -150px;
+    animation: float 20s ease-in-out infinite;
+}
+
+.bg-ornament-2 {
+    bottom: -150px;
+    right: -150px;
+    animation: float 25s ease-in-out infinite reverse;
+}
+
+.bg-ornament-3 {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 500px;
+    height: 500px;
+    animation: float 30s ease-in-out infinite;
+}
+
+.footer-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+}
+
+.footer-main {
+    margin-bottom: 3rem;
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+.footer-main.animate-in {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.footer-quote {
+    margin-bottom: 3rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.quote-text {
+    font-family: var(--font-script);
+    font-size: clamp(1.3rem, 3vw, 1.8rem);
+    color: var(--accent-beige);
+    line-height: 1.6;
+    font-style: italic;
+    margin-bottom: 1rem;
+}
+
+.quote-author {
+    font-family: var(--font-serif);
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    font-weight: 300;
+    font-style: normal;
+}
+
+.footer-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+}
+
+.footer-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    padding: 0.8rem 1.8rem;
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid rgba(212, 196, 168, 0.3);
+    border-radius: 25px;
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    font-weight: 400;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    text-decoration: none;
+}
+
+.footer-button:hover {
+    background: rgba(212, 196, 168, 0.1);
+    border-color: var(--accent-beige);
+    color: var(--accent-beige);
+    transform: translateY(-2px);
+}
+
+.footer-thanks {
+    border-top: 1px solid rgba(212, 196, 168, 0.1);
+    border-bottom: 1px solid rgba(212, 196, 168, 0.1);
+    padding: 2rem 0;
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+.thanks-text {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+    font-weight: 300;
+}
+
+.thanks-ornament {
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent-beige), transparent);
+    margin: 0 auto;
+}
+
+.footer-bottom {
+    border-top: 1px solid rgba(212, 196, 168, 0.1);
+    padding-top: 2rem;
+}
+
+.footer-signature {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.signature-text {
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.signature-names {
+    font-family: var(--font-script);
+    font-size: 1.8rem;
+    color: var(--accent-beige);
+    font-weight: 400;
+}
+
+/* Animaciones */
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px) rotate(0deg);
+    }
+    50% {
+        transform: translateY(-20px) rotate(180deg);
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .footer {
+        padding: 4rem 0 2rem;
+    }
+    
+    .footer-actions {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+    }
+    
+    .footer-button {
+        width: 100%;
+        max-width: 250px;
+        justify-content: center;
+    }
+    
+    .quote-text {
+        font-size: 1.3rem;
+    }
+    
+    .signature-names {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .bg-ornament {
+        width: 200px;
+        height: 200px;
+    }
+    
+    .bg-ornament-3 {
+        width: 300px;
+        height: 300px;
+    }
+}

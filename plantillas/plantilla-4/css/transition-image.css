@@ -1,0 +1,304 @@
+/* Transition Image - Elegante Minimalista */
+.transition-image {
+    height: 80vh;
+    min-height: 500px;
+    max-height: 800px;
+    position: relative;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+.transition-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.transition-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    filter: grayscale(30%) brightness(0.3) contrast(1.1);
+    transition: var(--transition-smooth);
+    z-index: 1;
+}
+
+.transition-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        135deg,
+        rgba(10, 10, 10, 0.8) 0%,
+        rgba(10, 10, 10, 0.6) 50%,
+        rgba(10, 10, 10, 0.9) 100%
+    );
+    z-index: 2;
+}
+
+.transition-content {
+    position: relative;
+    z-index: 3;
+    width: 100%;
+    text-align: center;
+    opacity: 0;
+    animation: fadeInUp 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.5s both;
+}
+
+.transition-text {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 2rem;
+    background: rgba(21, 21, 21, 0.4);
+    border: 1px solid var(--border-subtle);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: var(--transition-smooth);
+}
+
+.transition-text:hover {
+    background: rgba(21, 21, 21, 0.6);
+    border-color: rgba(212, 196, 168, 0.2);
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-card);
+}
+
+.transition-title {
+    font-family: var(--font-serif);
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    color: var(--text-primary);
+    font-weight: 300;
+    margin-bottom: 1rem;
+    letter-spacing: -0.01em;
+}
+
+.transition-subtitle {
+    font-family: var(--font-script);
+    font-size: clamp(1.125rem, 2.5vw, 1.375rem);
+    color: var(--accent-beige);
+    font-weight: 400;
+    line-height: 1.5;
+    margin: 0;
+    font-style: italic;
+}
+
+.transition-ornaments {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.ornament {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: var(--accent-beige);
+    border-radius: 50%;
+    opacity: 0.6;
+    animation: floatOrnament 6s infinite ease-in-out;
+}
+
+.ornament-1 {
+    top: 20%;
+    left: 15%;
+    animation-delay: 0s;
+}
+
+.ornament-2 {
+    top: 30%;
+    right: 20%;
+    animation-delay: 2s;
+}
+
+.ornament-3 {
+    bottom: 25%;
+    left: 25%;
+    animation-delay: 4s;
+}
+
+@keyframes floatOrnament {
+    0%, 100% {
+        transform: translateY(0) scale(1);
+        opacity: 0.4;
+    }
+    50% {
+        transform: translateY(-10px) scale(1.2);
+        opacity: 0.8;
+    }
+}
+
+/* Efecto parallax sutil */
+.transition-image:hover .transition-background {
+    transform: scale(1.02);
+    filter: grayscale(20%) brightness(0.4) contrast(1.2);
+}
+
+/* Líneas decorativas en los bordes */
+.transition-image::before,
+.transition-image::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 1px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        var(--accent-beige),
+        transparent
+    );
+    z-index: 4;
+}
+
+.transition-image::before {
+    top: 50px;
+    animation: expandLine 2s cubic-bezier(0.25, 0.46, 0.45, 0.94) 1s both;
+}
+
+.transition-image::after {
+    bottom: 50px;
+    animation: expandLine 2s cubic-bezier(0.25, 0.46, 0.45, 0.94) 1.2s both;
+}
+
+@keyframes expandLine {
+    from {
+        width: 0;
+        opacity: 0;
+    }
+    to {
+        width: 100px;
+        opacity: 1;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .transition-background {
+        background-attachment: scroll;
+    }
+}
+
+@media (max-width: 768px) {
+    .transition-image {
+        height: 60vh;
+        min-height: 400px;
+    }
+    
+    .transition-text {
+        padding: 1.5rem;
+        margin: 0 1rem;
+    }
+    
+    .transition-image::before,
+    .transition-image::after {
+        width: 60px;
+    }
+    
+    .ornament-1 {
+        top: 15%;
+        left: 10%;
+    }
+    
+    .ornament-2 {
+        top: 25%;
+        right: 15%;
+    }
+    
+    .ornament-3 {
+        bottom: 20%;
+        left: 20%;
+    }
+}
+
+@media (max-width: 480px) {
+    .transition-image {
+        height: 50vh;
+        min-height: 350px;
+    }
+    
+    .transition-text {
+        padding: 1rem;
+        margin: 0 0.5rem;
+    }
+    
+    .transition-title {
+        margin-bottom: 0.5rem;
+    }
+    
+    .transition-image::before,
+    .transition-image::after {
+        width: 40px;
+    }
+    
+    .transition-image::before {
+        top: 30px;
+    }
+    
+    .transition-image::after {
+        bottom: 30px;
+    }
+}
+
+/* Optimización de rendimiento */
+@media (prefers-reduced-motion: reduce) {
+    .ornament {
+        animation: none;
+    }
+    
+    .transition-image::before,
+    .transition-image::after {
+        animation: none;
+        opacity: 1;
+        width: 100px;
+    }
+    
+    .transition-background {
+        background-attachment: scroll;
+    }
+}
+
+/* Estados de carga */
+.loading .transition-content {
+    opacity: 0;
+    transform: translateY(40px);
+}
+
+.loaded .transition-content {
+    opacity: 1;
+    transform: translateY(0);
+    transition: var(--transition-smooth);
+}
+
+/* Mejora de accesibilidad */
+@media (prefers-contrast: high) {
+    .transition-overlay {
+        background: linear-gradient(
+            135deg,
+            rgba(0, 0, 0, 0.9) 0%,
+            rgba(0, 0, 0, 0.8) 50%,
+            rgba(0, 0, 0, 0.95) 100%
+        );
+    }
+    
+    .transition-text {
+        background: rgba(0, 0, 0, 0.8);
+        border-color: var(--accent-beige);
+    }
+}

@@ -1,0 +1,306 @@
+/* Contador - Elegante Minimalista */
+.contador {
+    background: var(--bg-dark-light);
+    position: relative;
+    overflow: hidden;
+}
+
+.contador::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(
+        circle at center,
+        rgba(212, 196, 168, 0.03) 0%,
+        transparent 70%
+    );
+    animation: rotateGradient 20s linear infinite;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.contador-content {
+    position: relative;
+    z-index: 2;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.contador-header {
+    text-align: center;
+    margin-bottom: 4rem;
+    opacity: 0;
+    animation: fadeInUp 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s both;
+}
+
+.contador-header h2 {
+    font-family: var(--font-serif);
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    color: var(--text-primary);
+    font-weight: 300;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.01em;
+}
+
+.contador-subtitle {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    color: var(--text-muted);
+    font-weight: 300;
+    letter-spacing: 0.5px;
+    margin: 0;
+}
+
+.countdown-wrapper {
+    opacity: 0;
+    animation: fadeInUp 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.4s both;
+}
+
+.countdown-grid {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+    max-width: 600px;
+    margin: 0 auto 3rem;
+    padding: 2rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    transition: var(--transition-smooth);
+}
+
+.countdown-grid:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-card);
+    border-color: rgba(212, 196, 168, 0.2);
+}
+
+.time-unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.time-card {
+    text-align: center;
+    transition: var(--transition-smooth);
+}
+
+.time-card:hover {
+    transform: scale(1.05);
+}
+
+.time-number {
+    font-family: var(--font-serif);
+    font-size: clamp(2rem, 5vw, 3rem);
+    color: var(--accent-beige);
+    font-weight: 400;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+    position: relative;
+    transition: var(--transition-smooth);
+}
+
+.time-number::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 1px;
+    background: var(--gold-accent);
+    transition: var(--transition-smooth);
+}
+
+.time-card:hover .time-number::after {
+    width: 100%;
+}
+
+.time-label {
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    font-weight: 300;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.countdown-separator {
+    font-family: var(--font-serif);
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    color: var(--text-muted);
+    font-weight: 300;
+    animation: pulse 2s infinite ease-in-out;
+}
+
+.countdown-message {
+    text-align: center;
+    opacity: 0;
+    animation: fadeInUp 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.6s both;
+}
+
+.countdown-message .script-text {
+    font-family: var(--font-script);
+    font-size: clamp(1.125rem, 2.5vw, 1.375rem);
+    color: var(--gold-accent);
+    font-weight: 400;
+    margin: 0;
+}
+
+/* Animaciones */
+@keyframes rotateGradient {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 0.5;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+}
+
+/* Efectos de actualización de números */
+.time-number.updating {
+    animation: numberFlip 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+@keyframes numberFlip {
+    0% {
+        transform: rotateX(0deg);
+    }
+    50% {
+        transform: rotateX(90deg);
+        color: var(--gold-accent);
+    }
+    100% {
+        transform: rotateX(0deg);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .contador-header {
+        margin-bottom: 3rem;
+    }
+    
+    .countdown-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    
+    .time-unit {
+        padding: 1rem;
+        background: rgba(21, 21, 21, 0.5);
+        border: 1px solid var(--border-subtle);
+        transition: var(--transition-smooth);
+    }
+    
+    .time-unit:hover {
+        background: rgba(21, 21, 21, 0.8);
+        border-color: rgba(212, 196, 168, 0.2);
+    }
+    
+    .countdown-separator {
+        display: none;
+    }
+    
+    .time-number {
+        font-size: clamp(1.5rem, 6vw, 2.5rem);
+        margin-bottom: 0.25rem;
+    }
+    
+    .time-label {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .countdown-grid {
+        padding: 1rem;
+        gap: 1rem;
+    }
+    
+    .time-unit {
+        padding: 0.75rem;
+    }
+    
+    .time-number {
+        font-size: clamp(1.25rem, 5vw, 2rem);
+    }
+    
+    .time-label {
+        font-size: 0.75rem;
+        letter-spacing: 0.5px;
+    }
+}
+
+/* Estados especiales */
+.countdown-expired .time-number {
+    color: var(--gold-accent);
+    animation: celebrate 2s infinite ease-in-out;
+}
+
+.countdown-expired .countdown-message .script-text {
+    color: var(--accent-beige);
+}
+
+.countdown-expired .countdown-message .script-text::after {
+    content: ' 🎉';
+}
+
+@keyframes celebrate {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+        text-shadow: 0 0 10px rgba(212, 196, 168, 0.5);
+    }
+}
+
+/* Mejoras de accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+    .countdown-separator {
+        animation: none;
+    }
+    
+    .time-number.updating {
+        animation: none;
+    }
+    
+    .contador::before {
+        animation: none;
+    }
+    
+    .countdown-expired .time-number {
+        animation: none;
+    }
+}
+
+/* Estados de carga */
+.loading .countdown-wrapper {
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+.loaded .countdown-wrapper {
+    opacity: 1;
+    transform: translateY(0);
+    transition: var(--transition-smooth);
+}
