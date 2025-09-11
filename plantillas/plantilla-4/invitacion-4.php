@@ -520,46 +520,60 @@ try {
 </section>
 <?php endif; ?>
 
-<!-- Sección Ubicaciones Elegante Minimalista -->
+<!-- Sección Ubicaciones Elegante Minimalista Mejorada -->
 <?php if (!empty($ubicaciones_result)): ?>
 <section class="ubicaciones" id="ubicaciones">
     <div class="container">
         <div class="ubicaciones-content">
             <div class="ubicaciones-header">
-                <h2>Ubicaciones</h2>
+                <h2 class="section-title">Ubicaciones</h2>
                 <div class="decorative-line"></div>
-                <p class="ubicaciones-subtitle">Lugares sagrados donde celebraremos</p>
+                <p class="section-subtitle">Lugares sagrados donde celebraremos nuestro amor</p>
             </div>
             
             <div class="ubicaciones-grid">
                 <?php foreach($ubicaciones_result as $index => $ubicacion_item): ?>
-                <div class="ubicacion-card" data-index="<?php echo $index; ?>">
+                <article class="ubicacion-card" data-index="<?php echo $index; ?>">
                     <div class="ubicacion-card-inner">
                         <!-- Imagen de ubicación -->
                         <?php if ($ubicacion_item['imagen']): ?>
                         <div class="ubicacion-image">
                             <img src="<?php echo htmlspecialchars($ubicacion_item['imagen']); ?>" 
-                                 alt="<?php echo htmlspecialchars($ubicacion_item['nombre_lugar']); ?>" />
+                                 alt="<?php echo htmlspecialchars($ubicacion_item['nombre_lugar']); ?>" 
+                                 loading="lazy" />
                             <div class="ubicacion-overlay">
                                 <div class="ubicacion-icon">
-                                    <?php echo $ubicacion_item['tipo'] === 'ceremonia' ? '⛪' : '🏛️'; ?>
+                                    <?php echo $ubicacion_item['tipo'] === 'ceremonia' ? '⛪' : ($ubicacion_item['tipo'] === 'recepcion' ? '🏛️' : '🎉'); ?>
                                 </div>
                             </div>
                         </div>
                         <?php endif; ?>
                         
+                        <!-- Badge de tipo mejorado -->
+                        <div class="ubicacion-badge">
+                            <span class="badge-icon">
+                                <?php echo $ubicacion_item['tipo'] === 'ceremonia' ? '⛪' : ($ubicacion_item['tipo'] === 'recepcion' ? '🏛️' : '🎉'); ?>
+                            </span>
+                            <span class="badge-text"><?php echo ucfirst($ubicacion_item['tipo']); ?></span>
+                        </div>
+                        
                         <!-- Contenido de ubicación -->
                         <div class="ubicacion-content">
-                            <div class="ubicacion-badge">
-                                <?php echo ucfirst($ubicacion_item['tipo']); ?>
+                            <div class="ubicacion-header-content">
+                                <h3 class="ubicacion-nombre" title="<?php echo htmlspecialchars($ubicacion_item['nombre_lugar']); ?>">
+                                    <?php echo htmlspecialchars($ubicacion_item['nombre_lugar']); ?>
+                                </h3>
                             </div>
-                            
-                            <h3 class="ubicacion-nombre"><?php echo htmlspecialchars($ubicacion_item['nombre_lugar']); ?></h3>
                             
                             <!-- Información principal -->
                             <div class="ubicacion-details">
                                 <div class="detail-item">
-                                    <div class="detail-icon">📍</div>
+                                    <div class="detail-icon">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                            <circle cx="12" cy="10" r="3"/>
+                                        </svg>
+                                    </div>
                                     <div class="detail-content">
                                         <span class="detail-label">Dirección</span>
                                         <p class="detail-text"><?php echo htmlspecialchars($ubicacion_item['direccion']); ?></p>
@@ -568,7 +582,12 @@ try {
                                 
                                 <?php if ($ubicacion_item['hora_inicio']): ?>
                                 <div class="detail-item">
-                                    <div class="detail-icon">🕐</div>
+                                    <div class="detail-icon">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <circle cx="12" cy="12" r="10"/>
+                                            <polyline points="12,6 12,12 16,14"/>
+                                        </svg>
+                                    </div>
                                     <div class="detail-content">
                                         <span class="detail-label">Horario</span>
                                         <p class="detail-text">
@@ -584,7 +603,9 @@ try {
                             
                             <!-- Descripción -->
                             <?php if ($ubicacion_item['descripcion']): ?>
-                            <p class="ubicacion-descripcion"><?php echo htmlspecialchars($ubicacion_item['descripcion']); ?></p>
+                            <div class="ubicacion-descripcion">
+                                <p><?php echo htmlspecialchars($ubicacion_item['descripcion']); ?></p>
+                            </div>
                             <?php endif; ?>
                             
                             <!-- Acciones -->
@@ -592,15 +613,19 @@ try {
                                 <?php if ($ubicacion_item['google_maps_url']): ?>
                                 <a href="<?php echo htmlspecialchars($ubicacion_item['google_maps_url']); ?>" 
                                    target="_blank" 
-                                   class="ubicacion-button">
-                                    <span class="button-icon">📍</span>
-                                    <span class="button-text">Ver en Maps</span>
+                                   rel="noopener noreferrer"
+                                   class="ubicacion-button btn">
+                                    <svg class="button-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                        <circle cx="12" cy="10" r="3"/>
+                                    </svg>
+                                    <span class="button-text">Ver Ubicación</span>
                                 </a>
                                 <?php endif; ?>
                             </div>
                         </div>
                     </div>
-                </div>
+                </article>
                 <?php endforeach; ?>
             </div>
         </div>
@@ -656,43 +681,72 @@ try {
     </div>
 </section>
 
-<!-- Sección Galería Elegante Minimalista -->
-<section class="galeria" id="galeria">
+<!-- Sección Galería -->
+<section class="galeria" id="galeria" aria-labelledby="galeria-title">
     <div class="container">
-        <div class="galeria-content">
-            <div class="galeria-header">
-                <h2>Momentos Eternos</h2>
-                <div class="decorative-line"></div>
-                <p class="galeria-subtitle">Recuerdos que atesoramos en nuestro corazón</p>
-            </div>
-            
-            <!-- Grid de galería -->
-            <div class="galeria-grid" id="galeria-grid">
-                <!-- Las imágenes se cargarán dinámicamente con JavaScript -->
-            </div>
-            
-            <!-- Modal de imagen ampliada -->
-            <div class="galeria-modal" id="galeria-modal">
-                <div class="modal-backdrop" onclick="closeGaleriaModal()"></div>
-                <div class="modal-content">
-                    <button class="modal-close" onclick="closeGaleriaModal()">
-                        <span>&times;</span>
+        <header class="galeria-header">
+            <h2 id="galeria-title" class="section-title">Momentos Eternos</h2>
+            <div class="decorative-line" aria-hidden="true"></div>
+            <p class="galeria-subtitle">Recuerdos que atesoramos en nuestro corazón</p>
+        </header>
+        
+        <!-- Grid de galería -->
+        <div class="galeria-grid" 
+             id="galeria-grid" 
+             role="grid" 
+             aria-label="Galería de fotos de la pareja">
+            <!-- Las imágenes se cargarán dinámicamente -->
+        </div>
+        
+        <!-- Modal lightbox -->
+        <div class="galeria-modal" 
+             id="galeria-modal" 
+             role="dialog" 
+             aria-modal="true" 
+             aria-labelledby="modal-title" 
+             aria-hidden="true">
+            <div class="modal-backdrop"></div>
+            <div class="modal-content">
+                <header class="modal-header">
+                    <h3 id="modal-title" class="sr-only">Vista ampliada de imagen</h3>
+                    <button class="modal-close" 
+                            aria-label="Cerrar galería"
+                            type="button">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                        </svg>
                     </button>
-                    <div class="modal-image-container">
-                        <img id="modal-image" src="" alt="Imagen ampliada" />
-                    </div>
-                    <div class="modal-nav">
-                        <button class="nav-btn nav-prev" onclick="prevImage()">
-                            <span>&larr;</span>
-                        </button>
-                        <button class="nav-btn nav-next" onclick="nextImage()">
-                            <span>&rarr;</span>
-                        </button>
-                    </div>
-                    <div class="modal-counter">
-                        <span id="modal-counter-text">1 / 5</span>
-                    </div>
+                </header>
+                
+                <div class="modal-image-container">
+                    <img id="modal-image" 
+                         src="" 
+                         alt=""
+                         loading="lazy" />
+                    
+                    <!-- Navegación -->
+                    <button class="modal-nav modal-prev" 
+                            aria-label="Imagen anterior"
+                            type="button">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M15.41 16.09L10.83 11.5l4.58-4.59L14 5.5l-6 6 6 6z"/>
+                        </svg>
+                    </button>
+                    
+                    <button class="modal-nav modal-next" 
+                            aria-label="Siguiente imagen"
+                            type="button">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M8.59 16.34L13.17 11.75l-4.58-4.59L10 5.75l6 6-6 6z"/>
+                        </svg>
+                    </button>
                 </div>
+                
+                <footer class="modal-footer">
+                    <div class="modal-counter" aria-live="polite">
+                        <span id="modal-counter-text">1 de 5</span>
+                    </div>
+                </footer>
             </div>
         </div>
     </div>

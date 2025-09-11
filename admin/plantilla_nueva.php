@@ -4,11 +4,29 @@ require_once '../config/database.php';
 $database = new Database();
 $db = $database->getConnection();
 
-// Obtener invitaciones disponibles para usar como ejemplo
-$invitaciones_query = "SELECT id, nombres_novios, slug FROM invitaciones ORDER BY nombres_novios ASC";
-$invitaciones_stmt = $db->prepare($invitaciones_query);
-$invitaciones_stmt->execute();
-$invitaciones = $invitaciones_stmt->fetchAll(PDO::FETCH_ASSOC);
+// --- NUEVA LÓGICA: VERIFICAR SI LA COLUMNA EXISTE ---
+$invitacionEjemploColumnExists = false;
+try {
+    $check_column_query = "DESCRIBE plantillas invitacion_ejemplo_id";
+    $check_column_stmt = $db->query($check_column_query);
+    if ($check_column_stmt->fetch()) {
+        $invitacionEjemploColumnExists = true;
+    }
+} catch (PDOException $e) {
+    // La columna no existe, lo cual es esperado en algunos casos.
+    $invitacionEjemploColumnExists = false;
+}
+// --- FIN DE LA NUEVA LÓGICA ---
+
+// Solo obtenemos las invitaciones si la columna existe
+$invitaciones = [];
+if ($invitacionEjemploColumnExists) {
+    $invitaciones_query = "SELECT id, nombres_novios, slug FROM invitaciones ORDER BY nombres_novios ASC";
+    $invitaciones_stmt = $db->prepare($invitaciones_query);
+    $invitaciones_stmt->execute();
+    $invitaciones = $invitaciones_stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nombre = $_POST['nombre'];
@@ -16,12 +34,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $carpeta = $_POST['carpeta'];
     $archivo_principal = $_POST['archivo_principal'];
     $imagen_preview = $_POST['imagen_preview'];
-    $invitacion_ejemplo_id = !empty($_POST['invitacion_ejemplo_id']) ? $_POST['invitacion_ejemplo_id'] : null;
 
-    $query = "INSERT INTO plantillas (nombre, descripcion, carpeta, archivo_principal, imagen_preview, invitacion_ejemplo_id) 
-              VALUES (?, ?, ?, ?, ?, ?)";
+    // --- LÓGICA DINÁMICA PARA INSERTAR ---
+    if ($invitacionEjemploColumnExists) {
+        $invitacion_ejemplo_id = !empty($_POST['invitacion_ejemplo_id']) ? $_POST['invitacion_ejemplo_id'] : null;
+        
+        $query = "INSERT INTO plantillas (nombre, descripcion, carpeta, archivo_principal, imagen_preview, invitacion_ejemplo_id) 
+                  VALUES (?, ?, ?, ?, ?, ?)";
+        $params = [$nombre, $descripcion, $carpeta, $archivo_principal, $imagen_preview, $invitacion_ejemplo_id];
+    } else {
+        $query = "INSERT INTO plantillas (nombre, descripcion, carpeta, archivo_principal, imagen_preview) 
+                  VALUES (?, ?, ?, ?, ?)";
+        $params = [$nombre, $descripcion, $carpeta, $archivo_principal, $imagen_preview];
+    }
+
     $stmt = $db->prepare($query);
-    $stmt->execute([$nombre, $descripcion, $carpeta, $archivo_principal, $imagen_preview, $invitacion_ejemplo_id]);
+    $stmt->execute($params);
+    // --- FIN DE LA LÓGICA DINÁMICA ---
 
     header("Location: plantillas.php");
     exit;

@@ -1,274 +1,391 @@
-// Galería Gótica con Rotación Automática
-class GaleriaGotica {
-    constructor(imagenes, contenedor = 'galeria-grid') {
-        this.imagenes = imagenes || [];
-        this.contenedor = document.getElementById(contenedor);
+class ElegantGallery {
+    constructor(images, containerId = 'galeria-grid') {
+        this.images = images || [];
+        this.container = document.getElementById(containerId);
+        this.modal = document.getElementById('galeria-modal');
+        this.modalImage = document.getElementById('modal-image');
+        this.counterText = document.getElementById('modal-counter-text');
         
-        if (!this.contenedor || this.imagenes.length === 0) {
-            console.log('Galería gótica: Sin contenedor o imágenes');
+        if (!this.container || this.images.length === 0) {
+            console.warn('ElegantGallery: Container not found or no images provided');
             return;
         }
         
-        this.imagenesPorPagina = this.calcularImagenesPorPagina();
-        this.paginaActual = 0;
-        this.totalPaginas = Math.max(1, Math.ceil(this.imagenes.length / this.imagenesPorPagina));
-        this.autoRotacion = null;
-        this.tiempoRotacion = 5000; // 5 segundos
-        this.elementosMinimos = Math.max(this.imagenesPorPagina, 6);
+        this.currentIndex = 0;
+        this.isModalOpen = false;
+        this.touchStartX = 0;
+        this.touchEndX = 0;
+        this.isMobile = window.innerWidth < 768;
         
-        console.log(`Galería gótica iniciada: ${this.imagenes.length} imágenes`);
+        // Intersection Observer para lazy loading (solo desktop)
+        if (!this.isMobile) {
+            this.observer = new IntersectionObserver(
+                this.handleIntersection.bind(this),
+                { rootMargin: '50px' }
+            );
+        }
         
         this.init();
     }
     
-    calcularImagenesPorPagina() {
-        const width = window.innerWidth;
-        if (width < 480) return 4;
-        if (width < 768) return 6;
-        if (width < 1200) return 8;
-        return 9;
-    }
-    
-    getImagenCiclica(indice) {
-        if (this.imagenes.length === 0) return null;
-        return this.imagenes[indice % this.imagenes.length];
-    }
-    
     init() {
-        this.crearEstructuraGotica();
-        this.mostrarPagina(0);
-        this.configurarEventos();
-        
-        if (this.imagenes.length > this.imagenesPorPagina) {
-            setTimeout(() => this.iniciarAutoRotacion(), 2000);
-        }
-        
-        this.configurarResponsive();
-    }
-    
-    crearEstructuraGotica() {
-        if (!this.contenedor) return;
-        
-        this.contenedor.innerHTML = '';
-        
-        for (let i = 0; i < this.elementosMinimos; i++) {
-            const item = document.createElement('div');
-            item.className = 'galeria-item loading';
-            item.style.setProperty('--item-delay', i);
-            
-            item.innerHTML = `
-                <div class="galeria-overlay">
-                    <div class="galeria-icon">◊</div>
-                </div>
-                <img src="" alt="" loading="lazy" />
-                <div class="image-overlay"></div>
-            `;
-            
-            this.contenedor.appendChild(item);
+        this.createGalleryItems();
+        this.bindEvents();
+        if (!this.isMobile) {
+            this.preloadFirstImages();
+        } else {
+            // En móvil, cargar todas las imágenes para el carrusel
+            this.loadAllImages();
         }
     }
     
-    mostrarPagina(numeroPagina) {
-        if (!this.contenedor || this.imagenes.length === 0) return;
+    createGalleryItems() {
+        const fragment = document.createDocumentFragment();
         
-        const items = this.contenedor.querySelectorAll('.galeria-item');
+        // Para móvil: repetir las imágenes 3 veces para efecto infinito
+        const imagesToRender = this.isMobile ? 
+            [...this.images, ...this.images, ...this.images] : 
+            this.images;
         
-        // Animar salida
-        items.forEach((item, index) => {
-            const img = item.querySelector('img');
-            item.classList.add('loading');
+        imagesToRender.forEach((src, index) => {
+            const originalIndex = this.isMobile ? index % this.images.length : index;
+            const item = this.createGalleryItem(src, originalIndex, index);
+            fragment.appendChild(item);
             
-            setTimeout(() => {
-                if (img) {
-                    img.style.opacity = '0';
-                    img.style.transform = 'scale(0.9)';
-                }
-            }, index * 30);
+            // Stagger animation solo en desktop
+            if (!this.isMobile) {
+                setTimeout(() => {
+                    item.style.animationDelay = `${index * 0.1}s`;
+                }, 50);
+            }
         });
         
-        // Cambiar contenido
-        setTimeout(() => {
-            items.forEach((item, index) => {
-                const img = item.querySelector('img');
-                const indiceImagen = numeroPagina * this.imagenesPorPagina + index;
-                const imagenSrc = this.getImagenCiclica(indiceImagen);
+        this.container.appendChild(fragment);
+    }
+    
+    createGalleryItem(src, originalIndex, renderIndex) {
+        const item = document.createElement('div');
+        item.className = this.isMobile ? 'galeria-item' : 'galeria-item loading';
+        item.setAttribute('role', 'gridcell');
+        item.setAttribute('tabindex', '0');
+        item.setAttribute('data-index', originalIndex);
+        item.setAttribute('data-render-index', renderIndex);
+        
+        const img = document.createElement('img');
+        img.className = 'galeria-image';
+        img.alt = `Momento especial ${originalIndex + 1}`;
+        
+        // En móvil, cargar imagen inmediatamente
+        if (this.isMobile) {
+            img.src = src;
+            img.loading = 'eager';
+        } else {
+            img.setAttribute('data-src', src);
+            img.loading = 'lazy';
+        }
+        
+        const overlay = document.createElement('div');
+        overlay.className = 'galeria-overlay';
+        overlay.setAttribute('aria-hidden', 'true');
+        
+        const zoomIcon = document.createElement('div');
+        zoomIcon.className = 'galeria-zoom-icon';
+        zoomIcon.innerHTML = '⊕';
+        
+        overlay.appendChild(zoomIcon);
+        item.appendChild(img);
+        item.appendChild(overlay);
+        
+        // Observe for lazy loading solo en desktop
+        if (!this.isMobile && this.observer) {
+            this.observer.observe(item);
+        }
+        
+        return item;
+    }
+    
+    loadAllImages() {
+        const items = this.container.querySelectorAll('.galeria-item');
+        items.forEach(item => {
+            const img = item.querySelector('.galeria-image');
+            const src = img.getAttribute('data-src');
+            if (src) {
+                this.loadImage(img, item);
+            }
+        });
+    }
+    
+    handleIntersection(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const item = entry.target;
+                const img = item.querySelector('.galeria-image');
+                const src = img.getAttribute('data-src');
                 
-                if (img && imagenSrc) {
-                    img.src = imagenSrc;
-                    img.alt = `Momento especial ${(indiceImagen % this.imagenes.length) + 1}`;
-                    
-                    img.onload = () => {
-                        item.classList.remove('loading');
-                        item.classList.add('loaded');
-                        img.style.opacity = '1';
-                        img.style.transform = 'scale(1)';
-                    };
-                    
-                    img.onerror = () => {
-                        console.error('Error cargando imagen:', imagenSrc);
-                        if (this.imagenes[0] && img.src !== this.imagenes[0]) {
-                            img.src = this.imagenes[0];
-                        }
-                    };
-                    
-                    // Hacer clickeable
-                    item.onclick = () => this.abrirModal(imagenSrc);
-                    item.style.cursor = 'pointer';
-                    
-                    // Animación de entrada con delay
-                    setTimeout(() => {
-                        if (img && item.classList.contains('loaded')) {
-                            img.style.opacity = '1';
-                            img.style.transform = 'scale(1)';
-                        }
-                    }, index * 80);
+                if (src && !img.src) {
+                    this.loadImage(img, item);
+                    this.observer.unobserve(item);
                 }
-            });
-        }, 400);
-        
-        this.paginaActual = numeroPagina;
+            }
+        });
     }
     
-    abrirModal(imagenSrc) {
-        // Crear modal gótico si no existe
-        let modal = document.getElementById('galeria-modal');
-        if (!modal) {
-            modal = document.createElement('div');
-            modal.id = 'galeria-modal';
-            modal.className = 'galeria-modal';
-            modal.innerHTML = `
-                <img src="" alt="Imagen ampliada" id="modal-imagen">
-                <button class="galeria-close">&times;</button>
-            `;
-            document.body.appendChild(modal);
-            
-            // Eventos del modal
-            modal.querySelector('.galeria-close').onclick = () => this.cerrarModal();
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) this.cerrarModal();
-            });
-            
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && modal.classList.contains('active')) {
-                    this.cerrarModal();
-                }
-            });
-        }
+    loadImage(img, item) {
+        const src = img.getAttribute('data-src');
         
-        const modalImg = modal.querySelector('#modal-imagen');
-        if (modalImg) {
-            modalImg.src = imagenSrc;
-            modalImg.alt = 'Imagen ampliada';
-        }
+        img.addEventListener('load', () => {
+            item.classList.remove('loading');
+            img.style.opacity = '1';
+        }, { once: true });
         
-        modal.classList.add('active');
-        this.pausarAutoRotacion();
+        img.addEventListener('error', () => {
+            item.classList.remove('loading');
+            item.classList.add('error');
+            console.error(`Failed to load image: ${src}`);
+        }, { once: true });
+        
+        img.src = src;
+    }
+    
+    preloadFirstImages() {
+        // Solo para desktop
+        const firstItems = this.container.querySelectorAll('.galeria-item:nth-child(-n+4)');
+        firstItems.forEach(item => {
+            const img = item.querySelector('.galeria-image');
+            const src = img.getAttribute('data-src');
+            if (src) {
+                this.loadImage(img, item);
+            }
+        });
+    }
+
+    // Agregar después del método bindEvents()
+    handleGalleryKeydown(e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            const item = e.target.closest('.galeria-item');
+            if (item) {
+                const index = parseInt(item.getAttribute('data-index'));
+                this.openModal(index);
+            }
+        }
+    }
+
+    handleModalClick(e) {
+        // Cerrar al hacer clic en el backdrop
+        if (e.target.classList.contains('modal-backdrop') || 
+            e.target.classList.contains('galeria-modal')) {
+            this.closeModal();
+        }
+    }
+
+    handleModalKeydown(e) {
+        if (!this.isModalOpen) return;
+        
+        switch(e.key) {
+            case 'Escape':
+                e.preventDefault();
+                this.closeModal();
+                break;
+            case 'ArrowLeft':
+                e.preventDefault();
+                this.navigateModal(-1);
+                break;
+            case 'ArrowRight':
+                e.preventDefault();
+                this.navigateModal(1);
+                break;
+        }
+    }
+
+    handleTouchStart(e) {
+        this.touchStartX = e.touches[0].clientX;
+    }
+
+    handleTouchEnd(e) {
+        this.touchEndX = e.changedTouches[0].clientX;
+        const diffX = this.touchStartX - this.touchEndX;
+        
+        // Swipe threshold
+        if (Math.abs(diffX) > 50) {
+            if (diffX > 0) {
+                // Swipe left - next image
+                this.navigateModal(1);
+            } else {
+                // Swipe right - previous image
+                this.navigateModal(-1);
+            }
+        }
+    }
+    
+    bindEvents() {
+        // Eventos de galería
+        this.container.addEventListener('click', this.handleGalleryClick.bind(this));
+        this.container.addEventListener('keydown', this.handleGalleryKeydown.bind(this));
+        
+        // Eventos de modal
+        this.modal?.addEventListener('click', this.handleModalClick.bind(this));
+        document.addEventListener('keydown', this.handleModalKeydown.bind(this));
+        
+        // Touch events para swipe
+        this.modal?.addEventListener('touchstart', this.handleTouchStart.bind(this), { passive: true });
+        this.modal?.addEventListener('touchend', this.handleTouchEnd.bind(this), { passive: true });
+        
+        // Navegación del modal
+        const prevBtn = this.modal?.querySelector('.modal-prev');
+        const nextBtn = this.modal?.querySelector('.modal-next');
+        const closeBtn = this.modal?.querySelector('.modal-close');
+        
+        prevBtn?.addEventListener('click', () => this.navigateModal(-1));
+        nextBtn?.addEventListener('click', () => this.navigateModal(1));
+        closeBtn?.addEventListener('click', () => this.closeModal());
+        
+        // Resize observer para responsive
+        if (window.ResizeObserver) {
+            const resizeObserver = new ResizeObserver(
+                this.debounce(this.handleResize.bind(this), 300)
+            );
+            resizeObserver.observe(this.container);
+        }
+    }
+    
+    handleGalleryClick(e) {
+        const item = e.target.closest('.galeria-item');
+        if (item) {
+            const index = parseInt(item.getAttribute('data-index'));
+            this.openModal(index);
+        }
+    }
+    
+    handleResize() {
+        const wasMobile = this.isMobile;
+        this.isMobile = window.innerWidth < 768;
+        
+        // Si cambió de móvil a desktop o viceversa, recrear galería
+        if (wasMobile !== this.isMobile) {
+            this.destroy();
+            this.init();
+        }
+    }
+    
+    openModal(index) {
+        if (!this.modal || !this.images[index]) return;
+        
+        this.currentIndex = index;
+        this.isModalOpen = true;
+        
+        // Set image
+        this.modalImage.src = this.images[index];
+        this.modalImage.alt = `Momento especial ${index + 1}`;
+        
+        // Update counter
+        this.updateCounter();
+        
+        // Show modal
+        this.modal.setAttribute('aria-hidden', 'false');
         document.body.style.overflow = 'hidden';
-    }
-    
-    cerrarModal() {
-        const modal = document.getElementById('galeria-modal');
-        if (modal) {
-            modal.classList.remove('active');
-            document.body.style.overflow = '';
-            this.iniciarAutoRotacion();
-        }
-    }
-    
-    siguientePagina() {
-        const siguiente = (this.paginaActual + 1) % Math.max(1, Math.ceil(this.imagenes.length / this.imagenesPorPagina));
-        this.mostrarPagina(siguiente);
-    }
-    
-    configurarEventos() {
-        if (this.contenedor) {
-            this.contenedor.addEventListener('mouseenter', () => {
-                this.pausarAutoRotacion();
-            });
-            
-            this.contenedor.addEventListener('mouseleave', () => {
-                if (!document.querySelector('.galeria-modal.active')) {
-                    this.iniciarAutoRotacion();
-                }
-            });
-        }
         
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden) {
-                this.pausarAutoRotacion();
-            } else if (!document.querySelector('.galeria-modal.active')) {
-                this.iniciarAutoRotacion();
-            }
+        // Focus management
+        const closeBtn = this.modal.querySelector('.modal-close');
+        setTimeout(() => closeBtn?.focus(), 100);
+        
+        // Preload adjacent images
+        this.preloadAdjacentImages(index);
+    }
+    
+    closeModal() {
+        if (!this.modal) return;
+        
+        this.isModalOpen = false;
+        this.modal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+        
+        // Return focus to gallery item
+        const galleryItem = this.container.querySelector(`[data-index="${this.currentIndex}"]`);
+        setTimeout(() => galleryItem?.focus(), 100);
+    }
+    
+    navigateModal(direction) {
+        const newIndex = this.currentIndex + direction;
+        
+        if (newIndex >= 0 && newIndex < this.images.length) {
+            this.currentIndex = newIndex;
+            this.modalImage.src = this.images[newIndex];
+            this.modalImage.alt = `Momento especial ${newIndex + 1}`;
+            this.updateCounter();
+            this.preloadAdjacentImages(newIndex);
+        }
+    }
+    
+    updateCounter() {
+        if (this.counterText) {
+            this.counterText.textContent = `${this.currentIndex + 1} de ${this.images.length}`;
+        }
+    }
+    
+    preloadAdjacentImages(index) {
+        const preloadIndexes = [index - 1, index + 1].filter(i => 
+            i >= 0 && i < this.images.length
+        );
+        
+        preloadIndexes.forEach(i => {
+            const img = new Image();
+            img.src = this.images[i];
         });
     }
     
-    configurarResponsive() {
-        let resizeTimeout;
-        window.addEventListener('resize', () => {
-            clearTimeout(resizeTimeout);
-            resizeTimeout = setTimeout(() => {
-                const nuevasImagenes = this.calcularImagenesPorPagina();
-                if (nuevasImagenes !== this.imagenesPorPagina) {
-                    this.imagenesPorPagina = nuevasImagenes;
-                    this.elementosMinimos = Math.max(nuevasImagenes, 6);
-                    this.totalPaginas = Math.max(1, Math.ceil(this.imagenes.length / this.imagenesPorPagina));
-                    this.paginaActual = 0;
-                    this.crearEstructuraGotica();
-                    this.mostrarPagina(0);
-                    this.reiniciarAutoRotacion();
-                }
-            }, 300);
-        });
+    // Utility function
+    debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
     }
     
-    iniciarAutoRotacion() {
-        if (this.imagenes.length <= this.imagenesPorPagina) return;
+    
+    // Public methods
+    destroy() {
+        this.observer?.disconnect();
+        this.closeModal();
+        if (this.container) {
+            this.container.innerHTML = '';
+        }
+    }
+    
+    addImages(newImages) {
+        const startIndex = this.images.length;
+        this.images.push(...newImages);
         
-        this.pausarAutoRotacion();
-        this.autoRotacion = setInterval(() => {
-            if (!document.querySelector('.galeria-modal.active')) {
-                this.siguientePagina();
-            }
-        }, this.tiempoRotacion);
-    }
-    
-    pausarAutoRotacion() {
-        if (this.autoRotacion) {
-            clearInterval(this.autoRotacion);
-            this.autoRotacion = null;
-        }
-    }
-    
-    reiniciarAutoRotacion() {
-        this.pausarAutoRotacion();
-        if (!document.querySelector('.galeria-modal.active') && this.imagenes.length > this.imagenesPorPagina) {
-            setTimeout(() => this.iniciarAutoRotacion(), 1000);
-        }
-    }
-    
-    destruir() {
-        this.pausarAutoRotacion();
-        if (this.contenedor) {
-            this.contenedor.innerHTML = '';
-        }
-        const modal = document.getElementById('galeria-modal');
-        if (modal) {
-            modal.remove();
+        // Recrear toda la galería para mantener el patrón del carrusel
+        if (this.isMobile) {
+            this.destroy();
+            this.init();
+        } else {
+            // En desktop, solo agregar las nuevas
+            const fragment = document.createDocumentFragment();
+            newImages.forEach((src, i) => {
+                const item = this.createGalleryItem(src, startIndex + i, startIndex + i);
+                fragment.appendChild(item);
+            });
+            this.container.appendChild(fragment);
         }
     }
 }
 
-// Inicialización
-document.addEventListener('DOMContentLoaded', function() {
-    if (typeof galeriaImagenes !== 'undefined' && galeriaImagenes.length > 0) {
-        setTimeout(() => {
-            window.galeriaGotica = new GaleriaGotica(galeriaImagenes);
-        }, 200);
+// Inicialización automática
+document.addEventListener('DOMContentLoaded', () => {
+    // Verificar si existen las imágenes de galería
+    if (typeof galeriaImagenes !== 'undefined' && Array.isArray(galeriaImagenes) && galeriaImagenes.length > 0) {
+        window.elegantGallery = new ElegantGallery(galeriaImagenes);
     }
 });
 
+// Cleanup
 window.addEventListener('beforeunload', () => {
-    if (window.galeriaGotica) {
-        window.galeriaGotica.destruir();
-    }
+    window.elegantGallery?.destroy();
 });

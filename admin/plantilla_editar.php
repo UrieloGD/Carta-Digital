@@ -17,12 +17,6 @@ if (!$plantilla) {
     exit("Plantilla no encontrada");
 }
 
-// Obtener invitaciones disponibles para usar como ejemplo
-$invitaciones_query = "SELECT id, nombres_novios, slug FROM invitaciones ORDER BY nombres_novios ASC";
-$invitaciones_stmt = $db->prepare($invitaciones_query);
-$invitaciones_stmt->execute();
-$invitaciones = $invitaciones_stmt->fetchAll(PDO::FETCH_ASSOC);
-
 // Función para limpiar rutas de imagen
 function limpiarRutaImagen($ruta) {
     if (empty($ruta)) return '';
@@ -37,17 +31,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $archivo_principal = trim($_POST['archivo_principal']);
     $imagen_preview = trim($_POST['imagen_preview']);
     $activa = isset($_POST['activa']) ? 1 : 0;
-    $invitacion_ejemplo_id = !empty($_POST['invitacion_ejemplo_id']) ? $_POST['invitacion_ejemplo_id'] : null;
     
     $imagen_preview = limpiarRutaImagen($imagen_preview);
     
     if (empty($nombre) || empty($carpeta) || empty($archivo_principal)) {
         $error = "Los campos Nombre, Carpeta y Archivo PHP son obligatorios.";
     } else {
-        $update_query = "UPDATE plantillas SET nombre = ?, descripcion = ?, carpeta = ?, archivo_principal = ?, imagen_preview = ?, activa = ?, invitacion_ejemplo_id = ? WHERE id = ?";
+        // SE CORRIGIÓ LA CONSULTA SQL PARA ELIMINAR LA COLUMNA INEXISTENTE
+        $update_query = "UPDATE plantillas SET nombre = ?, descripcion = ?, carpeta = ?, archivo_principal = ?, imagen_preview = ?, activa = ? WHERE id = ?";
         $update_stmt = $db->prepare($update_query);
         
-        if ($update_stmt->execute([$nombre, $descripcion, $carpeta, $archivo_principal, $imagen_preview, $activa, $invitacion_ejemplo_id, $id])) {
+        // SE CORRIGIÓ EL ARRAY DE EXECUTE PARA QUE COINCIDA CON LA CONSULTA
+        if ($update_stmt->execute([$nombre, $descripcion, $carpeta, $archivo_principal, $imagen_preview, $activa, $id])) {
             $success = "Plantilla actualizada correctamente.";
             // Refrescar datos de la plantilla
             $stmt->execute([$id]);
@@ -65,16 +60,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Plantilla - <?php echo htmlspecialchars($plantilla['nombre']); ?></title>
-    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="./css/plantilla_editar.css">
-    <!-- Icon page -->
     <link rel="shortcut icon" href="./../images/logo.webp" />
 </head>
 <body>
-    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">
@@ -91,7 +82,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </nav>
 
     <div class="container py-4">
-        <!-- Mensajes de estado -->
         <?php if (isset($success)): ?>
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 <i class="bi bi-check-circle me-2"></i>
@@ -109,7 +99,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php endif; ?>
 
         <form method="POST" class="needs-validation" novalidate>
-            <!-- Información de la Plantilla -->
             <div class="form-section">
                 <h3 class="section-title">
                     <i class="bi bi-info-circle me-2"></i>
@@ -226,56 +215,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="form-text">Ejemplo: img/preview.png (relativo a la carpeta de la plantilla)</div>
                 </div>
 
-                <!-- NUEVO CAMPO: Invitación Ejemplo -->
-                <div class="mb-3">
-                    <label for="invitacion_ejemplo_id" class="form-label">
-                        <i class="bi bi-eye me-1"></i>
-                        Invitación de Ejemplo
-                    </label>
-                    <select class="form-select" 
-                            id="invitacion_ejemplo_id" 
-                            name="invitacion_ejemplo_id">
-                        <option value="">-- Seleccionar invitación ejemplo (opcional) --</option>
-                        <?php foreach ($invitaciones as $invitacion): ?>
-                            <option value="<?= $invitacion['id'] ?>" 
-                                    <?= ($plantilla['invitacion_ejemplo_id'] == $invitacion['id']) ? 'selected' : '' ?>>
-                                <?= htmlspecialchars($invitacion['nombres_novios']) ?> 
-                                (<?= htmlspecialchars($invitacion['slug']) ?>)
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                    <div class="form-text">
-                        <i class="bi bi-info-circle me-1"></i>
-                        Selecciona una invitación existente que sirva como ejemplo para mostrar esta plantilla. 
-                        Los usuarios podrán ver esta invitación cuando hagan clic en "Ver Plantilla".
-                        <?php if (!empty($plantilla['invitacion_ejemplo_id'])): ?>
-                            <br><strong>Ejemplo actual:</strong> 
-                            <?php 
-                            $ejemplo_actual = array_filter($invitaciones, function($inv) use ($plantilla) {
-                                return $inv['id'] == $plantilla['invitacion_ejemplo_id'];
-                            });
-                            if (!empty($ejemplo_actual)) {
-                                $ejemplo = reset($ejemplo_actual);
-                                echo htmlspecialchars($ejemplo['nombres_novios']) . ' (' . htmlspecialchars($ejemplo['slug']) . ')';
-                            } else {
-                                echo '<span class="text-warning">Invitación no encontrada</span>';
-                            }
-                            ?>
-                        <?php endif; ?>
-                    </div>
                 </div>
 
-                <?php if (empty($invitaciones)): ?>
-                <div class="alert alert-info" role="alert">
-                    <i class="bi bi-info-circle me-2"></i>
-                    <strong>Nota:</strong> No hay invitaciones creadas aún. 
-                    <a href="functions/crear.php" class="alert-link">Crea una invitación</a> 
-                    primero para poder usarla como ejemplo.
-                </div>
-                <?php endif; ?>
-            </div>
-
-            <!-- Preview de la imagen actual -->
             <?php if (!empty($plantilla['imagen_preview'])): ?>
                 <?php 
                 $imagen_preview = ltrim($plantilla['imagen_preview'], './');
@@ -299,7 +240,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
             <?php endif; ?>
 
-            <!-- Botones de acción -->
             <div class="form-section">
                 <div class="d-flex gap-2 justify-content-end">
                     <a href="plantillas.php" class="btn btn-outline-secondary btn-lg">
@@ -315,7 +255,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </form>
     </div>
 
-    <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
@@ -359,16 +298,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 badge.className = 'badge bg-secondary';
                 icon.className = 'bi bi-pause-circle me-1';
                 badge.innerHTML = '<i class="bi bi-pause-circle me-1"></i>Inactiva';
-            }
-        });
-
-        // Mejorar el selector de invitación con información adicional
-        document.getElementById('invitacion_ejemplo_id').addEventListener('change', function() {
-            if (this.value) {
-                const selectedOption = this.options[this.selectedIndex];
-                const slug = selectedOption.text.match(/\(([^)]+)\)$/)[1];
-                console.log('Invitación seleccionada:', selectedOption.text);
-                console.log('URL que se usará:', `/invitacion/${slug}`);
             }
         });
     </script>
