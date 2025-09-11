@@ -1,9 +1,13 @@
 /* Plantilla Elegante Minimalista - Estilos Globales Mejorados */
 :root {
     /* Paleta de colores elegante oscuro */
+    /* Tonos originales
     --bg-dark: #0a0a0a;
     --bg-dark-light: #1a1a1a;
-    --bg-card: #151515;
+    --bg-card: #151515; */
+    --bg-dark: #131313;
+    --bg-dark-light: #202020;
+    --bg-card: #363636;
     --accent-beige: #d4c4a8;
     --accent-cream: #f5f0e8;
     --accent-champagne: #f7e7ce;
