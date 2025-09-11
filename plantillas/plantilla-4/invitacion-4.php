@@ -788,7 +788,7 @@ try {
                             <?php endif; ?>
                         </div>
                         
-                        <div class="color-palette">
+                        <!-- <div class="color-palette">
                             <div class="palette-title">Paleta recomendada</div>
                             <div class="color-dots">
                                 <div class="color-dot" style="background-color: #8B7355;" title="Marrón elegante"></div>
@@ -796,7 +796,7 @@ try {
                                 <div class="color-dot" style="background-color: #2C3E50;" title="Azul marino"></div>
                                 <div class="color-dot" style="background-color: #5D4E75;" title="Ciruela"></div>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
                 
@@ -821,7 +821,7 @@ try {
                             <?php endif; ?>
                         </div>
                         
-                        <div class="color-palette">
+                        <!-- <div class="color-palette">
                             <div class="palette-title">Paleta recomendada</div>
                             <div class="color-dots">
                                 <div class="color-dot" style="background-color: #1C1C1C;" title="Negro clásico"></div>
@@ -829,14 +829,8 @@ try {
                                 <div class="color-dot" style="background-color: #4A4A4A;" title="Gris carbón"></div>
                                 <div class="color-dot" style="background-color: #8B7355;" title="Marrón elegante"></div>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
-                </div>
-            </div>
-            
-            <div class="dresscode-footer" data-animate="fadeInUp" data-delay="0.6s">
-                <div class="dresscode-note">
-                    <p class="note-text">La elegancia reside en la sobriedad. Tu presencia es el verdadero regalo.</p>
                 </div>
             </div>
         </div>
