@@ -931,7 +931,7 @@ try {
                             <div class="detail-icon">📅</div>
                             <div class="detail-content">
                                 <span class="detail-label">Fecha límite</span>
-                                <span class="detail-value"><?php echo fechaEnEspanol(date('Y-m-d', strtotime($invitacion['fecha_evento'] . ' -7 days'))); ?></span>
+                                <span class="detail-value"><?php echo fechaEnEspanol(date('Y-m-d', strtotime($invitacion['fecha_evento'] . ' -16 days'))); ?></span>
                             </div>
                         </div>
                         
