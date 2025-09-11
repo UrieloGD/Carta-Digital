@@ -28,7 +28,7 @@
     background-position: center;
     background-repeat: no-repeat;
     background-attachment: fixed;
-    filter: grayscale(20%) brightness(0.5) contrast(1.3);
+    filter: grayscale(0%) brightness(0.8) contrast(1.4);
     transition: var(--transition-smooth);
     z-index: 1;
 }
@@ -39,11 +39,12 @@
     left: 0;
     width: 100%;
     height: 100%;
+    /* Overlay muy sutil para mantener legibilidad del texto */
     background: linear-gradient(
         135deg,
-        rgba(10, 10, 10, 0.6) 0%,
-        rgba(10, 10, 10, 0.4) 50%,
-        rgba(10, 10, 10, 0.7) 100%
+        rgba(10, 10, 10, 0.3) 0%,
+        rgba(10, 10, 10, 0.2) 50%,
+        rgba(10, 10, 10, 0.4) 100%
     );
     z-index: 2;
 }
@@ -61,16 +62,17 @@
     max-width: 600px;
     margin: 0 auto;
     padding: 2rem;
-    background: rgba(21, 21, 21, 0.4);
+    /* Fondo más opaco para el texto para mantener legibilidad */
+    background: rgba(21, 21, 21, 0.7);
     border: 1px solid var(--border-subtle);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
     transition: var(--transition-smooth);
 }
 
 .transition-text:hover {
-    background: rgba(21, 21, 21, 0.6);
-    border-color: rgba(212, 196, 168, 0.2);
+    background: rgba(21, 21, 21, 0.8);
+    border-color: rgba(212, 196, 168, 0.3);
     transform: translateY(-5px);
     box-shadow: var(--shadow-card);
 }
@@ -146,7 +148,7 @@
 /* Efecto parallax sutil */
 .transition-image:hover .transition-background {
     transform: scale(1.02);
-    filter: grayscale(15%) brightness(0.6) contrast(1.4);
+    filter: grayscale(0%) brightness(0.9) contrast(1.5);
 }
 
 /* Líneas decorativas en los bordes */
@@ -291,14 +293,14 @@
     .transition-overlay {
         background: linear-gradient(
             135deg,
-            rgba(0, 0, 0, 0.9) 0%,
-            rgba(0, 0, 0, 0.8) 50%,
-            rgba(0, 0, 0, 0.95) 100%
+            rgba(0, 0, 0, 0.4) 0%,
+            rgba(0, 0, 0, 0.3) 50%,
+            rgba(0, 0, 0, 0.5) 100%
         );
     }
     
     .transition-text {
-        background: rgba(0, 0, 0, 0.8);
+        background: rgba(0, 0, 0, 0.9);
         border-color: var(--accent-beige);
     }
 }
