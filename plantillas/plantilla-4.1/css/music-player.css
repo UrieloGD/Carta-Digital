@@ -1,0 +1,381 @@
+/* Music Player - Plantilla Elegante Minimalista */
+.music-controls {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 1000;
+    transition: var(--transition-smooth);
+    font-family: var(--font-sans);
+}
+
+.music-player-widget {
+    background: rgba(21, 21, 21, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--border-radius);
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-width: 320px;
+    box-shadow: var(--shadow-card);
+    transition: var(--transition-smooth);
+}
+
+.music-player-widget:hover {
+    background: rgba(26, 26, 26, 0.98);
+    border-color: rgba(212, 196, 168, 0.2);
+    box-shadow: var(--shadow-soft);
+    transform: translateY(-2px);
+}
+
+/* Botón de reproducir/pausar */
+.music-toggle {
+    background: transparent;
+    border: 1px solid var(--accent-beige);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    color: var(--accent-beige);
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+
+.music-toggle:hover {
+    background: var(--accent-beige);
+    color: var(--bg-dark);
+    transform: scale(1.1);
+    box-shadow: 0 0 15px rgba(212, 196, 168, 0.3);
+}
+
+.music-toggle .play-icon {
+    transition: var(--transition-smooth);
+}
+
+/* Información de la música */
+.music-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.music-title {
+    font-family: var(--font-serif);
+    font-size: 0.9rem;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
+}
+
+.music-status {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Control de volumen */
+.music-volume {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.volume-icon {
+    font-size: 1rem;
+    color: var(--accent-beige);
+    opacity: 0.7;
+    transition: var(--transition-smooth);
+}
+
+.volume-slider {
+    width: 60px;
+    height: 2px;
+    background: rgba(212, 196, 168, 0.2);
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+    transition: var(--transition-smooth);
+}
+
+.volume-slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--accent-beige);
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(212, 196, 168, 0.3);
+    transition: var(--transition-smooth);
+}
+
+.volume-slider::-webkit-slider-thumb:hover {
+    background: var(--accent-cream);
+    transform: scale(1.2);
+    box-shadow: 0 3px 12px rgba(212, 196, 168, 0.4);
+}
+
+.volume-slider::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--accent-beige);
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 2px 8px rgba(212, 196, 168, 0.3);
+}
+
+.volume-slider:hover {
+    background: rgba(212, 196, 168, 0.3);
+}
+
+/* Botón de minimizar */
+.music-minimize {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.2rem;
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-smooth);
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.music-minimize:hover {
+    color: var(--accent-beige);
+    background: rgba(212, 196, 168, 0.1);
+    transform: scale(1.1);
+}
+
+/* Estado minimizado */
+.music-controls.minimized .music-player-widget {
+    min-width: auto;
+    width: 56px;
+    height: 56px;
+    padding: 0;
+    border-radius: 50%;
+    justify-content: center;
+    background: rgba(21, 21, 21, 0.98);
+}
+
+.music-controls.minimized .music-info,
+.music-controls.minimized .music-volume,
+.music-controls.minimized .music-minimize {
+    display: none;
+}
+
+.music-controls.minimized .music-toggle {
+    border: none;
+    width: auto;
+    height: auto;
+    font-size: 1.1rem;
+}
+
+.music-controls.minimized .music-player-widget:hover {
+    background: rgba(26, 26, 26, 1);
+    box-shadow: 0 0 20px rgba(212, 196, 168, 0.2);
+}
+
+/* Animación de pulso para cuando está reproduciendo */
+@keyframes musicPulse {
+    0%, 100% {
+        box-shadow: var(--shadow-card);
+    }
+    50% {
+        box-shadow: var(--shadow-card), 0 0 20px rgba(212, 196, 168, 0.2);
+    }
+}
+
+.music-controls.playing .music-player-widget {
+    animation: musicPulse 3s ease-in-out infinite;
+}
+
+.music-controls.playing .volume-icon {
+    opacity: 1;
+    animation: volumeGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes volumeGlow {
+    0% {
+        opacity: 0.7;
+    }
+    100% {
+        opacity: 1;
+        text-shadow: 0 0 8px rgba(212, 196, 168, 0.4);
+    }
+}
+
+/* Línea decorativa sutil */
+.music-player-widget::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 20px;
+    right: 20px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent-beige), transparent);
+    opacity: 0.3;
+}
+
+.music-controls.minimized .music-player-widget::before {
+    display: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .music-controls {
+        bottom: 20px;
+        right: 20px;
+    }
+    
+    .music-player-widget {
+        min-width: 280px;
+        padding: 12px 16px;
+        gap: 12px;
+    }
+    
+    .music-toggle {
+        width: 36px;
+        height: 36px;
+        font-size: 0.8rem;
+    }
+    
+    .volume-slider {
+        width: 50px;
+    }
+    
+    .music-title {
+        font-size: 0.85rem;
+    }
+    
+    .music-status {
+        font-size: 0.7rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .music-controls {
+        bottom: 15px;
+        right: 15px;
+        left: 15px;
+    }
+    
+    .music-player-widget {
+        min-width: auto;
+        width: 100%;
+        padding: 10px 14px;
+        gap: 10px;
+    }
+    
+    .music-toggle {
+        width: 32px;
+        height: 32px;
+        font-size: 0.75rem;
+    }
+    
+    .volume-slider {
+        width: 40px;
+    }
+    
+    .music-title {
+        font-size: 0.8rem;
+    }
+    
+    .music-status {
+        font-size: 0.65rem;
+    }
+    
+    .music-controls.minimized {
+        right: 15px;
+        left: auto;
+    }
+    
+    .music-controls.minimized .music-player-widget {
+        width: 48px;
+        height: 48px;
+    }
+}
+
+/* Modo landscape en móviles */
+@media (max-height: 500px) and (orientation: landscape) {
+    .music-controls {
+        bottom: 10px;
+        right: 10px;
+    }
+    
+    .music-player-widget {
+        padding: 8px 12px;
+        gap: 8px;
+    }
+    
+    .music-toggle {
+        width: 28px;
+        height: 28px;
+    }
+}
+
+/* Estados de carga */
+.music-controls.loading .music-toggle {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.music-controls.loading .music-status::after {
+    content: '...';
+    animation: loadingDots 1.5s infinite;
+}
+
+@keyframes loadingDots {
+    0%, 20% {
+        color: var(--text-muted);
+        text-shadow: none;
+    }
+    40% {
+        color: var(--accent-beige);
+        text-shadow: 0 0 4px rgba(212, 196, 168, 0.3);
+    }
+    60%, 100% {
+        color: var(--text-muted);
+        text-shadow: none;
+    }
+}
+
+/* Tooltip elegante */
+.music-controls [title]:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: -35px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg-card);
+    color: var(--text-primary);
+    font-size: 0.75rem;
+    padding: 6px 12px;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-subtle);
+    white-space: nowrap;
+    z-index: 1001;
+    font-family: var(--font-sans);
+    font-weight: 300;
+    box-shadow: var(--shadow-card);
+}
