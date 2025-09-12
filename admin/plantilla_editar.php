@@ -6,6 +6,29 @@ $db = $database->getConnection();
 
 $id = $_GET['id'] ?? 0;
 
+// --- NUEVA LÓGICA: VERIFICAR SI LA COLUMNA invitacion_ejemplo_id EXISTE ---
+$invitacionEjemploColumnExists = false;
+try {
+    $check_column_query = "DESCRIBE plantillas invitacion_ejemplo_id";
+    $check_column_stmt = $db->query($check_column_query);
+    if ($check_column_stmt->fetch()) {
+        $invitacionEjemploColumnExists = true;
+    }
+} catch (PDOException $e) {
+    // La columna no existe, lo cual es esperado en algunos casos.
+    $invitacionEjemploColumnExists = false;
+}
+// --- FIN DE LA NUEVA LÓGICA ---
+
+// Solo obtenemos las invitaciones si la columna existe
+$invitaciones = [];
+if ($invitacionEjemploColumnExists) {
+    $invitaciones_query = "SELECT id, nombres_novios, slug FROM invitaciones ORDER BY nombres_novios ASC";
+    $invitaciones_stmt = $db->prepare($invitaciones_query);
+    $invitaciones_stmt->execute();
+    $invitaciones = $invitaciones_stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
 // Obtener datos de la plantilla
 $query = "SELECT * FROM plantillas WHERE id = ?";
 $stmt = $db->prepare($query);
@@ -37,12 +60,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($nombre) || empty($carpeta) || empty($archivo_principal)) {
         $error = "Los campos Nombre, Carpeta y Archivo PHP son obligatorios.";
     } else {
-        // SE CORRIGIÓ LA CONSULTA SQL PARA ELIMINAR LA COLUMNA INEXISTENTE
-        $update_query = "UPDATE plantillas SET nombre = ?, descripcion = ?, carpeta = ?, archivo_principal = ?, imagen_preview = ?, activa = ? WHERE id = ?";
+        // --- LÓGICA DINÁMICA PARA ACTUALIZAR ---
+        if ($invitacionEjemploColumnExists) {
+            $invitacion_ejemplo_id = !empty($_POST['invitacion_ejemplo_id']) ? $_POST['invitacion_ejemplo_id'] : null;
+            
+            $update_query = "UPDATE plantillas SET nombre = ?, descripcion = ?, carpeta = ?, archivo_principal = ?, imagen_preview = ?, activa = ?, invitacion_ejemplo_id = ? WHERE id = ?";
+            $params = [$nombre, $descripcion, $carpeta, $archivo_principal, $imagen_preview, $activa, $invitacion_ejemplo_id, $id];
+        } else {
+            $update_query = "UPDATE plantillas SET nombre = ?, descripcion = ?, carpeta = ?, archivo_principal = ?, imagen_preview = ?, activa = ? WHERE id = ?";
+            $params = [$nombre, $descripcion, $carpeta, $archivo_principal, $imagen_preview, $activa, $id];
+        }
+
         $update_stmt = $db->prepare($update_query);
         
-        // SE CORRIGIÓ EL ARRAY DE EXECUTE PARA QUE COINCIDA CON LA CONSULTA
-        if ($update_stmt->execute([$nombre, $descripcion, $carpeta, $archivo_principal, $imagen_preview, $activa, $id])) {
+        if ($update_stmt->execute($params)) {
             $success = "Plantilla actualizada correctamente.";
             // Refrescar datos de la plantilla
             $stmt->execute([$id]);
@@ -50,6 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             $error = "Error al actualizar la plantilla.";
         }
+        // --- FIN DE LA LÓGICA DINÁMICA ---
     }
 }
 ?>
@@ -215,7 +247,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="form-text">Ejemplo: img/preview.png (relativo a la carpeta de la plantilla)</div>
                 </div>
 
+                <!-- NUEVO CAMPO: Invitación Ejemplo (solo si la columna existe) -->
+                <?php if ($invitacionEjemploColumnExists): ?>
+                <div class="mb-3">
+                    <label for="invitacion_ejemplo_id" class="form-label">
+                        <i class="bi bi-eye me-1"></i>
+                        Invitación de Ejemplo
+                    </label>
+                    <select class="form-select" 
+                            id="invitacion_ejemplo_id" 
+                            name="invitacion_ejemplo_id">
+                        <option value="">-- Seleccionar invitación ejemplo (opcional) --</option>
+                        <?php foreach ($invitaciones as $invitacion): ?>
+                            <option value="<?= $invitacion['id'] ?>" 
+                                    <?= (isset($plantilla['invitacion_ejemplo_id']) && $plantilla['invitacion_ejemplo_id'] == $invitacion['id']) ? 'selected' : '' ?>>
+                                <?= htmlspecialchars($invitacion['nombres_novios']) ?> 
+                                (<?= htmlspecialchars($invitacion['slug']) ?>)
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                    <div class="form-text">
+                        <i class="bi bi-info-circle me-1"></i>
+                        Selecciona una invitación existente que sirva como ejemplo para mostrar esta plantilla. 
+                        Los usuarios podrán ver esta invitación cuando hagan clic en "Ver Plantilla".
+                    </div>
                 </div>
+
+                <?php if (empty($invitaciones)): ?>
+                <div class="alert alert-info" role="alert">
+                    <i class="bi bi-info-circle me-2"></i>
+                    <strong>Nota:</strong> No hay invitaciones creadas aún. 
+                    <a href="functions/crear.php" class="alert-link">Crea una invitación</a> 
+                    primero para poder usarla como ejemplo.
+                </div>
+                <?php endif; ?>
+                <?php endif; ?>
+
+            </div>
 
             <?php if (!empty($plantilla['imagen_preview'])): ?>
                 <?php 
@@ -300,6 +368,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 badge.innerHTML = '<i class="bi bi-pause-circle me-1"></i>Inactiva';
             }
         });
+
+        <?php if ($invitacionEjemploColumnExists): ?>
+        // Mejorar el selector de invitación con información adicional
+        document.getElementById('invitacion_ejemplo_id').addEventListener('change', function() {
+            if (this.value) {
+                const selectedOption = this.options[this.selectedIndex];
+                const match = selectedOption.text.match(/\(([^)]+)\)$/);
+                if (match) {
+                    const slug = match[1];
+                    console.log('Invitación seleccionada:', selectedOption.text);
+                    console.log('URL que se usará:', `/invitacion/${slug}`);
+                }
+            }
+        });
+        <?php endif; ?>
     </script>
 </body>
 </html>
