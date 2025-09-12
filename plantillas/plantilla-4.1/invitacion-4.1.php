@@ -125,8 +125,8 @@ if ($dresscode_info) {
     $descripcion_dresscode_hombres = $dresscode_info['descripcion_hombres'] ?? '';
     $descripcion_dresscode_mujeres = $dresscode_info['descripcion_mujeres'] ?? '';
 } else {
-    $img_dresscode_hombres = './plantillas/plantilla-4.1/img/dresscode-hombre.jpg';
-    $img_dresscode_mujeres = './plantillas/plantilla-4.1/img/dresscode-mujer.jpg';
+    $img_dresscode_hombres = './plantillas/plantilla-1/img/dresscode2.webp';
+    $img_dresscode_mujeres = './plantillas/plantilla-1/img/dresscode.webp';
     $descripcion_dresscode_hombres = '';
     $descripcion_dresscode_mujeres = '';
 }
@@ -224,7 +224,7 @@ try {
     <link href="https://fonts.googleapis.com/css2?family=Satisfy&display=swap" rel="stylesheet">
     
     <!-- Icon page -->
-    <link rel="shortcut icon" href="./../../images/logo.webp" />
+    <link rel="shortcut icon" href="./images/logo.webp" />
 </head>
 <body>
 
@@ -256,6 +256,57 @@ try {
     </div>
 </section>
 
+<?php if ($mostrar_contador): ?>
+<!-- Contador regresivo elegante minimalista -->
+<section class="contador" id="contador">
+    <div class="container">
+        <div class="contador-content">
+            <div class="contador-header">
+                <h2>Cuenta Regresiva</h2>
+                <div class="decorative-line"></div>
+                <p class="contador-subtitle">Hasta nuestro día especial</p>
+            </div>
+            
+            <div class="countdown-wrapper">
+                <div class="countdown-grid" id="countdown">
+                    <div class="time-unit">
+                        <div class="time-card">
+                            <div class="time-number" id="days">0</div>
+                            <div class="time-label">Días</div>
+                        </div>
+                    </div>
+                    
+                    <div class="time-unit">
+                        <div class="time-card">
+                            <div class="time-number" id="hours">0</div>
+                            <div class="time-label">Horas</div>
+                        </div>
+                    </div>
+                    
+                    <div class="time-unit">
+                        <div class="time-card">
+                            <div class="time-number" id="minutes">0</div>
+                            <div class="time-label">Minutos</div>
+                        </div>
+                    </div>
+                    
+                    <div class="time-unit">
+                        <div class="time-card">
+                            <div class="time-number" id="seconds">0</div>
+                            <div class="time-label">Segundos</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="countdown-message">
+                    <p class="script-text">Faltan muy pocos días para celebrar juntos</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<?php endif; ?>
+
 <!-- Sección Bienvenida Elegante Minimalista Mejorada -->
 <section class="bienvenida" id="bienvenida">
     <div class="container">
@@ -266,17 +317,17 @@ try {
             <div class="bienvenida-header">
                 <div class="header-ornament"></div>
                 <h2>Querida Familia y Amigos</h2>
-                <p class="header-subtitle">Les invitamos a ser testigos de nuestro amor</p>
+                <p class="header-subtitle">Les invitamos a ser testigos de nuestro amor.</p>
             </div>
             
             <div class="bienvenida-main">
                 <div class="bienvenida-text">
                     <div class="text-content">
-                        <p class="bienvenida-intro">Con el corazón rebosante de alegría y el alma llena de gratitud, les extendemos esta formal invitación para que nos acompañen en el momento más sagrado y trascendental de nuestras vidas.</p>
+                        <p class="bienvenida-intro">Porque juntos somos mejores, hemos decidido caminar de la mano para siempre</p>
                         
                         <div class="quote-decoration">
                             <span class="quote-mark">"</span>
-                            <p class="bienvenida-message">Su presencia, sus bendiciones y el amor que han depositado en nosotros a lo largo de los años, son los pilares que sostienen este sueño que hoy se hace realidad.</p>
+                            <p class="bienvenida-message">Queremos qye seab oarte de este día único en nuestras vidas.</p>
                             <span class="quote-mark quote-mark-end">"</span>
                         </div>
                     </div>
@@ -302,7 +353,9 @@ try {
 
                 <!-- Información de ceremonia destacada mejorada -->
                 <div class="bienvenida-ceremony">
-                    <div class="ceremony-ornament"></div>
+                    <div class="ceremony-ornament">
+                        <img src="./plantillas/plantilla-4.1/img/iconos/anillos-imagen.png" alt="Anillos de boda" class="ceremony-icon-img">
+                    </div>
                     
                     <div class="ceremony-main">
                         <div class="ceremony-date-container">
@@ -469,57 +522,6 @@ try {
     </div>
 </section>
 
-<?php if ($mostrar_contador): ?>
-<!-- Contador regresivo elegante minimalista -->
-<section class="contador" id="contador">
-    <div class="container">
-        <div class="contador-content">
-            <div class="contador-header">
-                <h2>Cuenta Regresiva</h2>
-                <div class="decorative-line"></div>
-                <p class="contador-subtitle">Hasta nuestro día especial</p>
-            </div>
-            
-            <div class="countdown-wrapper">
-                <div class="countdown-grid" id="countdown">
-                    <div class="time-unit">
-                        <div class="time-card">
-                            <div class="time-number" id="days">0</div>
-                            <div class="time-label">Días</div>
-                        </div>
-                    </div>
-                    
-                    <div class="time-unit">
-                        <div class="time-card">
-                            <div class="time-number" id="hours">0</div>
-                            <div class="time-label">Horas</div>
-                        </div>
-                    </div>
-                    
-                    <div class="time-unit">
-                        <div class="time-card">
-                            <div class="time-number" id="minutes">0</div>
-                            <div class="time-label">Minutos</div>
-                        </div>
-                    </div>
-                    
-                    <div class="time-unit">
-                        <div class="time-card">
-                            <div class="time-number" id="seconds">0</div>
-                            <div class="time-label">Segundos</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="countdown-message">
-                    <p class="script-text">Faltan muy pocos días para celebrar juntos</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-<?php endif; ?>
-
 <!-- Sección Ubicaciones Elegante Minimalista Mejorada -->
 <?php if (!empty($ubicaciones_result)): ?>
 <section class="ubicaciones" id="ubicaciones">
@@ -527,7 +529,9 @@ try {
         <div class="ubicaciones-content">
             <div class="ubicaciones-header">
                 <h2 class="section-title">Ubicacion</h2>
-                <div class="decorative-line"></div>
+                <div class="decorative-line">
+                    <span class="line-accent"></span>
+                </div>
                 <p class="section-subtitle">Lugares donde celebraremos nuestro amor</p>
             </div>
             
@@ -639,7 +643,9 @@ try {
         <div class="cronograma-content">
             <div class="cronograma-header">
                 <h2>Cronograma de la Celebración</h2>
-                <div class="decorative-line"></div>
+                <div class="decorative-line">
+                    <span class="line-accent"></span>
+                </div>
                 <p class="cronograma-subtitle">Momentos especiales que compartiremos</p>
             </div>
             
@@ -758,8 +764,10 @@ try {
         <div class="dresscode-content">
             <div class="dresscode-header">
                 <h2 class="section-title">Código de Vestimenta</h2>
-                <div class="decorative-line"></div>
-                <p class="section-subtitle">Elegancia que honre la solemnidad del momento</p>
+                <div class="decorative-line">
+                    <span class="line-accent"></span>
+                </div>
+                <p class="section-subtitle">Se solicita vestimenta rigurosamente formal para el evento.</p>
             </div>
             
             <div class="dresscode-description">
@@ -908,7 +916,9 @@ try {
         <div class="rsvp-content">
             <div class="rsvp-header">
                 <h2 class="section-title">Confirma tu Asistencia</h2>
-                <div class="decorative-line"></div>
+                <div class="decorative-line">
+                    <span class="line-accent"></span>
+                </div>
                 <p class="section-subtitle">Tu presencia hace que este día sea perfecto</p>
             </div>
             
@@ -931,7 +941,8 @@ try {
                             <div class="detail-icon">📅</div>
                             <div class="detail-content">
                                 <span class="detail-label">Fecha límite</span>
-                                <span class="detail-value"><?php echo fechaEnEspanol(date('Y-m-d', strtotime($invitacion['fecha_evento'] . ' -16 days'))); ?></span>
+                                <span class="detail-value"><?php echo fechaEnEspanol(date('Y-m-d', strtotime($invitacion['fecha_evento'] . ' -15 days'))); ?></span>
+                                <span class="detail-value">Queremos asegurarnos que tu lugar este reservado.</span>
                             </div>
                         </div>
                         
@@ -963,6 +974,13 @@ try {
                         <?php echo htmlspecialchars($mensaje_footer); ?>
                     </blockquote>
                     <cite class="quote-author">— <?php echo htmlspecialchars($firma_footer); ?></cite>
+                </div>
+
+                <!-- Imagen después de la firma -->
+                <div class="footer-ornament-container">
+                    <div class="footer-ceremony-ornament">
+                        <img src="./plantillas/plantilla-4.1/img/iconos/anillos-imagen.png" alt="Anillos de boda" class="footer-ceremony-icon-img">
+                    </div>
                 </div>
                 
                 <div class="footer-actions">
@@ -1074,7 +1092,6 @@ const galeriaImagenes = <?php echo json_encode($galeria); ?>;
 <script src="./plantillas/plantilla-4.1/js/contador.js?v=<?php echo filemtime('./plantillas/plantilla-4.1/js/contador.js'); ?>"></script>
 <script src="./plantillas/plantilla-4.1/js/compartir.js?v=<?php echo filemtime('./plantillas/plantilla-4.1/js/compartir.js'); ?>"></script>
 <script src="./plantillas/plantilla-4.1/js/rsvp.js?v=<?php echo filemtime('./plantillas/plantilla-4.1/js/rsvp.js'); ?>"></script>
-<script src="./plantillas/plantilla-4.1/js/faq.js?v=<?php echo filemtime('./plantillas/plantilla-4.1/js/faq.js'); ?>"></script>
 <script src="./plantillas/plantilla-4.1/js/estadisticas.js?v=<?php echo filemtime('./plantillas/plantilla-4.1/js/estadisticas.js'); ?>"></script>
 <script src="./plantillas/plantilla-4.1/js/invitacion.js?v=<?php echo filemtime('./plantillas/plantilla-4.1/js/invitacion.js'); ?>"></script>
 <script src="./plantillas/plantilla-4.1/js/music-player.js?v=<?php echo filemtime('./plantillas/plantilla-4.1/js/music-player.js'); ?>"></script>

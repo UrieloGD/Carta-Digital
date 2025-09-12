@@ -120,13 +120,13 @@ $musica_volumen = $invitacion['musica_volumen'] ?? 0.5;
 
 // Construir las rutas de imágenes de dresscode
 if ($dresscode_info) {
-    $img_dresscode_hombres = !empty($dresscode_info['hombres']) ? './' . ltrim($dresscode_info['hombres'], '/') : './plantillas/natural/img/dresscode.webp';
-    $img_dresscode_mujeres = !empty($dresscode_info['mujeres']) ? './' . ltrim($dresscode_info['mujeres'], '/') : './plantillas/natural/img/dresscode2.webp';
+    $img_dresscode_hombres = !empty($dresscode_info['hombres']) ? './' . ltrim($dresscode_info['hombres'], '/') : './plantillas/plantilla-2/img/dresscode.webp';
+    $img_dresscode_mujeres = !empty($dresscode_info['mujeres']) ? './' . ltrim($dresscode_info['mujeres'], '/') : './plantillas/plantilla-2/img/dresscode2.webp';
     $descripcion_dresscode_hombres = $dresscode_info['descripcion_hombres'] ?? '';
     $descripcion_dresscode_mujeres = $dresscode_info['descripcion_mujeres'] ?? '';
 } else {
-    $img_dresscode_hombres = './plantillas/natural/img/dresscode.webp';
-    $img_dresscode_mujeres = './plantillas/natural/img/dresscode2.webp';
+    $img_dresscode_hombres = './plantillas/plantilla-2/img/dresscode.webp';
+    $img_dresscode_mujeres = './plantillas/plantilla-2/img/dresscode2.webp';
     $descripcion_dresscode_hombres = '';
     $descripcion_dresscode_mujeres = '';
 }
@@ -148,7 +148,7 @@ $direccion_completa = $invitacion['direccion_completa'] ?: ($ubicacion_ceremonia
 
 // Contenido principal con nuevos campos
 $historia_texto = $invitacion['historia'] ?: "Nuestra historia comenzó de manera inesperada, pero desde el primer momento supimos que estábamos destinados a estar juntos. Cada día compartido nos ha llevado hasta este momento especial.";
-$dresscode = $invitacion['dresscode'] ?: "Elegante casual. Colores naturales que armonicen con nuestro entorno verde.";
+$dresscode = $invitacion['dresscode'] ?: "Elegante casual. Colores plantilla-2es que armonicen con nuestro entorno verde.";
 $texto_rsvp = $invitacion['texto_rsvp'] ?: 'Tu presencia es importante para nosotros. Por favor confirma tu asistencia.';
 $mensaje_footer = $invitacion['mensaje_footer'] ?: '"El amor crece mejor en la libertad, como las flores silvestres en el campo."';
 $firma_footer = $invitacion['firma_footer'] ?: $nombres;

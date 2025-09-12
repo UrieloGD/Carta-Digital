@@ -120,13 +120,13 @@ $musica_volumen = $invitacion['musica_volumen'] ?? 0.5;
 
 // Construir las rutas de imágenes de dresscode
 if ($dresscode_info) {
-    $img_dresscode_hombres = !empty($dresscode_info['hombres']) ? './' . ltrim($dresscode_info['hombres'], '/') : './plantillas/plantilla-4/img/dresscode-hombre.jpg';
-    $img_dresscode_mujeres = !empty($dresscode_info['mujeres']) ? './' . ltrim($dresscode_info['mujeres'], '/') : './plantillas/plantilla-4/img/dresscode-mujer.jpg';
+    $img_dresscode_hombres = !empty($dresscode_info['hombres']) ? './' . ltrim($dresscode_info['hombres'], '/') : './plantillas/plantilla-4/img/dresscode.webp';
+    $img_dresscode_mujeres = !empty($dresscode_info['mujeres']) ? './' . ltrim($dresscode_info['mujeres'], '/') : './plantillas/plantilla-4/img/dresscode.webp';
     $descripcion_dresscode_hombres = $dresscode_info['descripcion_hombres'] ?? '';
     $descripcion_dresscode_mujeres = $dresscode_info['descripcion_mujeres'] ?? '';
 } else {
-    $img_dresscode_hombres = './plantillas/plantilla-4/img/dresscode-hombre.jpg';
-    $img_dresscode_mujeres = './plantillas/plantilla-4/img/dresscode-mujer.jpg';
+    $img_dresscode_hombres = './plantillas/plantilla-1/img/dresscode.webp';
+    $img_dresscode_mujeres = './plantillas/plantilla-1/img/dresscode2.webp';
     $descripcion_dresscode_hombres = '';
     $descripcion_dresscode_mujeres = '';
 }
