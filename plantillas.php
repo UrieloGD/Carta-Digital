@@ -46,8 +46,7 @@ try {
                     $imagenRuta = './images/default-template.png'; // Por defecto
                     
                     if (!empty($plantilla['imagen_preview'])) {
-                        // La ruta completa sería: ./plantillas/plantilla-{id}/{imagen_preview}
-                        $imagenRuta = './plantillas/plantilla-' . $plantilla['id'] . '/' . $plantilla['imagen_preview'];
+                        $imagenRuta = './plantillas/' . $plantilla['carpeta'] . '/' . $plantilla['imagen_preview'];
                     }
                     
                     // Determinar si tiene ejemplo
