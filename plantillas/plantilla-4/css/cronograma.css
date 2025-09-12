@@ -305,11 +305,13 @@
         margin-bottom: 2.5rem;
         margin-left: 60px;
         position: relative;
+        width: calc(100% - 60px); /* Ancho fijo basado en el contenedor */
     }
     
     .timeline-item:nth-child(even) {
         flex-direction: column;
         margin-left: 60px;
+        width: calc(100% - 60px); /* Mismo ancho para elementos pares */
     }
     
     .timeline-dot {
@@ -331,28 +333,34 @@
         text-align: left;
         padding: 0;
         margin-bottom: 0.75rem;
+        width: 100%; /* Ancho completo */
     }
     
     .timeline-item:nth-child(even) .timeline-time {
         order: 1;
         text-align: left;
         padding: 0;
+        width: 100%; /* Ancho completo */
     }
     
     .timeline-content {
         order: 2;
         padding: 0;
+        width: 100%; /* Ancho completo */
     }
     
     .timeline-item:nth-child(even) .timeline-content {
         order: 2;
         padding: 0;
+        width: 100%; /* Ancho completo */
     }
     
     .time-card {
         padding: 0.5rem 1rem;
         min-width: 75px;
         font-size: 0.85rem;
+        display: inline-block;
+        width: auto; /* Mantiene el ancho automático solo para las time-cards */
     }
     
     .time-card::before,
@@ -370,12 +378,15 @@
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
+        width: 100%; /* Ancho completo fijo */
+        box-sizing: border-box; /* Incluye padding en el ancho total */
     }
     
     .event-title {
         font-size: 1.125rem;
         margin-bottom: 0.5rem;
         flex-shrink: 0; 
+        width: 100%; /* Ancho completo */
     }
     
     .event-description {
@@ -384,12 +395,14 @@
         flex: 1;
         display: flex;
         align-items: flex-start;
+        width: 100%; /* Ancho completo */
     }
     
     .event-location {
         font-size: 0.8rem;
         flex-shrink: 0; 
         margin-top: auto;
+        width: 100%; /* Ancho completo */
     }
 }
 
@@ -405,10 +418,12 @@
     .timeline-item {
         margin-left: 40px;
         margin-bottom: 2rem;
+        width: calc(100% - 40px); /* Ancho fijo ajustado */
     }
     
     .timeline-item:nth-child(even) {
         margin-left: 40px;
+        width: calc(100% - 40px); /* Mismo ancho para elementos pares */
     }
     
     .timeline-dot {
@@ -429,25 +444,30 @@
     
     .content-card {
         padding: 1rem;
-        min-height: 160px; /* Altura mínima para pantallas más pequeñas */
+        min-height: 160px;
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
+        width: 100%; /* Ancho completo fijo */
+        box-sizing: border-box;
     }
     
     .event-title {
         font-size: 1rem;
         line-height: 1.4;
+        width: 100%;
     }
     
     .event-description {
         flex: 1;
         display: flex;
         align-items: flex-start;
+        width: 100%;
     }
     
     .event-location {
         margin-top: auto;
+        width: 100%;
     }
     
     .location-icon {
@@ -458,10 +478,12 @@
 @media (max-width: 320px) {
     .timeline-item {
         margin-left: 35px;
+        width: calc(100% - 35px); /* Ancho fijo ajustado */
     }
     
     .timeline-item:nth-child(even) {
         margin-left: 35px;
+        width: calc(100% - 35px); /* Mismo ancho para elementos pares */
     }
     
     .timeline-line {
@@ -487,7 +509,9 @@
     
     .content-card {
         padding: 0.75rem;
-        min-height: 140px; /* Altura mínima para pantallas muy pequeñas */
+        min-height: 140px;
+        width: 100%; /* Ancho completo fijo */
+        box-sizing: border-box;
     }
 }
 
