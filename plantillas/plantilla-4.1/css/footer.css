@@ -1,9 +1,71 @@
 /* Footer Elegante Minimalista */
+/* Footer Elegante Minimalista */
 .footer {
     padding: 6rem 0 3rem;
-    background: var(--bg-dark);
+    /* Fondo marmoleado elegante */
+    background: 
+        /* Gradiente base suave */
+        linear-gradient(135deg, 
+            #fefefe 0%,
+            #f8f8f8 20%,
+            #f7f6f4 40%,
+            #f0eeec 60%,
+            #f0eeed 80%,
+            #eeecea 100%
+        ),
+        /* Patrones marmoleados sutiles */
+        radial-gradient(ellipse 900px 400px at 10% 20%, rgba(139, 115, 85, 0.02) 0%, transparent 60%),
+        radial-gradient(ellipse 700px 500px at 90% 80%, rgba(93, 78, 55, 0.018) 0%, transparent 55%),
+        radial-gradient(ellipse 600px 350px at 50% 5%, rgba(139, 105, 20, 0.015) 0%, transparent 50%),
+        radial-gradient(ellipse 800px 300px at 30% 95%, rgba(107, 91, 71, 0.02) 0%, transparent 65%);
+    
     position: relative;
     overflow: hidden;
+}
+
+/* Capa de textura marmoleada */
+.footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        /* Venas del mármol sutiles */
+        linear-gradient(40deg, transparent 46%, rgba(139, 115, 85, 0.008) 48%, rgba(139, 115, 85, 0.004) 49%, transparent 51%),
+        linear-gradient(-50deg, transparent 44%, rgba(93, 78, 55, 0.007) 46%, rgba(93, 78, 55, 0.003) 47%, transparent 49%),
+        linear-gradient(70deg, transparent 47%, rgba(139, 105, 20, 0.006) 49%, rgba(139, 105, 20, 0.002) 50%, transparent 52%),
+        /* Textura granular fina */
+        radial-gradient(circle at 20% 30%, rgba(139, 115, 85, 0.01) 1px, transparent 1px),
+        radial-gradient(circle at 80% 70%, rgba(107, 91, 71, 0.008) 1px, transparent 1px),
+        radial-gradient(circle at 60% 50%, rgba(139, 105, 20, 0.006) 0.5px, transparent 0.5px);
+    background-size: 
+        300px 300px,
+        220px 220px,
+        260px 260px,
+        60px 60px,
+        80px 80px,
+        45px 45px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Capa de profundidad y suavizado */
+.footer::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        /* Overlay unificador */
+        radial-gradient(circle at 50% 50%, transparent 30%, rgba(254, 254, 254, 0.01) 70%),
+        /* Gradiente de profundidad */
+        linear-gradient(180deg, rgba(139, 115, 85, 0.003) 0%, transparent 25%, transparent 75%, rgba(139, 115, 85, 0.005) 100%);
+    pointer-events: none;
+    z-index: 1;
 }
 
 .footer-background {

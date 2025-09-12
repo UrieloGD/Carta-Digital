@@ -13,10 +13,42 @@
     right: 0;
     bottom: 0;
     background: 
-        radial-gradient(circle at 20% 30%, rgba(139, 115, 85, 0.05) 0%, transparent 50%),
-        radial-gradient(circle at 80% 70%, rgba(139, 115, 85, 0.03) 0%, transparent 50%);
+        /* Formas orgánicas principales */
+        radial-gradient(ellipse 700px 300px at 10% 20%, rgba(139, 115, 85, 0.15) 0%, transparent 60%),
+        radial-gradient(ellipse 300px 700px at 90% 80%, rgba(139, 115, 85, 0.12) 0%, transparent 60%),
+        radial-gradient(ellipse 500px 400px at 30% 70%, rgba(139, 115, 85, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse 400px 500px at 70% 30%, rgba(139, 115, 85, 0.10) 0%, transparent 50%),
+        /* Vetas sutiles */
+        radial-gradient(ellipse 900px 100px at 50% 40%, rgba(139, 115, 85, 0.06) 0%, transparent 70%),
+        radial-gradient(ellipse 100px 900px at 60% 60%, rgba(139, 115, 85, 0.04) 0%, transparent 70%),
+        /* Base suave */
+        radial-gradient(ellipse 1200px 800px at 50% 50%, rgba(139, 115, 85, 0.03) 0%, transparent 80%);
+    animation: organicMarble 30s ease-in-out infinite alternate;
     pointer-events: none;
     z-index: 1;
+}
+
+@keyframes organicMarble {
+    0% {
+        background: 
+            radial-gradient(ellipse 700px 300px at 10% 20%, rgba(139, 115, 85, 0.15) 0%, transparent 70%),
+            radial-gradient(ellipse 300px 700px at 90% 80%, rgba(139, 115, 85, 0.12) 0%, transparent 70%),
+            radial-gradient(ellipse 500px 400px at 30% 70%, rgba(139, 115, 85, 0.08) 0%, transparent 60%),
+            radial-gradient(ellipse 400px 500px at 70% 30%, rgba(139, 115, 85, 0.10) 0%, transparent 60%),
+            radial-gradient(ellipse 900px 100px at 50% 40%, rgba(139, 115, 85, 0.06) 0%, transparent 80%),
+            radial-gradient(ellipse 100px 900px at 60% 60%, rgba(139, 115, 85, 0.04) 0%, transparent 80%),
+            radial-gradient(ellipse 1200px 800px at 50% 50%, rgba(139, 115, 85, 0.03) 0%, transparent 90%);
+    }
+    100% {
+        background: 
+            radial-gradient(ellipse 300px 700px at 20% 30%, rgba(139, 115, 85, 0.12) 0%, transparent 70%),
+            radial-gradient(ellipse 700px 300px at 80% 70%, rgba(139, 115, 85, 0.15) 0%, transparent 70%),
+            radial-gradient(ellipse 400px 500px at 40% 60%, rgba(139, 115, 85, 0.10) 0%, transparent 60%),
+            radial-gradient(ellipse 500px 400px at 60% 40%, rgba(139, 115, 85, 0.08) 0%, transparent 60%),
+            radial-gradient(ellipse 100px 900px at 40% 50%, rgba(139, 115, 85, 0.04) 0%, transparent 80%),
+            radial-gradient(ellipse 900px 100px at 70% 50%, rgba(139, 115, 85, 0.06) 0%, transparent 80%),
+            radial-gradient(ellipse 800px 1200px at 50% 50%, rgba(139, 115, 85, 0.05) 0%, transparent 90%);
+    }
 }
 
 .historia-content {

@@ -1,4 +1,4 @@
-/* Music Player - Plantilla Elegante Minimalista */
+/* Music Player - Plantilla Elegante Minimalista (Tema Claro) */
 .music-controls {
     position: fixed;
     bottom: 30px;
@@ -9,7 +9,7 @@
 }
 
 .music-player-widget {
-    background: rgba(21, 21, 21, 0.95);
+    background: rgba(248, 248, 248, 0.95);
     backdrop-filter: blur(20px);
     border: 1px solid var(--border-subtle);
     border-radius: var(--border-radius);
@@ -23,8 +23,8 @@
 }
 
 .music-player-widget:hover {
-    background: rgba(26, 26, 26, 0.98);
-    border-color: rgba(212, 196, 168, 0.2);
+    background: rgba(242, 242, 242, 0.98);
+    border-color: rgba(139, 115, 85, 0.3);
     box-shadow: var(--shadow-soft);
     transform: translateY(-2px);
 }
@@ -50,7 +50,7 @@
     background: var(--accent-beige);
     color: var(--bg-dark);
     transform: scale(1.1);
-    box-shadow: 0 0 15px rgba(212, 196, 168, 0.3);
+    box-shadow: 0 0 15px rgba(139, 115, 85, 0.3);
 }
 
 .music-toggle .play-icon {
@@ -105,7 +105,7 @@
 .volume-slider {
     width: 60px;
     height: 2px;
-    background: rgba(212, 196, 168, 0.2);
+    background: rgba(139, 115, 85, 0.2);
     border-radius: 2px;
     outline: none;
     cursor: pointer;
@@ -120,14 +120,14 @@
     border-radius: 50%;
     background: var(--accent-beige);
     cursor: pointer;
-    box-shadow: 0 2px 8px rgba(212, 196, 168, 0.3);
+    box-shadow: 0 2px 8px rgba(139, 115, 85, 0.3);
     transition: var(--transition-smooth);
 }
 
 .volume-slider::-webkit-slider-thumb:hover {
     background: var(--accent-cream);
     transform: scale(1.2);
-    box-shadow: 0 3px 12px rgba(212, 196, 168, 0.4);
+    box-shadow: 0 3px 12px rgba(139, 115, 85, 0.4);
 }
 
 .volume-slider::-moz-range-thumb {
@@ -137,11 +137,11 @@
     background: var(--accent-beige);
     cursor: pointer;
     border: none;
-    box-shadow: 0 2px 8px rgba(212, 196, 168, 0.3);
+    box-shadow: 0 2px 8px rgba(139, 115, 85, 0.3);
 }
 
 .volume-slider:hover {
-    background: rgba(212, 196, 168, 0.3);
+    background: rgba(139, 115, 85, 0.3);
 }
 
 /* Botón de minimizar */
@@ -163,7 +163,7 @@
 
 .music-minimize:hover {
     color: var(--accent-beige);
-    background: rgba(212, 196, 168, 0.1);
+    background: rgba(139, 115, 85, 0.1);
     transform: scale(1.1);
 }
 
@@ -175,7 +175,8 @@
     padding: 0;
     border-radius: 50%;
     justify-content: center;
-    background: rgba(21, 21, 21, 0.98);
+    background: rgba(248, 248, 248, 0.98);
+    box-shadow: var(--shadow-soft);
 }
 
 .music-controls.minimized .music-info,
@@ -192,8 +193,8 @@
 }
 
 .music-controls.minimized .music-player-widget:hover {
-    background: rgba(26, 26, 26, 1);
-    box-shadow: 0 0 20px rgba(212, 196, 168, 0.2);
+    background: rgba(242, 242, 242, 1);
+    box-shadow: 0 0 20px rgba(139, 115, 85, 0.2);
 }
 
 /* Animación de pulso para cuando está reproduciendo */
@@ -202,7 +203,7 @@
         box-shadow: var(--shadow-card);
     }
     50% {
-        box-shadow: var(--shadow-card), 0 0 20px rgba(212, 196, 168, 0.2);
+        box-shadow: var(--shadow-card), 0 0 20px rgba(139, 115, 85, 0.2);
     }
 }
 
@@ -221,7 +222,7 @@
     }
     100% {
         opacity: 1;
-        text-shadow: 0 0 8px rgba(212, 196, 168, 0.4);
+        text-shadow: 0 0 8px rgba(139, 115, 85, 0.4);
     }
 }
 
@@ -352,7 +353,7 @@
     }
     40% {
         color: var(--accent-beige);
-        text-shadow: 0 0 4px rgba(212, 196, 168, 0.3);
+        text-shadow: 0 0 4px rgba(139, 115, 85, 0.3);
     }
     60%, 100% {
         color: var(--text-muted);

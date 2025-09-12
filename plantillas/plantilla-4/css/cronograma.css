@@ -1,4 +1,4 @@
-/* Cronograma - Elegante Minimalista Mejorado */
+/* Cronograma - Elegante Minimalista Mejorado - TEMA CLARO */
 .cronograma {
     background: var(--bg-dark);
     position: relative;
@@ -107,7 +107,7 @@
     position: relative;
     min-width: 80px;
     text-align: center;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-card);
 }
 
 .time-card::before {
@@ -132,18 +132,18 @@
 }
 
 .time-card:hover {
-    background: rgba(21, 21, 21, 0.9);
-    border-color: rgba(212, 196, 168, 0.4);
+    background: rgba(248, 248, 248, 0.9);
+    border-color: rgba(139, 115, 85, 0.4);
     transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    box-shadow: var(--shadow-soft);
 }
 
 .time-card:hover::before {
-    border-left-color: rgba(21, 21, 21, 0.9);
+    border-left-color: rgba(248, 248, 248, 0.9);
 }
 
 .timeline-item:nth-child(even) .time-card:hover::before {
-    border-right-color: rgba(21, 21, 21, 0.9);
+    border-right-color: rgba(248, 248, 248, 0.9);
 }
 
 .time-text {
@@ -181,7 +181,7 @@
 .timeline-item:hover .timeline-dot {
     border-color: var(--gold-accent);
     transform: scale(1.2);
-    box-shadow: 0 0 15px rgba(201, 169, 110, 0.3);
+    box-shadow: 0 0 15px rgba(139, 105, 20, 0.2);
 }
 
 .timeline-item:hover .dot-inner {
@@ -206,7 +206,7 @@
     transition: var(--transition-smooth);
     position: relative;
     overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-card);
 }
 
 .content-card::before {
@@ -224,8 +224,8 @@
 
 .timeline-item:hover .content-card {
     transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
-    border-color: rgba(212, 196, 168, 0.3);
+    box-shadow: var(--shadow-soft);
+    border-color: rgba(139, 115, 85, 0.3);
 }
 
 .timeline-item:hover .content-card::before {
@@ -366,20 +366,30 @@
     
     .content-card {
         padding: 1.25rem;
+        min-height: 180px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
     }
     
     .event-title {
         font-size: 1.125rem;
         margin-bottom: 0.5rem;
+        flex-shrink: 0; 
     }
     
     .event-description {
         font-size: 0.9rem;
         margin-bottom: 0.75rem;
+        flex: 1;
+        display: flex;
+        align-items: flex-start;
     }
     
     .event-location {
         font-size: 0.8rem;
+        flex-shrink: 0; 
+        margin-top: auto;
     }
 }
 
@@ -419,6 +429,10 @@
     
     .content-card {
         padding: 1rem;
+        min-height: 160px; /* Altura mínima para pantallas más pequeñas */
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
     }
     
     .event-title {
@@ -427,13 +441,13 @@
     }
     
     .event-description {
-        font-size: 0.85rem;
-        line-height: 1.5;
+        flex: 1;
+        display: flex;
+        align-items: flex-start;
     }
     
     .event-location {
-        font-size: 0.75rem;
-        gap: 0.4rem;
+        margin-top: auto;
     }
     
     .location-icon {
@@ -473,10 +487,11 @@
     
     .content-card {
         padding: 0.75rem;
+        min-height: 140px; /* Altura mínima para pantallas muy pequeñas */
     }
 }
 
-/* Estados especiales */
+/* Estados especiales adaptados al tema claro */
 .timeline-item.current-event .timeline-dot {
     border-color: var(--gold-accent);
     background: var(--gold-accent);
@@ -489,10 +504,10 @@
 
 @keyframes currentEventPulse {
     0%, 100% {
-        box-shadow: 0 0 15px rgba(201, 169, 110, 0.3);
+        box-shadow: 0 0 15px rgba(139, 105, 20, 0.2);
     }
     50% {
-        box-shadow: 0 0 25px rgba(201, 169, 110, 0.6);
+        box-shadow: 0 0 25px rgba(139, 105, 20, 0.4);
     }
 }
 

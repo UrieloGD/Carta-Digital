@@ -1,7 +1,21 @@
 /* Sección RSVP Elegante Minimalista */
 .rsvp {
     padding: 2rem 0;
-    background: var(--bg-dark);
+    background: 
+        /* Gradiente principal */
+        linear-gradient(160deg, 
+            var(--bg-dark) 0%,
+            var(--bg-dark-light) 25%,
+            #f6f4f1 50%,
+            var(--bg-card) 75%,
+            #ede7df 100%
+        ),
+        /* Ondas decorativas orgánicas */
+        radial-gradient(ellipse 1000px 400px at 0% 60%, rgba(139, 115, 85, 0.02) 0%, transparent 55%),
+        radial-gradient(ellipse 700px 600px at 100% 30%, rgba(93, 78, 55, 0.018) 0%, transparent 50%),
+        radial-gradient(ellipse 800px 300px at 50% 0%, rgba(139, 105, 20, 0.015) 0%, transparent 45%),
+        radial-gradient(ellipse 600px 500px at 100% 100%, rgba(107, 91, 71, 0.02) 0%, transparent 60%);
+    
     position: relative;
     overflow: hidden;
 }
@@ -13,8 +27,24 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: radial-gradient(ellipse at center, rgba(139, 115, 85, 0.08) 0%, transparent 60%);
+    background: 
+        /* Líneas orgánicas entrecruzadas */
+        repeating-linear-gradient(
+            25deg,
+            transparent,
+            transparent 150px,
+            rgba(139, 115, 85, 0.005) 151px,
+            rgba(139, 115, 85, 0.005) 153px
+        ),
+        repeating-linear-gradient(
+            -65deg,
+            transparent,
+            transparent 200px,
+            rgba(93, 78, 55, 0.004) 201px,
+            rgba(93, 78, 55, 0.004) 202px
+        );
     pointer-events: none;
+    z-index: 0;
 }
 
 .rsvp-content {

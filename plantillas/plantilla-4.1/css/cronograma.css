@@ -1,7 +1,37 @@
 /* Cronograma - Elegante Minimalista Mejorado - TEMA CLARO */
 .cronograma {
-    background: var(--bg-dark);
+    background: 
+        /* Gradiente principal */
+        linear-gradient(180deg, 
+            rgba(253, 252, 250, 1) 0%,
+            rgba(248, 246, 243, 1) 50%,
+            rgba(245, 241, 235, 1) 100%
+        ),
+        /* Ondas decorativas */
+        radial-gradient(ellipse 800px 400px at 0% 50%, rgba(139, 115, 85, 0.03) 0%, transparent 60%),
+        radial-gradient(ellipse 600px 300px at 100% 0%, rgba(139, 105, 20, 0.02) 0%, transparent 50%),
+        radial-gradient(ellipse 400px 200px at 100% 100%, rgba(139, 115, 85, 0.025) 0%, transparent 40%);
     position: relative;
+}
+
+/* Líneas decorativas muy sutiles */
+.cronograma::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        repeating-linear-gradient(
+            45deg,
+            transparent,
+            transparent 200px,
+            rgba(139, 115, 85, 0.005) 201px,
+            rgba(139, 115, 85, 0.005) 203px
+        );
+    pointer-events: none;
+    z-index: 0;
 }
 
 .cronograma-content {

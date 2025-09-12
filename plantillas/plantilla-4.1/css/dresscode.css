@@ -317,6 +317,11 @@
         width: 20px;
         height: 20px;
     }
+
+    .dresscode-title {
+        background-color: var(--bg-dark);
+        border-radius: 5px;
+    }
 }
 
 @media (max-width: 480px) {
