@@ -526,9 +526,9 @@ try {
     <div class="container">
         <div class="ubicaciones-content">
             <div class="ubicaciones-header">
-                <h2 class="section-title">Ubicaciones</h2>
+                <h2 class="section-title">Ubicacion</h2>
                 <div class="decorative-line"></div>
-                <p class="section-subtitle">Lugares sagrados donde celebraremos nuestro amor</p>
+                <p class="section-subtitle">Lugares donde celebraremos nuestro amor</p>
             </div>
             
             <div class="ubicaciones-grid">
@@ -543,7 +543,7 @@ try {
                                  loading="lazy" />
                             <div class="ubicacion-overlay">
                                 <div class="ubicacion-icon">
-                                    <?php echo $ubicacion_item['tipo'] === 'ceremonia' ? '⛪' : ($ubicacion_item['tipo'] === 'recepcion' ? '🏛️' : '🎉'); ?>
+                                    <?php echo $ubicacion_item['tipo'] === 'ceremonia' ? '⛪' : ($ubicacion_item['tipo'] === 'recepcion' ? '🏛️' : ''); ?>
                                 </div>
                             </div>
                         </div>
@@ -552,7 +552,7 @@ try {
                         <!-- Badge de tipo mejorado -->
                         <div class="ubicacion-badge">
                             <span class="badge-icon">
-                                <?php echo $ubicacion_item['tipo'] === 'ceremonia' ? '⛪' : ($ubicacion_item['tipo'] === 'recepcion' ? '🏛️' : '🎉'); ?>
+                                <?php echo $ubicacion_item['tipo'] === 'ceremonia' ? '⛪' : ($ubicacion_item['tipo'] === 'recepcion' ? '🏛️' : ''); ?>
                             </span>
                             <span class="badge-text"><?php echo ucfirst($ubicacion_item['tipo']); ?></span>
                         </div>
