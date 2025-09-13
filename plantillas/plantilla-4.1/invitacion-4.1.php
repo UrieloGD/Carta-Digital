@@ -979,7 +979,7 @@ try {
                 <!-- Imagen después de la firma -->
                 <div class="footer-ornament-container">
                     <div class="footer-ceremony-ornament">
-                        <img src="./plantillas/plantilla-4.1/img/iconos/anillos-imagen.png" alt="Anillos de boda" class="footer-ceremony-icon-img">
+                        <img src="./plantillas/plantilla-4.1/img/iconos/sobre-dinero.webp" alt="Anillos de boda" class="footer-ceremony-icon-img">
                     </div>
                 </div>
                 
