@@ -210,6 +210,14 @@
         padding: 1.5rem;
         margin: 0 1rem;
     }
+
+    .transition-title {
+        font-size: 1.3rem;
+    }
+
+    .transition-subtitle {
+        font-size: 1.1rem;
+    }
     
     .transition-image::before,
     .transition-image::after {

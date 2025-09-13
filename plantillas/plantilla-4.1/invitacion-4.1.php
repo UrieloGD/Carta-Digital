@@ -507,8 +507,8 @@ try {
         <div class="transition-content">
             <div class="container">
                 <div class="transition-text">
-                    <h3 class="transition-title">Un Momento Eterno</h3>
-                    <p class="transition-subtitle">Cada segundo juntos es un tesoro que atesoramos</p>
+                    <h3 class="transition-title">Más valen dos que uno, porque obtienen más fruto de su esfuerzo. Si caen, el uno levanta al otro...</h3>
+                    <p class="transition-subtitle">Eclesiastés 4:9-12</p>
                 </div>
             </div>
         </div>
@@ -770,9 +770,9 @@ try {
                 <p class="section-subtitle">Se solicita vestimenta rigurosamente formal para el evento.</p>
             </div>
             
-            <div class="dresscode-description">
+            <!-- <div class="dresscode-description">
                 <p class="dresscode-text"><?php echo htmlspecialchars($dresscode); ?></p>
-            </div>
+            </div> -->
             
             <div class="dresscode-examples">
                 <div class="dresscode-card" data-animate="fadeInUp" data-delay="0.2s">
