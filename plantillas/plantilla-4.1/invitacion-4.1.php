@@ -486,9 +486,9 @@ try {
                         </blockquote>
                         
                         <div class="hearts-decoration">
-                            <span class="heart">♥</span>
-                            <span class="heart">♥</span>
-                            <span class="heart">♥</span>
+                            <span class="heart"></span>
+                            <span class="heart"></span>
+                            <span class="heart"></span>
                         </div>
                     </div>
                 </div>
@@ -532,7 +532,7 @@ try {
                 <div class="decorative-line">
                     <span class="line-accent"></span>
                 </div>
-                <p class="section-subtitle">Lugares donde celebraremos nuestro amor</p>
+                <p class="section-subtitle">Lugar donde celebraremos nuestro amor</p>
             </div>
             
             <div class="ubicaciones-grid">
@@ -792,7 +792,7 @@ try {
                             <?php if ($descripcion_dresscode_mujeres): ?>
                             <p class="dresscode-description-text"><?php echo htmlspecialchars($descripcion_dresscode_mujeres); ?></p>
                             <?php else: ?>
-                            <p class="dresscode-description-text">Vestidos elegantes en tonos sofisticados. Evita colores muy llamativos que puedan competir con la novia.</p>
+                            <p class="dresscode-description-text">Rigurosa Formal.</p>
                             <?php endif; ?>
                         </div>
                         
@@ -825,7 +825,7 @@ try {
                             <?php if ($descripcion_dresscode_hombres): ?>
                             <p class="dresscode-description-text"><?php echo htmlspecialchars($descripcion_dresscode_hombres); ?></p>
                             <?php else: ?>
-                            <p class="dresscode-description-text">Traje formal oscuro con corbata o moño. Camisa blanca o en tonos claros complementan la elegancia requerida.</p>
+                            <p class="dresscode-description-text">Rigurosa Formal.</p>
                             <?php endif; ?>
                         </div>
                         
@@ -950,7 +950,7 @@ try {
                             <div class="detail-icon">👨‍👩‍👧‍👦</div>
                             <div class="detail-content">
                                 <span class="detail-label">Solo adultos</span>
-                                <span class="detail-value">Celebración exclusiva para adultos</span>
+                                <span class="detail-value">Celebración exclusiva para adultos (No niños).</span>
                             </div>
                         </div>
                     </div>
