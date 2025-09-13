@@ -89,15 +89,16 @@
 }
 
 .line-accent::after {
-    content: '♦';
+    content: '';
     position: absolute;
     left: 50%;
     top: 50%;
-    transform: translate(-50%, -50%);
-    color: var(--gold-accent);
-    font-size: 12px;
-    background: var(--bg-dark);
-    padding: 0 8px;
+    transform: translate(-50%, -50%) rotate(45deg);
+    width: 8px;
+    height: 8px;
+    background: var(--gold-accent);
+    border-radius: 0;
+    padding: 0;
     white-space: nowrap;
 }
 
