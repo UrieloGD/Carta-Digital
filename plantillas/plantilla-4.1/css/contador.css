@@ -109,6 +109,13 @@
     flex-direction: column;
     align-items: center;
     position: relative;
+    background: var(--bg-card); /* Usando el color más oscuro de tu paleta */
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    padding: 1.5rem 1rem;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 4px 15px rgba(139, 115, 85, 0.15);
+    transition: var(--transition-smooth);
 }
 
 .time-card {
@@ -118,28 +125,31 @@
     position: relative;
 }
 
-.time-card:hover {
-    transform: scale(1.05);
+.time-unit:hover {
+    background: var(--accent-champagne); /* Color más oscuro al hover */
+    border-color: var(--accent-beige);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(139, 115, 85, 0.25);
 }
 
-.time-card::before {
+.time-unit:hover::before {
+    opacity: 0.1;
+}
+
+.time-unit::before {
     content: '';
     position: absolute;
-    top: -10px;
-    left: -10px;
-    right: -10px;
-    bottom: -10px;
-    background: radial-gradient(circle at center, 
-        rgba(139, 115, 85, 0.15) 0%, 
-        transparent 70%);
-    border-radius: 50%;
-    opacity: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, 
+        var(--accent-beige) 0%, 
+        var(--bg-card) 100%);
+    border-radius: 12px;
+    opacity: 0.05;
     transition: var(--transition-smooth);
     z-index: -1;
-}
-
-.time-card:hover::before {
-    opacity: 1;
 }
 
 .time-number {
@@ -309,12 +319,11 @@
     }
     
     .time-unit {
+        background: rgba(255, 255, 255, 0.8); /* Más opaco en móvil */
+        border: 1px solid rgba(139, 115, 85, 0.25);
         padding: 1.5rem 1rem;
-        background: rgba(242, 242, 242, 0.8);
-        border: 1px solid var(--border-subtle);
-        transition: var(--transition-smooth);
-        position: relative;
-        overflow: hidden;
+        margin-bottom: 1rem; /* Separación entre elementos */
+        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
     }
     
     .time-unit::before {
@@ -332,9 +341,10 @@
     }
     
     .time-unit:hover {
-        background: rgba(248, 248, 248, 0.9);
-        border-color: rgba(139, 115, 85, 0.3);
-        transform: translateY(-3px);
+        background: rgba(255, 255, 255, 0.9);
+        border-color: rgba(139, 115, 85, 0.4);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
     }
     
     .time-unit:hover::before {
@@ -369,8 +379,16 @@
     }
     
     .time-unit {
+        background: rgba(255, 255, 255, 0.85); /* Máximo contraste en pantallas pequeñas */
+        border: 1px solid rgba(139, 115, 85, 0.3);
         padding: 1.25rem 0.75rem;
-        margin: 0;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
+        margin-bottom: 1.5rem;
+    }
+
+    .time-unit:hover {
+        background: rgba(255, 255, 255, 0.95);
+        border-color: rgba(139, 115, 85, 0.5);
     }
     
     .time-number {

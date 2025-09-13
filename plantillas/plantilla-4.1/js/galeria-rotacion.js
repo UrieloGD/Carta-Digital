@@ -1,4 +1,8 @@
-class ElegantGallery {
+// ================================================
+// GALERÍA ELEGANTE CON ROTACIÓN DE 3 IMÁGENES
+// ================================================
+
+class GaleriaEleganteRotativa {
     constructor(images, containerId = 'galeria-grid') {
         this.images = images || [];
         this.container = document.getElementById(containerId);
@@ -7,82 +11,95 @@ class ElegantGallery {
         this.counterText = document.getElementById('modal-counter-text');
         
         if (!this.container || this.images.length === 0) {
-            console.warn('ElegantGallery: Container not found or no images provided');
+            console.warn('GaleriaEleganteRotativa: Container not found or no images provided');
             return;
         }
         
+        // Configuración del carrusel
+        this.imagenesMostradas = 3; // Siempre mostrar 3 imágenes
+        this.indiceInicial = 0;
+        this.autoRotacion = null;
+        this.tiempoRotacion = 4000; // 4 segundos
+        this.isMobile = window.innerWidth < 768;
+        
+        // Modal
         this.currentIndex = 0;
         this.isModalOpen = false;
         this.touchStartX = 0;
         this.touchEndX = 0;
-        this.isMobile = window.innerWidth < 768;
         
-        // Intersection Observer para lazy loading (solo desktop)
-        if (!this.isMobile) {
-            this.observer = new IntersectionObserver(
-                this.handleIntersection.bind(this),
-                { rootMargin: '50px' }
-            );
-        }
+        // Preparar imágenes para mostrar
+        this.prepararImagenes();
+        
+        console.log(`Galería: ${this.images.length} imágenes, mostrando ${this.imagenesMostradas}`);
         
         this.init();
     }
     
-    init() {
-        this.createGalleryItems();
-        this.bindEvents();
-        if (!this.isMobile) {
-            this.preloadFirstImages();
-        } else {
-            // En móvil, cargar todas las imágenes para el carrusel
-            this.loadAllImages();
+    prepararImagenes() {
+        // Si tenemos menos de 3 imágenes, las repetimos hasta completar 3
+        this.imagenesParaMostrar = [];
+        
+        if (this.images.length === 0) return;
+        
+        for (let i = 0; i < this.imagenesMostradas; i++) {
+            const imagen = this.images[i % this.images.length];
+            this.imagenesParaMostrar.push({
+                src: imagen,
+                originalIndex: i % this.images.length,
+                displayIndex: i
+            });
         }
     }
     
-    createGalleryItems() {
+    init() {
+        this.crearElementosGaleria();
+        this.configurarEventos();
+        this.iniciarAutoRotacion();
+        
+        // Recalcular en resize
+        window.addEventListener('resize', this.manejarResize.bind(this));
+    }
+    
+    crearElementosGaleria() {
+        this.container.innerHTML = '';
         const fragment = document.createDocumentFragment();
         
-        // Para móvil: repetir las imágenes 3 veces para efecto infinito
-        const imagesToRender = this.isMobile ? 
-            [...this.images, ...this.images, ...this.images] : 
-            this.images;
-        
-        imagesToRender.forEach((src, index) => {
-            const originalIndex = this.isMobile ? index % this.images.length : index;
-            const item = this.createGalleryItem(src, originalIndex, index);
+        this.imagenesParaMostrar.forEach((imagen, index) => {
+            const item = this.crearItemGaleria(imagen, index);
             fragment.appendChild(item);
-            
-            // Stagger animation solo en desktop
-            if (!this.isMobile) {
-                setTimeout(() => {
-                    item.style.animationDelay = `${index * 0.1}s`;
-                }, 50);
-            }
         });
         
         this.container.appendChild(fragment);
+        
+        // Animación inicial escalonada
+        setTimeout(() => {
+            const items = this.container.querySelectorAll('.galeria-item');
+            items.forEach((item, index) => {
+                setTimeout(() => {
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateY(0)';
+                }, index * 150);
+            });
+        }, 100);
     }
     
-    createGalleryItem(src, originalIndex, renderIndex) {
+    crearItemGaleria(imagen, index) {
         const item = document.createElement('div');
-        item.className = this.isMobile ? 'galeria-item' : 'galeria-item loading';
+        item.className = 'galeria-item';
         item.setAttribute('role', 'gridcell');
         item.setAttribute('tabindex', '0');
-        item.setAttribute('data-index', originalIndex);
-        item.setAttribute('data-render-index', renderIndex);
+        item.setAttribute('data-original-index', imagen.originalIndex);
+        item.setAttribute('data-display-index', index);
+        item.style.opacity = '0';
+        item.style.transform = 'translateY(20px)';
+        item.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
         
         const img = document.createElement('img');
         img.className = 'galeria-image';
-        img.alt = `Momento especial ${originalIndex + 1}`;
-        
-        // En móvil, cargar imagen inmediatamente
-        if (this.isMobile) {
-            img.src = src;
-            img.loading = 'eager';
-        } else {
-            img.setAttribute('data-src', src);
-            img.loading = 'lazy';
-        }
+        img.src = imagen.src;
+        img.alt = `Momento especial ${imagen.originalIndex + 1}`;
+        img.loading = 'eager';
         
         const overlay = document.createElement('div');
         overlay.className = 'galeria-overlay';
@@ -96,296 +113,264 @@ class ElegantGallery {
         item.appendChild(img);
         item.appendChild(overlay);
         
-        // Observe for lazy loading solo en desktop
-        if (!this.isMobile && this.observer) {
-            this.observer.observe(item);
-        }
-        
         return item;
     }
     
-    loadAllImages() {
+    rotarImagenes() {
+        // Obtener las próximas 3 imágenes
+        this.indiceInicial = (this.indiceInicial + 1) % this.images.length;
+        
+        // Actualizar las imágenes a mostrar
+        for (let i = 0; i < this.imagenesMostradas; i++) {
+            const indiceImagen = (this.indiceInicial + i) % this.images.length;
+            this.imagenesParaMostrar[i] = {
+                src: this.images[indiceImagen],
+                originalIndex: indiceImagen,
+                displayIndex: i
+            };
+        }
+        
+        // Actualizar DOM con animación
         const items = this.container.querySelectorAll('.galeria-item');
-        items.forEach(item => {
-            const img = item.querySelector('.galeria-image');
-            const src = img.getAttribute('data-src');
-            if (src) {
-                this.loadImage(img, item);
-            }
+        
+        // Animación de salida
+        items.forEach((item, index) => {
+            setTimeout(() => {
+                item.style.opacity = '0.3';
+                item.style.transform = 'translateY(-10px) scale(0.98)';
+            }, index * 50);
         });
-    }
-    
-    handleIntersection(entries) {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const item = entry.target;
+        
+        // Cambiar imágenes y animar entrada
+        setTimeout(() => {
+            items.forEach((item, index) => {
+                const nuevaImagen = this.imagenesParaMostrar[index];
                 const img = item.querySelector('.galeria-image');
-                const src = img.getAttribute('data-src');
                 
-                if (src && !img.src) {
-                    this.loadImage(img, item);
-                    this.observer.unobserve(item);
-                }
-            }
-        });
+                item.setAttribute('data-original-index', nuevaImagen.originalIndex);
+                img.src = nuevaImagen.src;
+                img.alt = `Momento especial ${nuevaImagen.originalIndex + 1}`;
+                
+                // Animación de entrada
+                setTimeout(() => {
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateY(0) scale(1)';
+                }, index * 80);
+            });
+        }, 300);
     }
     
-    loadImage(img, item) {
-        const src = img.getAttribute('data-src');
+    configurarEventos() {
+        // Eventos de galería
+        this.container.addEventListener('click', this.manejarClickGaleria.bind(this));
+        this.container.addEventListener('keydown', this.manejarTeclaGaleria.bind(this));
         
-        img.addEventListener('load', () => {
-            item.classList.remove('loading');
-            img.style.opacity = '1';
-        }, { once: true });
+        // Pausar rotación en hover
+        this.container.addEventListener('mouseenter', () => {
+            this.pausarAutoRotacion();
+        });
         
-        img.addEventListener('error', () => {
-            item.classList.remove('loading');
-            item.classList.add('error');
-            console.error(`Failed to load image: ${src}`);
-        }, { once: true });
+        this.container.addEventListener('mouseleave', () => {
+            this.iniciarAutoRotacion();
+        });
         
-        img.src = src;
+        // Eventos de modal
+        this.configurarEventosModal();
     }
     
-    preloadFirstImages() {
-        // Solo para desktop
-        const firstItems = this.container.querySelectorAll('.galeria-item:nth-child(-n+4)');
-        firstItems.forEach(item => {
-            const img = item.querySelector('.galeria-image');
-            const src = img.getAttribute('data-src');
-            if (src) {
-                this.loadImage(img, item);
-            }
-        });
+    configurarEventosModal() {
+        if (!this.modal) return;
+        
+        this.modal.addEventListener('click', this.manejarClickModal.bind(this));
+        document.addEventListener('keydown', this.manejarTeclaModal.bind(this));
+        
+        // Touch events
+        this.modal.addEventListener('touchstart', this.manejarTouchStart.bind(this), { passive: true });
+        this.modal.addEventListener('touchend', this.manejarTouchEnd.bind(this), { passive: true });
+        
+        // Navegación
+        const prevBtn = this.modal.querySelector('.modal-prev');
+        const nextBtn = this.modal.querySelector('.modal-next');
+        const closeBtn = this.modal.querySelector('.modal-close');
+        
+        prevBtn?.addEventListener('click', () => this.navegarModal(-1));
+        nextBtn?.addEventListener('click', () => this.navegarModal(1));
+        closeBtn?.addEventListener('click', () => this.cerrarModal());
     }
-
-    // Agregar después del método bindEvents()
-    handleGalleryKeydown(e) {
+    
+    manejarClickGaleria(e) {
+        const item = e.target.closest('.galeria-item');
+        if (item) {
+            const originalIndex = parseInt(item.getAttribute('data-original-index'));
+            this.abrirModal(originalIndex);
+        }
+    }
+    
+    manejarTeclaGaleria(e) {
         if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
             const item = e.target.closest('.galeria-item');
             if (item) {
-                const index = parseInt(item.getAttribute('data-index'));
-                this.openModal(index);
-            }
-        }
-    }
-
-    handleModalClick(e) {
-        // Cerrar al hacer clic en el backdrop
-        if (e.target.classList.contains('modal-backdrop') || 
-            e.target.classList.contains('galeria-modal')) {
-            this.closeModal();
-        }
-    }
-
-    handleModalKeydown(e) {
-        if (!this.isModalOpen) return;
-        
-        switch(e.key) {
-            case 'Escape':
-                e.preventDefault();
-                this.closeModal();
-                break;
-            case 'ArrowLeft':
-                e.preventDefault();
-                this.navigateModal(-1);
-                break;
-            case 'ArrowRight':
-                e.preventDefault();
-                this.navigateModal(1);
-                break;
-        }
-    }
-
-    handleTouchStart(e) {
-        this.touchStartX = e.touches[0].clientX;
-    }
-
-    handleTouchEnd(e) {
-        this.touchEndX = e.changedTouches[0].clientX;
-        const diffX = this.touchStartX - this.touchEndX;
-        
-        // Swipe threshold
-        if (Math.abs(diffX) > 50) {
-            if (diffX > 0) {
-                // Swipe left - next image
-                this.navigateModal(1);
-            } else {
-                // Swipe right - previous image
-                this.navigateModal(-1);
+                const originalIndex = parseInt(item.getAttribute('data-original-index'));
+                this.abrirModal(originalIndex);
             }
         }
     }
     
-    bindEvents() {
-        // Eventos de galería
-        this.container.addEventListener('click', this.handleGalleryClick.bind(this));
-        this.container.addEventListener('keydown', this.handleGalleryKeydown.bind(this));
-        
-        // Eventos de modal
-        this.modal?.addEventListener('click', this.handleModalClick.bind(this));
-        document.addEventListener('keydown', this.handleModalKeydown.bind(this));
-        
-        // Touch events para swipe
-        this.modal?.addEventListener('touchstart', this.handleTouchStart.bind(this), { passive: true });
-        this.modal?.addEventListener('touchend', this.handleTouchEnd.bind(this), { passive: true });
-        
-        // Navegación del modal
-        const prevBtn = this.modal?.querySelector('.modal-prev');
-        const nextBtn = this.modal?.querySelector('.modal-next');
-        const closeBtn = this.modal?.querySelector('.modal-close');
-        
-        prevBtn?.addEventListener('click', () => this.navigateModal(-1));
-        nextBtn?.addEventListener('click', () => this.navigateModal(1));
-        closeBtn?.addEventListener('click', () => this.closeModal());
-        
-        // Resize observer para responsive
-        if (window.ResizeObserver) {
-            const resizeObserver = new ResizeObserver(
-                this.debounce(this.handleResize.bind(this), 300)
-            );
-            resizeObserver.observe(this.container);
-        }
-    }
-    
-    handleGalleryClick(e) {
-        const item = e.target.closest('.galeria-item');
-        if (item) {
-            const index = parseInt(item.getAttribute('data-index'));
-            this.openModal(index);
-        }
-    }
-    
-    handleResize() {
+    manejarResize() {
         const wasMobile = this.isMobile;
         this.isMobile = window.innerWidth < 768;
         
-        // Si cambió de móvil a desktop o viceversa, recrear galería
         if (wasMobile !== this.isMobile) {
-            this.destroy();
-            this.init();
+            this.pausarAutoRotacion();
+            this.crearElementosGaleria();
+            this.iniciarAutoRotacion();
         }
     }
     
-    openModal(index) {
+    // Métodos de modal
+    abrirModal(index) {
         if (!this.modal || !this.images[index]) return;
         
         this.currentIndex = index;
         this.isModalOpen = true;
         
-        // Set image
         this.modalImage.src = this.images[index];
         this.modalImage.alt = `Momento especial ${index + 1}`;
         
-        // Update counter
-        this.updateCounter();
+        this.actualizarContador();
         
-        // Show modal
         this.modal.setAttribute('aria-hidden', 'false');
         document.body.style.overflow = 'hidden';
         
-        // Focus management
         const closeBtn = this.modal.querySelector('.modal-close');
         setTimeout(() => closeBtn?.focus(), 100);
         
-        // Preload adjacent images
-        this.preloadAdjacentImages(index);
+        // Pausar rotación mientras el modal está abierto
+        this.pausarAutoRotacion();
     }
     
-    closeModal() {
+    cerrarModal() {
         if (!this.modal) return;
         
         this.isModalOpen = false;
         this.modal.setAttribute('aria-hidden', 'true');
         document.body.style.overflow = '';
         
-        // Return focus to gallery item
-        const galleryItem = this.container.querySelector(`[data-index="${this.currentIndex}"]`);
-        setTimeout(() => galleryItem?.focus(), 100);
+        // Reanudar rotación
+        this.iniciarAutoRotacion();
     }
     
-    navigateModal(direction) {
-        const newIndex = this.currentIndex + direction;
+    navegarModal(direccion) {
+        const nuevoIndex = this.currentIndex + direccion;
         
-        if (newIndex >= 0 && newIndex < this.images.length) {
-            this.currentIndex = newIndex;
-            this.modalImage.src = this.images[newIndex];
-            this.modalImage.alt = `Momento especial ${newIndex + 1}`;
-            this.updateCounter();
-            this.preloadAdjacentImages(newIndex);
+        if (nuevoIndex >= 0 && nuevoIndex < this.images.length) {
+            this.currentIndex = nuevoIndex;
+            this.modalImage.src = this.images[nuevoIndex];
+            this.modalImage.alt = `Momento especial ${nuevoIndex + 1}`;
+            this.actualizarContador();
         }
     }
     
-    updateCounter() {
+    actualizarContador() {
         if (this.counterText) {
             this.counterText.textContent = `${this.currentIndex + 1} de ${this.images.length}`;
         }
     }
     
-    preloadAdjacentImages(index) {
-        const preloadIndexes = [index - 1, index + 1].filter(i => 
-            i >= 0 && i < this.images.length
-        );
+    manejarClickModal(e) {
+        if (e.target.classList.contains('modal-backdrop') || 
+            e.target.classList.contains('galeria-modal')) {
+            this.cerrarModal();
+        }
+    }
+    
+    manejarTeclaModal(e) {
+        if (!this.isModalOpen) return;
         
-        preloadIndexes.forEach(i => {
-            const img = new Image();
-            img.src = this.images[i];
-        });
+        switch(e.key) {
+            case 'Escape':
+                e.preventDefault();
+                this.cerrarModal();
+                break;
+            case 'ArrowLeft':
+                e.preventDefault();
+                this.navegarModal(-1);
+                break;
+            case 'ArrowRight':
+                e.preventDefault();
+                this.navegarModal(1);
+                break;
+        }
     }
     
-    // Utility function
-    debounce(func, wait) {
-        let timeout;
-        return function executedFunction(...args) {
-            const later = () => {
-                clearTimeout(timeout);
-                func(...args);
-            };
-            clearTimeout(timeout);
-            timeout = setTimeout(later, wait);
-        };
+    manejarTouchStart(e) {
+        this.touchStartX = e.touches[0].clientX;
     }
     
+    manejarTouchEnd(e) {
+        this.touchEndX = e.changedTouches[0].clientX;
+        const diffX = this.touchStartX - this.touchEndX;
+        
+        if (Math.abs(diffX) > 50) {
+            if (diffX > 0) {
+                this.navegarModal(1);
+            } else {
+                this.navegarModal(-1);
+            }
+        }
+    }
     
-    // Public methods
-    destroy() {
-        this.observer?.disconnect();
-        this.closeModal();
+    // Métodos de rotación automática
+    iniciarAutoRotacion() {
+        if (this.images.length <= 1 || this.isModalOpen) return;
+        
+        this.pausarAutoRotacion();
+        
+        this.autoRotacion = setInterval(() => {
+            this.rotarImagenes();
+        }, this.tiempoRotacion);
+    }
+    
+    pausarAutoRotacion() {
+        if (this.autoRotacion) {
+            clearInterval(this.autoRotacion);
+            this.autoRotacion = null;
+        }
+    }
+    
+    // Métodos públicos
+    destruir() {
+        this.pausarAutoRotacion();
+        this.cerrarModal();
         if (this.container) {
             this.container.innerHTML = '';
         }
     }
     
-    addImages(newImages) {
-        const startIndex = this.images.length;
-        this.images.push(...newImages);
-        
-        // Recrear toda la galería para mantener el patrón del carrusel
-        if (this.isMobile) {
-            this.destroy();
-            this.init();
-        } else {
-            // En desktop, solo agregar las nuevas
-            const fragment = document.createDocumentFragment();
-            newImages.forEach((src, i) => {
-                const item = this.createGalleryItem(src, startIndex + i, startIndex + i);
-                fragment.appendChild(item);
-            });
-            this.container.appendChild(fragment);
+    agregarImagenes(nuevasImagenes) {
+        this.images.push(...nuevasImagenes);
+        this.prepararImagenes();
+        this.crearElementosGaleria();
+        this.iniciarAutoRotacion();
+    }
+    
+    cambiarTiempoRotacion(nuevoTiempo) {
+        this.tiempoRotacion = nuevoTiempo;
+        if (this.autoRotacion) {
+            this.iniciarAutoRotacion();
         }
     }
 }
 
 // Inicialización automática
 document.addEventListener('DOMContentLoaded', () => {
-    // Verificar si existen las imágenes de galería
     if (typeof galeriaImagenes !== 'undefined' && Array.isArray(galeriaImagenes) && galeriaImagenes.length > 0) {
-        window.elegantGallery = new ElegantGallery(galeriaImagenes);
+        window.galeriaElegante = new GaleriaEleganteRotativa(galeriaImagenes);
     }
 });
 
 // Cleanup
 window.addEventListener('beforeunload', () => {
-    window.elegantGallery?.destroy();
+    window.galeriaElegante?.destruir();
 });

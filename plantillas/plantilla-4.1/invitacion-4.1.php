@@ -256,8 +256,8 @@ try {
     </div>
 </section>
 
-<?php if ($mostrar_contador): ?>
 <!-- Contador regresivo elegante minimalista -->
+<?php if ($mostrar_contador): ?>
 <section class="contador" id="contador">
     <div class="container">
         <div class="contador-content">
@@ -327,7 +327,7 @@ try {
                         
                         <div class="quote-decoration">
                             <span class="quote-mark">"</span>
-                            <p class="bienvenida-message">Queremos qye seab oarte de este día único en nuestras vidas.</p>
+                            <p class="bienvenida-message">Queremos que seas parte de este día único en nuestras vidas.</p>
                             <span class="quote-mark quote-mark-end">"</span>
                         </div>
                     </div>
