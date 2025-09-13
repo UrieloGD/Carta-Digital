@@ -350,6 +350,7 @@
 }
 
 /* Decoración de corazones corregida */
+/* Decoración de corazones corregida */
 .hearts-decoration {
     margin-top: 1.5rem;
     display: flex;
@@ -360,15 +361,15 @@
 }
 
 .heart {
-    color: var(--accent-beige);
-    font-size: 1rem;
-    opacity: 0.6;
-    animation: heartBeat 2s infinite ease-in-out;
-    display: inline-block;
-    line-height: 1;
     position: relative;
     width: 12px;
     height: 12px;
+    animation: heartBeat 2s infinite ease-in-out;
+    display: inline-block;
+    /* Limpiar cualquier contenido de texto */
+    font-size: 0;
+    text-indent: -9999px;
+    overflow: hidden;
 }
 
 /* Crear corazón con CSS puro */
