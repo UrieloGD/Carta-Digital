@@ -1,0 +1,356 @@
+/* Dress Code - Estilo Natural */
+.dresscode {
+    background: var(--warm-white);
+    position: relative;
+    overflow: hidden;
+}
+
+.dresscode::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 30% 70%, rgba(107, 123, 58, 0.02) 50%, transparent 50%),
+        radial-gradient(circle at 70% 30%, rgba(212, 184, 150, 0.03) 40%, transparent 40%);
+    z-index: 0;
+}
+
+.dresscode-content {
+    position: relative;
+    z-index: 1;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.dresscode-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.dresscode-header h2 {
+    font-family: var(--font-serif);
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    color: var(--primary-olive);
+    font-weight: 400;
+    margin-bottom: 1rem;
+}
+
+.dresscode-description {
+    font-size: 1.2rem;
+    line-height: 1.7;
+    color: var(--soft-gray);
+    text-align: center;
+    max-width: 700px;
+    margin: 2rem auto 4rem;
+    font-style: italic;
+}
+
+.dresscode-examples {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 3rem;
+    margin-top: 4rem;
+}
+
+.dresscode-example {
+    text-align: center;
+    position: relative;
+}
+
+.dresscode-image {
+    position: relative;
+    width: 100%;
+    max-width: 350px;
+    margin: 0 auto 2rem;
+    border-radius: 25px;
+    overflow: hidden;
+    box-shadow: var(--shadow-soft);
+    transition: var(--transition-smooth);
+}
+
+.dresscode-image::before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
+    background: linear-gradient(135deg, var(--primary-olive), var(--sand));
+    border-radius: 25px;
+    z-index: -1;
+    opacity: 0;
+    transition: var(--transition-smooth);
+}
+
+.dresscode-example:hover .dresscode-image::before {
+    opacity: 0.2;
+}
+
+.dresscode-image img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    transition: var(--transition-slow);
+    filter: sepia(10%) saturate(110%) brightness(1.05);
+}
+
+.dresscode-example:hover .dresscode-image img {
+    transform: scale(1.03);
+    filter: sepia(5%) saturate(120%) brightness(1.1);
+}
+
+.image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        135deg,
+        rgba(107, 123, 58, 0.1) 0%,
+        rgba(212, 184, 150, 0.1) 100%
+    );
+    opacity: 0;
+    transition: var(--transition-smooth);
+}
+
+.dresscode-example:hover .image-overlay {
+    opacity: 1;
+}
+
+.dresscode-example h3 {
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    color: var(--primary-olive);
+    margin-bottom: 1rem;
+    font-weight: 500;
+    position: relative;
+}
+
+.dresscode-example h3::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 2px;
+    background: var(--sand);
+    border-radius: 1px;
+}
+
+.dresscode-example p {
+    font-size: 1rem;
+    color: var(--soft-gray);
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    max-width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Estilo cuando no hay imagen - AGREGAR AL FINAL */
+.dresscode-example:not(:has(.dresscode-image)) {
+    text-align: center;
+}
+
+.dresscode-example:not(:has(.dresscode-image)) h3 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+}
+
+.dresscode-example:not(:has(.dresscode-image)) h3::after {
+    bottom: -12px;
+}
+
+/* Fallback para navegadores que no soportan :has() */
+.dresscode-example.no-image {
+    text-align: center;
+}
+
+.dresscode-example.no-image h3 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+}
+
+.dresscode-example.no-image h3::after {
+    bottom: -12px;
+}
+
+/* Ajustar grid cuando no hay imágenes */
+.dresscode-examples:not(:has(.dresscode-image)) {
+    grid-template-columns: 1fr;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.color-palette {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.color-dot {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 3px solid var(--warm-white);
+    box-shadow: var(--shadow-soft);
+    transition: var(--transition-smooth);
+    position: relative;
+    cursor: pointer;
+}
+
+.color-dot::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    left: -6px;
+    right: -6px;
+    bottom: -6px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    transition: var(--transition-smooth);
+}
+
+.color-dot:hover {
+    transform: scale(1.1);
+    box-shadow: var(--shadow-medium);
+}
+
+.color-dot:hover::before {
+    border-color: var(--primary-olive);
+}
+
+/* Colores específicos */
+.color-dot.olive {
+    background: var(--primary-olive);
+}
+
+.color-dot.sand {
+    background: var(--sand);
+}
+
+.color-dot.cream {
+    background: var(--cream);
+}
+
+/* Efectos decorativos */
+.dresscode-example::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 60px;
+    background: 
+        radial-gradient(circle, var(--sand) 2px, transparent 2px),
+        radial-gradient(circle, var(--light-olive) 1px, transparent 1px);
+    background-size: 12px 12px, 8px 8px;
+    background-position: 0 0, 4px 4px;
+    opacity: 0.2;
+    border-radius: 50%;
+    animation: rotate 20s linear infinite;
+}
+
+@keyframes rotate {
+    from { transform: translateX(-50%) rotate(0deg); }
+    to { transform: translateX(-50%) rotate(360deg); }
+}
+
+/* Animaciones de entrada */
+.dresscode-example {
+    opacity: 0;
+    animation: slideInUp 0.8s ease-out forwards;
+}
+
+.dresscode-example:nth-child(1) { animation-delay: 0.2s; }
+.dresscode-example:nth-child(2) { animation-delay: 0.4s; }
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .dresscode-examples {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+        max-width: 450px;
+        margin: 3rem auto 0;
+    }
+    
+    .dresscode-image {
+        max-width: 300px;
+    }
+    
+    .dresscode-image img {
+        height: 350px;
+    }
+    
+    .dresscode-example h3 {
+        font-size: 1.8rem;
+    }
+    
+    .color-dot {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .dresscode-description {
+        font-size: 1.1rem;
+        margin: 1.5rem auto 3rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .dresscode-examples {
+        gap: 2rem;
+    }
+    
+    .dresscode-image {
+        max-width: 280px;
+        margin-bottom: 1.5rem;
+    }
+    
+    .dresscode-image img {
+        height: 320px;
+    }
+    
+    .dresscode-example h3 {
+        font-size: 1.6rem;
+        margin-bottom: 0.8rem;
+    }
+    
+    .dresscode-example p {
+        font-size: 0.95rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .color-palette {
+        gap: 0.8rem;
+    }
+    
+    .color-dot {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .dresscode-description {
+        font-size: 1rem;
+        padding: 0 20px;
+    }
+}

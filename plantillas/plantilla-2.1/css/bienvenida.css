@@ -1,0 +1,280 @@
+/* Sección Bienvenida - Estilo Natural */
+.bienvenida {
+    background: var(--warm-white);
+    position: relative;
+}
+
+.bienvenida::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 0;
+    width: 100%;
+    height: 50px;
+    background: var(--cream);
+    clip-path: polygon(0 0, 100% 0, 85% 100%, 0% 100%);
+}
+
+.bienvenida-content {
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.bienvenida-header h2 {
+    font-family: var(--font-serif);
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    color: var(--primary-olive);
+    font-weight: 400;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+}
+
+.bienvenida-text {
+    margin: 3rem 0;
+}
+
+.bienvenida-text p {
+    font-size: 1.2rem;
+    line-height: 1.8;
+    color: var(--soft-gray);
+    max-width: 700px;
+    margin: 0 auto 2rem;
+}
+
+.bienvenida-image {
+    margin: 4rem 0;
+    display: flex;
+    justify-content: center;
+}
+
+.image-frame {
+    position: relative;
+    max-width: 500px;
+    width: 100%;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: var(--shadow-medium);
+    transform: rotate(-1deg);
+    transition: var(--transition-smooth);
+}
+
+.image-frame:hover {
+    transform: rotate(0deg) scale(1.02);
+    box-shadow: 0 12px 40px rgba(107, 123, 58, 0.2);
+}
+
+.image-frame img {
+    width: 100%;
+    height: 350px; /* Altura fija para consistencia */
+    object-fit: cover;
+    object-position: center 20%; /* Enfoca en la parte superior */
+    display: block;
+    filter: sepia(10%) saturate(110%);
+}
+
+.image-ornament {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    width: 60px;
+    height: 60px;
+    background: var(--sand);
+    border-radius: 50%;
+    opacity: 0.8;
+    animation: pulse 3s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.1); opacity: 0.6; }
+}
+
+/* Información familiar */
+.familia-info {
+    margin: 4rem 0;
+    padding: 3rem;
+    background: var(--cream);
+    border-radius: var(--border-radius);
+    border: 1px solid rgba(107, 123, 58, 0.1);
+}
+
+.familia-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 3rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.familia-lado h4 {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    color: var(--primary-olive);
+    margin-bottom: 1.5rem;
+    text-align: center;
+    position: relative;
+}
+
+.familia-lado h4::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 2px;
+    background: var(--sand);
+}
+
+.familia-item {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.familia-item strong {
+    display: block;
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--dark-olive);
+    margin-bottom: 0.5rem;
+}
+
+.familia-item span {
+    font-family: var(--font-serif);
+    font-size: 1.1rem;
+    color: var(--soft-gray);
+    line-height: 1.4;
+}
+
+/* Sección de fecha */
+.bienvenida-date-section {
+    margin-top: 4rem;
+    padding: 3rem 0;
+    position: relative;
+}
+
+.date-ornament {
+    width: 150px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--sand), transparent);
+    margin: 0 auto 2rem;
+    position: relative;
+}
+
+.date-ornament::before,
+.date-ornament::after {
+    content: '❋';
+    position: absolute;
+    top: -14px;
+    font-size: 16px;
+    color: var(--sand);
+}
+
+.date-ornament::before {
+    left: 20px;
+}
+
+.date-ornament::after {
+    right: 20px;
+}
+
+.bienvenida-date {
+    font-family: var(--font-serif);
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 400;
+    color: var(--primary-olive);
+    margin-bottom: 1.5rem;
+    letter-spacing: 1px;
+}
+
+.bienvenida-venue p {
+    font-family: var(--font-sans);
+    font-size: 1.1rem;
+    color: var(--charcoal);
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.venue-name {
+    font-family: var(--font-serif);
+    font-size: 1.3rem;
+    color: var(--primary-olive);
+    font-weight: 500;
+    margin: 1rem 0;
+}
+
+.venue-address {
+    font-size: 1rem;
+    color: var(--soft-gray);
+    font-style: italic;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .bienvenida-content {
+        padding: 0 15px;
+    }
+    
+    .familia-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    
+    .familia-info {
+        padding: 2rem 1.5rem;
+        margin: 3rem 0;
+    }
+    
+    .image-frame {
+        max-width: 400px;
+        transform: rotate(0deg);
+    }
+
+    .image-frame img {
+        height: 300px;
+        object-position: center 25%;
+    }
+    
+    .bienvenida-text p {
+        font-size: 1.1rem;
+    }
+    
+    .date-ornament {
+        width: 100px;
+    }
+}
+
+@media (max-width: 480px) {
+    .bienvenida-date-section {
+        padding: 2rem 0;
+    }
+    
+    .familia-info {
+        padding: 1.5rem 1rem;
+    }
+    
+    .image-frame {
+        max-width: 300px;
+    }
+
+    .image-frame img {
+        height: 250px;
+        object-position: center 30%;
+    }
+    
+    .date-ornament {
+        width: 80px;
+    }
+    
+    .date-ornament::before {
+        left: 10px;
+    }
+    
+    .date-ornament::after {
+        right: 10px;
+    }
+} 

@@ -1,0 +1,211 @@
+/* Sección Historia - Estilo Natural */
+.historia {
+    background: var(--cream);
+    position: relative;
+    overflow: hidden;
+}
+
+.historia::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -50%;
+    width: 200%;
+    height: 100%;
+    background: 
+        radial-gradient(ellipse at 30% 20%, rgba(107, 123, 58, 0.03) 40%, transparent 40%),
+        radial-gradient(ellipse at 70% 80%, rgba(212, 184, 150, 0.05) 30%, transparent 30%);
+    animation: slowFloat 25s ease-in-out infinite;
+    z-index: 0;
+}
+
+@keyframes slowFloat {
+    0%, 100% { transform: translateX(0) rotate(0deg); }
+    50% { transform: translateX(5%) rotate(1deg); }
+}
+
+.historia-content {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.historia-header h2 {
+    font-family: var(--font-serif);
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    color: var(--primary-olive);
+    font-weight: 400;
+    margin-bottom: 1rem;
+    position: relative;
+}
+
+.historia-text {
+    margin: 3rem 0;
+    position: relative;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(107, 123, 58, 0.1);
+    box-shadow: var(--shadow-soft);
+}
+
+.historia-text::before {
+    content: '"';
+    position: absolute;
+    top: -20px;
+    left: 30px;
+    font-family: var(--font-serif);
+    font-size: 6rem;
+    color: var(--sand);
+    opacity: 0.5;
+    line-height: 1;
+}
+
+.historia-text::after {
+    content: '"';
+    position: absolute;
+    bottom: -40px;
+    right: 30px;
+    font-family: var(--font-serif);
+    font-size: 6rem;
+    color: var(--sand);
+    opacity: 0.5;
+    line-height: 1;
+}
+
+.historia-text p {
+    font-family: var(--font-serif);
+    font-size: 1.3rem;
+    line-height: 1.8;
+    color: var(--charcoal);
+    margin-bottom: 1.5rem;
+    font-style: italic;
+    position: relative;
+    z-index: 1;
+}
+
+.historia-text p:last-child {
+    margin-bottom: 0;
+}
+
+.historia-ornament {
+    width: 200px;
+    height: 40px;
+    margin: 3rem auto 0;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.historia-ornament::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(90deg, var(--primary-olive), transparent);
+    transform: translateY(-50%);
+}
+
+.historia-ornament::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--primary-olive));
+    transform: translateY(-50%);
+}
+
+.historia-ornament {
+    background-image: 
+        radial-gradient(circle, var(--sand) 3px, transparent 3px),
+        radial-gradient(circle, var(--light-olive) 2px, transparent 2px);
+    background-size: 20px 20px, 15px 15px;
+    background-position: 0 0, 7px 7px;
+    width: 80px;
+    height: 20px;
+    opacity: 0.6;
+}
+
+/* Efectos de hover */
+.historia-text {
+    transition: var(--transition-smooth);
+}
+
+.historia-text:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-medium);
+    background: rgba(255, 255, 255, 0.8);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .historia-content {
+        padding: 0 15px;
+    }
+    
+    .historia-text {
+        padding: 1.5rem;
+        margin: 2rem 0;
+    }
+    
+    .historia-text::before,
+    .historia-text::after {
+        font-size: 4rem;
+    }
+    
+    .historia-text::before {
+        top: -15px;
+        left: 20px;
+    }
+    
+    .historia-text::after {
+        bottom: -25px;
+        right: 20px;
+    }
+    
+    .historia-text p {
+        font-size: 1.2rem;
+        line-height: 1.7;
+    }
+    
+    .historia-ornament {
+        width: 60px;
+        margin: 2rem auto 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .historia-text {
+        padding: 1rem;
+        border-radius: 15px;
+    }
+    
+    .historia-text::before,
+    .historia-text::after {
+        font-size: 3rem;
+    }
+    
+    .historia-text::before {
+        top: -10px;
+        left: 15px;
+    }
+    
+    .historia-text::after {
+        bottom: -20px;
+        right: 15px;
+    }
+    
+    .historia-text p {
+        font-size: 1.1rem;
+        line-height: 1.6;
+        margin-bottom: 1rem;
+    }
+}
