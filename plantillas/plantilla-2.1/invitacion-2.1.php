@@ -133,6 +133,10 @@ if ($dresscode_info) {
     $descripcion_dresscode_mujeres = '';
 }
 
+// Variables para controlar si mostrar cada sección completa
+$mostrar_seccion_hombres = !empty($img_dresscode_hombres) || !empty($descripcion_dresscode_hombres);
+$mostrar_seccion_mujeres = !empty($img_dresscode_mujeres) || !empty($descripcion_dresscode_mujeres);
+
 // Variables para controlar si mostrar las imágenes
 $mostrar_img_hombres = !empty($img_dresscode_hombres);
 $mostrar_img_mujeres = !empty($img_dresscode_mujeres);
@@ -513,9 +517,11 @@ try {
             </div>
             <p class="dresscode-description"><?php echo htmlspecialchars($dresscode); ?></p>
             
+            <?php if ($mostrar_seccion_mujeres || $mostrar_seccion_hombres): ?>
             <div class="dresscode-examples">
+                <?php if ($mostrar_seccion_mujeres): ?>
                 <div class="dresscode-example">
-                    <?php if ($mostrar_img_mujeres): ?>
+                    <?php if (!empty($img_dresscode_mujeres)): ?>
                     <div class="dresscode-image">
                         <img src="<?php echo htmlspecialchars($img_dresscode_mujeres); ?>" alt="Vestimenta femenina" />
                         <div class="image-overlay"></div>
@@ -526,9 +532,11 @@ try {
                     <p><?php echo htmlspecialchars($descripcion_dresscode_mujeres); ?></p>
                     <?php endif; ?>
                 </div>
+                <?php endif; ?>
                 
+                <?php if ($mostrar_seccion_hombres): ?>
                 <div class="dresscode-example">
-                    <?php if ($mostrar_img_hombres): ?>
+                    <?php if (!empty($img_dresscode_hombres)): ?>
                     <div class="dresscode-image">
                         <img src="<?php echo htmlspecialchars($img_dresscode_hombres); ?>" alt="Vestimenta masculina" />
                         <div class="image-overlay"></div>
@@ -539,7 +547,9 @@ try {
                     <p><?php echo htmlspecialchars($descripcion_dresscode_hombres); ?></p>
                     <?php endif; ?>
                 </div>
+                <?php endif; ?>
             </div>
+            <?php endif; ?>
         </div>
     </div>
 </section>
