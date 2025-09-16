@@ -7,37 +7,45 @@
 
 .rsvp h2 {
     font-family: var(--font-serif);
-    font-size: 2.5rem;
+    font-size: clamp(2rem, 4vw, 2.5rem);
     color: var(--color-secondary);
     margin-bottom: 1rem;
+    animation: fadeInUp 1s ease-out;
 }
 
 .rsvp p {
-    font-size: 1.1rem;
+    font-size: clamp(1rem, 2.5vw, 1.1rem);
     color: var(--color-text-light);
     margin-bottom: 2rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    animation: fadeInUp 1s ease-out 0.2s both;
 }
 
 .rsvp-button {
     background: var(--color-secondary);
     color: var(--color-white);
     border: none;
-    padding: 1rem 2rem;
-    font-size: 1.1rem;
+    padding: clamp(0.8rem, 2vw, 1rem) clamp(1.5rem, 4vw, 2rem);
+    font-size: clamp(1rem, 2.5vw, 1.1rem);
     font-weight: 500;
     border-radius: var(--border-radius);
     cursor: pointer;
     transition: var(--transition);
     box-shadow: var(--shadow-soft);
+    animation: fadeInUp 1s ease-out 0.4s both;
+    min-width: 200px;
 }
 
 .rsvp-button:hover {
     background: #6b0a1c;
     transform: translateY(-2px);
     box-shadow: var(--shadow-medium);
+    animation: pulse 0.6s ease-in-out;
 }
 
-/* Modal RSVP */
+/* Modal RSVP - Siempre centrado */
 .rsvp-modal {
     display: none;
     position: fixed;
@@ -47,10 +55,11 @@
     bottom: 0;
     background: rgba(0, 0, 0, 0.8);
     z-index: 1000;
-    justify-content: center;
     align-items: center;
-    padding: 2rem;
+    justify-content: center;
+    padding: 2rem 1rem;
     animation: fadeIn 0.3s ease-out;
+    overflow-y: auto;
 }
 
 .rsvp-modal.active {
@@ -62,44 +71,86 @@
     border-radius: var(--border-radius);
     width: 100%;
     max-width: 500px;
-    max-height: 90vh;
+    max-height: calc(100vh - 4rem);
     overflow-y: auto;
     animation: scaleIn 0.3s ease-out;
+    box-shadow: var(--shadow-medium);
+    position: relative;
 }
 
 .modal-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1.5rem;
+    padding: clamp(1rem, 3vw, 1.5rem);
     border-bottom: 1px solid #eee;
+    position: sticky;
+    top: 0;
+    background: var(--color-white);
+    z-index: 10;
 }
 
 .modal-header h3 {
     font-family: var(--font-serif);
     color: var(--color-secondary);
-    font-size: 1.5rem;
+    font-size: clamp(1.2rem, 3vw, 1.5rem);
+    margin: 0;
 }
 
 .modal-close {
     background: none;
     border: none;
-    font-size: 1.5rem;
+    font-size: clamp(1.2rem, 3vw, 1.5rem);
     cursor: pointer;
     color: var(--color-text-light);
     transition: var(--transition);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
 }
 
 .modal-close:hover {
     color: var(--color-secondary);
+    background: rgba(133, 13, 35, 0.1);
 }
 
+/* Formulario RSVP */
 .rsvp-form {
-    padding: 1.5rem;
+    padding: clamp(1rem, 3vw, 1.5rem);
 }
 
+.rsvp-step {
+    width: 100%;
+    animation: fadeInUp 0.5s ease-out;
+    padding: clamp(1rem, 3vw, 1.5rem);
+}
+
+/* Información del grupo */
+.grupo-info {
+    margin-bottom: 1.5rem;
+    animation: slideInLeft 0.6s ease-out;
+}
+
+.grupo-info .alert {
+    margin-bottom: 1rem;
+    padding: clamp(1rem, 3vw, 1.2rem);
+    border-radius: var(--border-radius);
+    background: rgba(0, 123, 255, 0.1);
+    border-left: 4px solid #007bff;
+    font-size: clamp(0.9rem, 2vw, 1rem);
+}
+
+/* Formularios */
 .form-group {
     margin-bottom: 1.5rem;
+    animation: fadeInUp 0.5s ease-out;
+}
+
+.form-group:nth-child(n+2) {
+    animation-delay: calc(0.1s * var(--i, 0));
 }
 
 .form-group label {
@@ -107,18 +158,21 @@
     margin-bottom: 0.5rem;
     font-weight: 500;
     color: var(--color-text);
+    font-size: clamp(0.9rem, 2vw, 1rem);
 }
 
 .form-group input,
 .form-group select,
 .form-group textarea {
     width: 100%;
-    padding: 0.8rem;
+    padding: clamp(0.6rem, 2vw, 0.8rem);
     border: 2px solid #e0e0e0;
     border-radius: var(--border-radius);
-    font-size: 1rem;
+    font-size: clamp(0.9rem, 2vw, 1rem);
     transition: var(--transition);
     font-family: var(--font-sans);
+    background: var(--color-white);
+    box-sizing: border-box;
 }
 
 .form-group input:focus,
@@ -127,24 +181,466 @@
     outline: none;
     border-color: var(--color-secondary);
     box-shadow: 0 0 0 3px rgba(133, 13, 35, 0.1);
+    transform: translateY(-1px);
+}
+
+#codigo_grupo {
+    text-transform: uppercase !important;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+/* Campos de asistencia */
+.campos-asistencia {
+    border-left: 3px solid var(--color-secondary);
+    padding: clamp(1rem, 3vw, 1.2rem);
+    margin: 1.5rem 0;
+    background: rgba(133, 13, 35, 0.02);
+    border-radius: 0 var(--border-radius) var(--border-radius) 0;
+    animation: slideInLeft 0.6s ease-out;
+}
+
+.nombres-container .form-group {
+    margin-top: 1rem;
+    padding-left: clamp(0.8rem, 2vw, 1rem);
+    border-left: 2px solid #e0e0e0;
+    animation: fadeInUp 0.4s ease-out;
+}
+
+/* Confirmación de datos */
+.confirmacion-header {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.confirmacion-header h4 {
+    font-family: var(--font-serif);
+    color: var(--color-secondary);
+    font-size: clamp(1.2rem, 3vw, 1.4rem);
+    margin-bottom: 0.8rem;
+}
+
+.confirmacion-header p {
+    color: var(--color-text-light);
+    margin-bottom: 0;
+    font-size: clamp(0.9rem, 2vw, 1rem);
+}
+
+.confirmacion-info {
+    background: rgba(133, 13, 35, 0.05);
+    padding: clamp(1.2rem, 3vw, 1.8rem);
+    border-radius: var(--border-radius);
+    border-left: 4px solid var(--color-secondary);
+    margin: 1.5rem 0 2rem 0;
+    font-size: clamp(0.9rem, 2vw, 1rem);
+    line-height: 1.6;
+}
+
+/* Respuesta existente */
+.respuesta-existente {
+    background: rgba(40, 167, 69, 0.05);
+    padding: clamp(1.2rem, 3vw, 1.8rem);
+    border-radius: var(--border-radius);
+    border-left: 4px solid #28a745;
+    margin: 1.5rem 0 2rem 0;
+    font-size: clamp(0.9rem, 2vw, 1rem);
+    line-height: 1.6;
+}
+
+/* Éxito */
+.exito-container {
+    text-align: center;
+    padding: clamp(1.5rem, 4vw, 2.5rem);
+}
+
+.exito-icon {
+    width: 80px;
+    height: 80px;
+    background: #28a745;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin: 0 auto 1.5rem auto;
+    animation: scaleIn 0.6s ease-out 0.2s both;
+}
+
+.exito-container h3 {
+    font-family: var(--font-serif);
+    color: var(--color-secondary);
+    font-size: clamp(1.4rem, 3vw, 1.8rem);
+    margin-bottom: 1rem;
+    animation: fadeInUp 0.6s ease-out 0.4s both;
+}
+
+.exito-container p {
+    color: var(--color-text);
+    font-size: clamp(1rem, 2.5vw, 1.1rem);
+    margin-bottom: 2rem;
+    animation: fadeInUp 0.6s ease-out 0.6s both;
+}
+
+.resumen-confirmacion,
+.resumen-final {
+    background: rgba(133, 13, 35, 0.05);
+    padding: clamp(1.2rem, 3vw, 1.8rem);
+    border-radius: var(--border-radius);
+    border-left: 4px solid var(--color-secondary);
+    margin-top: 1.5rem;
+    text-align: left;
+    font-size: clamp(0.9rem, 2vw, 1rem);
+    line-height: 1.6;
+    animation: fadeInUp 0.6s ease-out 0.8s both;
+}
+
+/* Botones */
+.form-buttons {
+    display: flex;
+    gap: clamp(0.8rem, 2vw, 1.2rem);
+    justify-content: space-between;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+    padding: 0 clamp(0.5rem, 2vw, 1rem);
+}
+
+.form-buttons .btn {
+    flex: 1;
+    min-width: 120px;
+}
+
+.btn {
+    padding: clamp(0.8rem, 2.5vw, 1rem) clamp(1.2rem, 3vw, 1.5rem);
+    border-radius: var(--border-radius);
+    font-size: clamp(0.9rem, 2vw, 1rem);
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    border: 2px solid transparent;
+    text-align: center;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+.btn-primary {
+    background: var(--color-secondary);
+    color: var(--color-white);
+    border-color: var(--color-secondary);
+}
+
+.btn-primary:hover {
+    background: #6b0a1c;
+    border-color: #6b0a1c;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-soft);
+}
+
+.btn-secondary {
+    background: var(--color-white);
+    color: var(--color-secondary);
+    border-color: var(--color-secondary);
+}
+
+.btn-secondary:hover {
+    background: var(--color-secondary);
+    color: var(--color-white);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-soft);
+}
+
+.btn-warning {
+    background: #ffc107;
+    color: #856404;
+    border-color: #ffc107;
+}
+
+.btn-warning:hover {
+    background: #e0a800;
+    border-color: #e0a800;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-soft);
 }
 
 .form-submit {
-    width: 100%;
+    width: calc(100% - clamp(1rem, 4vw, 2rem));
+    margin: 1.5rem clamp(0.5rem, 2vw, 1rem) 0;
     background: var(--color-secondary);
     color: var(--color-white);
     border: none;
-   padding: 1rem;
-   font-size: 1.1rem;
-   font-weight: 500;
-   border-radius: var(--border-radius);
-   cursor: pointer;
-   transition: var(--transition);
-   box-shadow: var(--shadow-soft);
+    padding: clamp(0.8rem, 2.5vw, 1rem);
+    font-size: clamp(1rem, 2.5vw, 1.1rem);
+    font-weight: 500;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: var(--shadow-soft);
+    box-sizing: border-box;
 }
 
 .form-submit:hover {
-   background: #6b0a1c;
-   transform: translateY(-2px);
-   box-shadow: var(--shadow-medium);
+    background: #6b0a1c;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-medium);
+}
+
+/* Alertas y mensajes */
+.alert-container {
+    margin: 1.5rem clamp(0.5rem, 2vw, 1rem);
+}
+
+.alert {
+    padding: clamp(1rem, 3vw, 1.2rem);
+    border-radius: var(--border-radius);
+    margin-bottom: 1.5rem;
+    font-size: clamp(0.9rem, 2vw, 1rem);
+    animation: fadeInUp 0.4s ease-out;
+}
+
+.alert-info {
+    background: rgba(0, 123, 255, 0.1);
+    border-left: 4px solid #007bff;
+    color: #004085;
+}
+
+.alert-warning {
+    background: rgba(255, 193, 7, 0.1);
+    border-left: 4px solid #ffc107;
+    color: #856404;
+}
+
+.alert-success {
+    background: rgba(40, 167, 69, 0.1);
+    border-left: 4px solid #28a745;
+    color: #155724;
+    margin-bottom: 1.5rem;
+}
+
+.alert-danger {
+    background: rgba(220, 53, 69, 0.1);
+    border-left: 4px solid #dc3545;
+    color: #721c24;
+}
+
+/* Texto auxiliar */
+.form-text {
+    font-size: clamp(0.8rem, 1.8vw, 0.9rem);
+    color: var(--color-text-light);
+    margin-top: 0.5rem;
+}
+
+.text-muted {
+    color: var(--color-text-light) !important;
+}
+
+/* Clases de utilidad */
+.mb-3 {
+    margin-bottom: 1.5rem !important;
+}
+
+/* Estados de carga */
+.form-submit:disabled {
+    background: var(--color-text-light);
+    cursor: not-allowed;
+    transform: none;
+}
+
+.form-submit.loading {
+    position: relative;
+    color: transparent;
+}
+
+.form-submit.loading::after {
+    content: "";
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 50%;
+    left: 50%;
+    margin-left: -10px;
+    margin-top: -10px;
+    border: 2px solid transparent;
+    border-top-color: var(--color-white);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+    .rsvp {
+        padding: 3rem 0;
+    }
+    
+    .rsvp-modal {
+        padding: 1rem 0.5rem;
+        align-items: center;
+    }
+    
+    .modal-content {
+        max-height: calc(100vh - 2rem);
+    }
+
+    .rsvp-step {
+        padding: clamp(0.8rem, 2vw, 1rem);
+    }
+    
+    .form-buttons {
+        flex-direction: column;
+        padding: 0;
+        gap: 1rem;
+    }
+    
+    .form-buttons .btn {
+        flex: none;
+        width: 100%;
+    }
+    
+    .campos-asistencia {
+        padding: 1rem;
+        margin: 1rem 0;
+    }
+    
+    .nombres-container .form-group {
+        padding-left: 0.8rem;
+    }
+
+    .exito-container {
+        padding: 1.5rem 1rem;
+    }
+
+    .form-submit {
+        width: 100%;
+        margin: 1.5rem 0 0;
+    }
+
+    .alert-container {
+        margin: 1rem 0;
+    }
+
+    .confirmacion-info,
+    .respuesta-existente,
+    .resumen-confirmacion,
+    .resumen-final {
+        margin: 1rem 0;
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .rsvp {
+        padding: 2.5rem 0;
+    }
+    
+    .rsvp-modal {
+        padding: 0.5rem;
+        align-items: center;
+    }
+    
+    .modal-content {
+        max-height: calc(100vh - 1rem);
+    }
+    
+    .modal-header {
+        padding: 1rem;
+    }
+    
+    .rsvp-form {
+        padding: 0.8rem;
+    }
+
+    .rsvp-step {
+        padding: 0.8rem;
+    }
+    
+    .form-group {
+        margin-bottom: 1.2rem;
+    }
+    
+    .rsvp-button {
+        min-width: 180px;
+    }
+
+    .exito-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 2rem;
+    }
+
+    .confirmacion-header {
+        margin-bottom: 1.5rem;
+    }
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+    from { 
+        opacity: 0; 
+        transform: translateY(20px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+@keyframes scaleIn {
+    from { 
+        opacity: 0; 
+        transform: scale(0.9); 
+    }
+    to { 
+        opacity: 1; 
+        transform: scale(1); 
+    }
+}
+
+@keyframes slideInLeft {
+    from { 
+        opacity: 0; 
+        transform: translateX(-20px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateX(0); 
+    }
+}
+
+@keyframes pulse {
+    0%, 100% { transform: translateY(-2px) scale(1); }
+    50% { transform: translateY(-2px) scale(1.05); }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Mejoras de accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Estados de carga para el RSVP */
+.rsvp.fade-in-on-scroll {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s ease;
+}
+
+.rsvp.fade-in-on-scroll.visible {
+    opacity: 1;
+    transform: translateY(0);
 }

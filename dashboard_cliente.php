@@ -35,7 +35,7 @@ $stmt = $conn->prepare("
         SUM(boletos_asignados) as total_boletos,
         SUM(CASE WHEN r.estado = 'aceptado' THEN r.boletos_confirmados ELSE 0 END) as confirmados,
         SUM(CASE WHEN r.estado = 'rechazado' THEN r.boletos_confirmados ELSE 0 END) as rechazados,
-        SUM(CASE WHEN r.estado = 'pendiente' THEN ig.boletos_asignados ELSE 0 END) as pendientes
+        SUM(CASE WHEN r.estado = 'pendiente' OR r.estado IS NULL THEN ig.boletos_asignados ELSE 0 END) as pendientes
     FROM invitados_grupos ig 
     LEFT JOIN rsvp_respuestas r ON ig.id_grupo = r.id_grupo 
     WHERE ig.slug_invitacion = ?
@@ -146,7 +146,7 @@ $stmt = $conn->prepare("
         ig.*,
         r.estado,
         r.boletos_confirmados,
-        r.nombres_acompañantes,
+        r.nombres_acompanantes,
         r.comentarios,
         r.fecha_respuesta
     FROM invitados_grupos ig 
@@ -340,8 +340,8 @@ $grupos = $stmt->fetchAll();
                             <tr>
                                 <td>
                                     <strong><?php echo htmlspecialchars($grupo['nombre_grupo']); ?></strong>
-                                    <?php if ($grupo['nombres_acompañantes']): ?>
-                                        <br><small class="text-muted">Con: <?php echo htmlspecialchars($grupo['nombres_acompañantes']); ?></small>
+                                    <?php if ($grupo['nombres_acompanantes']): ?>
+                                        <br><small class="text-muted">Con: <?php echo htmlspecialchars($grupo['nombres_acompanantes']); ?></small>
                                     <?php endif; ?>
                                 </td>
                                 <td>
@@ -361,8 +361,13 @@ $grupos = $stmt->fetchAll();
                                 <td>
                                     <?php if ($grupo['fecha_respuesta']): ?>
                                         <small><?php echo date('d/m/Y H:i', strtotime($grupo['fecha_respuesta'])); ?></small>
+                                        <?php if ($grupo['comentarios']): ?>
+                                            <br><small class="text-info" title="<?php echo htmlspecialchars($grupo['comentarios']); ?>">
+                                                <i class="fas fa-comment"></i> Con comentarios
+                                            </small>
+                                        <?php endif; ?>
                                     <?php else: ?>
-                                        <small class="text-muted">-</small>
+                                        <small class="text-muted">Sin respuesta</small>
                                     <?php endif; ?>
                                 </td>
                                 <td>
@@ -382,6 +387,13 @@ $grupos = $stmt->fetchAll();
                                             onclick="verURLToken('<?php echo $grupo['token_unico']; ?>')">
                                         <i class="fas fa-link"></i>
                                     </button>
+                                    <?php if ($grupo['estado'] && $grupo['estado'] !== 'pendiente'): ?>
+                                    <button class="btn btn-sm btn-info ms-1" 
+                                            onclick="verDetallesRespuesta(<?php echo $grupo['id_grupo']; ?>)"
+                                            title="Ver detalles de la respuesta">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <?php endif; ?>
                                     <button class="btn btn-sm btn-danger ms-1" 
                                             onclick="eliminarGrupo(<?php echo $grupo['id_grupo']; ?>, '<?php echo htmlspecialchars($grupo['nombre_grupo'], ENT_QUOTES); ?>')">
                                         <i class="fas fa-trash"></i>
@@ -391,6 +403,24 @@ $grupos = $stmt->fetchAll();
                             <?php endforeach; ?>
                         </tbody>
                     </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Ver Detalles -->
+    <div class="modal fade" id="modalDetallesRespuesta" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Detalles de la Respuesta</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="detalles-respuesta-content">
+                    <!-- Se llena dinámicamente -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                 </div>
             </div>
         </div>
@@ -573,23 +603,110 @@ $grupos = $stmt->fetchAll();
             window.open(`https://wa.me/?text=${mensaje}`, '_blank');
         }
 
+        function verDetallesRespuesta(id_grupo) {
+            // Mostrar loading
+            document.getElementById('detalles-respuesta-content').innerHTML = 
+                '<div class="text-center"><i class="fas fa-spinner fa-spin"></i> Cargando...</div>';
+            
+            const modal = new bootstrap.Modal(document.getElementById('modalDetallesRespuesta'));
+            modal.show();
+            
+            // Cargar detalles usando tu API existente
+            fetch(`./plantillas/plantilla-1/api/rsvp.php?action=cargar_respuesta&id_grupo=${id_grupo}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const respuesta = data.respuesta;
+                    const nombresInvitados = data.nombres_invitados;
+                    
+                    let html = `
+                        <div class="card border-0">
+                            <div class="card-body">
+                                <h5 class="card-title">${respuesta.nombre_grupo}</h5>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p><strong>Estado:</strong> 
+                                            <span class="status-badge status-${respuesta.estado}">
+                                                ${respuesta.estado === 'aceptado' ? 'Confirmados' : 
+                                                respuesta.estado === 'rechazado' ? 'No asistirán' : 'Sin respuesta'}
+                                            </span>
+                                        </p>
+                                        <p><strong>Boletos asignados:</strong> ${respuesta.boletos_asignados}</p>
+                                        ${respuesta.estado === 'aceptado' ? 
+                                            `<p><strong>Boletos confirmados:</strong> ${respuesta.boletos_confirmados}</p>` : ''}
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p><strong>Fecha de respuesta:</strong><br>
+                                        <small>${new Date(respuesta.fecha_respuesta).toLocaleString()}</small></p>
+                                    </div>
+                                </div>
+                    `;
+                    
+                    if (nombresInvitados && nombresInvitados.length > 0) {
+                        html += `
+                            <hr>
+                            <p><strong>Invitados confirmados:</strong></p>
+                            <ul class="list-unstyled">`;
+                        
+                        nombresInvitados.forEach(nombre => {
+                            html += `<li><i class="fas fa-user me-2 text-primary"></i>${nombre}</li>`;
+                        });
+                        
+                        html += `</ul>`;
+                    }
+                    
+                    if (respuesta.comentarios) {
+                        html += `
+                            <hr>
+                            <p><strong>Comentarios:</strong></p>
+                            <div class="alert alert-light">
+                                ${respuesta.comentarios}
+                            </div>`;
+                    }
+                    
+                    html += `</div></div>`;
+                    
+                    document.getElementById('detalles-respuesta-content').innerHTML = html;
+                } else {
+                    document.getElementById('detalles-respuesta-content').innerHTML = 
+                        `<div class="alert alert-danger">Error: ${data.message}</div>`;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('detalles-respuesta-content').innerHTML = 
+                    '<div class="alert alert-danger">Error al cargar los detalles</div>';
+            });
+        }
+
         // Auto-refresh estadísticas cada 30 segundos
         setInterval(() => {
-            fetch(window.location.href)
+            fetch(window.location.href + '&ajax=1') // Agrega parámetro para respuesta JSON
                 .then(response => response.text())
                 .then(html => {
                     const parser = new DOMParser();
                     const doc = parser.parseFromString(html, 'text/html');
                     
-                    // Actualizar solo los números de estadísticas
+                    // Actualizar estadísticas
                     const statsNumbers = document.querySelectorAll('.stats-number');
                     const newStatsNumbers = doc.querySelectorAll('.stats-number');
                     
                     statsNumbers.forEach((stat, index) => {
-                        if (newStatsNumbers[index]) {
+                        if (newStatsNumbers[index] && stat.textContent !== newStatsNumbers[index].textContent) {
                             stat.textContent = newStatsNumbers[index].textContent;
+                            // Animate the change
+                            stat.style.animation = 'none';
+                            stat.offsetHeight; // trigger reflow
+                            stat.style.animation = 'pulse 0.5s';
                         }
                     });
+                    
+                    // Actualizar tabla si hay cambios
+                    const currentTable = document.querySelector('tbody');
+                    const newTable = doc.querySelector('tbody');
+                    if (newTable && currentTable.innerHTML !== newTable.innerHTML) {
+                        currentTable.innerHTML = newTable.innerHTML;
+                    }
                 })
                 .catch(console.error);
         }, 30000);

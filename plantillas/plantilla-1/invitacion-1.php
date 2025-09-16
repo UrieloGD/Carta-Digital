@@ -251,7 +251,7 @@ try {
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 
     <!-- Icon page -->
-    <link rel="shortcut icon" href="./../../images/logo.webp" />
+    <link rel="shortcut icon" href="./images/logo.webp" />
     
 </head>
 <body>
@@ -544,42 +544,6 @@ try {
    </div>
 </section>
 
-<!-- Sección Mesa de Regalos -->
-<?php if (!empty($mesa_regalos)): ?>
-<section class="mesa-regalos" id="mesa-regalos">
-   <div class="container">
-       <h2>Mesa de Regalos</h2>
-       <p>Tu presencia es nuestro mejor regalo, pero si deseas obsequiarnos algo especial:</p>
-       <div class="regalos-grid">
-           <?php foreach($mesa_regalos as $regalo): ?>
-           <div class="regalo-card">
-               <?php if ($regalo['icono']): ?>
-               <div class="regalo-icon">
-                   <img src="<?php echo htmlspecialchars($regalo['icono']); ?>" alt="<?php echo htmlspecialchars($regalo['nombre_tienda'] ?: $regalo['tienda']); ?>" />
-               </div>
-               <?php endif; ?>
-               <h3><?php echo htmlspecialchars($regalo['nombre_tienda'] ?: ucfirst(str_replace('_', ' ', $regalo['tienda']))); ?></h3>
-               <?php if ($regalo['numero_evento']): ?>
-               <p><strong>Número de evento:</strong> <?php echo htmlspecialchars($regalo['numero_evento']); ?></p>
-               <?php endif; ?>
-               <?php if ($regalo['codigo_evento']): ?>
-               <p><strong>Código:</strong> <?php echo htmlspecialchars($regalo['codigo_evento']); ?></p>
-               <?php endif; ?>
-               <?php if ($regalo['descripcion']): ?>
-               <p><?php echo htmlspecialchars($regalo['descripcion']); ?></p>
-               <?php endif; ?>
-               <?php if ($regalo['url']): ?>
-               <a href="<?php echo htmlspecialchars($regalo['url']); ?>" target="_blank" class="regalo-link">
-                   Visitar tienda
-               </a>
-               <?php endif; ?>
-           </div>
-           <?php endforeach; ?>
-       </div>
-   </div>
-</section>
-<?php endif; ?>
-
 <!-- Sección RSVP -->
 <section class="rsvp" id="rsvp">
    <div class="container">
@@ -596,47 +560,125 @@ try {
            <h3>Confirmar Asistencia</h3>
            <button class="modal-close" onclick="closeRSVPModal()">&times;</button>
        </div>
-       <form class="rsvp-form" id="rsvpForm">
-           <input type="hidden" name="invitacion_id" value="<?php echo $invitacion['id']; ?>">
-           <div class="form-group">
-               <label for="nombre">Nombre Completo *</label>
-               <input type="text" id="nombre" name="nombre" required>
+
+       <!-- Paso 1: Validar código del grupo -->
+       <div class="rsvp-step" id="step-codigo">
+           <form class="rsvp-form" id="codigoForm">
+               <input type="hidden" name="slug" value="<?php echo htmlspecialchars($slug); ?>">
+               <div class="form-group">
+                   <label for="codigo_grupo">Código de Invitación *</label>
+                   <input type="text" id="codigo_grupo" name="codigo_grupo" required 
+                          placeholder="Ingresa tu código de invitación" style="text-transform: uppercase;">
+                   <small class="form-text text-muted">
+                       Ingresa el código único que recibiste para tu grupo
+                   </small>
+               </div>
+               <div class="alert-container" id="codigo-alert"></div>
+               <button type="submit" class="form-submit">Validar Código</button>
+           </form>
+       </div>
+
+       <!-- Paso 2: Formulario completo RSVP -->
+       <div class="rsvp-step" id="step-formulario" style="display: none;">
+           <div class="grupo-info mb-3">
+               <div class="alert alert-info">
+                   <strong id="nombre-grupo"></strong><br>
+                   <span id="boletos-info"></span>
+               </div>
            </div>
-           <div class="form-group">
-               <label for="telefono">Teléfono</label>
-               <input type="tel" id="telefono" name="telefono">
+
+           <form class="rsvp-form" id="rsvpForm">
+               <input type="hidden" name="id_grupo" id="id_grupo">
+               
+               <div class="form-group">
+                   <label for="estado">¿Asistirán a la celebración? *</label>
+                   <select id="estado" name="estado" required onchange="toggleAsistenciaFields()">
+                       <option value="">Selecciona una opción</option>
+                       <option value="aceptado">Sí, asistiremos</option>
+                       <option value="rechazado">No podremos asistir</option>
+                   </select>
+               </div>
+
+               <!-- Campos que se muestran solo si acepta asistir -->
+               <div class="campos-asistencia" id="campos-asistencia" style="display: none;">
+                   <div class="form-group">
+                       <label for="boletos_confirmados">¿Cuántos boletos usarán? *</label>
+                       <select id="boletos_confirmados" name="boletos_confirmados" onchange="updateNombresFields()">
+                           <!-- Se llena dinámicamente -->
+                       </select>
+                   </div>
+
+                   <div class="nombres-container" id="nombres-container">
+                       <!-- Se generan dinámicamente los campos de nombres -->
+                   </div>
+               </div>
+
+               <div class="form-group">
+                   <label for="comentarios">Comentarios (opcional)</label>
+                   <textarea id="comentarios" name="comentarios" rows="3" 
+                             placeholder="Mensaje especial, restricciones alimentarias, etc."></textarea>
+               </div>
+
+               <div class="alert-container" id="form-alert"></div>
+
+               <div class="form-buttons">
+                   <button type="button" class="btn btn-secondary" onclick="volverACodigo()">Cambiar Código</button>
+                   <button type="submit" class="form-submit">Continuar</button>
+               </div>
+           </form>
+       </div>
+
+       <!-- Paso 3: Confirmación de datos -->
+       <div class="rsvp-step" id="step-confirmacion" style="display: none;">
+           <div class="confirmacion-header">
+               <h4>Confirma tu información</h4>
+               <p>Por favor revisa que todos los datos sean correctos:</p>
            </div>
-           <div class="form-group">
-               <label for="email">Email</label>
-               <input type="email" id="email" name="email">
+           
+           <div class="confirmacion-info" id="confirmacion-info">
+               <!-- Se llena dinámicamente -->
            </div>
-           <div class="form-group">
-               <label for="asistencia">¿Asistirás? *</label>
-               <select id="asistencia" name="asistencia" required>
-                   <option value="">Selecciona una opción</option>
-                   <option value="si">Sí, asistiré</option>
-                   <option value="no">No podré asistir</option>
-                   <option value="tal_vez">Tal vez</option>
-               </select>
+
+           <div class="form-buttons">
+               <button type="button" class="btn btn-secondary" onclick="volverAFormulario()">Editar Información</button>
+               <button type="button" class="btn btn-primary" onclick="enviarConfirmacion()">Confirmar Asistencia</button>
            </div>
-           <div class="form-group">
-               <label for="acompanantes">Número de acompañantes</label>
-               <input type="number" id="acompanantes" name="acompanantes" min="0" max="5" value="0">
+       </div>
+
+       <!-- Paso 4: Ver respuesta existente -->
+       <div class="rsvp-step" id="step-ver-respuesta" style="display: none;">
+           <div class="alert alert-success mb-3">
+               <strong>¡Ya confirmaste tu asistencia!</strong><br>
+               Muchas gracias por responder a nuestra invitación.
            </div>
-           <div class="form-group">
-               <label for="nombres_acompanantes">Nombres de acompañantes</label>
-               <textarea id="nombres_acompanantes" name="nombres_acompanantes" rows="2" placeholder="Nombres de las personas que te acompañarán..."></textarea>
+           
+           <div class="respuesta-existente" id="respuesta-existente">
+               <!-- Se carga dinámicamente -->
            </div>
-           <div class="form-group">
-               <label for="restricciones_alimentarias">Restricciones alimentarias</label>
-               <textarea id="restricciones_alimentarias" name="restricciones_alimentarias" rows="2" placeholder="Alergias, vegetariano, vegano, etc."></textarea>
+
+           <div class="form-buttons">
+               <button type="button" class="btn btn-warning" onclick="editarRespuesta()" id="btn-editar-respuesta">
+                   Modificar Respuesta
+               </button>
+               <button type="button" class="btn btn-secondary" onclick="closeRSVPModal()">Cerrar</button>
            </div>
-           <div class="form-group">
-               <label for="mensaje">Mensaje especial</label>
-               <textarea id="mensaje" name="mensaje" rows="3" placeholder="Mensaje especial para los novios..."></textarea>
+       </div>
+
+       <!-- Paso 5: Éxito -->
+       <div class="rsvp-step" id="step-exito" style="display: none;">
+           <div class="exito-container">
+               <div class="exito-icon">✓</div>
+               <h3>¡Confirmación exitosa!</h3>
+               <p id="mensaje-exito"></p>
+               <div class="resumen-confirmacion" id="resumen-final">
+                   <!-- Se llena dinámicamente -->
+               </div>
            </div>
-           <button type="submit" class="form-submit">Enviar Confirmación</button>
-       </form>
+           
+           <div class="form-buttons">
+               <button type="button" class="btn btn-primary" onclick="closeRSVPModal()">Cerrar</button>
+           </div>
+       </div>
    </div>
 </div>
 
