@@ -204,35 +204,42 @@ $invitacion_url = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . $_SER
     <link rel="shortcut icon" href="./images/logo.webp" />
 </head>
 <body>
-    <!-- Header -->
+    <!-- Header mejorado -->
     <div class="dashboard-header">
         <div class="container">
-            <div class="row align-items-center">
-                <div class="col-12 col-md-8">
+            <div class="row">
+                <div class="col-12">
                     <h1 class="header-title">
                         <i class="fas fa-heart me-2"></i>
                         <?php echo htmlspecialchars($invitacion['nombres_novios']); ?>
                     </h1>
+                    
                     <div class="header-info">
                         <span class="info-item">
                             <i class="fas fa-calendar me-1"></i>
                             <?php echo date('d/m/Y', strtotime($invitacion['fecha_evento'])); ?>
                         </span>
+                        
+                        <span class="info-separator">—</span>
+                        
                         <span class="info-item">
                             <i class="fas fa-clock me-1"></i>
                             <?php echo date('H:i', strtotime($invitacion['hora_evento'])); ?>
                         </span>
                     </div>
-                </div>
-                <div class="col-12 col-md-4 header-actions">
-                    <a href="invitacion.php?slug=<?php echo $invitacion['slug']; ?>" 
-                       target="_blank" 
-                       class="btn btn-light btn-action">
-                        <i class="fas fa-eye me-2"></i>Ver Invitación
-                    </a>
-                    <a href="logout.php" class="btn btn-outline-light btn-action">
-                        <i class="fas fa-sign-out-alt me-2"></i>Salir
-                    </a>
+                    
+                    <div class="header-actions">
+                        <a href="invitacion.php?slug=<?php echo $invitacion['slug']; ?>" 
+                        target="_blank" 
+                        class="btn btn-light btn-action">
+                            <i class="fas fa-eye me-2"></i>
+                            <span class="btn-text">Ver Invitación</span>
+                        </a>
+                        <a href="logout.php" class="btn btn-outline-light btn-action">
+                            <i class="fas fa-sign-out-alt me-2"></i>
+                            <span class="btn-text">Salir</span>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -325,18 +332,87 @@ $invitacion_url = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . $_SER
         <!-- Gestión de Invitados -->
         <div class="card guests-card">
             <div class="card-header">
-                <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex justify-content-between align-items-center flex-wrap">
                     <h5 class="mb-0">
                         <i class="fas fa-users-cog me-2"></i>Gestión de Invitados
                     </h5>
-                    <button class="btn btn-primary btn-add-guest" 
-                            data-bs-toggle="modal" 
-                            data-bs-target="#modalCrearGrupo">
-                        <i class="fas fa-plus me-2"></i>
-                        <span class="btn-text">Nuevo Grupo</span>
-                    </button>
+                    <div class="header-buttons">
+                        <button onclick="actualizarDatos()" class="btn btn-secondary btn-action" id="btn-actualizar">
+                            <i class="fas fa-sync-alt me-2" id="icono-actualizar"></i>Actualizar
+                        </button>
+                        <button class="btn btn-primary btn-action" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#modalCrearGrupo">
+                            <i class="fas fa-plus me-2"></i>
+                            <span class="btn-text">Nuevo Grupo</span>
+                        </button>
+                    </div>
                 </div>
             </div>
+            
+            <!-- Sección de Filtros y Búsqueda -->
+            <div class="filters-section">
+                <div class="filters-toggle" onclick="toggleFilters()">
+                    <h6><i class="fas fa-filter me-2"></i>Filtros y Búsqueda</h6>
+                    <i class="fas fa-chevron-down" id="filters-chevron"></i>
+                </div>
+                
+                <div class="filters-collapsed" id="filters-content">
+                    <div class="filters-content">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" class="form-control" id="search-input" 
+                                placeholder="Buscar por nombre de grupo..." oninput="applyFilters()">
+                        </div>
+                        
+                        <div class="filter-row">
+                            <div class="filter-group">
+                                <label for="status-filter">Estado</label>
+                                <select class="form-select" id="status-filter" onchange="applyFilters()">
+                                    <option value="all">Todos los estados</option>
+                                    <option value="pendiente">Sin respuesta</option>
+                                    <option value="aceptado">Confirmados</option>
+                                    <option value="rechazado">No asistirán</option>
+                                </select>
+                            </div>
+                            
+                            <div class="filter-group">
+                                <label for="sort-by">Ordenar por</label>
+                                <select class="form-select" id="sort-by" onchange="applyFilters()">
+                                    <option value="newest">Más recientes primero</option>
+                                    <option value="oldest">Más antiguos primero</option>
+                                    <option value="name_asc">Nombre (A-Z)</option>
+                                    <option value="name_desc">Nombre (Z-A)</option>
+                                </select>
+                            </div>
+                            
+                            <div class="filter-group">
+                                <label for="items-per-page">Mostrar</label>
+                                <select class="form-select" id="items-per-page" onchange="applyFilters()">
+                                    <option value="10">10 elementos</option>
+                                    <option value="25">25 elementos</option>
+                                    <option value="50">50 elementos</option>
+                                    <option value="all">Todos</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="filter-actions">
+                            <button class="btn btn-sm btn-outline-secondary" onclick="resetFilters()">
+                                <i class="fas fa-undo me-1"></i>Restablecer
+                            </button>
+                            <button class="btn btn-sm btn-primary" onclick="applyFilters()">
+                                <i class="fas fa-check me-1"></i>Aplicar
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-badges" id="active-filters">
+                        <!-- Aquí se mostrarán los filtros activos -->
+                    </div>
+                </div>
+            </div>
+            
             <div class="card-body p-0">
                 <!-- Vista Mobile -->
                 <div class="mobile-guests d-md-none">
@@ -394,24 +470,24 @@ $invitacion_url = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . $_SER
                             </div>
                             
                             <div class="guest-actions">
-                                <button class="btn btn-sm btn-primary" 
+                                <button class="btn btn-sm btn-action btn-secondary" 
                                         onclick="editarGrupo(<?php echo $grupo['id_grupo']; ?>, '<?php echo htmlspecialchars($grupo['nombre_grupo'], ENT_QUOTES); ?>', <?php echo $grupo['boletos_asignados']; ?>)">
                                     <i class="fas fa-edit"></i>
                                 </button>
                                 
-                                <button class="btn btn-sm btn-info" 
+                                <button class="btn btn-sm btn-action btn-info" 
                                         onclick="compartirInvitacion('<?php echo htmlspecialchars($grupo['nombre_grupo'], ENT_QUOTES); ?>', '<?php echo $grupo['token_unico']; ?>')">
                                     <i class="fas fa-share"></i>
                                 </button>
                                 
                                 <?php if ($grupo['estado'] && $grupo['estado'] !== 'pendiente'): ?>
-                                <button class="btn btn-sm btn-success" 
+                                <button class="btn btn-sm btn-action btn-success" 
                                         onclick="verDetallesRespuesta(<?php echo $grupo['id_grupo']; ?>)">
                                     <i class="fas fa-eye"></i>
                                 </button>
                                 <?php endif; ?>
                                 
-                                <button class="btn btn-sm btn-danger" 
+                                <button class="btn btn-sm btn-action btn-danger" 
                                         onclick="eliminarGrupo(<?php echo $grupo['id_grupo']; ?>, '<?php echo htmlspecialchars($grupo['nombre_grupo'], ENT_QUOTES); ?>')">
                                     <i class="fas fa-trash"></i>
                                 </button>
@@ -477,21 +553,21 @@ $invitacion_url = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . $_SER
                                         <?php endif; ?>
                                     </td>
                                     <td class="table-actions">
-                                        <button class="btn btn-sm btn-primary" 
+                                        <button class="btn btn-sm btn-action btn-secondary" 
                                                 onclick="editarGrupo(<?php echo $grupo['id_grupo']; ?>, '<?php echo htmlspecialchars($grupo['nombre_grupo'], ENT_QUOTES); ?>', <?php echo $grupo['boletos_asignados']; ?>)">
                                             <i class="fas fa-edit"></i>
                                         </button>
-                                        <button class="btn btn-sm btn-info" 
+                                        <button class="btn btn-sm btn-action btn-info" 
                                                 onclick="compartirInvitacion('<?php echo htmlspecialchars($grupo['nombre_grupo'], ENT_QUOTES); ?>', '<?php echo $grupo['token_unico']; ?>')">
                                             <i class="fas fa-share"></i>
                                         </button>
                                         <?php if ($grupo['estado'] && $grupo['estado'] !== 'pendiente'): ?>
-                                        <button class="btn btn-sm btn-success" 
+                                        <button class="btn btn-sm btn-action btn-success" 
                                                 onclick="verDetallesRespuesta(<?php echo $grupo['id_grupo']; ?>)">
                                             <i class="fas fa-eye"></i>
                                         </button>
                                         <?php endif; ?>
-                                        <button class="btn btn-sm btn-danger" 
+                                        <button class="btn btn-sm btn-action btn-danger" 
                                                 onclick="eliminarGrupo(<?php echo $grupo['id_grupo']; ?>, '<?php echo htmlspecialchars($grupo['nombre_grupo'], ENT_QUOTES); ?>')">
                                             <i class="fas fa-trash"></i>
                                         </button>
