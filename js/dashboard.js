@@ -737,21 +737,28 @@ class DashboardManager {
         const nombreGrupo = document.getElementById('grupo-nombre').textContent;
         const url = document.getElementById('link-invitacion').value;
         const token = document.getElementById('token-display').textContent;
-        const nombresNovios = window.dashboardConfig.nombresNovios;
+        // Obtener nombres sin escapar HTML
+        const nombresNovios = this.htmlUnescape(window.dashboardConfig.nombresNovios);
         
         const mensaje = `¡Estás invitado a nuestra boda!
 
-${nombresNovios}
+        ${nombresNovios}
 
-Confirma tu asistencia aquí:
-${url}
+        Confirma tu asistencia aquí:
+        ${url}
 
-Tu código de acceso es: ${token}
+        Tu código de acceso es: ${token}
 
-¡Esperamos verte en nuestro día especial!`;
+        ¡Esperamos verte en nuestro día especial!`;
 
         const mensajeCodificado = encodeURIComponent(mensaje);
         window.open(`https://wa.me/?text=${mensajeCodificado}`, '_blank');
+    }
+
+    htmlUnescape(str) {
+        const textarea = document.createElement('textarea');
+        textarea.innerHTML = str;
+        return textarea.value;
     }
 
     // Compartir por Telegram
@@ -759,18 +766,18 @@ Tu código de acceso es: ${token}
         const nombreGrupo = document.getElementById('grupo-nombre').textContent;
         const url = document.getElementById('link-invitacion').value;
         const token = document.getElementById('token-display').textContent;
-        const nombresNovios = window.dashboardConfig.nombresNovios;
+        const nombresNovios = this.htmlUnescape(window.dashboardConfig.nombresNovios);
         
         const mensaje = `¡Estás invitado a nuestra boda!
 
-${nombresNovios}
+        ${nombresNovios}
 
-Confirma tu asistencia aquí:
-${url}
+        Confirma tu asistencia aquí:
+        ${url}
 
-Tu código de acceso es: ${token}
+        Tu código de acceso es: ${token}
 
-¡Esperamos verte en nuestro día especial!`;
+        ¡Esperamos verte en nuestro día especial!`;
 
         const mensajeCodificado = encodeURIComponent(mensaje);
         window.open(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${mensajeCodificado}`, '_blank');
@@ -781,17 +788,17 @@ Tu código de acceso es: ${token}
         const nombreGrupo = document.getElementById('grupo-nombre').textContent;
         const url = document.getElementById('link-invitacion').value;
         const token = document.getElementById('token-display').textContent;
-        const nombresNovios = window.dashboardConfig.nombresNovios;
+        const nombresNovios = this.htmlUnescape(window.dashboardConfig.nombresNovios);
         
         const mensaje = `¡Estás invitado a nuestra boda!
 
-${nombresNovios}
+        ${nombresNovios}
 
-Confirma tu asistencia en: ${url}
+        Confirma tu asistencia en: ${url}
 
-Tu código de acceso es: ${token}
+        Tu código de acceso es: ${token}
 
-¡Esperamos verte en nuestro día especial!`;
+        ¡Esperamos verte en nuestro día especial!`;
 
         navigator.clipboard.writeText(mensaje).then(() => {
             const btn = event.target;
