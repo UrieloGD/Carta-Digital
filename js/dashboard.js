@@ -737,19 +737,16 @@ class DashboardManager {
         const nombreGrupo = document.getElementById('grupo-nombre').textContent;
         const url = document.getElementById('link-invitacion').value;
         const token = document.getElementById('token-display').textContent;
-        // Obtener nombres sin escapar HTML
         const nombresNovios = this.htmlUnescape(window.dashboardConfig.nombresNovios);
         
-        const mensaje = `¡Estás invitado a nuestra boda!
+        // Mensaje más compacto para evitar problemas de formato en WhatsApp
+        const mensaje = `¡Estas invitado a nuestra boda! ${nombresNovios}
 
-        ${nombresNovios}
+Confirma tu asistencia aqui: ${url}
 
-        Confirma tu asistencia aquí:
-        ${url}
+Tu codigo de acceso es: ${token}
 
-        Tu código de acceso es: ${token}
-
-        ¡Esperamos verte en nuestro día especial!`;
+¡Esperamos verte en nuestro dia especial!`;
 
         const mensajeCodificado = encodeURIComponent(mensaje);
         window.open(`https://wa.me/?text=${mensajeCodificado}`, '_blank');
@@ -768,16 +765,13 @@ class DashboardManager {
         const token = document.getElementById('token-display').textContent;
         const nombresNovios = this.htmlUnescape(window.dashboardConfig.nombresNovios);
         
-        const mensaje = `¡Estás invitado a nuestra boda!
+        const mensaje = `¡Estas invitado a nuestra boda! ${nombresNovios}
 
-        ${nombresNovios}
+Confirma tu asistencia aqui: ${url}
 
-        Confirma tu asistencia aquí:
-        ${url}
+Tu codigo de acceso es: ${token}
 
-        Tu código de acceso es: ${token}
-
-        ¡Esperamos verte en nuestro día especial!`;
+¡Esperamos verte en nuestro dia especial!`;
 
         const mensajeCodificado = encodeURIComponent(mensaje);
         window.open(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${mensajeCodificado}`, '_blank');
@@ -790,15 +784,13 @@ class DashboardManager {
         const token = document.getElementById('token-display').textContent;
         const nombresNovios = this.htmlUnescape(window.dashboardConfig.nombresNovios);
         
-        const mensaje = `¡Estás invitado a nuestra boda!
+        const mensaje = `¡Estas invitado a nuestra boda! ${nombresNovios}
 
-        ${nombresNovios}
+Confirma tu asistencia en: ${url}
 
-        Confirma tu asistencia en: ${url}
+Tu codigo de acceso es: ${token}
 
-        Tu código de acceso es: ${token}
-
-        ¡Esperamos verte en nuestro día especial!`;
+¡Esperamos verte en nuestro dia especial!`;
 
         navigator.clipboard.writeText(mensaje).then(() => {
             const btn = event.target;
