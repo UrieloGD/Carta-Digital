@@ -545,142 +545,164 @@ try {
 </section>
 
 <!-- Sección RSVP -->
+
+<?php
+// Obtener el tipo de RSVP configurado (por defecto 'whatsapp' para compatibilidad)
+$tipo_rsvp = $invitacion['tipo_rsvp'] ?? 'whatsapp';
+?>
+
 <section class="rsvp" id="rsvp">
-   <div class="container">
-       <h2>Confirma tu Asistencia</h2>
-       <p><?php echo htmlspecialchars($texto_rsvp); ?></p>
-       <button class="rsvp-button" onclick="openRSVPModal()">Confirmar Asistencia</button>
-   </div>
+    <div class="container">
+        <h2>Confirma tu Asistencia</h2>
+        <p><?php echo htmlspecialchars($texto_rsvp); ?></p>
+        
+        <?php if ($tipo_rsvp === 'whatsapp'): ?>
+            <!-- Botón para confirmación por WhatsApp -->
+            <button class="rsvp-button whatsapp-button" onclick="confirmarAsistenciaWhatsApp()">
+                <i class="bi bi-whatsapp me-2"></i>
+                Confirmar por WhatsApp
+            </button>
+            
+        <?php else: ?>
+            <!-- Botón para sistema digital (original) -->
+            <button class="rsvp-button" onclick="openRSVPModal()">
+                <i class="bi bi-calendar-check me-2"></i>
+                Confirmar Asistencia
+            </button>
+        <?php endif; ?>
+    </div>
 </section>
 
-<!-- Modal RSVP -->
-<div class="rsvp-modal" id="rsvpModal">
-   <div class="modal-content">
-       <div class="modal-header">
-           <h3>Confirmar Asistencia</h3>
-           <button class="modal-close" onclick="closeRSVPModal()">&times;</button>
-       </div>
+<?php if ($tipo_rsvp === 'digital'): ?>
+    <!-- Modal RSVP Digital (solo si es tipo digital) -->
+    <div class="rsvp-modal" id="rsvpModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Confirmar Asistencia</h3>
+                <button class="modal-close" onclick="closeRSVPModal()">&times;</button>
+            </div>
 
-       <!-- Paso 1: Validar código del grupo -->
-       <div class="rsvp-step" id="step-codigo">
-           <form class="rsvp-form" id="codigoForm">
-               <input type="hidden" name="slug" value="<?php echo htmlspecialchars($slug); ?>">
-               <div class="form-group">
-                   <label for="codigo_grupo">Código de Invitación *</label>
-                   <input type="text" id="codigo_grupo" name="codigo_grupo" required 
-                          placeholder="Ingresa tu código de invitación" style="text-transform: uppercase;">
-                   <small class="form-text text-muted">
-                       Ingresa el código único que recibiste para tu grupo
-                   </small>
-               </div>
-               <div class="alert-container" id="codigo-alert"></div>
-               <button type="submit" class="form-submit">Validar Código</button>
-           </form>
-       </div>
+            <!-- Paso 1: Validar código del grupo -->
+            <div class="rsvp-step" id="step-codigo">
+                <form class="rsvp-form" id="codigoForm">
+                    <input type="hidden" name="slug" value="<?php echo htmlspecialchars($slug); ?>">
+                    <div class="form-group">
+                        <label for="codigo_grupo">Código de Invitación *</label>
+                        <input type="text" id="codigo_grupo" name="codigo_grupo" required 
+                               placeholder="Ingresa tu código de invitación" style="text-transform: uppercase;">
+                        <small class="form-text text-muted">
+                            Ingresa el código único que recibiste para tu grupo
+                        </small>
+                    </div>
+                    <div class="alert-container" id="codigo-alert"></div>
+                    <button type="submit" class="form-submit">Validar Código</button>
+                </form>
+            </div>
 
-       <!-- Paso 2: Formulario completo RSVP -->
-       <div class="rsvp-step" id="step-formulario" style="display: none;">
-           <div class="grupo-info mb-3">
-               <div class="alert alert-info">
-                   <strong id="nombre-grupo"></strong><br>
-                   <span id="boletos-info"></span>
-               </div>
-           </div>
+            <!-- Paso 2: Formulario completo RSVP -->
+            <div class="rsvp-step" id="step-formulario" style="display: none;">
+                <div class="grupo-info mb-3">
+                    <div class="alert alert-info">
+                        <strong id="nombre-grupo"></strong><br>
+                        <span id="boletos-info"></span>
+                    </div>
+                </div>
 
-           <form class="rsvp-form" id="rsvpForm">
-               <input type="hidden" name="id_grupo" id="id_grupo">
-               
-               <div class="form-group">
-                   <label for="estado">¿Asistirán a la celebración? *</label>
-                   <select id="estado" name="estado" required onchange="toggleAsistenciaFields()">
-                       <option value="">Selecciona una opción</option>
-                       <option value="aceptado">Sí, asistiremos</option>
-                       <option value="rechazado">No podremos asistir</option>
-                   </select>
-               </div>
+                <form class="rsvp-form" id="rsvpForm">
+                    <input type="hidden" name="id_grupo" id="id_grupo">
+                    
+                    <div class="form-group">
+                        <label for="estado">¿Asistirán a la celebración? *</label>
+                        <select id="estado" name="estado" required onchange="toggleAsistenciaFields()">
+                            <option value="">Selecciona una opción</option>
+                            <option value="aceptado">Sí, asistiremos</option>
+                            <option value="rechazado">No podremos asistir</option>
+                        </select>
+                    </div>
 
-               <!-- Campos que se muestran solo si acepta asistir -->
-               <div class="campos-asistencia" id="campos-asistencia" style="display: none;">
-                   <div class="form-group">
-                       <label for="boletos_confirmados">¿Cuántos boletos usarán? *</label>
-                       <select id="boletos_confirmados" name="boletos_confirmados" onchange="updateNombresFields()">
-                           <!-- Se llena dinámicamente -->
-                       </select>
-                   </div>
+                    <!-- Campos que se muestran solo si acepta asistir -->
+                    <div class="campos-asistencia" id="campos-asistencia" style="display: none;">
+                        <div class="form-group">
+                            <label for="boletos_confirmados">¿Cuántos boletos usarán? *</label>
+                            <select id="boletos_confirmados" name="boletos_confirmados" onchange="updateNombresFields()">
+                                <!-- Se llena dinámicamente -->
+                            </select>
+                        </div>
 
-                   <div class="nombres-container" id="nombres-container">
-                       <!-- Se generan dinámicamente los campos de nombres -->
-                   </div>
-               </div>
+                        <div class="nombres-container" id="nombres-container">
+                            <!-- Se generan dinámicamente los campos de nombres -->
+                        </div>
+                    </div>
 
-               <div class="form-group">
-                   <label for="comentarios">Comentarios (opcional)</label>
-                   <textarea id="comentarios" name="comentarios" rows="3" 
-                             placeholder="Mensaje especial, restricciones alimentarias, etc."></textarea>
-               </div>
+                    <div class="form-group">
+                        <label for="comentarios">Comentarios (opcional)</label>
+                        <textarea id="comentarios" name="comentarios" rows="3" 
+                                  placeholder="Mensaje especial, restricciones alimentarias, etc."></textarea>
+                    </div>
 
-               <div class="alert-container" id="form-alert"></div>
+                    <div class="alert-container" id="form-alert"></div>
 
-               <div class="form-buttons">
-                   <button type="button" class="btn btn-secondary" onclick="volverACodigo()">Cambiar Código</button>
-                   <button type="submit" class="form-submit">Continuar</button>
-               </div>
-           </form>
-       </div>
+                    <div class="form-buttons">
+                        <button type="button" class="btn btn-secondary" onclick="volverACodigo()">Cambiar Código</button>
+                        <button type="submit" class="form-submit">Continuar</button>
+                    </div>
+                </form>
+            </div>
 
-       <!-- Paso 3: Confirmación de datos -->
-       <div class="rsvp-step" id="step-confirmacion" style="display: none;">
-           <div class="confirmacion-header">
-               <h4>Confirma tu información</h4>
-               <p>Por favor revisa que todos los datos sean correctos:</p>
-           </div>
-           
-           <div class="confirmacion-info" id="confirmacion-info">
-               <!-- Se llena dinámicamente -->
-           </div>
+            <!-- Paso 3: Confirmación de datos -->
+            <div class="rsvp-step" id="step-confirmacion" style="display: none;">
+                <div class="confirmacion-header">
+                    <h4>Confirma tu información</h4>
+                    <p>Por favor revisa que todos los datos sean correctos:</p>
+                </div>
+                
+                <div class="confirmacion-info" id="confirmacion-info">
+                    <!-- Se llena dinámicamente -->
+                </div>
 
-           <div class="form-buttons">
-               <button type="button" class="btn btn-secondary" onclick="volverAFormulario()">Editar Información</button>
-               <button type="button" class="btn btn-primary" onclick="enviarConfirmacion()">Confirmar Asistencia</button>
-           </div>
-       </div>
+                <div class="form-buttons">
+                    <button type="button" class="btn btn-secondary" onclick="volverAFormulario()">Editar Información</button>
+                    <button type="button" class="btn btn-primary" onclick="enviarConfirmacion()">Confirmar Asistencia</button>
+                </div>
+            </div>
 
-       <!-- Paso 4: Ver respuesta existente -->
-       <div class="rsvp-step" id="step-ver-respuesta" style="display: none;">
-           <div class="alert alert-success mb-3">
-               <strong>¡Ya confirmaste tu asistencia!</strong><br>
-               Muchas gracias por responder a nuestra invitación.
-           </div>
-           
-           <div class="respuesta-existente" id="respuesta-existente">
-               <!-- Se carga dinámicamente -->
-           </div>
+            <!-- Paso 4: Ver respuesta existente -->
+            <div class="rsvp-step" id="step-ver-respuesta" style="display: none;">
+                <div class="alert alert-success mb-3">
+                    <strong>¡Ya confirmaste tu asistencia!</strong><br>
+                    Muchas gracias por responder a nuestra invitación.
+                </div>
+                
+                <div class="respuesta-existente" id="respuesta-existente">
+                    <!-- Se carga dinámicamente -->
+                </div>
 
-           <div class="form-buttons">
-               <button type="button" class="btn btn-warning" onclick="editarRespuesta()" id="btn-editar-respuesta">
-                   Modificar Respuesta
-               </button>
-               <button type="button" class="btn btn-secondary" onclick="closeRSVPModal()">Cerrar</button>
-           </div>
-       </div>
+                <div class="form-buttons">
+                    <button type="button" class="btn btn-warning" onclick="editarRespuesta()" id="btn-editar-respuesta">
+                        Modificar Respuesta
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="closeRSVPModal()">Cerrar</button>
+                </div>
+            </div>
 
-       <!-- Paso 5: Éxito -->
-       <div class="rsvp-step" id="step-exito" style="display: none;">
-           <div class="exito-container">
-               <div class="exito-icon">✓</div>
-               <h3>¡Confirmación exitosa!</h3>
-               <p id="mensaje-exito"></p>
-               <div class="resumen-confirmacion" id="resumen-final">
-                   <!-- Se llena dinámicamente -->
-               </div>
-           </div>
-           
-           <div class="form-buttons">
-               <button type="button" class="btn btn-primary" onclick="closeRSVPModal()">Cerrar</button>
-           </div>
-       </div>
-   </div>
-</div>
+            <!-- Paso 5: Éxito -->
+            <div class="rsvp-step" id="step-exito" style="display: none;">
+                <div class="exito-container">
+                    <div class="exito-icon">✓</div>
+                    <h3>¡Confirmación exitosa!</h3>
+                    <p id="mensaje-exito"></p>
+                    <div class="resumen-confirmacion" id="resumen-final">
+                        <!-- Se llena dinámicamente -->
+                    </div>
+                </div>
+                
+                <div class="form-buttons">
+                    <button type="button" class="btn btn-primary" onclick="closeRSVPModal()">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
 
 <!-- Footer -->
 <footer class="footer">
@@ -759,5 +781,6 @@ const invitacionData = {
 <script src="./plantillas/plantilla-1/js/estadisticas.js?v=<?php echo filemtime('./plantillas/plantilla-1/js/estadisticas.js'); ?>"></script>
 <script src="./plantillas/plantilla-1/js/invitacion.js?v=<?php echo filemtime('./plantillas/plantilla-1/js/invitacion.js'); ?>"></script>
 <script src="./plantillas/plantilla-1/js/music-player.js?v=<?php echo filemtime('./plantillas/plantilla-1/js/music-player.js'); ?>"></script>
+<script src="./plantillas/plantilla-1/js/whatsapp.js?v=<?php echo filemtime('./plantillas/plantilla-1/js/whatsapp.js'); ?>"></script>
 </body>
 </html>

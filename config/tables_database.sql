@@ -35,6 +35,7 @@ CREATE TABLE IF NOT EXISTS invitaciones (
     frase_historia TEXT,
     dresscode TEXT,
     texto_rsvp TEXT,
+    tipo_rsvp ENUM('digital', 'whatsapp') DEFAULT 'whatsapp',
     mensaje_footer TEXT,
     firma_footer VARCHAR(100),
     
@@ -176,7 +177,7 @@ CREATE TABLE IF NOT EXISTS rsvp_respuestas (
     nombre_invitado_principal VARCHAR(255),
     estado ENUM('pendiente','aceptado','rechazado') DEFAULT 'pendiente',
     boletos_confirmados INT DEFAULT 0,
-    nombres_acompañantes TEXT,
+    nombres_acompanantes TEXT,
     comentarios TEXT,
     fecha_respuesta TIMESTAMP NULL,
     FOREIGN KEY (id_grupo) REFERENCES invitados_grupos(id_grupo) ON DELETE CASCADE

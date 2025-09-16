@@ -83,9 +83,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             historia = ?, dresscode = ?, texto_rsvp = ?, mensaje_footer = ?, firma_footer = ?,
             padres_novia = ?, padres_novio = ?, padrinos_novia = ?, padrinos_novio = ?,
             musica_youtube_url = ?, musica_autoplay = ?, musica_volumen = ?,
-            imagen_hero = ?, imagen_dedicatoria = ?, imagen_destacada = ?, whatsapp_confirmacion = ?
+            imagen_hero = ?, imagen_dedicatoria = ?, imagen_destacada = ?, whatsapp_confirmacion = ?, tipo_rsvp = ?
             WHERE id = ?";
-        
+
         $stmt = $db->prepare($update_query);
         $stmt->execute([
             $plantilla_id,
@@ -108,6 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $imagen_dedicatoria,
             $imagen_destacada,
             $_POST['whatsapp_confirmacion'] ?? '',
+            $_POST['tipo_rsvp'] ?? 'digital',
             $id
         ]);
         
@@ -301,7 +302,7 @@ foreach($ubicaciones as $ub) {
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">
+            <a class="navbar-brand" href="./../index.php">
                 <i class="bi bi-pencil-square me-2"></i>
                 Editar Invitación: <?php echo htmlspecialchars($invitacion['nombres_novios']); ?>
             </a>
@@ -511,90 +512,6 @@ foreach($ubicaciones as $ub) {
                     <textarea id="historia" name="historia" rows="4" class="form-control" 
                         placeholder="Cuenta vuestra historia de amor..."><?php echo htmlspecialchars($invitacion['historia']); ?></textarea>
                 </div>
-                
-                <div class="mb-3">
-                    <label for="dresscode" class="form-label">Descripción del Código de Vestimenta</label>
-                    <textarea id="dresscode" name="dresscode" rows="2" class="form-control" 
-                        placeholder="Por favor, viste atuendo elegante..."><?php echo htmlspecialchars($invitacion['dresscode']); ?></textarea>
-                </div>
-                
-                <div class="mb-3">
-                    <label for="texto_rsvp" class="form-label">Texto para RSVP</label>
-                    <input type="text" id="texto_rsvp" name="texto_rsvp" class="form-control" 
-                        placeholder="Confirma tu asistencia antes del..."
-                        value="<?php echo htmlspecialchars($invitacion['texto_rsvp']); ?>">
-                </div>
-            </div>
-
-            <!-- Información Familiar -->
-            <div class="form-section">
-                <h3 class="section-title">
-                    <i class="bi bi-people me-2"></i>
-                    Información Familiar
-                </h3>
-                
-                <div class="row">
-                    <div class="col-md-6">
-                        <label for="padres_novia" class="form-label">Padres de la Novia</label>
-                        <input type="text" id="padres_novia" name="padres_novia" class="form-control" 
-                            placeholder="Nombres de los padres de la novia"
-                            value="<?php echo htmlspecialchars($invitacion['padres_novia']); ?>">
-                    </div>
-                    <div class="col-md-6">
-                        <label for="padres_novio" class="form-label">Padres del Novio</label>
-                        <input type="text" id="padres_novio" name="padres_novio" class="form-control" 
-                            placeholder="Nombres de los padres del novio"
-                            value="<?php echo htmlspecialchars($invitacion['padres_novio']); ?>">
-                    </div>
-                </div>
-                
-                <div class="row mt-3">
-                    <div class="col-md-6">
-                        <label for="padrinos_novia" class="form-label">Padrinos de la Novia</label>
-                        <input type="text" id="padrinos_novia" name="padrinos_novia" class="form-control" 
-                            placeholder="Nombres de los padrinos de la novia"
-                            value="<?php echo htmlspecialchars($invitacion['padrinos_novia']); ?>">
-                    </div>
-                    <div class="col-md-6">
-                        <label for="padrinos_novio" class="form-label">Padrinos del Novio</label>
-                        <input type="text" id="padrinos_novio" name="padrinos_novio" class="form-control" 
-                            placeholder="Nombres de los padrinos del novio"
-                            value="<?php echo htmlspecialchars($invitacion['padrinos_novio']); ?>">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Mensajes Personalizados -->
-            <div class="form-section">
-                <h3 class="section-title">
-                    <i class="bi bi-chat-heart me-2"></i>
-                    Mensajes Personalizados
-                </h3>
-                
-                <div class="mb-3">
-                    <label for="mensaje_footer" class="form-label">Mensaje del Footer</label>
-                    <textarea id="mensaje_footer" name="mensaje_footer" rows="2" class="form-control" 
-                        placeholder="El amor es la fuerza más poderosa del mundo..."><?php echo htmlspecialchars($invitacion['mensaje_footer']); ?></textarea>
-                </div>
-                
-                <div class="mb-3">
-                    <label for="firma_footer" class="form-label">Firma del Footer</label>
-                    <input type="text" id="firma_footer" name="firma_footer" class="form-control" 
-                        placeholder="Con amor, Victoria & Matthew"
-                        value="<?php echo htmlspecialchars($invitacion['firma_footer']); ?>">
-                </div>
-                
-                <!-- NUEVO CAMPO WHATSAPP -->
-                <div class="mb-3">
-                    <label for="whatsapp_confirmacion" class="form-label">Número de WhatsApp para Confirmaciones</label>
-                    <input type="tel" id="whatsapp_confirmacion" name="whatsapp_confirmacion" class="form-control" 
-                        placeholder="3339047672" pattern="[0-9]{10,15}"
-                        value="<?php echo htmlspecialchars($invitacion['whatsapp_confirmacion'] ?? ''); ?>">
-                    <div class="form-text">
-                        <i class="bi bi-info-circle me-1"></i>
-                        Número de WhatsApp donde recibirás las confirmaciones de asistencia (solo números, sin espacios ni guiones)
-                    </div>
-                </div>
             </div>
 
             <!-- Imágenes -->
@@ -684,6 +601,44 @@ foreach($ubicaciones as $ub) {
                             </div>
                             <div class="form-text">Deja vacío para mantener la imagen actual</div>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Información Familiar -->
+            <div class="form-section">
+                <h3 class="section-title">
+                    <i class="bi bi-people me-2"></i>
+                    Información Familiar
+                </h3>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="padres_novia" class="form-label">Padres de la Novia</label>
+                        <input type="text" id="padres_novia" name="padres_novia" class="form-control" 
+                            placeholder="Nombres de los padres de la novia"
+                            value="<?php echo htmlspecialchars($invitacion['padres_novia']); ?>">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="padres_novio" class="form-label">Padres del Novio</label>
+                        <input type="text" id="padres_novio" name="padres_novio" class="form-control" 
+                            placeholder="Nombres de los padres del novio"
+                            value="<?php echo htmlspecialchars($invitacion['padres_novio']); ?>">
+                    </div>
+                </div>
+                
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <label for="padrinos_novia" class="form-label">Padrinos de la Novia</label>
+                        <input type="text" id="padrinos_novia" name="padrinos_novia" class="form-control" 
+                            placeholder="Nombres de los padrinos de la novia"
+                            value="<?php echo htmlspecialchars($invitacion['padrinos_novia']); ?>">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="padrinos_novio" class="form-label">Padrinos del Novio</label>
+                        <input type="text" id="padrinos_novio" name="padrinos_novio" class="form-control" 
+                            placeholder="Nombres de los padrinos del novio"
+                            value="<?php echo htmlspecialchars($invitacion['padrinos_novio']); ?>">
                     </div>
                 </div>
             </div>
@@ -868,6 +823,70 @@ foreach($ubicaciones as $ub) {
                         </div>
                     </div>
                 </div>
+                <div class="mb-3">
+                    <label for="dresscode" class="form-label">Descripción del Código de Vestimenta</label>
+                    <textarea id="dresscode" name="dresscode" rows="2" class="form-control" 
+                        placeholder="Por favor, viste atuendo elegante..."><?php echo htmlspecialchars($invitacion['dresscode']); ?></textarea>
+                </div>
+            </div>
+
+            <!-- Mensajes Personalizados -->
+            <div class="form-section">
+                <h3 class="section-title">
+                    <i class="bi bi-chat-heart me-2"></i>
+                    Mensajes Personalizados
+                </h3>
+                
+                <!-- Texto RSVP -->
+                <div class="mb-3">
+                    <label for="texto_rsvp" class="form-label">Texto para RSVP</label>
+                    <input type="text" id="texto_rsvp" name="texto_rsvp" class="form-control" 
+                        placeholder="Confirma tu asistencia antes del..."
+                        value="<?php echo htmlspecialchars($invitacion['texto_rsvp']); ?>">
+                </div>
+                
+                <!-- Tipo de RSVP -->
+                <div class="mb-3">
+                    <label for="tipo_rsvp" class="form-label">Tipo de Confirmación RSVP</label>
+                    <select id="tipo_rsvp" name="tipo_rsvp" class="form-select" onchange="toggleRSVPFields()">
+                        <option value="digital" <?php echo ($invitacion['tipo_rsvp'] ?? 'digital') == 'digital' ? 'selected' : ''; ?>>
+                            Sistema de Boletaje Digital
+                        </option>
+                        <option value="whatsapp" <?php echo ($invitacion['tipo_rsvp'] ?? 'digital') == 'whatsapp' ? 'selected' : ''; ?>>
+                            Confirmación por WhatsApp
+                        </option>
+                    </select>
+                    <div class="form-text">
+                        <i class="bi bi-info-circle me-1"></i>
+                        Elige cómo prefieres que tus invitados confirmen su asistencia
+                    </div>
+                </div>
+
+                <!-- Campo WhatsApp - modificado para mostrar/ocultar según el tipo -->
+                <div class="mb-3" id="campo-whatsapp" style="<?php echo ($invitacion['tipo_rsvp'] ?? 'digital') == 'whatsapp' ? '' : 'display: none;'; ?>">
+                    <label for="whatsapp_confirmacion" class="form-label">Número de WhatsApp para Confirmaciones *</label>
+                    <input type="tel" id="whatsapp_confirmacion" name="whatsapp_confirmacion" class="form-control" 
+                        placeholder="3339047672" pattern="[0-9]{10,15}"
+                        value="<?php echo htmlspecialchars($invitacion['whatsapp_confirmacion'] ?? ''); ?>"
+                        <?php echo ($invitacion['tipo_rsvp'] ?? 'digital') == 'whatsapp' ? 'required' : ''; ?>>
+                    <div class="form-text">
+                        <i class="bi bi-info-circle me-1"></i>
+                        Número de WhatsApp donde recibirás las confirmaciones de asistencia (solo números, sin espacios ni guiones)
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="mensaje_footer" class="form-label">Mensaje del Footer</label>
+                    <textarea id="mensaje_footer" name="mensaje_footer" rows="2" class="form-control" 
+                        placeholder="El amor es la fuerza más poderosa del mundo..."><?php echo htmlspecialchars($invitacion['mensaje_footer']); ?></textarea>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="firma_footer" class="form-label">Firma del Footer</label>
+                    <input type="text" id="firma_footer" name="firma_footer" class="form-control" 
+                        placeholder="Con amor, Victoria & Matthew"
+                        value="<?php echo htmlspecialchars($invitacion['firma_footer']); ?>">
+                </div>
             </div>
 
             <!-- Botones de acción flotantes -->
@@ -1007,6 +1026,26 @@ foreach($ubicaciones as $ub) {
                     });
             }
         }
+
+        // Función para mostrar/ocultar campos según el tipo de RSVP
+        function toggleRSVPFields() {
+            const tipoRsvp = document.getElementById('tipo_rsvp').value;
+            const campoWhatsapp = document.getElementById('campo-whatsapp');
+            const inputWhatsapp = document.getElementById('whatsapp_confirmacion');
+            
+            if (tipoRsvp === 'whatsapp') {
+                campoWhatsapp.style.display = 'block';
+                inputWhatsapp.required = true;
+            } else {
+                campoWhatsapp.style.display = 'none';
+                inputWhatsapp.required = false;
+            }
+        }
+
+        // Inicializar el estado al cargar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            toggleRSVPFields();
+        });
     </script>
 </body>
 </html>

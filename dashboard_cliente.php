@@ -1,13 +1,14 @@
 <?php
-// dashboard_cliente.php (Solo las partes corregidas)
+// dashboard_cliente.php (Versión mejorada)
 session_start();
 require_once 'config/database.php';
 require_once 'functions/auth-check.php';
+header('Content-Type: text/html; charset=UTF-8');
 
 $db = new Database();
 $conn = $db->getConnection();
 
-// Obtener información de la invitación del cliente (CORREGIDO para PDO y collations)
+// Obtener información de la invitación del cliente
 $stmt = $conn->prepare("
     SELECT i.*, p.nombre as plantilla_nombre 
     FROM invitaciones i 
@@ -28,7 +29,7 @@ if (!$invitacion) {
 
 $invitacion_slug = $invitacion['slug'];
 
-// Obtener estadísticas RSVP (CORREGIDO para PDO)
+// Obtener estadísticas RSVP
 $stmt = $conn->prepare("
     SELECT 
         COUNT(*) as total_grupos,
@@ -43,6 +44,35 @@ $stmt = $conn->prepare("
 $stmt->execute([$invitacion_slug]);
 $stats = $stmt->fetch();
 
+// SI ES PETICIÓN AJAX, SOLO DEVOLVER LOS DATOS EN JSON
+if (isset($_GET['ajax']) && $_GET['ajax'] == '1') {
+    header('Content-Type: application/json');
+    
+    // Obtener grupos actualizados para AJAX
+    $stmt = $conn->prepare("
+        SELECT 
+            ig.*,
+            r.estado,
+            r.boletos_confirmados,
+            r.nombres_acompanantes,
+            r.comentarios,
+            r.fecha_respuesta
+        FROM invitados_grupos ig 
+        LEFT JOIN rsvp_respuestas r ON ig.id_grupo = r.id_grupo 
+        WHERE ig.slug_invitacion = ? 
+        ORDER BY ig.fecha_creacion DESC
+    ");
+    $stmt->execute([$invitacion_slug]);
+    $grupos_ajax = $stmt->fetchAll();
+    
+    echo json_encode([
+        'success' => true,
+        'stats' => $stats,
+        'grupos' => $grupos_ajax
+    ]);
+    exit; // IMPORTANTE: Salir aquí para peticiones AJAX
+}
+
 // Procesar acciones CRUD
 $message = '';
 $message_type = '';
@@ -56,7 +86,8 @@ if ($_POST) {
                 
                 if (!empty($nombre_grupo) && $boletos > 0) {
                     try {
-                        $token_unico = bin2hex(random_bytes(16));
+                        // Token más sencillo: 8 caracteres alfanuméricos
+                        $token_unico = strtoupper(substr(md5(uniqid()), 0, 15));
                         
                         $stmt = $conn->prepare("
                             INSERT INTO invitados_grupos (slug_invitacion, nombre_grupo, boletos_asignados, token_unico) 
@@ -140,7 +171,7 @@ if ($_POST) {
     }
 }
 
-// Obtener todos los grupos de invitados (CORREGIDO para PDO)
+// Obtener todos los grupos de invitados
 $stmt = $conn->prepare("
     SELECT 
         ig.*,
@@ -156,6 +187,9 @@ $stmt = $conn->prepare("
 ");
 $stmt->execute([$invitacion_slug]);
 $grupos = $stmt->fetchAll();
+
+// URL base de la invitación
+$invitacion_url = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . '/invitacion.php?slug=' . $invitacion['slug'];
 ?>
 
 <!DOCTYPE html>
@@ -166,78 +200,34 @@ $grupos = $stmt->fetchAll();
     <title>Dashboard - <?php echo htmlspecialchars($invitacion['nombres_novios']); ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="css/style.css" rel="stylesheet">
-    <style>
-        .dashboard-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 2rem 0;
-        }
-        .stats-card {
-            background: white;
-            border-radius: 15px;
-            padding: 1.5rem;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-            border-left: 4px solid #667eea;
-            transition: transform 0.2s;
-        }
-        .stats-card:hover {
-            transform: translateY(-5px);
-        }
-        .stats-number {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: #667eea;
-        }
-        .btn-action {
-            border-radius: 20px;
-            padding: 8px 20px;
-            font-weight: 500;
-        }
-        .url-box {
-            background: #f8f9fa;
-            border: 2px dashed #dee2e6;
-            border-radius: 10px;
-            padding: 1rem;
-        }
-        .table-responsive {
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 0 20px rgba(0,0,0,0.05);
-        }
-        .status-badge {
-            border-radius: 15px;
-            padding: 5px 12px;
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
-        .status-pendiente { background: #fff3cd; color: #856404; }
-        .status-aceptado { background: #d1e7dd; color: #0f5132; }
-        .status-rechazado { background: #f8d7da; color: #721c24; }
-    </style>
+    <link href="css/dashboard.css" rel="stylesheet">
+    <link rel="shortcut icon" href="./images/logo.webp" />
 </head>
 <body>
+    <!-- Header -->
     <div class="dashboard-header">
         <div class="container">
             <div class="row align-items-center">
-                <div class="col-md-8">
-                    <h1 class="mb-0">
+                <div class="col-12 col-md-8">
+                    <h1 class="header-title">
                         <i class="fas fa-heart me-2"></i>
                         <?php echo htmlspecialchars($invitacion['nombres_novios']); ?>
                     </h1>
-                    <p class="mb-0 mt-2">
-                        <i class="fas fa-calendar me-2"></i>
-                        <?php echo date('d/m/Y', strtotime($invitacion['fecha_evento'])); ?>
-                        <span class="ms-3">
-                            <i class="fas fa-clock me-2"></i>
+                    <div class="header-info">
+                        <span class="info-item">
+                            <i class="fas fa-calendar me-1"></i>
+                            <?php echo date('d/m/Y', strtotime($invitacion['fecha_evento'])); ?>
+                        </span>
+                        <span class="info-item">
+                            <i class="fas fa-clock me-1"></i>
                             <?php echo date('H:i', strtotime($invitacion['hora_evento'])); ?>
                         </span>
-                    </p>
+                    </div>
                 </div>
-                <div class="col-md-4 text-md-end">
+                <div class="col-12 col-md-4 header-actions">
                     <a href="invitacion.php?slug=<?php echo $invitacion['slug']; ?>" 
                        target="_blank" 
-                       class="btn btn-light btn-action me-2">
+                       class="btn btn-light btn-action">
                         <i class="fas fa-eye me-2"></i>Ver Invitación
                     </a>
                     <a href="logout.php" class="btn btn-outline-light btn-action">
@@ -248,7 +238,8 @@ $grupos = $stmt->fetchAll();
         </div>
     </div>
 
-    <div class="container mt-4">
+    <div class="container main-container">
+        <!-- Mensajes de estado -->
         <?php if ($message): ?>
             <div class="alert alert-<?php echo $message_type; ?> alert-dismissible fade show" role="alert">
                 <i class="fas fa-<?php echo $message_type == 'success' ? 'check-circle' : 'exclamation-triangle'; ?> me-2"></i>
@@ -258,169 +249,258 @@ $grupos = $stmt->fetchAll();
         <?php endif; ?>
 
         <!-- Estadísticas RSVP -->
-        <div class="row mb-4">
-            <div class="col-md-3 mb-3">
-                <div class="stats-card text-center">
-                    <div class="stats-number"><?php echo $stats['total_grupos'] ?? 0; ?></div>
-                    <div class="text-muted">Grupos Invitados</div>
+        <div class="row stats-row">
+            <div class="col-6 col-md-3 mb-3">
+                <div class="stats-card">
+                    <div class="stats-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stats-content">
+                        <div class="stats-number"><?php echo $stats['total_grupos'] ?? 0; ?></div>
+                        <div class="stats-label">Grupos</div>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-3 mb-3">
-                <div class="stats-card text-center">
-                    <div class="stats-number text-success"><?php echo $stats['confirmados'] ?? 0; ?></div>
-                    <div class="text-muted">Confirmados</div>
+            <div class="col-6 col-md-3 mb-3">
+                <div class="stats-card success">
+                    <div class="stats-icon">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <div class="stats-content">
+                        <div class="stats-number"><?php echo $stats['confirmados'] ?? 0; ?></div>
+                        <div class="stats-label">Confirmados</div>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-3 mb-3">
-                <div class="stats-card text-center">
-                    <div class="stats-number text-danger"><?php echo $stats['rechazados'] ?? 0; ?></div>
-                    <div class="text-muted">No Asistirán</div>
+            <div class="col-6 col-md-3 mb-3">
+                <div class="stats-card danger">
+                    <div class="stats-icon">
+                        <i class="fas fa-times"></i>
+                    </div>
+                    <div class="stats-content">
+                        <div class="stats-number"><?php echo $stats['rechazados'] ?? 0; ?></div>
+                        <div class="stats-label">No Asisten</div>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-3 mb-3">
-                <div class="stats-card text-center">
-                    <div class="stats-number text-warning"><?php echo $stats['pendientes'] ?? 0; ?></div>
-                    <div class="text-muted">Sin Respuesta</div>
+            <div class="col-6 col-md-3 mb-3">
+                <div class="stats-card warning">
+                    <div class="stats-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stats-content">
+                        <div class="stats-number"><?php echo $stats['pendientes'] ?? 0; ?></div>
+                        <div class="stats-label">Pendientes</div>
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- URL Pública -->
-        <div class="card mb-4">
+        <div class="card url-card mb-4">
             <div class="card-header">
                 <h5 class="mb-0">
                     <i class="fas fa-link me-2"></i>URL de tu Invitación
                 </h5>
             </div>
             <div class="card-body">
-                <div class="url-box">
-                    <div class="d-flex align-items-center">
-                        <input type="text" 
-                               class="form-control border-0 bg-transparent" 
-                               id="invitacion-url" 
-                               value="<?php echo 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . '/invitacion.php?slug=' . $invitacion['slug']; ?>" 
-                               readonly>
-                        <button class="btn btn-primary btn-action ms-2" onclick="copiarURL()">
-                            <i class="fas fa-copy me-2"></i>Copiar
-                        </button>
-                    </div>
+                <div class="url-input-group">
+                    <input type="text" 
+                           class="form-control url-input" 
+                           id="invitacion-url" 
+                           value="<?php echo $invitacion_url; ?>" 
+                           readonly>
+                    <button class="btn btn-primary" onclick="copiarURL()">
+                        <i class="fas fa-copy"></i>
+                        <span class="btn-text">Copiar</span>
+                    </button>
                 </div>
-                <small class="text-muted">
+                <small class="text-muted mt-2 d-block">
                     <i class="fas fa-info-circle me-1"></i>
-                    Esta es la URL pública de tu invitación que puedes compartir
+                    Comparte esta URL pública de tu invitación
                 </small>
             </div>
         </div>
 
-        <!-- CRUD Grupos de Invitados -->
-        <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">
-                    <i class="fas fa-users me-2"></i>Gestión de Invitados
-                </h5>
-                <button class="btn btn-primary btn-action" data-bs-toggle="modal" data-bs-target="#modalCrearGrupo">
-                    <i class="fas fa-plus me-2"></i>Nuevo Grupo
-                </button>
+        <!-- Gestión de Invitados -->
+        <div class="card guests-card">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-users-cog me-2"></i>Gestión de Invitados
+                    </h5>
+                    <button class="btn btn-primary btn-add-guest" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#modalCrearGrupo">
+                        <i class="fas fa-plus me-2"></i>
+                        <span class="btn-text">Nuevo Grupo</span>
+                    </button>
+                </div>
             </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Grupo/Familia</th>
-                                <th>Boletos</th>
-                                <th>Estado</th>
-                                <th>Respuesta</th>
-                                <th>Token Único</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($grupos as $grupo): ?>
-                            <tr>
-                                <td>
-                                    <strong><?php echo htmlspecialchars($grupo['nombre_grupo']); ?></strong>
-                                    <?php if ($grupo['nombres_acompanantes']): ?>
-                                        <br><small class="text-muted">Con: <?php echo htmlspecialchars($grupo['nombres_acompanantes']); ?></small>
-                                    <?php endif; ?>
-                                </td>
-                                <td>
-                                    <span class="badge bg-secondary"><?php echo $grupo['boletos_asignados']; ?></span>
-                                    <?php if ($grupo['estado'] == 'aceptado'): ?>
-                                        <br><small class="text-success">Confirmados: <?php echo $grupo['boletos_confirmados']; ?></small>
-                                    <?php endif; ?>
-                                </td>
-                                <td>
-                                    <span class="status-badge status-<?php echo $grupo['estado']; ?>">
+            <div class="card-body p-0">
+                <!-- Vista Mobile -->
+                <div class="mobile-guests d-md-none">
+                    <?php foreach ($grupos as $grupo): ?>
+                        <div class="mobile-guest-card">
+                            <div class="guest-header">
+                                <div class="guest-name">
+                                    <?php echo htmlspecialchars($grupo['nombre_grupo']); ?>
+                                </div>
+                                <div class="guest-status">
+                                    <span class="status-badge status-<?php echo $grupo['estado'] ?? 'pendiente'; ?>">
                                         <?php 
-                                        $estados = ['pendiente' => 'Sin respuesta', 'aceptado' => 'Confirmado', 'rechazado' => 'No asistirá'];
+                                        $estados = [
+                                            'pendiente' => 'Sin respuesta', 
+                                            'aceptado' => 'Confirmado', 
+                                            'rechazado' => 'No asistirá'
+                                        ];
                                         echo $estados[$grupo['estado']] ?? 'Pendiente';
                                         ?>
                                     </span>
-                                </td>
-                                <td>
-                                    <?php if ($grupo['fecha_respuesta']): ?>
-                                        <small><?php echo date('d/m/Y H:i', strtotime($grupo['fecha_respuesta'])); ?></small>
-                                        <?php if ($grupo['comentarios']): ?>
-                                            <br><small class="text-info" title="<?php echo htmlspecialchars($grupo['comentarios']); ?>">
-                                                <i class="fas fa-comment"></i> Con comentarios
-                                            </small>
-                                        <?php endif; ?>
-                                    <?php else: ?>
-                                        <small class="text-muted">Sin respuesta</small>
+                                </div>
+                            </div>
+                            
+                            <div class="guest-details">
+                                <div class="detail-item">
+                                    <i class="fas fa-ticket-alt me-2"></i>
+                                    <?php echo $grupo['boletos_asignados']; ?> boletos
+                                    <?php if ($grupo['estado'] == 'aceptado'): ?>
+                                        <small class="text-success">(<?php echo $grupo['boletos_confirmados']; ?> confirmados)</small>
                                     <?php endif; ?>
-                                </td>
-                                <td>
-                                    <code class="small"><?php echo substr($grupo['token_unico'], 0, 8); ?>...</code>
+                                </div>
+                                
+                                <?php if ($grupo['nombres_acompanantes']): ?>
+                                    <div class="detail-item">
+                                        <i class="fas fa-users me-2"></i>
+                                        <?php echo htmlspecialchars($grupo['nombres_acompanantes']); ?>
+                                    </div>
+                                <?php endif; ?>
+                                
+                                <div class="detail-item">
+                                    <i class="fas fa-key me-2"></i>
+                                    Token: <code><?php echo $grupo['token_unico']; ?></code>
                                     <button class="btn btn-sm btn-outline-secondary ms-1" 
-                                            onclick="copiarToken('<?php echo $grupo['token_unico']; ?>')"
-                                            title="Copiar token completo">
+                                            onclick="copiarToken('<?php echo $grupo['token_unico']; ?>')">
                                         <i class="fas fa-copy"></i>
                                     </button>
-                                </td>
-                                <td>
-                                    <button class="btn btn-sm btn-primary" 
-                                            onclick="editarGrupo(<?php echo $grupo['id_grupo']; ?>, '<?php echo htmlspecialchars($grupo['nombre_grupo'], ENT_QUOTES); ?>', <?php echo $grupo['boletos_asignados']; ?>)">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button class="btn btn-sm btn-outline-info ms-1" 
-                                            onclick="verURLToken('<?php echo $grupo['token_unico']; ?>')">
-                                        <i class="fas fa-link"></i>
-                                    </button>
-                                    <?php if ($grupo['estado'] && $grupo['estado'] !== 'pendiente'): ?>
-                                    <button class="btn btn-sm btn-info ms-1" 
-                                            onclick="verDetallesRespuesta(<?php echo $grupo['id_grupo']; ?>)"
-                                            title="Ver detalles de la respuesta">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                    <?php endif; ?>
-                                    <button class="btn btn-sm btn-danger ms-1" 
-                                            onclick="eliminarGrupo(<?php echo $grupo['id_grupo']; ?>, '<?php echo htmlspecialchars($grupo['nombre_grupo'], ENT_QUOTES); ?>')">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
+                                </div>
+                                
+                                <?php if ($grupo['fecha_respuesta']): ?>
+                                    <div class="detail-item">
+                                        <i class="fas fa-calendar-check me-2"></i>
+                                        <?php echo date('d/m/Y H:i', strtotime($grupo['fecha_respuesta'])); ?>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                            
+                            <div class="guest-actions">
+                                <button class="btn btn-sm btn-primary" 
+                                        onclick="editarGrupo(<?php echo $grupo['id_grupo']; ?>, '<?php echo htmlspecialchars($grupo['nombre_grupo'], ENT_QUOTES); ?>', <?php echo $grupo['boletos_asignados']; ?>)">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                
+                                <button class="btn btn-sm btn-info" 
+                                        onclick="compartirInvitacion('<?php echo htmlspecialchars($grupo['nombre_grupo'], ENT_QUOTES); ?>', '<?php echo $grupo['token_unico']; ?>')">
+                                    <i class="fas fa-share"></i>
+                                </button>
+                                
+                                <?php if ($grupo['estado'] && $grupo['estado'] !== 'pendiente'): ?>
+                                <button class="btn btn-sm btn-success" 
+                                        onclick="verDetallesRespuesta(<?php echo $grupo['id_grupo']; ?>)">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <?php endif; ?>
+                                
+                                <button class="btn btn-sm btn-danger" 
+                                        onclick="eliminarGrupo(<?php echo $grupo['id_grupo']; ?>, '<?php echo htmlspecialchars($grupo['nombre_grupo'], ENT_QUOTES); ?>')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
                 </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- Modal Ver Detalles -->
-    <div class="modal fade" id="modalDetallesRespuesta" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Detalles de la Respuesta</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body" id="detalles-respuesta-content">
-                    <!-- Se llena dinámicamente -->
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <!-- Vista Desktop -->
+                <div class="d-none d-md-block">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Grupo/Familia</th>
+                                    <th>Boletos</th>
+                                    <th>Estado</th>
+                                    <th>Token</th>
+                                    <th>Respuesta</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($grupos as $grupo): ?>
+                                <tr>
+                                    <td>
+                                        <strong><?php echo htmlspecialchars($grupo['nombre_grupo']); ?></strong>
+                                        <?php if ($grupo['nombres_acompanantes']): ?>
+                                            <br><small class="text-muted">Con: <?php echo htmlspecialchars($grupo['nombres_acompanantes']); ?></small>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-secondary"><?php echo $grupo['boletos_asignados']; ?></span>
+                                        <?php if ($grupo['estado'] == 'aceptado'): ?>
+                                            <br><small class="text-success">Confirmados: <?php echo $grupo['boletos_confirmados']; ?></small>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td>
+                                        <span class="status-badge status-<?php echo $grupo['estado'] ?? 'pendiente'; ?>">
+                                            <?php 
+                                            $estados = ['pendiente' => 'Sin respuesta', 'aceptado' => 'Confirmado', 'rechazado' => 'No asistirá'];
+                                            echo $estados[$grupo['estado']] ?? 'Pendiente';
+                                            ?>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <code><?php echo $grupo['token_unico']; ?></code>
+                                        <button class="btn btn-sm btn-outline-secondary ms-1" 
+                                                onclick="copiarToken('<?php echo $grupo['token_unico']; ?>')">
+                                            <i class="fas fa-copy"></i>
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <?php if ($grupo['fecha_respuesta']): ?>
+                                            <small><?php echo date('d/m/Y H:i', strtotime($grupo['fecha_respuesta'])); ?></small>
+                                            <?php if ($grupo['comentarios']): ?>
+                                                <br><small class="text-info">
+                                                    <i class="fas fa-comment"></i> Con comentarios
+                                                </small>
+                                            <?php endif; ?>
+                                        <?php else: ?>
+                                            <small class="text-muted">Sin respuesta</small>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td class="table-actions">
+                                        <button class="btn btn-sm btn-primary" 
+                                                onclick="editarGrupo(<?php echo $grupo['id_grupo']; ?>, '<?php echo htmlspecialchars($grupo['nombre_grupo'], ENT_QUOTES); ?>', <?php echo $grupo['boletos_asignados']; ?>)">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-info" 
+                                                onclick="compartirInvitacion('<?php echo htmlspecialchars($grupo['nombre_grupo'], ENT_QUOTES); ?>', '<?php echo $grupo['token_unico']; ?>')">
+                                            <i class="fas fa-share"></i>
+                                        </button>
+                                        <?php if ($grupo['estado'] && $grupo['estado'] !== 'pendiente'): ?>
+                                        <button class="btn btn-sm btn-success" 
+                                                onclick="verDetallesRespuesta(<?php echo $grupo['id_grupo']; ?>)">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <?php endif; ?>
+                                        <button class="btn btn-sm btn-danger" 
+                                                onclick="eliminarGrupo(<?php echo $grupo['id_grupo']; ?>, '<?php echo htmlspecialchars($grupo['nombre_grupo'], ENT_QUOTES); ?>')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -485,30 +565,70 @@ $grupos = $stmt->fetchAll();
         </div>
     </div>
 
-    <!-- Modal URL con Token -->
-    <div class="modal fade" id="modalURLToken" tabindex="-1">
+    <!-- Modal Compartir -->
+    <div class="modal fade" id="modalCompartir" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">URL Personalizada para este Grupo</h5>
+                    <h5 class="modal-title">Compartir Invitación</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="url-box">
-                        <input type="text" class="form-control" id="url-con-token" readonly>
+                    <div class="share-section mb-4">
+                        <label class="form-label fw-bold">Grupo:</label>
+                        <div id="grupo-nombre" class="text-primary fs-5"></div>
                     </div>
-                    <div class="mt-3">
-                        <button class="btn btn-primary btn-action" onclick="copiarURLToken()">
-                            <i class="fas fa-copy me-2"></i>Copiar URL
-                        </button>
-                        <button class="btn btn-success btn-action ms-2" onclick="compartirWhatsApp()">
+                    
+                    <div class="share-section mb-4">
+                        <label class="form-label fw-bold">Link de Invitación:</label>
+                        <div class="url-input-group">
+                            <input type="text" class="form-control" id="link-invitacion" readonly>
+                            <button class="btn btn-outline-primary" onclick="copiarLinkInvitacion()">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="share-section mb-4">
+                        <label class="form-label fw-bold">Token de Acceso:</label>
+                        <div class="token-box">
+                            <code id="token-display" class="fs-4"></code>
+                            <button class="btn btn-outline-secondary btn-sm ms-2" onclick="copiarTokenDisplay()">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        <small class="text-muted">Compártelo junto con el link para acceso directo</small>
+                    </div>
+                    
+                    <div class="share-buttons">
+                        <button class="btn btn-success w-100 mb-2" onclick="compartirWhatsApp()">
                             <i class="fab fa-whatsapp me-2"></i>Compartir por WhatsApp
                         </button>
+                        <button class="btn btn-primary w-100 mb-2" onclick="compartirTelegram()">
+                            <i class="fab fa-telegram me-2"></i>Compartir por Telegram
+                        </button>
+                        <button class="btn btn-info w-100" onclick="copiarMensajeCompleto()">
+                            <i class="fas fa-copy me-2"></i>Copiar Mensaje Completo
+                        </button>
                     </div>
-                    <small class="text-muted d-block mt-2">
-                        <i class="fas fa-info-circle me-1"></i>
-                        Esta URL permite al grupo acceder directamente al RSVP
-                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Ver Detalles -->
+    <div class="modal fade" id="modalDetallesRespuesta" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Detalles de la Respuesta</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="detalles-respuesta-content">
+                    <!-- Se llena dinámicamente -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                 </div>
             </div>
         </div>
@@ -516,200 +636,12 @@ $grupos = $stmt->fetchAll();
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        function copiarURL() {
-            const urlField = document.getElementById('invitacion-url');
-            urlField.select();
-            document.execCommand('copy');
-            
-            // Mostrar feedback
-            const btn = event.target.closest('button');
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-check me-2"></i>Copiado!';
-            btn.classList.replace('btn-primary', 'btn-success');
-            
-            setTimeout(() => {
-                btn.innerHTML = originalText;
-                btn.classList.replace('btn-success', 'btn-primary');
-            }, 2000);
-        }
-
-        function copiarToken(token) {
-            navigator.clipboard.writeText(token).then(() => {
-                // Mostrar feedback
-                const btn = event.target.closest('button');
-                btn.innerHTML = '<i class="fas fa-check"></i>';
-                btn.classList.replace('btn-outline-secondary', 'btn-success');
-                
-                setTimeout(() => {
-                    btn.innerHTML = '<i class="fas fa-copy"></i>';
-                    btn.classList.replace('btn-success', 'btn-outline-secondary');
-                }, 2000);
-            });
-        }
-
-        function editarGrupo(id, nombre, boletos) {
-            document.getElementById('edit_id_grupo').value = id;
-            document.getElementById('edit_nombre_grupo').value = nombre;
-            document.getElementById('edit_boletos_asignados').value = boletos;
-            
-            const modal = new bootstrap.Modal(document.getElementById('modalEditarGrupo'));
-            modal.show();
-        }
-
-        function eliminarGrupo(id, nombre) {
-            if (confirm(`¿Estás seguro de eliminar el grupo "${nombre}"?`)) {
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.innerHTML = `
-                    <input type="hidden" name="action" value="eliminar_grupo">
-                    <input type="hidden" name="id_grupo" value="${id}">
-                `;
-                document.body.appendChild(form);
-                form.submit();
-            }
-        }
-
-        function verURLToken(token) {
-            const baseURL = window.location.protocol + '//' + window.location.host + 
-                           window.location.pathname.replace('dashboard_cliente.php', 'invitacion.php');
-            const urlConToken = baseURL + '?slug=<?php echo $invitacion['slug']; ?>&token=' + token;
-            
-            document.getElementById('url-con-token').value = urlConToken;
-            
-            const modal = new bootstrap.Modal(document.getElementById('modalURLToken'));
-            modal.show();
-        }
-
-        function copiarURLToken() {
-            const urlField = document.getElementById('url-con-token');
-            urlField.select();
-            document.execCommand('copy');
-            
-            // Mostrar feedback
-            const btn = event.target;
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-check me-2"></i>Copiado!';
-            btn.classList.replace('btn-primary', 'btn-success');
-            
-            setTimeout(() => {
-                btn.innerHTML = originalText;
-                btn.classList.replace('btn-success', 'btn-primary');
-            }, 2000);
-        }
-
-        function compartirWhatsApp() {
-            const url = document.getElementById('url-con-token').value;
-            const mensaje = encodeURIComponent(`¡Estás invitado a nuestra boda! 💒\n\nConfirma tu asistencia aquí: ${url}`);
-            window.open(`https://wa.me/?text=${mensaje}`, '_blank');
-        }
-
-        function verDetallesRespuesta(id_grupo) {
-            // Mostrar loading
-            document.getElementById('detalles-respuesta-content').innerHTML = 
-                '<div class="text-center"><i class="fas fa-spinner fa-spin"></i> Cargando...</div>';
-            
-            const modal = new bootstrap.Modal(document.getElementById('modalDetallesRespuesta'));
-            modal.show();
-            
-            // Cargar detalles usando tu API existente
-            fetch(`./plantillas/plantilla-1/api/rsvp.php?action=cargar_respuesta&id_grupo=${id_grupo}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    const respuesta = data.respuesta;
-                    const nombresInvitados = data.nombres_invitados;
-                    
-                    let html = `
-                        <div class="card border-0">
-                            <div class="card-body">
-                                <h5 class="card-title">${respuesta.nombre_grupo}</h5>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <p><strong>Estado:</strong> 
-                                            <span class="status-badge status-${respuesta.estado}">
-                                                ${respuesta.estado === 'aceptado' ? 'Confirmados' : 
-                                                respuesta.estado === 'rechazado' ? 'No asistirán' : 'Sin respuesta'}
-                                            </span>
-                                        </p>
-                                        <p><strong>Boletos asignados:</strong> ${respuesta.boletos_asignados}</p>
-                                        ${respuesta.estado === 'aceptado' ? 
-                                            `<p><strong>Boletos confirmados:</strong> ${respuesta.boletos_confirmados}</p>` : ''}
-                                    </div>
-                                    <div class="col-md-6">
-                                        <p><strong>Fecha de respuesta:</strong><br>
-                                        <small>${new Date(respuesta.fecha_respuesta).toLocaleString()}</small></p>
-                                    </div>
-                                </div>
-                    `;
-                    
-                    if (nombresInvitados && nombresInvitados.length > 0) {
-                        html += `
-                            <hr>
-                            <p><strong>Invitados confirmados:</strong></p>
-                            <ul class="list-unstyled">`;
-                        
-                        nombresInvitados.forEach(nombre => {
-                            html += `<li><i class="fas fa-user me-2 text-primary"></i>${nombre}</li>`;
-                        });
-                        
-                        html += `</ul>`;
-                    }
-                    
-                    if (respuesta.comentarios) {
-                        html += `
-                            <hr>
-                            <p><strong>Comentarios:</strong></p>
-                            <div class="alert alert-light">
-                                ${respuesta.comentarios}
-                            </div>`;
-                    }
-                    
-                    html += `</div></div>`;
-                    
-                    document.getElementById('detalles-respuesta-content').innerHTML = html;
-                } else {
-                    document.getElementById('detalles-respuesta-content').innerHTML = 
-                        `<div class="alert alert-danger">Error: ${data.message}</div>`;
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                document.getElementById('detalles-respuesta-content').innerHTML = 
-                    '<div class="alert alert-danger">Error al cargar los detalles</div>';
-            });
-        }
-
-        // Auto-refresh estadísticas cada 30 segundos
-        setInterval(() => {
-            fetch(window.location.href + '&ajax=1') // Agrega parámetro para respuesta JSON
-                .then(response => response.text())
-                .then(html => {
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(html, 'text/html');
-                    
-                    // Actualizar estadísticas
-                    const statsNumbers = document.querySelectorAll('.stats-number');
-                    const newStatsNumbers = doc.querySelectorAll('.stats-number');
-                    
-                    statsNumbers.forEach((stat, index) => {
-                        if (newStatsNumbers[index] && stat.textContent !== newStatsNumbers[index].textContent) {
-                            stat.textContent = newStatsNumbers[index].textContent;
-                            // Animate the change
-                            stat.style.animation = 'none';
-                            stat.offsetHeight; // trigger reflow
-                            stat.style.animation = 'pulse 0.5s';
-                        }
-                    });
-                    
-                    // Actualizar tabla si hay cambios
-                    const currentTable = document.querySelector('tbody');
-                    const newTable = doc.querySelector('tbody');
-                    if (newTable && currentTable.innerHTML !== newTable.innerHTML) {
-                        currentTable.innerHTML = newTable.innerHTML;
-                    }
-                })
-                .catch(console.error);
-        }, 30000);
+        // Variables globales para JS
+        window.dashboardConfig = {
+            invitacionUrl: '<?php echo $invitacion_url; ?>',
+            nombresNovios: '<?php echo htmlspecialchars($invitacion['nombres_novios'], ENT_QUOTES); ?>'
+        };
     </script>
+    <script src="js/dashboard.js"></script>
 </body>
 </html>

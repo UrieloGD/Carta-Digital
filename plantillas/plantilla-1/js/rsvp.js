@@ -225,7 +225,7 @@ function mostrarExito(mensaje, datos) {
 // Función para mostrar respuesta existente
 function mostrarRespuestaExistente(grupo, respuestaExistente) {
     // Cargar detalles completos de la respuesta
-    fetch(`./plantillas/plantilla-1/api/rsvp.php?action=cargar_respuesta&id_grupo=${grupo.id_grupo}`)
+    fetch(`./plantillas/plantilla-1/api/rsvp.php?action=cargar_respuesta&id_grupo=${grupoActual.id_grupo}`)
     .then(response => response.json())
     .then(data => {
         if (data.success) {
@@ -390,11 +390,13 @@ document.getElementById('codigoForm').addEventListener('submit', function(e) {
             grupoActual = data.grupo;
             respuestaExistente = data.respuesta_existente;
             
-            if (respuestaExistente) {
-                // Mostrar respuesta existente
+            // CAMBIAR ESTA LÓGICA
+            if (respuestaExistente && 
+                (respuestaExistente.estado === 'aceptado' || respuestaExistente.estado === 'rechazado')) {
+                // Solo mostrar respuesta existente si ya está confirmada (aceptada o rechazada)
                 mostrarRespuestaExistente(data.grupo, respuestaExistente);
             } else {
-                // Mostrar formulario nuevo
+                // Mostrar formulario nuevo (para estado pendiente o sin respuesta)
                 document.getElementById('nombre-grupo').textContent = data.grupo.nombre_grupo;
                 document.getElementById('boletos-info').textContent = 
                     `Boletos asignados: ${data.grupo.boletos_asignados}`;

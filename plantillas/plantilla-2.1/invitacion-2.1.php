@@ -596,71 +596,163 @@ try {
 <?php endif; ?>
 
 <!-- Sección RSVP -->
+<?php
+// Obtener el tipo de RSVP configurado (por defecto 'whatsapp' para compatibilidad)
+$tipo_rsvp = $invitacion['tipo_rsvp'] ?? 'whatsapp';
+?>
+
 <section class="rsvp" id="rsvp">
     <div class="container">
-        <div class="rsvp-content">
-            <div class="rsvp-header">
-                <h2>Confirma tu Asistencia</h2>
-                <div class="decorative-line"></div>
-            </div>
-            <p><?php echo htmlspecialchars($texto_rsvp); ?></p>
-            <button class="rsvp-button" onclick="confirmarAsistenciaWhatsApp()">
-                <span>📱</span> Confirmar por WhatsApp
+        <h2>Confirma tu Asistencia</h2>
+        <p><?php echo htmlspecialchars($texto_rsvp); ?></p>
+        
+        <?php if ($tipo_rsvp === 'whatsapp'): ?>
+            <!-- Botón para confirmación por WhatsApp -->
+            <button class="rsvp-button whatsapp-button" onclick="confirmarAsistenciaWhatsApp()">
+                <i class="bi bi-whatsapp me-2"></i>
+                Confirmar por WhatsApp
             </button>
-        </div>
+            
+        <?php else: ?>
+            <!-- Botón para sistema digital (original) -->
+            <button class="rsvp-button" onclick="openRSVPModal()">
+                <i class="bi bi-calendar-check me-2"></i>
+                Confirmar Asistencia
+            </button>
+        <?php endif; ?>
     </div>
 </section>
 
-<!-- Modal RSVP
-<div class="rsvp-modal" id="rsvpModal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h3>Confirmar Asistencia</h3>
-            <button class="modal-close" onclick="closeRSVPModal()">&times;</button>
+<?php if ($tipo_rsvp === 'digital'): ?>
+    <!-- Modal RSVP Digital (solo si es tipo digital) -->
+    <div class="rsvp-modal" id="rsvpModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Confirmar Asistencia</h3>
+                <button class="modal-close" onclick="closeRSVPModal()">&times;</button>
+            </div>
+
+            <!-- Paso 1: Validar código del grupo -->
+            <div class="rsvp-step" id="step-codigo">
+                <form class="rsvp-form" id="codigoForm">
+                    <input type="hidden" name="slug" value="<?php echo htmlspecialchars($slug); ?>">
+                    <div class="form-group">
+                        <label for="codigo_grupo">Código de Invitación *</label>
+                        <input type="text" id="codigo_grupo" name="codigo_grupo" required 
+                               placeholder="Ingresa tu código de invitación" style="text-transform: uppercase;">
+                        <small class="form-text text-muted">
+                            Ingresa el código único que recibiste para tu grupo
+                        </small>
+                    </div>
+                    <div class="alert-container" id="codigo-alert"></div>
+                    <button type="submit" class="form-submit">Validar Código</button>
+                </form>
+            </div>
+
+            <!-- Paso 2: Formulario completo RSVP -->
+            <div class="rsvp-step" id="step-formulario" style="display: none;">
+                <div class="grupo-info mb-3">
+                    <div class="alert alert-info">
+                        <strong id="nombre-grupo"></strong><br>
+                        <span id="boletos-info"></span>
+                    </div>
+                </div>
+
+                <form class="rsvp-form" id="rsvpForm">
+                    <input type="hidden" name="id_grupo" id="id_grupo">
+                    
+                    <div class="form-group">
+                        <label for="estado">¿Asistirán a la celebración? *</label>
+                        <select id="estado" name="estado" required onchange="toggleAsistenciaFields()">
+                            <option value="">Selecciona una opción</option>
+                            <option value="aceptado">Sí, asistiremos</option>
+                            <option value="rechazado">No podremos asistir</option>
+                        </select>
+                    </div>
+
+                    <!-- Campos que se muestran solo si acepta asistir -->
+                    <div class="campos-asistencia" id="campos-asistencia" style="display: none;">
+                        <div class="form-group">
+                            <label for="boletos_confirmados">¿Cuántos boletos usarán? *</label>
+                            <select id="boletos_confirmados" name="boletos_confirmados" onchange="updateNombresFields()">
+                                <!-- Se llena dinámicamente -->
+                            </select>
+                        </div>
+
+                        <div class="nombres-container" id="nombres-container">
+                            <!-- Se generan dinámicamente los campos de nombres -->
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="comentarios">Comentarios (opcional)</label>
+                        <textarea id="comentarios" name="comentarios" rows="3" 
+                                  placeholder="Mensaje especial, restricciones alimentarias, etc."></textarea>
+                    </div>
+
+                    <div class="alert-container" id="form-alert"></div>
+
+                    <div class="form-buttons">
+                        <button type="button" class="btn btn-secondary" onclick="volverACodigo()">Cambiar Código</button>
+                        <button type="submit" class="form-submit">Continuar</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Paso 3: Confirmación de datos -->
+            <div class="rsvp-step" id="step-confirmacion" style="display: none;">
+                <div class="confirmacion-header">
+                    <h4>Confirma tu información</h4>
+                    <p>Por favor revisa que todos los datos sean correctos:</p>
+                </div>
+                
+                <div class="confirmacion-info" id="confirmacion-info">
+                    <!-- Se llena dinámicamente -->
+                </div>
+
+                <div class="form-buttons">
+                    <button type="button" class="btn btn-secondary" onclick="volverAFormulario()">Editar Información</button>
+                    <button type="button" class="btn btn-primary" onclick="enviarConfirmacion()">Confirmar Asistencia</button>
+                </div>
+            </div>
+
+            <!-- Paso 4: Ver respuesta existente -->
+            <div class="rsvp-step" id="step-ver-respuesta" style="display: none;">
+                <div class="alert alert-success mb-3">
+                    <strong>¡Ya confirmaste tu asistencia!</strong><br>
+                    Muchas gracias por responder a nuestra invitación.
+                </div>
+                
+                <div class="respuesta-existente" id="respuesta-existente">
+                    <!-- Se carga dinámicamente -->
+                </div>
+
+                <div class="form-buttons">
+                    <button type="button" class="btn btn-warning" onclick="editarRespuesta()" id="btn-editar-respuesta">
+                        Modificar Respuesta
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="closeRSVPModal()">Cerrar</button>
+                </div>
+            </div>
+
+            <!-- Paso 5: Éxito -->
+            <div class="rsvp-step" id="step-exito" style="display: none;">
+                <div class="exito-container">
+                    <div class="exito-icon">✓</div>
+                    <h3>¡Confirmación exitosa!</h3>
+                    <p id="mensaje-exito"></p>
+                    <div class="resumen-confirmacion" id="resumen-final">
+                        <!-- Se llena dinámicamente -->
+                    </div>
+                </div>
+                
+                <div class="form-buttons">
+                    <button type="button" class="btn btn-primary" onclick="closeRSVPModal()">Cerrar</button>
+                </div>
+            </div>
         </div>
-        <form class="rsvp-form" id="rsvpForm">
-            <input type="hidden" name="invitacion_id" value="<?php echo $invitacion['id']; ?>">
-            <div class="form-group">
-                <label for="nombre">Nombre Completo *</label>
-                <input type="text" id="nombre" name="nombre" required>
-            </div>
-            <div class="form-group">
-                <label for="telefono">Teléfono</label>
-                <input type="tel" id="telefono" name="telefono">
-            </div>
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email">
-            </div>
-            <div class="form-group">
-                <label for="asistencia">¿Asistirás? *</label>
-                <select id="asistencia" name="asistencia" required>
-                    <option value="">Selecciona una opción</option>
-                    <option value="si">Sí, asistiré</option>
-                    <option value="no">No podré asistir</option>
-                   <option value="tal_vez">Tal vez</option>
-               </select>
-           </div>
-           <div class="form-group">
-               <label for="acompanantes">Número de acompañantes</label>
-               <input type="number" id="acompanantes" name="acompanantes" min="0" max="5" value="0">
-           </div>
-           <div class="form-group">
-               <label for="nombres_acompanantes">Nombres de acompañantes</label>
-               <textarea id="nombres_acompanantes" name="nombres_acompanantes" rows="2" placeholder="Nombres de las personas que te acompañarán..."></textarea>
-           </div>
-           <div class="form-group">
-               <label for="restricciones_alimentarias">Restricciones alimentarias</label>
-               <textarea id="restricciones_alimentarias" name="restricciones_alimentarias" rows="2" placeholder="Alergias, vegetariano, vegano, etc."></textarea>
-           </div>
-           <div class="form-group">
-               <label for="mensaje">Mensaje especial</label>
-               <textarea id="mensaje" name="mensaje" rows="3" placeholder="Mensaje especial para los novios..."></textarea>
-           </div>
-           <button type="submit" class="form-submit">Enviar Confirmación</button>
-       </form>
-   </div>
-</div> -->
+    </div>
+<?php endif; ?>
 
 <!-- Footer -->
 <footer class="footer">
@@ -746,6 +838,7 @@ const galeriaImagenes = <?php echo json_encode($galeria); ?>;
 <script src="./plantillas/plantilla-2.1/js/contador.js?v=<?php echo filemtime('./plantillas/plantilla-2.1/js/contador.js'); ?>"></script>
 <script src="./plantillas/plantilla-2.1/js/compartir.js?v=<?php echo filemtime('./plantillas/plantilla-2.1/js/compartir.js'); ?>"></script>
 <script src="./plantillas/plantilla-2.1/js/rsvp.js?v=<?php echo filemtime('./plantillas/plantilla-2.1/js/rsvp.js'); ?>"></script>
+<script src="./plantillas/plantilla-2.1/js/whatsapp.js?v=<?php echo filemtime('./plantillas/plantilla-2.1/js/whatsapp.js'); ?>"></script>
 <script src="./plantillas/plantilla-2.1/js/estadisticas.js?v=<?php echo filemtime('./plantillas/plantilla-2.1/js/estadisticas.js'); ?>"></script>
 <script src="./plantillas/plantilla-2.1/js/invitacion.js?v=<?php echo filemtime('./plantillas/plantilla-2.1/js/invitacion.js'); ?>"></script>
 <script src="./plantillas/plantilla-2.1/js/music-player.js?v=<?php echo filemtime('./plantillas/plantilla-2.1/js/music-player.js'); ?>"></script>
