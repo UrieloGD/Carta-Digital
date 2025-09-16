@@ -29,14 +29,20 @@ if (!$invitacion) {
 
 $invitacion_slug = $invitacion['slug'];
 
-// Obtener estadísticas RSVP
+// Obtener estadísticas RSVP (versión corregida)
 $stmt = $conn->prepare("
     SELECT 
         COUNT(*) as total_grupos,
-        SUM(boletos_asignados) as total_boletos,
+        SUM(ig.boletos_asignados) as total_boletos,
         SUM(CASE WHEN r.estado = 'aceptado' THEN r.boletos_confirmados ELSE 0 END) as confirmados,
-        SUM(CASE WHEN r.estado = 'rechazado' THEN r.boletos_confirmados ELSE 0 END) as rechazados,
-        SUM(CASE WHEN r.estado = 'pendiente' OR r.estado IS NULL THEN ig.boletos_asignados ELSE 0 END) as pendientes
+        SUM(CASE WHEN r.estado = 'rechazado' THEN ig.boletos_asignados ELSE 0 END) as rechazados,
+        SUM(
+            CASE 
+                WHEN r.estado = 'pendiente' OR r.estado IS NULL THEN ig.boletos_asignados 
+                WHEN r.estado = 'aceptado' THEN (ig.boletos_asignados - r.boletos_confirmados)
+                ELSE 0 
+            END
+        ) as pendientes
     FROM invitados_grupos ig 
     LEFT JOIN rsvp_respuestas r ON ig.id_grupo = r.id_grupo 
     WHERE ig.slug_invitacion = ?
@@ -46,6 +52,9 @@ $stats = $stmt->fetch();
 
 // SI ES PETICIÓN AJAX, SOLO DEVOLVER LOS DATOS EN JSON
 if (isset($_GET['ajax']) && $_GET['ajax'] == '1') {
+    // Asegurarnos de que no haya output antes de este punto
+    if (ob_get_length()) ob_clean();
+    
     header('Content-Type: application/json');
     
     // Obtener grupos actualizados para AJAX
@@ -65,9 +74,37 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == '1') {
     $stmt->execute([$invitacion_slug]);
     $grupos_ajax = $stmt->fetchAll();
     
+    // Obtener estadísticas actualizadas para AJAX (con la corrección anterior)
+    $stmt_stats = $conn->prepare("
+        SELECT 
+            COUNT(*) as total_grupos,
+            SUM(ig.boletos_asignados) as total_boletos,
+            SUM(CASE WHEN r.estado = 'aceptado' THEN r.boletos_confirmados ELSE 0 END) as confirmados,
+            SUM(CASE WHEN r.estado = 'rechazado' THEN ig.boletos_asignados ELSE 0 END) as rechazados,
+            SUM(
+                CASE 
+                    WHEN r.estado = 'pendiente' OR r.estado IS NULL THEN ig.boletos_asignados 
+                    WHEN r.estado = 'aceptado' THEN (ig.boletos_asignados - r.boletos_confirmados)
+                    ELSE 0 
+                END
+            ) as pendientes
+        FROM invitados_grupos ig 
+        LEFT JOIN rsvp_respuestas r ON ig.id_grupo = r.id_grupo 
+        WHERE ig.slug_invitacion = ?
+    ");
+    $stmt_stats->execute([$invitacion_slug]);
+    $stats_ajax = $stmt_stats->fetch();
+    
+    // Verificar si hay errores de base de datos
+    if ($grupos_ajax === false || $stats_ajax === false) {
+        http_response_code(500);
+        echo json_encode(['success' => false, 'message' => 'Error en la consulta de base de datos']);
+        exit;
+    }
+    
     echo json_encode([
         'success' => true,
-        'stats' => $stats,
+        'stats' => $stats_ajax,
         'grupos' => $grupos_ajax
     ]);
     exit; // IMPORTANTE: Salir aquí para peticiones AJAX
@@ -260,11 +297,11 @@ $invitacion_url = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . $_SER
             <div class="col-6 col-md-3 mb-3">
                 <div class="stats-card">
                     <div class="stats-icon">
-                        <i class="fas fa-users"></i>
+                        <i class="fas fa-ticket-alt"></i>
                     </div>
                     <div class="stats-content">
-                        <div class="stats-number"><?php echo $stats['total_grupos'] ?? 0; ?></div>
-                        <div class="stats-label">Grupos</div>
+                        <div class="stats-number"><?php echo $stats['total_boletos'] ?? 0; ?></div>
+                        <div class="stats-label">Invitados totales</div>
                     </div>
                 </div>
             </div>

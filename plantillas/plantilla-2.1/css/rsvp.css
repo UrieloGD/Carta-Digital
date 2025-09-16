@@ -106,7 +106,6 @@
 
 /* Modal RSVP - Ajustable al contenido */
 .rsvp-modal {
-    display: none;
     position: fixed;
     top: 0;
     left: 0;
@@ -115,14 +114,20 @@
     background: rgba(44, 44, 44, 0.8);
     z-index: 9999;
     backdrop-filter: blur(5px);
-    /* Flexbox para centrado perfecto */
-    display: flex;
-    align-items: center;
-    justify-content: center;
     padding: 20px;
     box-sizing: border-box;
+    /* IMPORTANTE: Mantener oculto por defecto */
+    display: none !important;
 }
 
+/* Solo mostrar cuando tenga el estilo inline display: flex */
+.rsvp-modal[style*="display: flex"] {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Regla para asegurar que esté oculto cuando tenga display: none */
 .rsvp-modal[style*="display: none"] {
     display: none !important;
 }
@@ -133,20 +138,17 @@
     box-shadow: var(--shadow-medium);
     width: 100%;
     max-width: 600px;
-    /* Altura automática que se ajusta al contenido */
     max-height: calc(100vh - 40px);
     overflow-y: auto;
     position: relative;
-    /* Eliminar margin ya que usamos flexbox */
     margin: 0;
-    /* Transición suave */
     transform: scale(0.95);
     opacity: 0;
     transition: var(--transition-smooth);
 }
 
 /* Cuando el modal está visible */
-.rsvp-modal:not([style*="display: none"]) .modal-content {
+.rsvp-modal[style*="display: flex"] .modal-content {
     transform: scale(1);
     opacity: 1;
 }

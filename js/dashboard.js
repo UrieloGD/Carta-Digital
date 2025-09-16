@@ -426,7 +426,7 @@ class DashboardManager {
     // Actualizar estadísticas con animación
     actualizarEstadisticas(newStats) {
         const statsMapping = [
-            { selector: '.stats-row .col-6:nth-child(1) .stats-number', value: newStats.total_grupos },
+            { selector: '.stats-row .col-6:nth-child(1) .stats-number', value: newStats.total_boletos },
             { selector: '.stats-row .col-6:nth-child(2) .stats-number', value: newStats.confirmados },
             { selector: '.stats-row .col-6:nth-child(3) .stats-number', value: newStats.rechazados },
             { selector: '.stats-row .col-6:nth-child(4) .stats-number', value: newStats.pendientes }
