@@ -84,7 +84,7 @@ foreach ($ubicaciones_result as $ubicacion_item) {
 }
 
 // Obtener cronograma
-$cronograma_query = "SELECT * FROM invitacion_cronograma WHERE invitacion_id = ? ORDER BY orden, hora";
+$cronograma_query = "SELECT * FROM invitacion_cronograma WHERE invitacion_id = ? ORDER BY orden";
 $cronograma_stmt = $db->prepare($cronograma_query);
 $cronograma_stmt->execute([$invitacion['id']]);
 $cronograma = $cronograma_stmt->fetchAll(PDO::FETCH_ASSOC);
