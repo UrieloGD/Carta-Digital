@@ -189,7 +189,7 @@ $stmt->execute([$invitacion_slug]);
 $grupos = $stmt->fetchAll();
 
 // URL base de la invitación
-$invitacion_url = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . '/invitacion.php?slug=' . $invitacion['slug'];
+$invitacion_url = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . 'invitacion.php?slug=' . $invitacion['slug'];
 ?>
 
 <!DOCTYPE html>
