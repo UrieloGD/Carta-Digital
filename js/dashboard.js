@@ -331,14 +331,23 @@ class DashboardManager {
         // Si no hay resultados, mostrar mensaje
         if (grupos.length === 0) {
             const noResultsHTML = `
-                <div class="no-results">
-                    <i class="fas fa-search"></i>
-                    <h5>No se encontraron grupos</h5>
-                    <p>Intenta ajustar tus filtros de búsqueda</p>
-                    <button class="btn btn-primary mt-2" onclick="resetFilters()">
-                        Restablecer filtros
-                    </button>
-                </div>
+                <tr>
+                    <td colspan="6" style="text-align: center; border: none; padding: 2rem;">
+                        <div class="no-results">
+                            <i class="fas fa-search"></i>
+                            <h5>No se encontraron grupos</h5>
+                            <p>Intenta ajustar tus filtros de búsqueda o crea un nuevo grupo</p>
+                            <div class="no-results-actions">
+                                <button class="btn btn-secondary" onclick="resetFilters()">
+                                    Restablecer filtros
+                                </button>
+                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCrearGrupo">
+                                    Crear Nuevo Grupo
+                                </button>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
             `;
             
             // Actualizar vista desktop
@@ -348,9 +357,25 @@ class DashboardManager {
             }
 
             // Actualizar vista mobile
+            const noResultsMobileHTML = `
+                <div class="no-results">
+                    <i class="fas fa-search"></i>
+                    <h5>No se encontraron grupos</h5>
+                    <p>Intenta ajustar tus filtros de búsqueda o crea un nuevo grupo</p>
+                    <div class="no-results-actions">
+                        <button class="btn btn-secondary" onclick="resetFilters()">
+                            Restablecer filtros
+                        </button>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCrearGrupo">
+                            Crear Nuevo Grupo
+                        </button>
+                    </div>
+                </div>
+            `;
+            
             const mobileContainer = document.querySelector('.mobile-guests');
             if (mobileContainer) {
-                mobileContainer.innerHTML = noResultsHTML;
+                mobileContainer.innerHTML = noResultsMobileHTML;
             }
             
             return;

@@ -539,7 +539,7 @@ $invitacion_url = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . $_SER
                         <table class="table table-hover">
                             <thead class="table-light">
                                 <tr>
-                                    <th>Grupo/Familia</th>
+                                    <th>Grupo/Invitados</th>
                                     <th>Boletos</th>
                                     <th>Estado</th>
                                     <th>Token</th>
@@ -631,7 +631,7 @@ $invitacion_url = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . $_SER
                     </div>
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label for="nombre_grupo" class="form-label">Nombre del Grupo/Familia</label>
+                            <label for="nombre_grupo" class="form-label">Nombre del Grupo/Invitados</label>
                             <input type="text" class="form-control" id="nombre_grupo" name="nombre_grupo" required>
                         </div>
                         <div class="mb-3">
@@ -661,7 +661,7 @@ $invitacion_url = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . $_SER
                     </div>
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label for="edit_nombre_grupo" class="form-label">Nombre del Grupo/Familia</label>
+                            <label for="edit_nombre_grupo" class="form-label">Nombre del Grupo/Invitados</label>
                             <input type="text" class="form-control" id="edit_nombre_grupo" name="nombre_grupo" required>
                         </div>
                         <div class="mb-3">
