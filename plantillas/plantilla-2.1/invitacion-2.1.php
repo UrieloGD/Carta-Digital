@@ -762,14 +762,6 @@ $tipo_rsvp = $invitacion['tipo_rsvp'] ?? 'whatsapp';
            <p class="footer-message">
                <?php echo htmlspecialchars($mensaje_footer); ?>
            </p>
-           <div class="footer-actions">
-               <button class="share-button" onclick="shareWhatsApp()">
-                   <span>📱</span> Compartir por WhatsApp
-               </button>
-               <button class="copy-button" onclick="copyLink()">
-                   <span>🔗</span> Copiar enlace
-               </button>
-           </div>
            <p class="footer-thanks">
                Gracias por ser parte de nuestro día especial
            </p>
@@ -780,15 +772,6 @@ $tipo_rsvp = $invitacion['tipo_rsvp'] ?? 'whatsapp';
        </div>
    </div>
 </footer>
-
-<!-- Mensaje de éxito RSVP 
-<div class="success-message" id="successMessage">
-   <div class="success-content">
-       <span class="success-icon">✅</span>
-       <h3>¡Confirmación enviada!</h3>
-       <p>Gracias por confirmar tu asistencia. ¡Te esperamos!</p>
-   </div>
-</div>-->
 
 <?php if (!empty($musica_youtube_url)): ?>
 <link rel="stylesheet" href="./plantillas/plantilla-2.1/css/music-player.css">
