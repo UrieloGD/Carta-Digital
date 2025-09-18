@@ -83,7 +83,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             historia = ?, dresscode = ?, texto_rsvp = ?, mensaje_footer = ?, firma_footer = ?,
             padres_novia = ?, padres_novio = ?, padrinos_novia = ?, padrinos_novio = ?,
             musica_youtube_url = ?, musica_autoplay = ?, musica_volumen = ?,
-            imagen_hero = ?, imagen_dedicatoria = ?, imagen_destacada = ?, whatsapp_confirmacion = ?, tipo_rsvp = ?
+            imagen_hero = ?, imagen_dedicatoria = ?, imagen_destacada = ?, whatsapp_confirmacion = ?, 
+            tipo_rsvp = ?, fecha_limite_rsvp = ?
             WHERE id = ?";
 
         $stmt = $db->prepare($update_query);
@@ -109,6 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $imagen_destacada,
             $_POST['whatsapp_confirmacion'] ?? '',
             $_POST['tipo_rsvp'] ?? 'digital',
+            !empty($_POST['fecha_limite_rsvp']) ? $_POST['fecha_limite_rsvp'] : null,
             $id
         ]);
         
@@ -139,25 +141,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ]);
         }
         
-        // Actualizar cronograma (eliminar y volver a insertar)
-        $db->prepare("DELETE FROM invitacion_cronograma WHERE invitacion_id = ?")->execute([$id]);
-        
+        // Actualizar cronograma manteniendo el orden original
         if (!empty($_POST['cronograma_hora']) && is_array($_POST['cronograma_hora'])) {
-            $stmt = $db->prepare("INSERT INTO invitacion_cronograma (invitacion_id, hora, evento, descripcion, icono) VALUES (?, ?, ?, ?, ?)");
+            // Obtener IDs existentes del cronograma
+            $existing_query = "SELECT id FROM invitacion_cronograma WHERE invitacion_id = ? ORDER BY orden ASC, id ASC";
+            $existing_stmt = $db->prepare($existing_query);
+            $existing_stmt->execute([$id]);
+            $existing_ids = $existing_stmt->fetchAll(PDO::FETCH_COLUMN);
+            
+            // Preparar statements
+            $update_stmt = $db->prepare("UPDATE invitacion_cronograma SET hora = ?, evento = ?, descripcion = ?, icono = ?, orden = ? WHERE id = ?");
+            $insert_stmt = $db->prepare("INSERT INTO invitacion_cronograma (invitacion_id, hora, evento, descripcion, icono, orden) VALUES (?, ?, ?, ?, ?, ?)");
+            
+            $processed_ids = [];
+            $orden = 1;
             
             foreach ($_POST['cronograma_hora'] as $index => $hora) {
                 if (!empty($hora) && !empty($_POST['cronograma_evento'][$index])) {
-                    $stmt->execute([
-                        $id,
-                        $hora,
-                        $_POST['cronograma_evento'][$index],
-                        $_POST['cronograma_descripcion'][$index] ?? '',
-                        $_POST['cronograma_icono'][$index] ?? 'anillos'
-                    ]);
+                    $evento = $_POST['cronograma_evento'][$index];
+                    $descripcion = $_POST['cronograma_descripcion'][$index] ?? '';
+                    $icono = $_POST['cronograma_icono'][$index] ?? 'anillos';
+                    
+                    if (isset($existing_ids[$index])) {
+                        // Actualizar registro existente
+                        $cronograma_id = $existing_ids[$index];
+                        $update_stmt->execute([$hora, $evento, $descripcion, $icono, $orden, $cronograma_id]);
+                        $processed_ids[] = $cronograma_id;
+                    } else {
+                        // Insertar nuevo registro
+                        $insert_stmt->execute([$id, $hora, $evento, $descripcion, $icono, $orden]);
+                    }
+                    $orden++;
                 }
             }
+            
+            // Eliminar registros que ya no existen
+            if (!empty($existing_ids)) {
+                $ids_to_delete = array_diff($existing_ids, $processed_ids);
+                if (!empty($ids_to_delete)) {
+                    $placeholders = implode(',', array_fill(0, count($ids_to_delete), '?'));
+                    $delete_stmt = $db->prepare("DELETE FROM invitacion_cronograma WHERE id IN ($placeholders)");
+                    $delete_stmt->execute($ids_to_delete);
+                }
+            }
+        } else {
+            // Si no hay cronograma, eliminar todos los existentes
+            $db->prepare("DELETE FROM invitacion_cronograma WHERE invitacion_id = ?")->execute([$id]);
         }
-        
         
         // Agregar nuevas imágenes a la galería (sin eliminar las existentes)
         if (isset($_FILES['imagenes_galeria']) && !empty($_FILES['imagenes_galeria']['name'][0])) {
@@ -253,7 +283,7 @@ if (!$invitacion) {
 }
 
 // Obtener cronograma
-$cronograma_query = "SELECT * FROM invitacion_cronograma WHERE invitacion_id = ? ORDER BY hora";
+$cronograma_query = "SELECT id, invitacion_id, TIME_FORMAT(hora, '%H:%i') as hora, evento, descripcion, icono, orden FROM invitacion_cronograma WHERE invitacion_id = ? ORDER BY orden ASC, id ASC";
 $cronograma_stmt = $db->prepare($cronograma_query);
 $cronograma_stmt->execute([$id]);
 $cronograma = $cronograma_stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -294,163 +324,7 @@ foreach($ubicaciones as $ub) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <style>
-        body {
-            background-color: #f8f9fa;
-            font-size: 0.95rem;
-        }
-
-        .form-section {
-            background: white;
-            border-radius: 10px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-        }
-
-        .section-title {
-            color: #6f42c1;
-            border-bottom: 2px solid #e9ecef;
-            padding-bottom: 0.5rem;
-            margin-bottom: 1.5rem;
-            font-size: 1.25rem;
-        }
-
-        .form-label {
-            font-weight: 500;
-            margin-bottom: 0.5rem;
-            font-size: 0.9rem;
-        }
-
-        .form-control, .form-select, .form-range {
-            font-size: 0.9rem;
-            padding: 0.5rem 0.75rem;
-        }
-
-        .current-image img {
-            max-width: 150px;
-            height: auto;
-            border-radius: 8px;
-            margin-bottom: 0.5rem;
-        }
-
-        .success-alert {
-            background-color: #d1e7dd;
-            color: #0f5132;
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 1.5rem;
-        }
-
-        .error-alert {
-            background-color: #f8d7da;
-            color: #842029;
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 1.5rem;
-        }
-
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 0.75rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .gallery-item {
-            position: relative;
-        }
-
-        .gallery-item img {
-            width: 100%;
-            height: 120px;
-            object-fit: cover;
-            border-radius: 8px;
-        }
-
-        .gallery-item button {
-            position: absolute;
-            bottom: 8px;
-            right: 8px;
-            padding: 0.2rem 0.4rem;
-            font-size: 0.75rem;
-        }
-
-        .cronograma-item {
-            border: 1px solid #dee2e6;
-            border-radius: 8px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            background-color: #f8f9fa;
-        }
-
-        .floating-buttons {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 1000;
-            display: flex;
-            gap: 10px;
-        }
-
-        .floating-buttons .btn {
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            border-radius: 25px;
-            padding: 0.75rem 1.5rem;
-            font-weight: 600;
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            .form-section {
-                padding: 1rem;
-            }
-            
-            .floating-buttons {
-                position: static;
-                margin-top: 1.5rem;
-                justify-content: center;
-            }
-            
-            .floating-buttons .btn {
-                width: 100%;
-            }
-            
-            .gallery-grid {
-                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            }
-            
-            .gallery-item img {
-                height: 100px;
-            }
-        }
-
-        /* Custom spacing for form elements */
-        .form-group {
-            margin-bottom: 1rem;
-        }
-        
-        /* Preview images styling */
-        .img-preview {
-            max-width: 150px;
-            max-height: 150px;
-            border-radius: 8px;
-            margin-top: 0.5rem;
-        }
-        
-        /* Two-column layout for desktop */
-        @media (min-width: 992px) {
-            .two-columns {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 1.5rem;
-            }
-            
-            .full-width {
-                grid-column: 1 / -1;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="./../css/editar.css?v=<?php echo filemtime('./../css/editar.css'); ?>" />
     <!-- Icon page -->
     <link rel="shortcut icon" href="./../../images/logo.webp" />
 </head>
@@ -656,7 +530,7 @@ foreach($ubicaciones as $ub) {
             </div>
 
             <!-- Imágenes -->
-            <div class="form-section">
+            <div class="form-section images-section">
                 <h3 class="section-title">
                     <i class="bi bi-images me-2"></i>
                     Imágenes
@@ -823,6 +697,7 @@ foreach($ubicaciones as $ub) {
                 <div id="cronograma-container">
                     <?php if (empty($cronograma)): ?>
                     <div class="cronograma-item">
+                        <input type="hidden" name="cronograma_orden[]" value="1">
                         <div class="row g-2">
                             <div class="col-md-2">
                                 <label class="form-label">Hora</label>
@@ -833,7 +708,7 @@ foreach($ubicaciones as $ub) {
                                 <input type="text" name="cronograma_evento[]" class="form-control" 
                                     placeholder="Ceremonia">
                             </div>
-                            <div class="col-md-5">
+                            <div class="col-md-4">
                                 <label class="form-label">Descripción</label>
                                 <input type="text" name="cronograma_descripcion[]" class="form-control" 
                                     placeholder="Descripción del evento">
@@ -847,11 +722,18 @@ foreach($ubicaciones as $ub) {
                                     <option value="luna">Luna</option>
                                 </select>
                             </div>
+                            <div class="col-md-1 d-flex align-items-end">
+                                <button type="button" onclick="eliminarCronograma(this)" class="btn btn-outline-danger btn-sm mt-2">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
                     <?php else: ?>
-                        <?php foreach($cronograma as $item): ?>
+                        <?php foreach($cronograma as $orden_item => $item): ?>
                         <div class="cronograma-item">
+                            <!-- Campo oculto para mantener el orden -->
+                            <input type="hidden" name="cronograma_orden[]" value="<?php echo $orden_item + 1; ?>">
                             <div class="row g-2">
                                 <div class="col-md-2">
                                     <label class="form-label">Hora</label>
@@ -958,19 +840,32 @@ foreach($ubicaciones as $ub) {
                 </div>
             </div>
 
-            <!-- Mensajes Personalizados -->
+            <!-- RSVP -->
             <div class="form-section">
                 <h3 class="section-title">
-                    <i class="bi bi-chat-heart me-2"></i>
-                    Mensajes Personalizados
+                    <i class="bi bi-calendar-check me-2"></i>
+                    Confirmación RSVP
                 </h3>
                 
-                <!-- Texto RSVP -->
-                <div class="form-group">
-                    <label for="texto_rsvp" class="form-label">Texto para RSVP</label>
-                    <input type="text" id="texto_rsvp" name="texto_rsvp" class="form-control" 
-                        placeholder="Confirma tu asistencia antes del..."
-                        value="<?php echo htmlspecialchars($invitacion['texto_rsvp']); ?>">
+                <div class="two-columns">
+                    <!-- Texto RSVP -->
+                    <div class="form-group">
+                        <label for="texto_rsvp" class="form-label">Texto para RSVP</label>
+                        <input type="text" id="texto_rsvp" name="texto_rsvp" class="form-control" 
+                            placeholder="Confirma tu asistencia antes del..."
+                            value="<?php echo htmlspecialchars($invitacion['texto_rsvp']); ?>">
+                    </div>
+                    
+                    <!-- Fecha límite RSVP -->
+                    <div class="form-group">
+                        <label for="fecha_limite_rsvp" class="form-label">Fecha Límite para Confirmar</label>
+                        <input type="date" id="fecha_limite_rsvp" name="fecha_limite_rsvp" class="form-control"
+                            value="<?php echo $invitacion['fecha_limite_rsvp'] ?? ''; ?>">
+                        <div class="form-text">
+                            <i class="bi bi-info-circle me-1"></i>
+                            Después de esta fecha, los invitados no podrán confirmar su asistencia
+                        </div>
+                    </div>
                 </div>
                 
                 <!-- Tipo de RSVP -->
@@ -990,7 +885,7 @@ foreach($ubicaciones as $ub) {
                     </div>
                 </div>
 
-                <!-- Campo WhatsApp - modificado para mostrar/ocultar según el tipo -->
+                <!-- Campo WhatsApp -->
                 <div class="form-group" id="campo-whatsapp" style="<?php echo ($invitacion['tipo_rsvp'] ?? 'digital') == 'whatsapp' ? '' : 'display: none;'; ?>">
                     <label for="whatsapp_confirmacion" class="form-label">Número de WhatsApp para Confirmaciones *</label>
                     <input type="tel" id="whatsapp_confirmacion" name="whatsapp_confirmacion" class="form-control" 
@@ -1002,7 +897,15 @@ foreach($ubicaciones as $ub) {
                         Número de WhatsApp donde recibirás las confirmaciones de asistencia (solo números, sin espacios ni guiones)
                     </div>
                 </div>
+            </div>
 
+            <!-- Footer -->
+            <div class="form-section">
+                <h3 class="section-title">
+                    <i class="bi bi-chat-heart me-2"></i>
+                    Mensaje del Footer
+                </h3>
+                
                 <div class="form-group">
                     <label for="mensaje_footer" class="form-label">Mensaje del Footer</label>
                     <textarea id="mensaje_footer" name="mensaje_footer" rows="2" class="form-control" 
@@ -1015,7 +918,6 @@ foreach($ubicaciones as $ub) {
                         placeholder="Con amor, Victoria & Matthew"
                         value="<?php echo htmlspecialchars($invitacion['firma_footer']); ?>">
                 </div>
-            </div>
             </div>
 
             <!-- Botones de acción flotantes -->
@@ -1034,144 +936,6 @@ foreach($ubicaciones as $ub) {
 
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <script>
-        // Validación del número de WhatsApp
-        document.getElementById('whatsapp_confirmacion').addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\D/g, ''); // Solo números
-            if (value.length > 15) {
-                value = value.substring(0, 15); // Máximo 15 dígitos
-            }
-            e.target.value = value;
-            
-            // Cambiar el color del borde según la validez
-            if (value.length >= 10 && value.length <= 15) {
-                e.target.style.borderColor = '#28a745'; // Verde si es válido
-            } else if (value.length > 0) {
-                e.target.style.borderColor = '#dc3545'; // Rojo si es inválido
-            } else {
-                e.target.style.borderColor = ''; // Default si está vacío
-            }
-        });
-
-        // Función para previsualizar imágenes individuales
-        function previewImage(input, previewId) {
-            const preview = document.getElementById(previewId + '-img');
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    preview.src = e.target.result;
-                    preview.classList.remove('d-none');
-                }
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
-        // Función para previsualizar galería de imágenes
-        function previewGallery(input) {
-            const preview = document.getElementById('gallery-preview');
-            preview.innerHTML = '';
-            
-            if (input.files) {
-                Array.from(input.files).forEach((file, index) => {
-                    if (file.type.startsWith('image/')) {
-                        const reader = new FileReader();
-                        reader.onload = function(e) {
-                            const col = document.createElement('div');
-                            col.className = 'col-md-3 mb-3';
-                            col.innerHTML = `
-                                <div class="card">
-                                    <img src="${e.target.result}" class="card-img-top" style="height: 120px; object-fit: cover;">
-                                    <div class="card-body p-2">
-                                        <small class="text-muted">${file.name}</small>
-                                    </div>
-                                </div>
-                            `;
-                            preview.appendChild(col);
-                        }
-                        reader.readAsDataURL(file);
-                    }
-                });
-            }
-        }
-
-        // Función para agregar elementos al cronograma
-        function agregarCronograma() {
-            const container = document.getElementById('cronograma-container');
-            const newItem = document.createElement('div');
-            newItem.className = 'cronograma-item';
-            newItem.innerHTML = `
-                <div class="row g-2">
-                    <div class="col-md-2">
-                        <label class="form-label">Hora</label>
-                        <input type="time" name="cronograma_hora[]" class="form-control">
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label">Evento</label>
-                        <input type="text" name="cronograma_evento[]" class="form-control" placeholder="Evento">
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Descripción</label>
-                        <input type="text" name="cronograma_descripcion[]" class="form-control" placeholder="Descripción">
-                    </div>
-                    <div class="col-md-2">
-                        <label class="form-label">Icono</label>
-                        <select name="cronograma_icono[]" class="form-select">
-                            <option value="anillos">Anillos</option>
-                            <option value="cena">Cena</option>
-                            <option value="fiesta">Fiesta</option>
-                            <option value="luna">Luna</option>
-                        </select>
-                    </div>
-                    <div class="col-md-1 d-flex align-items-end">
-                        <button type="button" onclick="eliminarCronograma(this)" class="btn btn-outline-danger btn-sm mt-2">
-                            <i class="bi bi-trash"></i>
-                        </button>
-                    </div>
-                </div>
-            `;
-            container.appendChild(newItem);
-        }
-
-        // Función para eliminar elementos del cronograma
-        function eliminarCronograma(button) {
-            button.closest('.cronograma-item').remove();
-        }
-        
-        // Función para eliminar imagen de galería
-        function eliminarImagenGaleria(id) {
-            if (confirm('¿Estás seguro de que quieres eliminar esta imagen de la galería?')) {
-                fetch(`eliminar_galeria.php?id=${id}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            location.reload();
-                        } else {
-                            alert('Error al eliminar la imagen');
-                        }
-                    });
-            }
-        }
-
-        // Función para mostrar/ocultar campos según el tipo de RSVP
-        function toggleRSVPFields() {
-            const tipoRsvp = document.getElementById('tipo_rsvp').value;
-            const campoWhatsapp = document.getElementById('campo-whatsapp');
-            const inputWhatsapp = document.getElementById('whatsapp_confirmacion');
-            
-            if (tipoRsvp === 'whatsapp') {
-                campoWhatsapp.style.display = 'block';
-                inputWhatsapp.required = true;
-            } else {
-                campoWhatsapp.style.display = 'none';
-                inputWhatsapp.required = false;
-            }
-        }
-
-        // Inicializar el estado al cargar la página
-        document.addEventListener('DOMContentLoaded', function() {
-            toggleRSVPFields();
-        });
-    </script>
+    <script src="./../js/editar.js?v=<?php echo filemtime('./../js/editar.js'); ?>"></script>
 </body>
 </html>

@@ -1,259 +1,177 @@
-// Funciones para manejo de cronograma
-function agregarCronograma() {
-    const container = document.getElementById('cronograma-container');
-    const newItem = container.children[0].cloneNode(true);
-    
-    // Limpiar valores
-    newItem.querySelectorAll('input, select').forEach(input => input.value = '');
-    
-    // Agregar botón eliminar si no existe
-    if (!newItem.querySelector('.btn-danger')) {
-        const formRow = newItem.querySelector('.form-row');
-        const deleteGroup = document.createElement('div');
-        deleteGroup.className = 'form-group';
-        deleteGroup.innerHTML = '<button type="button" onclick="eliminarCronograma(this)" class="btn btn-danger btn-sm">🗑️ Eliminar</button>';
-        formRow.appendChild(deleteGroup);
-    }
-    
-    container.appendChild(newItem);
-}
+// editar.js - Funciones para el formulario de edición de invitaciones
 
-function eliminarCronograma(button) {
-    const container = document.getElementById('cronograma-container');
-    if (container.children.length > 1) {
-        button.closest('.cronograma-item').remove();
+// Validación del número de WhatsApp
+function initWhatsAppValidation() {
+    const whatsappInput = document.getElementById('whatsapp_confirmacion');
+    if (whatsappInput) {
+        whatsappInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, ''); // Solo números
+            if (value.length > 15) {
+                value = value.substring(0, 15); // Máximo 15 dígitos
+            }
+            e.target.value = value;
+           
+            // Cambiar el color del borde según la validez
+            if (value.length >= 10 && value.length <= 15) {
+                e.target.style.borderColor = '#28a745'; // Verde si es válido
+            } else if (value.length > 0) {
+                e.target.style.borderColor = '#dc3545'; // Rojo si es inválido
+            } else {
+                e.target.style.borderColor = ''; // Default si está vacío
+            }
+        });
     }
 }
 
-// Funciones para manejo de FAQ
-function agregarFAQ() {
-    const container = document.getElementById('faq-container');
-    const newItem = container.children[0].cloneNode(true);
-    
-    // Limpiar valores
-    newItem.querySelectorAll('input, textarea').forEach(input => input.value = '');
-    
-    // Agregar botón eliminar si no existe
-    if (!newItem.querySelector('.btn-danger')) {
-        const deleteGroup = document.createElement('div');
-        deleteGroup.className = 'form-group';
-        deleteGroup.innerHTML = '<button type="button" onclick="eliminarFAQ(this)" class="btn btn-danger btn-sm">🗑️ Eliminar</button>';
-        newItem.appendChild(deleteGroup);
-    }
-    
-    container.appendChild(newItem);
-}
-
-function eliminarFAQ(button) {
-    const container = document.getElementById('faq-container');
-    if (container.children.length > 1) {
-        button.closest('.faq-item').remove();
-    }
-}
-
-// Función para preview de imagen individual
+// Función para previsualizar imágenes individuales
 function previewImage(input, previewId) {
-    const file = input.files[0];
-    const preview = document.getElementById(previewId);
-    
-    if (file && preview) {
+    const preview = document.getElementById(previewId + '-img');
+    if (input.files && input.files[0]) {
         const reader = new FileReader();
         reader.onload = function(e) {
-            preview.innerHTML = `<img src="${e.target.result}" alt="Vista previa" class="image-preview" style="max-width: 200px; height: auto; border-radius: 8px;">`;
-            preview.classList.add('has-image');
-        };
-        reader.readAsDataURL(file);
+            preview.src = e.target.result;
+            preview.classList.remove('d-none');
+        }
+        reader.readAsDataURL(input.files[0]);
     }
 }
 
-// Función para preview de galería múltiple
+// Función para previsualizar galería de imágenes
 function previewGallery(input) {
     const preview = document.getElementById('gallery-preview');
-    
-    if (!preview) return;
-    
     preview.innerHTML = '';
-    
-    Array.from(input.files).forEach((file, index) => {
-        if (file.type.startsWith('image/')) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const div = document.createElement('div');
-                div.className = 'gallery-preview-item';
-                div.style.cssText = 'display: inline-block; margin: 10px; position: relative; border: 2px solid #ddd; border-radius: 8px; overflow: hidden;';
-                div.innerHTML = `
-                    <img src="${e.target.result}" alt="Imagen ${index + 1}" style="width: 150px; height: 150px; object-fit: cover; display: block;">
-                    <button type="button" class="remove-preview-btn" onclick="removePreviewItem(this)" 
-                            style="position: absolute; top: 5px; right: 5px; background: rgba(255,0,0,0.8); color: white; border: none; border-radius: 50%; width: 25px; height: 25px; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center;">×</button>
-                `;
-                preview.appendChild(div);
-            };
-            reader.readAsDataURL(file);
-        }
-    });
-}
-
-// Función para eliminar item de preview
-function removePreviewItem(button) {
-    button.parentElement.remove();
-}
-
-// Función para configurar preview individual
-function setupImagePreview(inputId, previewId) {
-    const input = document.getElementById(inputId);
-    const preview = document.getElementById(previewId);
-    
-    if (input && preview) {
-        input.addEventListener('change', function(e) {
-            previewImage(this, previewId);
-        });
-    }
-}
-
-// Función para eliminar imagen de galería existente
-function eliminarImagenGaleria(imagenId) {
-    if (confirm('¿Estás seguro de que quieres eliminar esta imagen?')) {
-        // Obtener el ID de la invitación desde la URL o un elemento hidden
-        const urlParams = new URLSearchParams(window.location.search);
-        const invitacionId = urlParams.get('id');
-        
-        fetch('./eliminar_imagen.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                imagen_id: imagenId,
-                invitacion_id: invitacionId
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                location.reload();
-            } else {
-                alert('Error al eliminar la imagen: ' + (data.error || 'Error desconocido'));
+   
+    if (input.files) {
+        Array.from(input.files).forEach((file, index) => {
+            if (file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const col = document.createElement('div');
+                    col.className = 'col-md-3 mb-3';
+                    col.innerHTML = `
+                        <div class="card">
+                            <img src="${e.target.result}" class="card-img-top" style="height: 120px; object-fit: cover;">
+                            <div class="card-body p-2">
+                                <small class="text-muted">${file.name}</small>
+                            </div>
+                        </div>
+                    `;
+                    preview.appendChild(col);
+                }
+                reader.readAsDataURL(file);
             }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Error al conectar con el servidor');
         });
     }
 }
 
-// Inicialización cuando el DOM esté listo
+// Validaciones de fechas
+function initDateValidation() {
+    const fechaLimiteRsvp = document.getElementById('fecha_limite_rsvp');
+    const fechaEvento = document.getElementById('fecha_evento');
+
+    if (fechaLimiteRsvp && fechaEvento) {
+        // Validar que la fecha límite RSVP no sea posterior a la fecha del evento
+        fechaLimiteRsvp.addEventListener('change', function() {
+            const fechaEventoValue = fechaEvento.value;
+            const fechaLimiteValue = this.value;
+           
+            if (fechaEventoValue && fechaLimiteValue && fechaLimiteValue > fechaEventoValue) {
+                alert('La fecha límite para RSVP no puede ser posterior a la fecha del evento');
+                this.value = '';
+            }
+        });
+
+        fechaEvento.addEventListener('change', function() {
+            const fechaLimiteValue = fechaLimiteRsvp.value;
+            const fechaEventoValue = this.value;
+           
+            if (fechaEventoValue && fechaLimiteValue && fechaLimiteValue > fechaEventoValue) {
+                alert('La fecha límite para RSVP no puede ser posterior a la fecha del evento');
+                fechaLimiteRsvp.value = '';
+            }
+        });
+    }
+}
+
+// Función para agregar elementos al cronograma
+function agregarCronograma() {
+    const container = document.getElementById('cronograma-container');
+    const newItem = document.createElement('div');
+    newItem.className = 'cronograma-item';
+    newItem.innerHTML = `
+        <div class="row g-2">
+            <div class="col-md-2">
+                <label class="form-label">Hora</label>
+                <input type="time" name="cronograma_hora[]" class="form-control">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Evento</label>
+                <input type="text" name="cronograma_evento[]" class="form-control" placeholder="Evento">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Descripción</label>
+                <input type="text" name="cronograma_descripcion[]" class="form-control" placeholder="Descripción">
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Icono</label>
+                <select name="cronograma_icono[]" class="form-select">
+                    <option value="anillos">Anillos</option>
+                    <option value="cena">Cena</option>
+                    <option value="fiesta">Fiesta</option>
+                    <option value="luna">Luna</option>
+                </select>
+            </div>
+            <div class="col-md-1 d-flex align-items-end">
+                <button type="button" onclick="eliminarCronograma(this)" class="btn btn-outline-danger btn-sm mt-2">
+                    <i class="bi bi-trash"></i>
+                </button>
+            </div>
+        </div>
+    `;
+    container.appendChild(newItem);
+}
+
+// Función para eliminar elementos del cronograma
+function eliminarCronograma(button) {
+    button.closest('.cronograma-item').remove();
+}
+
+// Función para eliminar imagen de galería
+function eliminarImagenGaleria(id) {
+    if (confirm('¿Estás seguro de que quieres eliminar esta imagen de la galería?')) {
+        fetch(`eliminar_galeria.php?id=${id}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert('Error al eliminar la imagen');
+                }
+            });
+    }
+}
+
+// Función para mostrar/ocultar campos según el tipo de RSVP
+function toggleRSVPFields() {
+    const tipoRsvp = document.getElementById('tipo_rsvp');
+    const campoWhatsapp = document.getElementById('campo-whatsapp');
+    const inputWhatsapp = document.getElementById('whatsapp_confirmacion');
+    
+    if (tipoRsvp && campoWhatsapp && inputWhatsapp) {
+        if (tipoRsvp.value === 'whatsapp') {
+            campoWhatsapp.style.display = 'block';
+            inputWhatsapp.required = true;
+        } else {
+            campoWhatsapp.style.display = 'none';
+            inputWhatsapp.required = false;
+        }
+    }
+}
+
+// Inicialización cuando el DOM está listo
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Editar.js cargado correctamente');
-    
-    // Configurar vistas previas para imágenes individuales
-    setupImagePreview('imagen_hero', 'hero-preview');
-    setupImagePreview('imagen_dedicatoria', 'dedicatoria-preview');
-    setupImagePreview('imagen_destacada', 'destacada-preview');
-    setupImagePreview('imagen_dresscode_hombres', 'dresscode-hombres-preview');
-    setupImagePreview('imagen_dresscode_mujeres', 'dresscode-mujeres-preview');
-    
-    // Configurar preview para galería múltiple
-    const galeriaInput = document.getElementById('imagenes_galeria');
-    if (galeriaInput) {
-        galeriaInput.addEventListener('change', function(e) {
-            previewGallery(this);
-        });
-    }
-    
-    // Validaciones adicionales del formulario
-    const form = document.querySelector('.admin-form');
-    if (form) {
-        form.addEventListener('submit', function(e) {
-            const nombresNovios = document.getElementById('nombres_novios').value.trim();
-            const fechaEvento = document.getElementById('fecha_evento').value;
-            const horaEvento = document.getElementById('hora_evento').value;
-            
-            if (!nombresNovios || !fechaEvento || !horaEvento) {
-                e.preventDefault();
-                alert('Por favor, completa todos los campos obligatorios (Nombres, Fecha y Hora)');
-                return false;
-            }
-            
-            // Validar que la fecha no sea en el pasado
-            const fechaSeleccionada = new Date(fechaEvento);
-            const hoy = new Date();
-            hoy.setHours(0, 0, 0, 0);
-            
-            if (fechaSeleccionada < hoy) {
-                e.preventDefault();
-                alert('La fecha del evento no puede ser anterior a hoy');
-                return false;
-            }
-        });
-    }
-    
-    // Agregar funcionalidad para mostrar/ocultar secciones opcionales
-    toggleOptionalSections();
+    // Inicializar todas las funciones
+    initWhatsAppValidation();
+    initDateValidation();
+    toggleRSVPFields();
 });
-
-// Función para manejar secciones opcionales
-function toggleOptionalSections() {
-    // Agregar botones para mostrar/ocultar secciones opcionales
-    const sectionsToToggle = [
-        { id: 'cronograma-container', buttonText: 'Agregar Cronograma' },
-        { id: 'faq-container', buttonText: 'Agregar FAQ' }
-    ];
-    
-    sectionsToToggle.forEach(section => {
-        const container = document.getElementById(section.id);
-        if (container && container.children.length === 1) {
-            // Si solo hay un elemento vacío, ocultar la sección inicialmente
-            const firstItem = container.children[0];
-            const hasContent = Array.from(firstItem.querySelectorAll('input, textarea, select'))
-                                   .some(input => input.value.trim() !== '');
-            
-            if (!hasContent) {
-                container.style.display = 'none';
-                
-                // Crear botón para mostrar la sección
-                const toggleBtn = document.createElement('button');
-                toggleBtn.type = 'button';
-                toggleBtn.className = 'btn btn-secondary';
-                toggleBtn.textContent = section.buttonText;
-                toggleBtn.onclick = function() {
-                    container.style.display = 'block';
-                    this.style.display = 'none';
-                };
-                
-                container.parentNode.insertBefore(toggleBtn, container);
-            }
-        }
-    });
-}
-
-// Agregar al final de editar.js
-document.addEventListener('DOMContentLoaded', function() {
-    const musicUrlInput = document.getElementById('musica_youtube_url');
-    const musicPreview = document.getElementById('musicPreview');
-    
-    if (musicUrlInput) {
-        musicUrlInput.addEventListener('input', function() {
-            if (this.value.trim()) {
-                musicPreview.style.display = 'block';
-            } else {
-                musicPreview.style.display = 'none';
-            }
-        });
-        
-        // Mostrar preview si ya hay URL
-        if (musicUrlInput.value.trim()) {
-            musicPreview.style.display = 'block';
-        }
-    }
-});
-
-// Hacer las funciones globales para que puedan ser llamadas desde el HTML
-window.agregarCronograma = agregarCronograma;
-window.eliminarCronograma = eliminarCronograma;
-window.agregarFAQ = agregarFAQ;
-window.eliminarFAQ = eliminarFAQ;
-window.previewImage = previewImage;
-window.previewGallery = previewGallery;
-window.eliminarImagenGaleria = eliminarImagenGaleria;
-window.removePreviewItem = removePreviewItem;

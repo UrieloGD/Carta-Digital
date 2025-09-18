@@ -1,152 +1,120 @@
 body {
-  background-color: #f8f9fa;
+    background-color: #f8f9fa;
+    font-size: 0.95rem;
 }
 
 .form-section {
-  background: white;
-  border-radius: 15px;
-  padding: 2rem;
-  margin-bottom: 2rem;
-  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    background: white;
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
 }
 
 .section-title {
-  color: #6f42c1;
-  border-bottom: 2px solid #e9ecef;
-  padding-bottom: 0.5rem;
-  margin-bottom: 1.5rem;
+    color: #6f42c1;
+    border-bottom: 2px solid #e9ecef;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
+    font-size: 1.25rem;
 }
 
-.image-preview {
-  max-width: 200px;
-  max-height: 200px;
-  border-radius: 10px;
+.form-label {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
 }
 
-.file-input-custom {
-  position: relative;
-  display: inline-block;
-  cursor: pointer;
+.form-control, .form-select, .form-range {
+    font-size: 0.9rem;
+    padding: 0.5rem 0.75rem;
 }
 
-.file-input-custom input[type="file"] {
-  position: absolute;
-  opacity: 0;
-  width: 100%;
-  height: 100%;
-  cursor: pointer;
-}
-
-.cronograma-item,
-.faq-item {
-  border: 1px solid #dee2e6;
-  border-radius: 10px;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  background-color: #f8f9fa;
-}
-
-.gallery-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-.gallery-item {
-  position: relative;
-}
-
-.gallery-item img {
-  width: 100%;
-  height: 150px;
-  object-fit: cover;
-  border-radius: 8px;
-}
-
-.gallery-item button {
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
-}
-
-.gallery-preview-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin-top: 1rem;
-}
-
-.gallery-preview-item {
-  width: 150px;
-  height: 150px;
-}
-
-.gallery-preview-item img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 8px;
-}
-
-.image-preview-container {
-  margin-top: 1rem;
-  min-height: 100px;
-  border: 1px dashed #dee2e6;
-  border-radius: 8px;
-  padding: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.image-placeholder {
-  text-align: center;
-  color: #6c757d;
-}
-
-.image-placeholder i {
-  font-size: 2rem;
-  display: block;
-  margin-bottom: 0.5rem;
-}
-
+/* Sección de Imágenes - Base */
 .current-image {
-  margin-bottom: 1rem;
+    margin-bottom: 1rem;
 }
 
 .current-image img {
-  max-width: 200px;
-  height: auto;
-  border-radius: 8px;
-  margin-bottom: 0.5rem;
+    max-width: 150px;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    display: block;
 }
 
+.img-preview {
+    max-width: 150px;
+    max-height: 150px;
+    border-radius: 8px;
+    margin-top: 0.5rem;
+    display: block;
+}
+
+/* Input groups */
+.input-group .form-control {
+    border-right: 0;
+}
+
+.input-group .input-group-text {
+    background-color: #f8f9fa;
+    border-left: 0;
+}
+
+/* Alertas */
 .success-alert {
-  background-color: #d1e7dd;
-  color: #0f5132;
-  padding: 1rem;
-  border-radius: 8px;
-  margin-bottom: 1.5rem;
+    background-color: #d1e7dd;
+    color: #0f5132;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
 }
 
 .error-alert {
-  background-color: #f8d7da;
-  color: #842029;
-  padding: 1rem;
-  border-radius: 8px;
-  margin-bottom: 1.5rem;
+    background-color: #f8d7da;
+    color: #842029;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
 }
 
-.navbar-brand {
-  font-weight: 600;
+/* Galería */
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
 }
 
-.btn-outline-light {
-  border-color: rgba(255, 255, 255, 0.5);
+.gallery-item {
+    position: relative;
 }
 
-/* Botones flotantes */
+.gallery-item img {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.gallery-item button {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    padding: 0.2rem 0.4rem;
+    font-size: 0.75rem;
+}
+
+/* Cronograma */
+.cronograma-item {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background-color: #f8f9fa;
+}
+
+/* Botones Flotantes */
 .floating-buttons {
     position: fixed;
     bottom: 20px;
@@ -154,47 +122,260 @@ body {
     z-index: 1000;
     display: flex;
     gap: 10px;
-    flex-direction: column;
 }
 
 .floating-buttons .btn {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     border-radius: 25px;
-    padding: 12px 24px;
+    padding: 0.75rem 1.5rem;
     font-weight: 600;
-    transition: all 0.3s ease;
-    min-width: 150px;
-    text-align: center;
 }
 
-.floating-buttons .btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+/* Layout para Desktop (1200px+) */
+@media (min-width: 1200px) {
+    /* Grid de dos columnas para secciones normales */
+    .two-columns {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+    }
+    
+    /* Grid de tres columnas para sección de imágenes */
+    .images-section .two-columns {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 1.5rem;
+    }
+    
+    /* Asegurar que las imágenes tengan el mismo tamaño en desktop */
+    .images-section .current-image img {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+    
+    .images-section .img-preview {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-top: 0.5rem;
+        display: block;
+    }
+    
+    .full-width {
+        grid-column: 1 / -1;
+    }
 }
 
-/* Responsivo para pantallas pequeñas */
-@media (max-width: 768px) {
+/* Layout para Tablets (768px - 1199px) */
+@media (max-width: 1199.98px) and (min-width: 768px) {
+    .form-section {
+        padding: 1.25rem;
+    }
+    
     .floating-buttons {
         bottom: 15px;
         right: 15px;
+    }
+    
+    /* Grid de dos columnas para secciones normales */
+    .two-columns {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+    }
+    
+    /* Layout especial para imágenes en tablet */
+    .images-section .two-columns {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+    }
+    
+    /* La tercera imagen debe ocupar una columna normal, no toda la fila */
+    .images-section .two-columns .form-group:nth-child(3) {
+        grid-column: 1;
+        grid-row: 2;
+    }
+    
+    /* Mantener el tamaño consistente en tablets */
+    .images-section .current-image img {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+    
+    .images-section .img-preview {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-top: 0.5rem;
+        display: block;
+    }
+    
+    .full-width {
+        grid-column: 1 / -1;
+    }
+}
+
+/* Layout para Móviles (hasta 767px) */
+@media (max-width: 767.98px) {
+    .form-section {
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .section-title {
+        font-size: 1.1rem;
+    }
+    
+    /* Una columna para todo en móviles */
+    .two-columns,
+    .images-section .two-columns {
+        display: block;
+    }
+    
+    .gallery-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 0.5rem;
+    }
+    
+    .gallery-item img {
+        height: 100px;
+    }
+    
+    /* Botones flotantes fijos en la parte inferior */
+    .floating-buttons {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: white;
+        padding: 1rem;
+        box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.15);
+        border-top: 1px solid #dee2e6;
         flex-direction: row;
-        gap: 8px;
+        gap: 0.5rem;
+        justify-content: space-between;
+        z-index: 1050;
     }
     
     .floating-buttons .btn {
-        min-width: auto;
-        padding: 10px 16px;
+        flex: 1;
+        margin: 0;
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
         font-size: 0.9rem;
     }
-}
-
-/* Agregar espacio al final del contenido para que no se oculte bajo los botones */
-.container {
-    padding-bottom: 120px;
-}
-
-@media (max-width: 768px) {
-    .container {
-        padding-bottom: 100px;
+    
+    /* Espacio para los botones fijos en mobile */
+    body {
+        padding-bottom: 80px;
     }
+    
+    .container {
+        padding-bottom: 0;
+    }
+    
+    /* Mejorar inputs en mobile */
+    .form-control, .form-select {
+        font-size: 16px; /* Evita zoom en iOS */
+    }
+    
+    /* Cronograma más compacto en mobile */
+    .cronograma-item .row > div {
+        margin-bottom: 0.5rem;
+    }
+    
+    /* Navbar más compacto */
+    .navbar-brand {
+        font-size: 1rem;
+    }
+    
+    /* Ajustar imágenes preview en mobile */
+    .current-image img,
+    .img-preview,
+    .images-section .current-image img,
+    .images-section .img-preview {
+        max-width: 120px;
+        max-height: 120px;
+        width: auto;
+        height: auto;
+    }
+    
+    .form-group {
+        margin-bottom: 0.75rem;
+    }
+}
+
+/* Ajustes específicos para pantallas muy pequeñas */
+@media (max-width: 575.98px) {
+    .container {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+    }
+    
+    .form-section {
+        margin-bottom: 0.75rem;
+        border-radius: 8px;
+    }
+    
+    .floating-buttons {
+        padding: 0.75rem;
+    }
+    
+    .floating-buttons .btn {
+        padding: 0.625rem 0.75rem;
+        font-size: 0.85rem;
+    }
+    
+    .current-image img,
+    .img-preview,
+    .images-section .current-image img,
+    .images-section .img-preview {
+        max-width: 100px;
+        max-height: 100px;
+    }
+    
+    .gallery-grid {
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    }
+    
+    .gallery-item img {
+        height: 80px;
+    }
+}
+
+/* Estados de hover solo en dispositivos que lo soporten */
+@media (hover: hover) {
+    .floating-buttons .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    }
+}
+
+/* Mejorar accesibilidad */
+.form-control:focus,
+.form-select:focus {
+    border-color: #6f42c1;
+    box-shadow: 0 0 0 0.2rem rgba(111, 66, 193, 0.25);
+}
+
+/* Asegurar que las imágenes no se desborden */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Mejorar el espaciado en formularios */
+.form-group {
+    margin-bottom: 1rem;
 }
