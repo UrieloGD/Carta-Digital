@@ -918,23 +918,63 @@ $tipo_rsvp = $invitacion['tipo_rsvp'] ?? 'whatsapp';
 
 <section class="rsvp" id="rsvp">
     <div class="container">
-        <h2>Confirma tu Asistencia</h2>
-        <p><?php echo htmlspecialchars($texto_rsvp); ?></p>
-        
-        <?php if ($tipo_rsvp === 'whatsapp'): ?>
-            <!-- Botón para confirmación por WhatsApp -->
-            <button class="rsvp-button whatsapp-button" onclick="confirmarAsistenciaWhatsApp()">
-                <i class="bi bi-whatsapp me-2"></i>
-                Confirmar por WhatsApp
-            </button>
+        <div class="rsvp-content">
+            <div class="rsvp-header">
+                <h2 class="section-title">Confirma tu Asistencia</h2>
+                <div class="decorative-line">
+                    <span class="line-accent"></span>
+                </div>
+                <p class="section-subtitle">Tu presencia hace que este día sea perfecto</p>
+            </div>
             
-        <?php else: ?>
-            <!-- Botón para sistema digital (original) -->
-            <button class="rsvp-button" onclick="openRSVPModal()">
-                <i class="bi bi-calendar-check me-2"></i>
-                Confirmar Asistencia
-            </button>
-        <?php endif; ?>
+            <div class="rsvp-main" data-animate="fadeInUp" data-delay="0.2s">
+                <div class="rsvp-message">
+                    <p class="rsvp-text"><?php echo htmlspecialchars($texto_rsvp); ?></p>
+                </div>
+                
+                <div class="rsvp-action">
+                    <?php if ($tipo_rsvp === 'whatsapp'): ?>
+                        <!-- Botón para confirmación por WhatsApp -->
+                        <button class="rsvp-button whatsapp-button" onclick="confirmarAsistenciaWhatsApp()">
+                            <span class="button-text">Confirmar por WhatsApp</span>
+                            <div class="button-shimmer"></div>
+                        </button>
+                        
+                    <?php else: ?>
+                        <!-- Botón para sistema digital (original) -->
+                        <button class="rsvp-button" onclick="openRSVPModal()">
+                            <span class="button-text">Confirmar Asistencia</span>
+                            <div class="button-shimmer"></div>
+                        </button>
+                    <?php endif; ?>
+                </div>
+                
+                <div class="rsvp-details">
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <div class="detail-icon">📅</div>
+                            <div class="detail-content">
+                                <span class="detail-label">Fecha límite</span>
+                                <span class="detail-value"><?php echo fechaEnEspanol(date('Y-m-d', strtotime($invitacion['fecha_evento'] . ' -15 days'))); ?></span>
+                                <span class="detail-value">Queremos asegurarnos que tu lugar esté reservado.</span>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <div class="detail-icon">👨‍👩‍👧‍👦</div>
+                            <div class="detail-content">
+                                <span class="detail-label">Solo adultos</span>
+                                <span class="detail-value">Celebración exclusiva para adultos (No niños).</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="rsvp-ornament">
+                <div class="ornament-line"></div>
+            </div>
+        </div>
     </div>
 </section>
 
