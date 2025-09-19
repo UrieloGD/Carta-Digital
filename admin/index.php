@@ -84,25 +84,86 @@ $invitaciones = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <link rel="shortcut icon" href="./../images/logo.webp" />
 </head>
 <body>
-    <!-- Navbar -->
+    <!-- Navbar Mejorado -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">
+            <a class="navbar-brand d-flex align-items-center" href="#">
                 <i class="bi bi-envelope-heart me-2"></i>
-                Panel de Administración
+                <span class="d-none d-sm-inline">Panel de Administración</span>
+                <span class="d-sm-none">Admin</span>
             </a>
-            <div class="navbar-nav ms-auto">
-                <a href="plantillas.php" class="btn btn-outline-light me-2">
-                    <i class="bi bi-layout-text-window-reverse me-1"></i>
-                    Gestionar Plantillas
-                </a>
-                <a href="./functions/crear.php" class="btn btn-light">
-                    <i class="bi bi-plus-circle me-1"></i>
-                    Nueva Invitación
-                </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <div class="navbar-nav ms-auto">
+                    <div class="d-lg-flex flex-lg-row flex-column gap-2 mt-2 mt-lg-0">
+                        <a href="plantillas.php" class="btn btn-outline-light btn-sm">
+                            <i class="bi bi-layout-text-window-reverse me-1"></i>
+                            <span class="d-none d-md-inline">Gestionar </span>Plantillas
+                        </a>
+                        <a href="./functions/crear.php" class="btn btn-light btn-sm">
+                            <i class="bi bi-plus-circle me-1"></i>
+                            <span class="d-none d-md-inline">Nueva </span>Invitación
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </nav>
+
+    <!-- Panel de Control y Filtros -->
+    <div class="container-fluid py-3 bg-white border-bottom">
+        <div class="row align-items-center">
+            <!-- Búsqueda -->
+            <div class="col-lg-4 col-md-6 mb-3 mb-lg-0">
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0">
+                        <i class="bi bi-search"></i>
+                    </span>
+                    <input type="text" class="form-control border-start-0 ps-0" 
+                        id="searchInput" placeholder="Buscar por nombre o código...">
+                </div>
+            </div>
+            
+            <!-- Filtros -->
+            <div class="col-lg-6 col-md-6 mb-3 mb-lg-0">
+                <div class="row g-2">
+                    <div class="col-sm-6">
+                        <select class="form-select form-select-sm" id="estadoFilter">
+                            <option value="">Todos los estados</option>
+                            <option value="proxima">Próximas (7 días)</option>
+                            <option value="activa">Activas</option>
+                            <option value="finalizada">Finalizadas</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-6">
+                        <select class="form-select form-select-sm" id="fechaFilter">
+                            <option value="">Ordenar por fecha</option>
+                            <option value="evento_asc">Evento (más próximo)</option>
+                            <option value="evento_desc">Evento (más lejano)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Estadísticas -->
+            <div class="col-lg-2 col-12">
+                <div class="d-flex justify-content-between justify-content-lg-end gap-3">
+                    <small class="text-muted d-flex align-items-center">
+                        <i class="bi bi-calendar-check me-1 text-warning"></i>
+                        <span id="proximasCount">0</span> próximas
+                    </small>
+                    <small class="text-muted d-flex align-items-center">
+                        <i class="bi bi-collection me-1 text-primary"></i>
+                        <span id="totalCount"><?php echo count($invitaciones); ?></span> total
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="container-fluid py-4">
         <!-- Alertas -->
@@ -118,6 +179,25 @@ $invitaciones = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 <i class="bi bi-exclamation-triangle me-2"></i>
                 <?php echo htmlspecialchars($error_message); ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        <?php endif; ?>
+
+        <!-- Alerta de invitaciones próximas -->
+        <?php
+        $invitaciones_proximas = array_filter($invitaciones, function($inv) {
+            if (!$inv['fecha_evento']) return false;
+            $hoy = new DateTime();
+            $fecha_evento = new DateTime($inv['fecha_evento']);
+            $dias_restantes = $hoy->diff($fecha_evento)->days;
+            return $fecha_evento >= $hoy && $dias_restantes <= 7;
+        });
+
+        if (!empty($invitaciones_proximas)): ?>
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <i class="bi bi-clock me-2"></i>
+                <strong>Eventos próximos:</strong> 
+                Tienes <?php echo count($invitaciones_proximas); ?> invitación(es) con eventos en los próximos 7 días.
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         <?php endif; ?>
@@ -274,14 +354,224 @@ $invitaciones = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('searchInput');
+        const estadoFilter = document.getElementById('estadoFilter');
+        const fechaFilter = document.getElementById('fechaFilter');
+        
+        // Seleccionar específicamente las tarjetas de invitación
+        const invitacionCards = document.querySelectorAll('.card');
+        
+        let allInvitations = Array.from(invitacionCards).map(card => card.closest('.col-xl-3, .col-lg-4, .col-md-6')).filter(col => col !== null);
+        
+        // Función para actualizar contadores
+        function updateCounters() {
+            const visibleCards = allInvitations.filter(card => 
+                card.style.display !== 'none' && !card.hasAttribute('data-hidden')
+            );
+            
+            const proximasCards = visibleCards.filter(card => {
+                const badge = card.querySelector('.badge');
+                return badge && badge.textContent.trim().toLowerCase().includes('próxima');
+            });
+            
+            const totalCountEl = document.getElementById('totalCount');
+            const proximasCountEl = document.getElementById('proximasCount');
+            
+            if (totalCountEl) totalCountEl.textContent = visibleCards.length;
+            if (proximasCountEl) proximasCountEl.textContent = proximasCards.length;
+        }
+        
+        // Función de filtrado mejorada
+        function filterInvitations() {
+            const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
+            const selectedEstado = estadoFilter ? estadoFilter.value : '';
+            
+            allInvitations.forEach(cardContainer => {
+                if (!cardContainer) return;
+                
+                const card = cardContainer.querySelector('.card');
+                if (!card) return;
+                
+                // Buscar título de manera más robusta
+                const titleElement = card.querySelector('.card-title, h5');
+                const title = titleElement ? titleElement.textContent.toLowerCase() : '';
+                
+                // Buscar badge de estado
+                const badge = card.querySelector('.badge');
+                const estado = badge ? badge.textContent.trim().toLowerCase() : '';
+                
+                // Buscar también en el slug o código
+                const slugElement = card.querySelector('code');
+                const slug = slugElement ? slugElement.textContent.toLowerCase() : '';
+                
+                let shouldShow = true;
+                
+                // Filtro de búsqueda (busca en título y slug)
+                if (searchTerm && !title.includes(searchTerm) && !slug.includes(searchTerm)) {
+                    shouldShow = false;
+                }
+                
+                // Filtro de estado
+                if (selectedEstado) {
+                    const estadoMap = {
+                        'proxima': ['próxima', 'proxima'],
+                        'activa': ['activa'],
+                        'finalizada': ['finalizada']
+                    };
+                    
+                    const estadosValidos = estadoMap[selectedEstado] || [];
+                    const estadoCoincide = estadosValidos.some(est => estado.includes(est));
+                    
+                    if (!estadoCoincide) {
+                        shouldShow = false;
+                    }
+                }
+                
+                // Aplicar visibilidad
+                if (shouldShow) {
+                    cardContainer.style.display = 'block';
+                    cardContainer.style.opacity = '1';
+                    cardContainer.removeAttribute('data-hidden');
+                } else {
+                    cardContainer.style.display = 'none';
+                    cardContainer.style.opacity = '0';
+                    cardContainer.setAttribute('data-hidden', 'true');
+                }
+            });
+            
+            updateCounters();
+            showNoResultsMessage();
+        }
+        
+        // Función de ordenamiento mejorada
+        function sortInvitations() {
+            const sortBy = fechaFilter ? fechaFilter.value : '';
+            if (!sortBy) return;
+            
+            const container = document.querySelector('.row.g-4');
+            if (!container) return;
+            
+            const sortedCards = [...allInvitations].sort((a, b) => {
+                const getEventDate = (cardContainer) => {
+                    const dateElement = cardContainer.querySelector('.bi-calendar-event');
+                    if (!dateElement || !dateElement.parentElement) return new Date(0);
+                    
+                    const dateText = dateElement.parentElement.textContent;
+                    const match = dateText.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+                    return match ? new Date(match[3], match[2] - 1, match[1]) : new Date(0);
+                };
+                
+                if (sortBy.includes('evento')) {
+                    const dateA = getEventDate(a);
+                    const dateB = getEventDate(b);
+                    return sortBy.includes('asc') ? dateA - dateB : dateB - dateA;
+                }
+                
+                return 0;
+            });
+            
+            // Reordenar elementos en el DOM
+            sortedCards.forEach(card => {
+                if (card && container.contains(card)) {
+                    container.appendChild(card);
+                }
+            });
+            
+            allInvitations = sortedCards.filter(card => card !== null);
+        }
+        
+        // Mostrar mensaje cuando no hay resultados
+        function showNoResultsMessage() {
+            const visibleCards = allInvitations.filter(card => 
+                card && card.style.display !== 'none' && !card.hasAttribute('data-hidden')
+            );
+            
+            const container = document.querySelector('.row.g-4');
+            if (!container) return;
+            
+            const existingMessage = document.getElementById('no-results-message');
+            
+            if (visibleCards.length === 0 && !existingMessage && allInvitations.length > 0) {
+                const message = document.createElement('div');
+                message.id = 'no-results-message';
+                message.className = 'col-12 text-center py-5';
+                message.innerHTML = `
+                    <i class="bi bi-search text-muted" style="font-size: 3rem;"></i>
+                    <h5 class="mt-3 text-muted">No se encontraron invitaciones</h5>
+                    <p class="text-muted">Intenta ajustar los filtros de búsqueda</p>
+                    <button class="btn btn-outline-primary" onclick="clearFilters()">
+                        <i class="bi bi-arrow-clockwise me-1"></i>Limpiar filtros
+                    </button>
+                `;
+                container.appendChild(message);
+            } else if (visibleCards.length > 0 && existingMessage) {
+                existingMessage.remove();
+            }
+        }
+        
+        // Función para limpiar filtros
+        window.clearFilters = function() {
+            if (searchInput) searchInput.value = '';
+            if (estadoFilter) estadoFilter.value = '';
+            if (fechaFilter) fechaFilter.value = '';
+            
+            allInvitations.forEach(card => {
+                if (card) {
+                    card.style.display = 'block';
+                    card.style.opacity = '1';
+                    card.removeAttribute('data-hidden');
+                }
+            });
+            
+            updateCounters();
+            
+            const existingMessage = document.getElementById('no-results-message');
+            if (existingMessage) {
+                existingMessage.remove();
+            }
+        };
+        
+        // Event listeners con verificación de existencia
+        if (searchInput) {
+            searchInput.addEventListener('input', filterInvitations);
+        }
+        
+        if (estadoFilter) {
+            estadoFilter.addEventListener('change', filterInvitations);
+        }
+        
+        if (fechaFilter) {
+            fechaFilter.addEventListener('change', sortInvitations);
+        }
+        
+        // Inicializar contadores
+        setTimeout(() => {
+            updateCounters();
+        }, 100);
+        
         // Auto-ocultar alertas después de 5 segundos
         setTimeout(function() {
             const alerts = document.querySelectorAll('.alert:not(.alert-warning)');
             alerts.forEach(function(alert) {
-                const bsAlert = new bootstrap.Alert(alert);
-                bsAlert.close();
+                try {
+                    const bsAlert = new bootstrap.Alert(alert);
+                    bsAlert.close();
+                } catch (e) {
+                    // Si falla, ocultar manualmente
+                    alert.style.display = 'none';
+                }
             });
         }, 5000);
+        
+        // Debug: mostrar información en consola
+        console.log('Invitaciones encontradas:', allInvitations.length);
+        console.log('Elementos de filtro encontrados:', {
+            search: !!searchInput,
+            estado: !!estadoFilter,
+            fecha: !!fechaFilter
+        });
+    });
     </script>
 </body>
 </html>

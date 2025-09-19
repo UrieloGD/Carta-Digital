@@ -332,19 +332,35 @@ foreach($ubicaciones as $ub) {
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
         <div class="container-fluid">
-            <a class="navbar-brand" href="./../index.php">
+            <a class="navbar-brand d-flex align-items-center" href="./../index.php">
                 <i class="bi bi-pencil-square me-2"></i>
-                Editar Invitación: <?php echo htmlspecialchars($invitacion['nombres_novios']); ?>
+                <span class="d-none d-lg-inline">Editar Invitación: <?php echo htmlspecialchars($invitacion['nombres_novios']); ?></span>
+                <span class="d-lg-none d-none d-md-inline">Editar: <?php echo htmlspecialchars(substr($invitacion['nombres_novios'], 0, 15) . (strlen($invitacion['nombres_novios']) > 15 ? '...' : '')); ?></span>
+                <span class="d-md-none">Editar</span>
             </a>
-            <div class="navbar-nav ms-auto">
-                <a href="./../../invitacion.php?slug=<?php echo $invitacion['slug']; ?>" class="btn btn-outline-light me-2" target="_blank">
-                    <i class="bi bi-eye me-1"></i>
-                    Vista Previa
-                </a>
-                <a href="./../index.php" class="btn btn-outline-light">
-                    <i class="bi bi-arrow-left me-1"></i>
-                    Volver al Panel
-                </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <div class="navbar-nav ms-auto">
+                    <div class="d-lg-flex flex-lg-row flex-column gap-2 mt-2 mt-lg-0">
+                        <a href="./../../invitacion.php?slug=<?php echo htmlspecialchars($invitacion['slug']); ?>" 
+                        class="btn btn-outline-light btn-sm" target="_blank">
+                            <i class="bi bi-eye me-1"></i>
+                            <span class="d-none d-md-inline">Vista </span>Previa
+                        </a>
+                        <a href="./crear.php" class="btn btn-outline-light btn-sm">
+                            <i class="bi bi-plus-circle me-1"></i>
+                            <span class="d-none d-md-inline">Nueva </span>Invitación
+                        </a>
+                        <a href="./../index.php" class="btn btn-light btn-sm">
+                            <i class="bi bi-arrow-left me-1"></i>
+                            <span class="d-none d-md-inline">Volver al </span>Panel
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </nav>

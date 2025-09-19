@@ -224,18 +224,32 @@ $plantillas = $plantilla_stmt->fetchAll(PDO::FETCH_ASSOC);
     <link rel="shortcut icon" href="./../../images/logo.webp" />
 </head>
 <body>
-    <!-- Navbar -->
+    <!-- Navbar con más opciones (alternativa) -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
         <div class="container-fluid">
-            <a class="navbar-brand" href="./../index.php">
+            <a class="navbar-brand d-flex align-items-center" href="./../index.php">
                 <i class="bi bi-plus-circle me-2"></i>
-                Crear Nueva Invitación
+                <span class="d-none d-sm-inline">Crear Nueva Invitación</span>
+                <span class="d-sm-none">Nueva Invitación</span>
             </a>
-            <div class="navbar-nav ms-auto">
-                <a href="./../index.php" class="btn btn-outline-light">
-                    <i class="bi bi-arrow-left me-1"></i>
-                    Volver al Panel
-                </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <div class="navbar-nav ms-auto">
+                    <div class="d-lg-flex flex-lg-row flex-column gap-2 mt-2 mt-lg-0">
+                        <a href="./../plantillas.php" class="btn btn-outline-light btn-sm">
+                            <i class="bi bi-layout-text-window-reverse me-1"></i>
+                            <span class="d-none d-md-inline">Ver </span>Plantillas
+                        </a>
+                        <a href="./../index.php" class="btn btn-light btn-sm">
+                            <i class="bi bi-arrow-left me-1"></i>
+                            <span class="d-none d-md-inline">Volver al </span>Panel
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </nav>
