@@ -41,6 +41,7 @@
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 2rem;
     margin-top: 2rem;
+    align-items: stretch;
 }
 
 .plan-card {
@@ -52,6 +53,9 @@
     transition: var(--transition);
     position: relative;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 .plan-card:hover {
@@ -59,27 +63,31 @@
     box-shadow: var(--shadow-medium);
 }
 
-.plan-card.featured {
+.plan-card.premium-plan {
+    background: var(--primary-color);
+    color: var(--background-white);
     transform: scale(1.05);
     box-shadow: var(--shadow-medium);
     border: 3px solid var(--primary-color);
 }
 
-.plan-card.featured:hover {
+.plan-card.premium-plan:hover {
     transform: scale(1.05) translateY(-10px);
+    background: var(--primary-hover);
 }
 
 .featured-badge {
     position: absolute;
     top: 20px;
     right: -30px;
-    background: var(--primary-color);
-    color: var(--background-white);
+    background: var(--background-white);
+    color: var(--primary-color);
     padding: 8px 40px;
     font-size: 0.8rem;
     font-weight: 600;
     transform: rotate(45deg);
     text-transform: uppercase;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .plan-header h3 {
@@ -87,6 +95,10 @@
     margin-bottom: 1rem;
     color: var(--text-dark);
     font-weight: 500;
+}
+
+.plan-card.premium-plan .plan-header h3 {
+    color: var(--background-white);
 }
 
 .price {
@@ -105,17 +117,28 @@
     color: var(--primary-color);
 }
 
+.plan-card.premium-plan .price .amount {
+    color: var(--background-white);
+}
+
 .price .period {
     font-size: 1.2rem;
     color: var(--text-medium);
     margin-left: 5px;
 }
 
+.plan-features {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
 .plan-features ul {
     list-style: none;
     padding: 0;
-    margin: 0 0 2rem 0;
+    margin: 0;
     text-align: left;
+    flex-grow: 1;
 }
 
 .plan-features li {
@@ -123,6 +146,11 @@
     border-bottom: 1px solid var(--background-light);
     display: flex;
     align-items: center;
+}
+
+.plan-card.premium-plan .plan-features li {
+    color: var(--background-white);
+    border-bottom-color: rgba(255, 255, 255, 0.2);
 }
 
 .plan-features li:last-child {
@@ -134,6 +162,26 @@
     margin-right: 1rem;
     width: 16px;
     text-align: center;
+}
+
+.plan-card.premium-plan .plan-features i {
+    color: var(--background-white);
+}
+
+.plan-card .btn {
+    margin-top: auto;
+}
+
+.plan-card.premium-plan .btn-primary {
+    background: var(--background-white);
+    color: var(--primary-color);
+    border: 2px solid var(--background-white);
+}
+
+.plan-card.premium-plan .btn-primary:hover {
+    background: var(--background-light);
+    color: var(--primary-color);
+    transform: translateY(-2px);
 }
 
 /* Templates with Prices */
@@ -324,6 +372,29 @@
     margin-bottom: 1.5rem;
 }
 
+/* Estilos para botones deshabilitados */
+.btn.disabled,
+.btn-secondary.disabled {
+    background-color: #e9ecef;
+    color: #6c757d;
+    border-color: #dee2e6;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.btn.disabled:hover,
+.btn-secondary.disabled:hover {
+    background-color: #e9ecef;
+    color: #6c757d;
+    border-color: #dee2e6;
+    transform: none;
+}
+
+/* Mejorar la presentación del template sin ejemplo */
+.template-actions .btn.disabled + .btn-primary {
+    width: 100%;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .header-content h1 {
@@ -335,11 +406,11 @@
         gap: 1.5rem;
     }
     
-    .plan-card.featured {
+    .plan-card.premium-plan {
         transform: none;
     }
     
-    .plan-card.featured:hover {
+    .plan-card.premium-plan:hover {
         transform: translateY(-10px);
     }
     

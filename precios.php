@@ -43,92 +43,97 @@ try {
 <section class="pricing-plans">
     <div class="container">
         <div class="plans-grid">
-            <!-- Plan Básico -->
+            <!-- Plan Escencial -->
             <div class="plan-card basic-plan">
                 <div class="plan-header">
-                    <h3>Básico</h3>
+                    <h3>Escencial</h3>
                     <div class="price">
                         <span class="currency">$</span>
-                        <span class="amount">299</span>
+                        <span class="amount">699</span>
                         <span class="period">MXN</span>
                     </div>
                 </div>
                 <div class="plan-features">
                     <ul>
-                        <li><i class="fas fa-check"></i>Diseño personalizado</li>
-                        <li><i class="fas fa-check"></i>Información del evento</li>
-                        <li><i class="fas fa-check"></i>Mapa de ubicación</li>
-                        <li><i class="fas fa-check"></i>Galería de 5 fotos</li>
-                        <li><i class="fas fa-check"></i>Enlace para compartir</li>
-                        <li><i class="fas fa-check"></i>Música de fondo</li>
+                        <li><i class="fas fa-check"></i>Hero, Bienvenida, Historia</li>
+                        <li><i class="fas fa-check"></i>Contador simple</li>
+                        <li><i class="fas fa-times"></i>Cronograma</li>
+                        <li><i class="fas fa-check"></i>Ubicación (info + botón)</li>
+                        <li><i class="fas fa-check"></i>Galería 6 fotos (no interactiva)</li>
+                        <li><i class="fas fa-check"></i>Dresscode solo texto</li>
+                        <li><i class="fas fa-check"></i>RSVP por WhatsApp</li>
+                        <li><i class="fas fa-times"></i>Reproductor musical</li>
+                        <li><i class="fas fa-check"></i>Soporte 7 días</li>
+                        <li><i class="fas fa-times"></i>Cambios de colores/tipografía</li>
                     </ul>
                 </div>
-                <a href="./contacto.php?plan=basico" class="btn btn-outline">Elegir Plan</a>
+                <a href="./contacto.php?plan=escencial" class="btn btn-outline">Elegir Plan</a>
             </div>
 
-            <!-- Plan Premium -->
+            <!-- Plan premium -->
             <div class="plan-card premium-plan featured">
                 <div class="featured-badge">Más Popular</div>
                 <div class="plan-header">
                     <h3>Premium</h3>
                     <div class="price">
                         <span class="currency">$</span>
-                        <span class="amount">499</span>
+                        <span class="amount">899</span>
                         <span class="period">MXN</span>
                     </div>
                 </div>
                 <div class="plan-features">
                     <ul>
-                        <li><i class="fas fa-check"></i>Todo lo del plan Básico</li>
-                        <li><i class="fas fa-check"></i>Galería ilimitada de fotos</li>
-                        <li><i class="fas fa-check"></i>Confirmación de asistencia</li>
-                        <li><i class="fas fa-check"></i>Lista de regalos</li>
-                        <li><i class="fas fa-check"></i>Itinerario del evento</li>
-                        <li><i class="fas fa-check"></i>Código de vestimenta</li>
-                        <li><i class="fas fa-check"></i>Soporte prioritario</li>
+                        <li><i class="fas fa-check"></i>Hero, Bienvenida, Historia</li>
+                        <li><i class="fas fa-check"></i>Contador con cuenta regresiva</li>
+                        <li><i class="fas fa-check"></i>Cronograma del evento</li>
+                        <li><i class="fas fa-check"></i>Ubicaciones con imágenes</li>
+                        <li><i class="fas fa-check"></i>Galería 10 fotos (interactiva)</li>
+                        <li><i class="fas fa-check"></i>Dresscode con imágenes</li>
+                        <li><i class="fas fa-check"></i>RSVP con boletaje digital</li>
+                        <li><i class="fas fa-check"></i>Reproductor musical</li>
+                        <li><i class="fas fa-check"></i>Soporte 30 días</li>
+                        <li><i class="fas fa-times"></i>Cambios de colores/tipografía</li>
                     </ul>
                 </div>
                 <a href="./contacto.php?plan=premium" class="btn btn-primary">Elegir Plan</a>
             </div>
 
-            <!-- Plan Deluxe -->
-            <div class="plan-card deluxe-plan">
+            <!-- Plan Exclusivo -->
+            <div class="plan-card Exclusivo-plan">
                 <div class="plan-header">
-                    <h3>Deluxe</h3>
+                    <h3>Exclusivo</h3>
                     <div class="price">
                         <span class="currency">$</span>
-                        <span class="amount">799</span>
+                        <span class="amount">1199</span>
                         <span class="period">MXN</span>
                     </div>
                 </div>
                 <div class="plan-features">
                     <ul>
-                        <li><i class="fas fa-check"></i>Todo lo del plan Premium</li>
-                        <li><i class="fas fa-check"></i>Video de presentación</li>
-                        <li><i class="fas fa-check"></i>Timeline de la relación</li>
-                        <li><i class="fas fa-check"></i>Mensajes de invitados</li>
-                        <li><i class="fas fa-check"></i>Contador regresivo</li>
-                        <li><i class="fas fa-check"></i>Múltiples idiomas</li>
-                        <li><i class="fas fa-check"></i>Dominio personalizado</li>
-                        <li><i class="fas fa-check"></i>Soporte 24/7</li>
+                        <li><i class="fas fa-check"></i>Todo lo del plan Intermedio</li>
+                        <li><i class="fas fa-check"></i>Ubicación con mapa interactivo</li>
+                        <li><i class="fas fa-check"></i>Galería 15 fotos (interactiva)</li>
+                        <li><i class="fas fa-check"></i>RSVP avanzado con acompañantes</li>
+                        <li><i class="fas fa-check"></i>Soporte hasta el evento</li>
+                        <li><i class="fas fa-check"></i>Cambios de colores, tipografía y ajustes de la plantilla</li>
                     </ul>
                 </div>
-                <a href="./contacto.php?plan=deluxe" class="btn btn-outline">Elegir Plan</a>
+                <a href="./contacto.php?plan=exclusivo" class="btn btn-outline">Elegir Plan</a>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Templates with Prices -->
+<!-- Templates with Prices 
 <section class="templates-pricing">
     <div class="container">
         <h2>Precios por Plantilla</h2>
         <p class="section-subtitle">Cada plantilla tiene características únicas que definen su precio</p>
         
         <div class="templates-grid">
-            <?php if (!empty($plantillas)): ?>
-                <?php foreach ($plantillas as $plantilla): ?>
-                    <?php 
+            <?php 
+            if (!empty($plantillas)): 
+                foreach ($plantillas as $plantilla): 
                     // Construir la ruta de la imagen
                     $imagenRuta = './images/default-template.png';
                     if (!empty($plantilla['imagen_preview'])) {
@@ -138,12 +143,14 @@ try {
                         }
                     }
                     
-                    // Determinar si tiene ejemplo
+                    // Determinar si tiene ejemplo y configurar URLs
                     $tieneEjemplo = !empty($plantilla['ejemplo_slug']);
                     $urlDestino = $tieneEjemplo 
                         ? './invitacion.php?slug=' . urlencode($plantilla['ejemplo_slug'])
                         : '#';
-                    ?>
+                    $textoBotonVer = $tieneEjemplo ? 'Ver plantilla' : 'Próximamente';
+                    $claseBotonVer = $tieneEjemplo ? 'btn btn-secondary' : 'btn btn-secondary disabled';
+            ?>
                     <div class="template-price-card">
                         <div class="template-image">
                             <img src="<?php echo htmlspecialchars($imagenRuta); ?>" 
@@ -153,12 +160,12 @@ try {
                         </div>
                         <div class="template-info">
                             <h3><?php echo htmlspecialchars($plantilla['nombre']); ?></h3>
-                            <?php if ($plantilla['descripcion']): ?>
+                            <?php if (!empty($plantilla['descripcion'])): ?>
                                 <p class="template-description"><?php echo htmlspecialchars($plantilla['descripcion']); ?></p>
                             <?php endif; ?>
                             
                             <div class="template-price">
-                                <?php if (!empty($plantilla['precio'])): ?>
+                                <?php if (!empty($plantilla['precio']) && $plantilla['precio'] > 0): ?>
                                     <span class="price-amount">$<?php echo number_format($plantilla['precio'], 0, '.', ','); ?></span>
                                     <span class="price-currency">MXN</span>
                                 <?php else: ?>
@@ -170,17 +177,23 @@ try {
                             <div class="template-actions">
                                 <?php if ($tieneEjemplo): ?>
                                     <a href="<?php echo $urlDestino; ?>" 
-                                       class="btn btn-secondary"
+                                       class="<?php echo $claseBotonVer; ?>"
                                        target="_blank"
-                                       rel="noopener">Ver plantilla</a>
+                                       rel="noopener"><?php echo $textoBotonVer; ?></a>
+                                    <a href="./contacto.php?plantilla=<?php echo $plantilla['id']; ?>" 
+                                       class="btn btn-primary">Solicitar</a>
+                                <?php else: ?>
+                                    <span class="<?php echo $claseBotonVer; ?>"><?php echo $textoBotonVer; ?></span>
+                                    <a href="./contacto.php?plantilla=<?php echo $plantilla['id']; ?>" 
+                                       class="btn btn-primary">Solicitar</a>
                                 <?php endif; ?>
-                                <a href="./contacto.php?plantilla=<?php echo $plantilla['id']; ?>" 
-                                   class="btn btn-primary">Solicitar</a>
                             </div>
                         </div>
                     </div>
-                <?php endforeach; ?>
-            <?php else: ?>
+            <?php 
+                endforeach; 
+            else: 
+            ?>
                 <div class="no-templates">
                     <p>No hay plantillas disponibles en este momento.</p>
                     <a href="./contacto.php" class="btn btn-primary">Contáctanos</a>
@@ -188,17 +201,17 @@ try {
             <?php endif; ?>
         </div>
     </div>
-</section>
+</section> -->
 
 <!-- FAQ Section -->
 <section class="faq-section">
     <div class="container">
         <h2>Preguntas Frecuentes</h2>
         <div class="faq-grid">
-            <div class="faq-item">
+            <!--<div class="faq-item">
                 <h4>¿Qué incluye el precio?</h4>
                 <p>Cada plan incluye el diseño personalizado, hosting por 6 meses y soporte técnico durante todo el proceso.</p>
-            </div>
+            </div>-->
             <div class="faq-item">
                 <h4>¿Puedo cambiar de plan después?</h4>
                 <p>Sí, puedes actualizar tu plan en cualquier momento pagando únicamente la diferencia.</p>
@@ -209,7 +222,7 @@ try {
             </div>
             <div class="faq-item">
                 <h4>¿Cuánto tiempo toma la entrega?</h4>
-                <p>Entregamos tu invitación digital en menos de 48 horas después de recibir toda la información necesaria.</p>
+                <p>Entregamos tu invitación digital en menos de 24 horas después de recibir toda la información necesaria.</p>
             </div>
         </div>
     </div>
