@@ -29,9 +29,9 @@
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
     
     <!-- CSS -->
-    <link rel="stylesheet" href="./css/global.css">
-    <link rel="stylesheet" href="./css/navbar.css">
-    <link rel="stylesheet" href="./css/footer.css">
+    <link rel="stylesheet" href="./css/global.css?v=<?php echo filemtime('./css/global.css'); ?>"></script>
+    <link rel="stylesheet" href="./css/navbar.css?v=<?php echo filemtime('./css/navbar.css'); ?>"></script>
+    <link rel="stylesheet" href="./css/footer.css?v=<?php echo filemtime('./css/footer.css'); ?>"></script>
     
     <!-- Additional CSS can be added by individual pages -->
     <?php if (isset($additional_css)): ?>
