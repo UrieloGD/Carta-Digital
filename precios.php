@@ -55,16 +55,16 @@ try {
                 </div>
                 <div class="plan-features">
                     <ul>
-                        <li><i class="fas fa-check"></i>Hero, Bienvenida, Historia</li>
+                        <li><i class="fas fa-check"></i>Portada, Bienvenida, Historia</li>
                         <li><i class="fas fa-check"></i>Contador simple</li>
-                        <li><i class="fas fa-times"></i>Cronograma</li>
+                        <!-- <li><i class="fas fa-times"></i>Cronograma</li> -->
                         <li><i class="fas fa-check"></i>Ubicación (info + botón)</li>
                         <li><i class="fas fa-check"></i>Galería 6 fotos (no interactiva)</li>
                         <li><i class="fas fa-check"></i>Dresscode solo texto</li>
-                        <li><i class="fas fa-check"></i>RSVP por WhatsApp</li>
-                        <li><i class="fas fa-times"></i>Reproductor musical</li>
+                        <li><i class="fas fa-check"></i>Reservación por WhatsApp</li>
+                        <!-- <li><i class="fas fa-times"></i>Reproductor musical</li> -->
                         <li><i class="fas fa-check"></i>Soporte 7 días</li>
-                        <li><i class="fas fa-times"></i>Cambios de colores/tipografía</li>
+                        <!-- <li><i class="fas fa-times"></i>Cambios de colores/tipografía</li> -->
                     </ul>
                 </div>
                 <a href="./contacto.php?plan=escencial" class="btn btn-outline">Elegir Plan</a>
@@ -83,16 +83,16 @@ try {
                 </div>
                 <div class="plan-features">
                     <ul>
-                        <li><i class="fas fa-check"></i>Hero, Bienvenida, Historia</li>
+                        <li><i class="fas fa-check"></i>Portada, Bienvenida, Historia</li>
                         <li><i class="fas fa-check"></i>Contador con cuenta regresiva</li>
                         <li><i class="fas fa-check"></i>Cronograma del evento</li>
                         <li><i class="fas fa-check"></i>Ubicaciones con imágenes</li>
                         <li><i class="fas fa-check"></i>Galería 10 fotos (interactiva)</li>
                         <li><i class="fas fa-check"></i>Dresscode con imágenes</li>
-                        <li><i class="fas fa-check"></i>RSVP con boletaje digital</li>
+                        <li><i class="fas fa-check"></i>Reservación con boletaje digital</li>
                         <li><i class="fas fa-check"></i>Reproductor musical</li>
                         <li><i class="fas fa-check"></i>Soporte 30 días</li>
-                        <li><i class="fas fa-times"></i>Cambios de colores/tipografía</li>
+                        <!-- <li><i class="fas fa-times"></i>Cambios de colores/tipografía</li> -->
                     </ul>
                 </div>
                 <a href="./contacto.php?plan=premium" class="btn btn-primary">Elegir Plan</a>
@@ -111,9 +111,9 @@ try {
                 <div class="plan-features">
                     <ul>
                         <li><i class="fas fa-check"></i>Todo lo del plan Intermedio</li>
-                        <li><i class="fas fa-check"></i>Ubicación con mapa interactivo</li>
+                        <!-- <li><i class="fas fa-check"></i>Ubicación con mapa interactivo</li> -->
                         <li><i class="fas fa-check"></i>Galería 15 fotos (interactiva)</li>
-                        <li><i class="fas fa-check"></i>RSVP avanzado con acompañantes</li>
+                        <li><i class="fas fa-check"></i>Reservación con boletaje digital</li>
                         <li><i class="fas fa-check"></i>Soporte hasta el evento</li>
                         <li><i class="fas fa-check"></i>Cambios de colores, tipografía y ajustes de la plantilla</li>
                     </ul>
