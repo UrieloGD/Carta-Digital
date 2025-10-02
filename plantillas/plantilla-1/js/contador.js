@@ -36,24 +36,22 @@ function initCountdown() {
         return;
     }
     
+    // Detectar el tipo de contador
+    const esContadorSimple = invitacionData.tipoContador === 'simple';
+    
     // Crear la fecha del evento
     let fechaEvento;
     try {
-        // Intentar diferentes formatos de fecha
         if (invitacionData.hora && invitacionData.hora !== '') {
-            // Formato: YYYY-MM-DD HH:MM:SS o YYYY-MM-DD HH:MM
             fechaEvento = new Date(`${invitacionData.fecha} ${invitacionData.hora}`);
             
-            // Si no funciona, intentar con formato T
             if (isNaN(fechaEvento.getTime())) {
                 fechaEvento = new Date(`${invitacionData.fecha}T${invitacionData.hora}`);
             }
         } else {
-            // Solo fecha, asumir mediodía
             fechaEvento = new Date(`${invitacionData.fecha}T12:00:00`);
         }
         
-        // Verificar si la fecha es válida
         if (isNaN(fechaEvento.getTime())) {
             throw new Error('Fecha inválida');
         }
@@ -62,17 +60,16 @@ function initCountdown() {
         console.error('Error al parsear la fecha:', error);
         console.log('Fecha recibida:', invitacionData.fecha, 'Hora recibida:', invitacionData.hora);
         
-        // Fallback: crear fecha manualmente
         const fechaParts = invitacionData.fecha.split('-');
         const horaParts = invitacionData.hora ? invitacionData.hora.split(':') : ['12', '00'];
         
         fechaEvento = new Date(
-            parseInt(fechaParts[0]), // año
-            parseInt(fechaParts[1]) - 1, // mes (0-indexado)
-            parseInt(fechaParts[2]), // día
-            parseInt(horaParts[0]), // hora
-            parseInt(horaParts[1]) || 0, // minutos
-            parseInt(horaParts[2]) || 0 // segundos
+            parseInt(fechaParts[0]),
+            parseInt(fechaParts[1]) - 1,
+            parseInt(fechaParts[2]),
+            parseInt(horaParts[0]),
+            parseInt(horaParts[1]) || 0,
+            parseInt(horaParts[2]) || 0
         );
     }
     
@@ -80,18 +77,26 @@ function initCountdown() {
         const ahora = new Date().getTime();
         const fechaEventoTime = fechaEvento.getTime();
         const distancia = fechaEventoTime - ahora;
-                
+        
         // Si el evento ya pasó
         if (distancia < 0) {
-            countdownElement.innerHTML = `
-                <div class="time-unit celebration">
-                    <span class="number celebration-text">¡Hoy es el día!</span>
-                    <span class="label">¡Celebremos!</span>
-                </div>
-            `;
+            if (esContadorSimple) {
+                countdownElement.innerHTML = `
+                    <div class="time-unit time-unit-large celebration">
+                        <span class="label">¡Hoy es el gran día!</span>
+                        <span class="number celebration-text">0</span>
+                    </div>
+                `;
+            } else {
+                countdownElement.innerHTML = `
+                    <div class="time-unit celebration">
+                        <span class="number celebration-text">¡Hoy es el día!</span>
+                        <span class="label">¡Celebremos!</span>
+                    </div>
+                `;
+            }
             countdownElement.classList.add('final-day');
             
-            // Limpiar el intervalo
             if (countdownInterval) {
                 clearInterval(countdownInterval);
             }
@@ -100,54 +105,73 @@ function initCountdown() {
         
         // Calcular tiempo restante
         const dias = Math.floor(distancia / (1000 * 60 * 60 * 24));
-        const horas = Math.floor((distancia % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutos = Math.floor((distancia % (1000 * 60 * 60)) / (1000 * 60));
-        const segundos = Math.floor((distancia % (1000 * 60)) / 1000);
         
         // Efecto especial cuando faltan menos de 14 días
         if (dias <= 14 && contadorElement) {
             contadorElement.classList.add('close-date');
         }
         
-        // Obtener elementos
-        const elements = {
-            days: document.getElementById('days'),
-            hours: document.getElementById('hours'),
-            minutes: document.getElementById('minutes'),
-            seconds: document.getElementById('seconds')
-        };
-        
-        // Formatear valores
-        const newValues = {
-            days: dias.toString(),
-            hours: horas.toString().padStart(2, '0'),
-            minutes: minutos.toString().padStart(2, '0'),
-            seconds: segundos.toString().padStart(2, '0')
-        };
-        
-        // Actualizar con animación solo si hay cambios
-        Object.keys(newValues).forEach(key => {
-            if (elements[key] && previousValues[key] !== newValues[key]) {
-                if (previousValues[key] !== null) {
-                    animateNumberChange(elements[key], newValues[key]);
-                } else {
-                    // Primera carga sin animación
-                    elements[key].textContent = newValues[key];
-                    elements[key].setAttribute('data-number', newValues[key]);
+        if (esContadorSimple) {
+            // Versión simple: solo días
+            const daysElement = document.getElementById('days');
+            
+            if (daysElement) {
+                const newValue = dias.toString();
+                
+                if (previousValues.days !== newValue) {
+                    if (previousValues.days !== null) {
+                        animateNumberChange(daysElement, newValue);
+                    } else {
+                        daysElement.textContent = newValue;
+                        daysElement.setAttribute('data-number', newValue);
+                    }
+                    previousValues.days = newValue;
                 }
-                previousValues[key] = newValues[key];
             }
-        });
+        } else {
+            // Versión completa: días, horas, minutos, segundos
+            const horas = Math.floor((distancia % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutos = Math.floor((distancia % (1000 * 60 * 60)) / (1000 * 60));
+            const segundos = Math.floor((distancia % (1000 * 60)) / 1000);
+            
+            const elements = {
+                days: document.getElementById('days'),
+                hours: document.getElementById('hours'),
+                minutes: document.getElementById('minutes'),
+                seconds: document.getElementById('seconds')
+            };
+            
+            const newValues = {
+                days: dias.toString(),
+                hours: horas.toString().padStart(2, '0'),
+                minutes: minutos.toString().padStart(2, '0'),
+                seconds: segundos.toString().padStart(2, '0')
+            };
+            
+            Object.keys(newValues).forEach(key => {
+                if (elements[key] && previousValues[key] !== newValues[key]) {
+                    if (previousValues[key] !== null) {
+                        animateNumberChange(elements[key], newValues[key]);
+                    } else {
+                        elements[key].textContent = newValues[key];
+                        elements[key].setAttribute('data-number', newValues[key]);
+                    }
+                    previousValues[key] = newValues[key];
+                }
+            });
+        }
     }
     
-    // Ejecutar inmediatamente y luego cada segundo
+    // Ejecutar inmediatamente y luego cada segundo (o cada minuto para versión simple)
     updateCountdown();
-    countdownInterval = setInterval(updateCountdown, 1000);
+    
+    // Para la versión simple, actualizar cada minuto es suficiente ya que solo muestra días
+    const intervaloActualizacion = esContadorSimple ? 60000 : 1000; // 60000ms = 1 minuto
+    countdownInterval = setInterval(updateCountdown, intervaloActualizacion);
 }
 
 // Inicializar cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', function() {
-    // Pequeña pausa para asegurar que todas las variables estén cargadas
     setTimeout(initCountdown, 100);
 });
 

@@ -52,6 +52,8 @@ CREATE TABLE IF NOT EXISTS invitaciones (
     
     -- Configuraciones
     mostrar_contador TINYINT(1) DEFAULT 1,
+    tipo_contador ENUM('completo', 'simple') DEFAULT 'completo', 
+    mostrar_cronograma TINYINT(1) DEFAULT 1,
 
     -- Musica
     musica_youtube_url VARCHAR(255),
@@ -76,7 +78,7 @@ CREATE TABLE IF NOT EXISTS invitacion_ubicaciones (
     hora_inicio TIME,
     hora_fin TIME,
     google_maps_url TEXT,
-    imagen VARCHAR(255),
+    imagen VARCHAR(500),
     descripcion TEXT,
     orden INT DEFAULT 0,
     FOREIGN KEY (invitacion_id) REFERENCES invitaciones(id) ON DELETE CASCADE

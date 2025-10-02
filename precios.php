@@ -59,7 +59,7 @@ try {
                         <li><i class="fas fa-check"></i>Contador simple</li>
                         <!-- <li><i class="fas fa-times"></i>Cronograma</li> -->
                         <li><i class="fas fa-check"></i>Ubicación (info + botón)</li>
-                        <li><i class="fas fa-check"></i>Galería 6 fotos (no interactiva)</li>
+                        <li><i class="fas fa-check"></i>Galería 6 fotos</li>
                         <li><i class="fas fa-check"></i>Dresscode solo texto</li>
                         <li><i class="fas fa-check"></i>Reservación por WhatsApp</li>
                         <!-- <li><i class="fas fa-times"></i>Reproductor musical</li> -->
@@ -87,7 +87,7 @@ try {
                         <li><i class="fas fa-check"></i>Contador con cuenta regresiva</li>
                         <li><i class="fas fa-check"></i>Cronograma del evento</li>
                         <li><i class="fas fa-check"></i>Ubicaciones con imágenes</li>
-                        <li><i class="fas fa-check"></i>Galería 10 fotos (interactiva)</li>
+                        <li><i class="fas fa-check"></i>Galería 10 fotos</li>
                         <li><i class="fas fa-check"></i>Dresscode con imágenes</li>
                         <li><i class="fas fa-check"></i>Reservación con boletaje digital</li>
                         <li><i class="fas fa-check"></i>Reproductor musical</li>
@@ -112,7 +112,7 @@ try {
                     <ul>
                         <li><i class="fas fa-check"></i>Todo lo del plan Intermedio</li>
                         <!-- <li><i class="fas fa-check"></i>Ubicación con mapa interactivo</li> -->
-                        <li><i class="fas fa-check"></i>Galería 15 fotos (interactiva)</li>
+                        <li><i class="fas fa-check"></i>Galería 15 fotos</li>
                         <li><i class="fas fa-check"></i>Reservación con boletaje digital</li>
                         <li><i class="fas fa-check"></i>Soporte hasta el evento</li>
                         <li><i class="fas fa-check"></i>Cambios de colores, tipografía y ajustes de la plantilla</li>

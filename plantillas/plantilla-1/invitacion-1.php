@@ -142,21 +142,16 @@ $dresscode_stmt = $db->prepare($dresscode_query);
 $dresscode_stmt->execute([$invitacion['id']]);
 $dresscode_info = $dresscode_stmt->fetch(PDO::FETCH_ASSOC);
 
-// Obtener musica
-$musica_youtube_url = $invitacion['musica_youtube_url'] ?? '';
-$musica_autoplay = (bool)($invitacion['musica_autoplay'] ?? false);
-$musica_volumen = $invitacion['musica_volumen'] ?? 0.5;
-
-// Construir las rutas de imágenes de dresscode
+// Construir las rutas de imágenes de dresscode - SOLO si existen en la base de datos
 if ($dresscode_info) {
-    $img_dresscode_hombres = !empty($dresscode_info['hombres']) ? './' . ltrim($dresscode_info['hombres'], '/') : './plantillas/plantilla-1/img/dresscode.webp';
-    $img_dresscode_mujeres = !empty($dresscode_info['mujeres']) ? './' . ltrim($dresscode_info['mujeres'], '/') : './plantillas/plantilla-1/img/dresscode2.webp';
+    $img_dresscode_hombres = !empty($dresscode_info['hombres']) ? './' . ltrim($dresscode_info['hombres'], '/') : null;
+    $img_dresscode_mujeres = !empty($dresscode_info['mujeres']) ? './' . ltrim($dresscode_info['mujeres'], '/') : null;
     $descripcion_dresscode_hombres = $dresscode_info['descripcion_hombres'] ?? '';
     $descripcion_dresscode_mujeres = $dresscode_info['descripcion_mujeres'] ?? '';
 } else {
-    // Si no hay registro en la tabla dresscode, usar imágenes por defecto
-    $img_dresscode_hombres = './plantillas/plantilla-1/img/dresscode.webp';
-    $img_dresscode_mujeres = './plantillas/plantilla-1/img/dresscode2.webp';
+    // Si no hay registro en la tabla dresscode, no mostrar imágenes
+    $img_dresscode_hombres = null;
+    $img_dresscode_mujeres = null;
     $descripcion_dresscode_hombres = '';
     $descripcion_dresscode_mujeres = '';
 }
@@ -197,6 +192,22 @@ $padrinos_novio = $invitacion['padrinos_novio'] ?? '';
 
 // Configuraciones
 $mostrar_contador = (bool)($invitacion['mostrar_contador'] ?? true);
+$tipo_contador = $invitacion['tipo_contador'] ?? 'completo';
+$mostrar_cronograma = (bool)($invitacion['mostrar_cronograma'] ?? true);
+
+$frases = [
+    "Días que nos separan del gran día",
+    "Cada día más cerca de nuestro gran día",
+    "Cuenta regresiva en días",
+    "Días antes de vivir algo único",
+    "Solo faltan estos días…",
+    "Días para celebrar juntos",
+    "Días llenos de emoción por venir",
+    "Faltan pocos días para el gran momento"
+];
+
+// Elegir una frase al azar
+$frase_aleatoria = $frases[array_rand($frases)];
 
 // Si no hay cronograma, usar el por defecto
 if (empty($cronograma)) {
@@ -374,9 +385,20 @@ try {
 
 <?php if ($mostrar_contador): ?>
 <!-- Contador regresivo -->
-<section class="contador" id="contador">
+<section class="contador <?php echo $tipo_contador === 'simple' ? 'contador-simple' : ''; ?>" id="contador">
    <div class="container">
        <h2>Save the Date!</h2>
+       
+       <?php if ($tipo_contador === 'simple'): ?>
+        <!-- Versión Simple: Solo días -->
+        <div class="countdown countdown-simple" id="countdown">
+            <div class="time-unit time-unit-large">
+                <span class="label"><?= htmlspecialchars($frase_aleatoria) ?></span>
+                <span class="number" id="days">0</span>
+            </div>
+        </div>
+        <?php else: ?>
+       <!-- Versión Completa: Días, Horas, Minutos, Segundos -->
        <div class="countdown" id="countdown">
            <div class="time-unit">
                <span class="number" id="days">0</span>
@@ -395,10 +417,12 @@ try {
                <span class="label">Segundos</span>
            </div>
        </div>
+       <?php endif; ?>
    </div>
 </section>
 <?php endif; ?>
 
+<?php if ($mostrar_cronograma): ?>
 <!-- Sección Cronograma -->
 <section class="cronograma" id="cronograma">
    <div class="container">
@@ -432,6 +456,7 @@ try {
        </div>
    </div>
 </section>
+<?php endif; ?>
 
 <!-- Sección Ubicaciones -->
 <?php if (!empty($ubicaciones_result)): ?>
@@ -440,7 +465,7 @@ try {
        <h2>UBICACIONES</h2>
        <div class="ubicaciones-grid">
            <?php foreach($ubicaciones_result as $ubicacion_item): ?>
-           <div class="ubicacion-card">
+           <div class="ubicacion-card <?php echo !empty($ubicacion_item['imagen']) ? 'con-imagen' : 'sin-imagen'; ?>">
                <div class="ubicacion-content">
                    <div class="ubicacion-info">
                        <div class="ubicacion-tipo"><?php echo strtoupper($ubicacion_item['tipo']); ?></div>
@@ -465,7 +490,7 @@ try {
                        </a>
                        <?php endif; ?>
                    </div>
-                   <?php if ($ubicacion_item['imagen']): ?>
+                   <?php if (!empty($ubicacion_item['imagen'])): ?>
                    <div class="ubicacion-image">
                        <img src="<?php echo htmlspecialchars($ubicacion_item['imagen']); ?>" alt="<?php echo htmlspecialchars($ubicacion_item['nombre_lugar']); ?>" />
                    </div>
@@ -503,43 +528,45 @@ try {
 </section>
 
 <!-- Sección Dress Code -->
-<section class="dresscode" id="dresscode">
+<section class="dresscode <?php echo (!$dresscode_info || (empty($dresscode_info['hombres']) && empty($dresscode_info['mujeres']))) ? 'sin-imagenes' : ''; ?>" id="dresscode">
    <div class="container">
        <div class="dresscode-content">
            <h2>Código de vestimenta</h2>
            <p><?php echo strtoupper(htmlspecialchars($dresscode)); ?></p>
            
+           <?php if ($descripcion_dresscode_hombres || $descripcion_dresscode_mujeres): ?>
            <div class="dresscode-gender-section">
+               <?php if ($descripcion_dresscode_hombres): ?>
                <div class="gender-section">
                    <h3>Hombre</h3>
-                   <?php if ($descripcion_dresscode_hombres): ?>
                    <p><?php echo htmlspecialchars($descripcion_dresscode_hombres); ?></p>
-                   <?php endif; ?>
-                   <div class="color-dots">
-                       <div class="color-dot black"></div>
-                       <div class="color-dot white"></div>
-                   </div>
                </div>
+               <?php endif; ?>
+               
+               <?php if ($descripcion_dresscode_mujeres): ?>
                <div class="gender-section">
                    <h3>Mujer</h3>
-                   <?php if ($descripcion_dresscode_mujeres): ?>
                    <p><?php echo htmlspecialchars($descripcion_dresscode_mujeres); ?></p>
-                   <?php endif; ?>
-                   <div class="color-dots">
-                       <div class="color-dot burgundy"></div>
-                       <div class="color-dot white"></div>
-                   </div>
                </div>
+               <?php endif; ?>
            </div>
+           <?php endif; ?>
            
+           <?php if ($dresscode_info && (!empty($dresscode_info['hombres']) || !empty($dresscode_info['mujeres']))): ?>
            <div class="dresscode-examples">
-               <div class="dresscode-example-image women">
-                    <img src="<?php echo htmlspecialchars($img_dresscode_mujeres); ?>" alt="Ejemplo vestimenta femenina" />
-               </div>
+               <?php if (!empty($dresscode_info['hombres'])): ?>
                <div class="dresscode-example-image men">
                     <img src="<?php echo htmlspecialchars($img_dresscode_hombres); ?>" alt="Ejemplo vestimenta masculina" />
                </div>
+               <?php endif; ?>
+               
+               <?php if (!empty($dresscode_info['mujeres'])): ?>
+               <div class="dresscode-example-image women">
+                    <img src="<?php echo htmlspecialchars($img_dresscode_mujeres); ?>" alt="Ejemplo vestimenta femenina" />
+               </div>
+               <?php endif; ?>
            </div>
+           <?php endif; ?>
        </div>
    </div>
 </section>
@@ -772,6 +799,7 @@ const invitacionData = {
    fecha: '<?php echo $invitacion['fecha_evento']; ?>',
    hora: '<?php echo $invitacion['hora_evento']; ?>',
    mostrarContador: <?php echo $mostrar_contador ? 'true' : 'false'; ?>,
+   tipoContador: '<?php echo $tipo_contador; ?>',
 };
 </script>
 

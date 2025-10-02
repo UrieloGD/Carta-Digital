@@ -96,39 +96,47 @@ function initDateValidation() {
 // Función para agregar elementos al cronograma
 function agregarCronograma() {
     const container = document.getElementById('cronograma-container');
-    const newItem = document.createElement('div');
-    newItem.className = 'cronograma-item';
-    newItem.innerHTML = `
-        <div class="row g-2">
-            <div class="col-md-2">
-                <label class="form-label">Hora</label>
-                <input type="time" name="cronograma_hora[]" class="form-control">
+    const mostrarCronograma = document.getElementById('mostrar_cronograma');
+    const cronogramaContent = document.getElementById('cronograma-content');
+    
+    // Solo agregar si el cronograma está visible y activado
+    if (mostrarCronograma && mostrarCronograma.checked && cronogramaContent.style.display !== 'none') {
+        const newItem = document.createElement('div');
+        newItem.className = 'cronograma-item';
+        newItem.innerHTML = `
+            <div class="row g-2">
+                <div class="col-md-2">
+                    <label class="form-label">Hora</label>
+                    <input type="time" name="cronograma_hora[]" class="form-control">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Evento</label>
+                    <input type="text" name="cronograma_evento[]" class="form-control" placeholder="Evento">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Descripción</label>
+                    <input type="text" name="cronograma_descripcion[]" class="form-control" placeholder="Descripción">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Icono</label>
+                    <select name="cronograma_icono[]" class="form-select">
+                        <option value="anillos">Anillos</option>
+                        <option value="cena">Cena</option>
+                        <option value="fiesta">Fiesta</option>
+                        <option value="luna">Luna</option>
+                    </select>
+                </div>
+                <div class="col-md-1 d-flex align-items-end">
+                    <button type="button" onclick="eliminarCronograma(this)" class="btn btn-outline-danger btn-sm mt-2">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </div>
             </div>
-            <div class="col-md-3">
-                <label class="form-label">Evento</label>
-                <input type="text" name="cronograma_evento[]" class="form-control" placeholder="Evento">
-            </div>
-            <div class="col-md-4">
-                <label class="form-label">Descripción</label>
-                <input type="text" name="cronograma_descripcion[]" class="form-control" placeholder="Descripción">
-            </div>
-            <div class="col-md-2">
-                <label class="form-label">Icono</label>
-                <select name="cronograma_icono[]" class="form-select">
-                    <option value="anillos">Anillos</option>
-                    <option value="cena">Cena</option>
-                    <option value="fiesta">Fiesta</option>
-                    <option value="luna">Luna</option>
-                </select>
-            </div>
-            <div class="col-md-1 d-flex align-items-end">
-                <button type="button" onclick="eliminarCronograma(this)" class="btn btn-outline-danger btn-sm mt-2">
-                    <i class="bi bi-trash"></i>
-                </button>
-            </div>
-        </div>
-    `;
-    container.appendChild(newItem);
+        `;
+        container.appendChild(newItem);
+    } else {
+        alert('Activa la sección de cronograma primero para agregar eventos.');
+    }
 }
 
 // Función para eliminar elementos del cronograma
@@ -161,17 +169,77 @@ function toggleRSVPFields() {
         if (tipoRsvp.value === 'whatsapp') {
             campoWhatsapp.style.display = 'block';
             inputWhatsapp.required = true;
+            // Remover atributos que podrían causar problemas
+            inputWhatsapp.removeAttribute('disabled');
+            inputWhatsapp.removeAttribute('readonly');
         } else {
             campoWhatsapp.style.display = 'none';
             inputWhatsapp.required = false;
+            // Limpiar el valor cuando no es WhatsApp
+            inputWhatsapp.value = '';
+        }
+    }
+}
+
+// Función para mostrar/ocultar campos del contador
+function toggleContadorFields() {
+    const mostrarContador = document.getElementById('mostrar_contador');
+    const tipoContador = document.getElementById('tipo_contador');
+    
+    if (mostrarContador && tipoContador) {
+        tipoContador.disabled = !mostrarContador.checked;
+        
+        // Cambiar estilo visual cuando está deshabilitado
+        if (tipoContador.disabled) {
+            tipoContador.classList.add('text-muted', 'bg-light');
+        } else {
+            tipoContador.classList.remove('text-muted', 'bg-light');
+        }
+    }
+}
+
+function toggleCronogramaFields() {
+    const mostrarCronograma = document.getElementById('mostrar_cronograma');
+    const cronogramaContent = document.getElementById('cronograma-content');
+    
+    if (mostrarCronograma && cronogramaContent) {
+        if (mostrarCronograma.checked) {
+            cronogramaContent.style.display = 'block';
+            // Habilitar todos los campos dentro del cronograma
+            const inputs = cronogramaContent.querySelectorAll('input, select, button');
+            inputs.forEach(input => {
+                input.disabled = false;
+                input.classList.remove('text-muted', 'bg-light');
+            });
+        } else {
+            cronogramaContent.style.display = 'none';
+            // Deshabilitar todos los campos dentro del cronograma
+            const inputs = cronogramaContent.querySelectorAll('input, select, button');
+            inputs.forEach(input => {
+                input.disabled = true;
+                input.classList.add('text-muted', 'bg-light');
+            });
         }
     }
 }
 
 // Inicialización cuando el DOM está listo
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function() {    
     // Inicializar todas las funciones
     initWhatsAppValidation();
     initDateValidation();
+    
+    // Inicializar toggles
     toggleRSVPFields();
+    toggleContadorFields();
+    toggleCronogramaFields();
+    
+    // Agregar eventos
+    const tipoRsvp = document.getElementById('tipo_rsvp');
+    const mostrarContador = document.getElementById('mostrar_contador');
+    const mostrarCronograma = document.getElementById('mostrar_cronograma');
+    
+    if (tipoRsvp) tipoRsvp.addEventListener('change', toggleRSVPFields);
+    if (mostrarContador) mostrarContador.addEventListener('change', toggleContadorFields);
+    if (mostrarCronograma) mostrarCronograma.addEventListener('change', toggleCronogramaFields);
 });

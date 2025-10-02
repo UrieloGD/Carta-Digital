@@ -1,4 +1,4 @@
-// crear.js - JavaScript para el formulario de creación de invitaciones
+// crear.js - JavaScript para el formulario de creación de invitaciones (actualizado)
 
 // Generar slug automáticamente desde los nombres de los novios
 function initSlugGeneration() {
@@ -23,7 +23,6 @@ function initSlugGeneration() {
 // Validación del número de WhatsApp
 function initWhatsAppValidation() {
     const whatsappInput = document.getElementById('whatsapp_confirmacion');
-    
     if (whatsappInput) {
         whatsappInput.addEventListener('input', function(e) {
             let value = e.target.value.replace(/\D/g, ''); // Solo números
@@ -31,7 +30,7 @@ function initWhatsAppValidation() {
                 value = value.substring(0, 15); // Máximo 15 dígitos
             }
             e.target.value = value;
-            
+           
             // Cambiar el color del borde según la validez
             if (value.length >= 10 && value.length <= 15) {
                 e.target.style.borderColor = '#28a745'; // Verde si es válido
@@ -61,7 +60,7 @@ function previewImage(input, previewId) {
 function previewGallery(input) {
     const preview = document.getElementById('gallery-preview');
     preview.innerHTML = '';
-    
+   
     if (input.files) {
         Array.from(input.files).forEach((file, index) => {
             if (file.type.startsWith('image/')) {
@@ -86,65 +85,78 @@ function previewGallery(input) {
 }
 
 // Validaciones de fechas
-function initDateValidations() {
-    const fechaEventoInput = document.getElementById('fecha_evento');
-    const fechaLimiteInput = document.getElementById('fecha_limite_rsvp');
-    
-    function validateDates() {
-        const fechaEvento = fechaEventoInput.value;
-        const fechaLimite = fechaLimiteInput.value;
-        
-        if (fechaEvento && fechaLimite && fechaLimite > fechaEvento) {
-            alert('La fecha límite para RSVP no puede ser posterior a la fecha del evento');
-            fechaLimiteInput.value = '';
-        }
-    }
-    
-    if (fechaLimiteInput) {
-        fechaLimiteInput.addEventListener('change', validateDates);
-    }
-    
-    if (fechaEventoInput) {
-        fechaEventoInput.addEventListener('change', validateDates);
+function initDateValidation() {
+    const fechaLimiteRsvp = document.getElementById('fecha_limite_rsvp');
+    const fechaEvento = document.getElementById('fecha_evento');
+
+    if (fechaLimiteRsvp && fechaEvento) {
+        // Validar que la fecha límite RSVP no sea posterior a la fecha del evento
+        fechaLimiteRsvp.addEventListener('change', function() {
+            const fechaEventoValue = fechaEvento.value;
+            const fechaLimiteValue = this.value;
+           
+            if (fechaEventoValue && fechaLimiteValue && fechaLimiteValue > fechaEventoValue) {
+                alert('La fecha límite para RSVP no puede ser posterior a la fecha del evento');
+                this.value = '';
+            }
+        });
+
+        fechaEvento.addEventListener('change', function() {
+            const fechaLimiteValue = fechaLimiteRsvp.value;
+            const fechaEventoValue = this.value;
+           
+            if (fechaEventoValue && fechaLimiteValue && fechaLimiteValue > fechaEventoValue) {
+                alert('La fecha límite para RSVP no puede ser posterior a la fecha del evento');
+                fechaLimiteRsvp.value = '';
+            }
+        });
     }
 }
 
 // Función para agregar elementos al cronograma
 function agregarCronograma() {
     const container = document.getElementById('cronograma-container');
-    const newItem = document.createElement('div');
-    newItem.className = 'cronograma-item';
-    newItem.innerHTML = `
-        <div class="row g-2">
-            <div class="col-md-2">
-                <label class="form-label">Hora</label>
-                <input type="time" name="cronograma_hora[]" class="form-control">
+    const mostrarCronograma = document.getElementById('mostrar_cronograma');
+    const cronogramaContent = document.getElementById('cronograma-content');
+    
+    // Solo agregar si el cronograma está visible y activado
+    if (mostrarCronograma && mostrarCronograma.checked && cronogramaContent.style.display !== 'none') {
+        const newItem = document.createElement('div');
+        newItem.className = 'cronograma-item';
+        newItem.innerHTML = `
+            <div class="row g-2">
+                <div class="col-md-2">
+                    <label class="form-label">Hora</label>
+                    <input type="time" name="cronograma_hora[]" class="form-control">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Evento</label>
+                    <input type="text" name="cronograma_evento[]" class="form-control" placeholder="Evento">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Descripción</label>
+                    <input type="text" name="cronograma_descripcion[]" class="form-control" placeholder="Descripción">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Icono</label>
+                    <select name="cronograma_icono[]" class="form-select">
+                        <option value="anillos">Anillos</option>
+                        <option value="cena">Cena</option>
+                        <option value="fiesta">Fiesta</option>
+                        <option value="luna">Luna</option>
+                    </select>
+                </div>
+                <div class="col-md-1 d-flex align-items-end">
+                    <button type="button" onclick="eliminarCronograma(this)" class="btn btn-outline-danger btn-sm mt-2">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </div>
             </div>
-            <div class="col-md-3">
-                <label class="form-label">Evento</label>
-                <input type="text" name="cronograma_evento[]" class="form-control" placeholder="Evento">
-            </div>
-            <div class="col-md-4">
-                <label class="form-label">Descripción</label>
-                <input type="text" name="cronograma_descripcion[]" class="form-control" placeholder="Descripción">
-            </div>
-            <div class="col-md-2">
-                <label class="form-label">Icono</label>
-                <select name="cronograma_icono[]" class="form-select">
-                    <option value="anillos">Anillos</option>
-                    <option value="cena">Cena</option>
-                    <option value="fiesta">Fiesta</option>
-                    <option value="luna">Luna</option>
-                </select>
-            </div>
-            <div class="col-md-1 d-flex align-items-end">
-                <button type="button" onclick="eliminarCronograma(this)" class="btn btn-outline-danger btn-sm mt-2">
-                    <i class="bi bi-trash"></i>
-                </button>
-            </div>
-        </div>
-    `;
-    container.appendChild(newItem);
+        `;
+        container.appendChild(newItem);
+    } else {
+        alert('Activa la sección de cronograma primero para agregar eventos.');
+    }
 }
 
 // Función para eliminar elementos del cronograma
@@ -154,16 +166,65 @@ function eliminarCronograma(button) {
 
 // Función para mostrar/ocultar campos según el tipo de RSVP
 function toggleRSVPFields() {
-    const tipoRsvp = document.getElementById('tipo_rsvp').value;
+    const tipoRsvp = document.getElementById('tipo_rsvp');
     const campoWhatsapp = document.getElementById('campo-whatsapp');
     const inputWhatsapp = document.getElementById('whatsapp_confirmacion');
     
-    if (tipoRsvp === 'whatsapp') {
-        campoWhatsapp.style.display = 'block';
-        inputWhatsapp.required = true;
-    } else {
-        campoWhatsapp.style.display = 'none';
-        inputWhatsapp.required = false;
+    if (tipoRsvp && campoWhatsapp && inputWhatsapp) {
+        if (tipoRsvp.value === 'whatsapp') {
+            campoWhatsapp.style.display = 'block';
+            inputWhatsapp.required = true;
+            // Remover atributos que podrían causar problemas
+            inputWhatsapp.removeAttribute('disabled');
+            inputWhatsapp.removeAttribute('readonly');
+        } else {
+            campoWhatsapp.style.display = 'none';
+            inputWhatsapp.required = false;
+            // Limpiar el valor cuando no es WhatsApp
+            inputWhatsapp.value = '';
+        }
+    }
+}
+
+// Función para mostrar/ocultar campos del contador
+function toggleContadorFields() {
+    const mostrarContador = document.getElementById('mostrar_contador');
+    const tipoContador = document.getElementById('tipo_contador');
+    
+    if (mostrarContador && tipoContador) {
+        tipoContador.disabled = !mostrarContador.checked;
+        
+        // Cambiar estilo visual cuando está deshabilitado
+        if (tipoContador.disabled) {
+            tipoContador.classList.add('text-muted', 'bg-light');
+        } else {
+            tipoContador.classList.remove('text-muted', 'bg-light');
+        }
+    }
+}
+
+function toggleCronogramaFields() {
+    const mostrarCronograma = document.getElementById('mostrar_cronograma');
+    const cronogramaContent = document.getElementById('cronograma-content');
+    
+    if (mostrarCronograma && cronogramaContent) {
+        if (mostrarCronograma.checked) {
+            cronogramaContent.style.display = 'block';
+            // Habilitar todos los campos dentro del cronograma
+            const inputs = cronogramaContent.querySelectorAll('input, select, button');
+            inputs.forEach(input => {
+                input.disabled = false;
+                input.classList.remove('text-muted', 'bg-light');
+            });
+        } else {
+            cronogramaContent.style.display = 'none';
+            // Deshabilitar todos los campos dentro del cronograma
+            const inputs = cronogramaContent.querySelectorAll('input, select, button');
+            inputs.forEach(input => {
+                input.disabled = true;
+                input.classList.add('text-muted', 'bg-light');
+            });
+        }
     }
 }
 
@@ -186,14 +247,25 @@ function initFormValidation() {
     }
 }
 
-// Función principal de inicialización
-function initApp() {
+// Inicialización cuando el DOM está listo
+document.addEventListener('DOMContentLoaded', function() {    
+    // Inicializar todas las funciones
     initSlugGeneration();
     initWhatsAppValidation();
-    initDateValidations();
+    initDateValidation();
     initFormValidation();
-    toggleRSVPFields(); // Llamar una vez al inicio para establecer el estado inicial
-}
-
-// Inicializar cuando el DOM esté listo
-document.addEventListener('DOMContentLoaded', initApp);
+    
+    // Inicializar toggles
+    toggleRSVPFields();
+    toggleContadorFields();
+    toggleCronogramaFields();
+    
+    // Agregar eventos
+    const tipoRsvp = document.getElementById('tipo_rsvp');
+    const mostrarContador = document.getElementById('mostrar_contador');
+    const mostrarCronograma = document.getElementById('mostrar_cronograma');
+    
+    if (tipoRsvp) tipoRsvp.addEventListener('change', toggleRSVPFields);
+    if (mostrarContador) mostrarContador.addEventListener('change', toggleContadorFields);
+    if (mostrarCronograma) mostrarCronograma.addEventListener('change', toggleCronogramaFields);
+});

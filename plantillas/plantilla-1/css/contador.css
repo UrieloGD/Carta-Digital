@@ -179,6 +179,43 @@
     animation: subtlePulse 3s infinite;
 }
 
+/* ========================================
+   VERSIÓN SIMPLE DEL CONTADOR (SOLO DÍAS)
+   Agregar al final de contador.css
+======================================== */
+
+/* Contenedor específico para versión simple */
+.countdown-simple {
+    grid-template-columns: 1fr !important;
+    max-width: 600px !important;
+    padding: 60px 40px !important;
+}
+
+/* Unidad de tiempo en versión simple */
+.countdown-simple .time-unit {
+    padding: 40px 20px !important;
+}
+
+/* Remover separadores en versión simple */
+.countdown-simple .time-unit::after {
+    display: none !important;
+}
+
+/* Número más grande en versión simple */
+.countdown-simple .number {
+    font-size: clamp(5rem, 10vw, 8rem) !important;
+    margin-bottom: 30px !important;
+    animation: subtlePulse 3s infinite;
+}
+
+/* Etiqueta más prominente en versión simple */
+.countdown-simple .label {
+    font-size: clamp(1.1rem, 2vw, 1.5rem) !important;
+    letter-spacing: 4px !important;
+    font-weight: 400 !important;
+    line-height: 1.4;
+}
+
 @keyframes subtlePulse {
     0%, 100% { 
         transform: scale(1);
@@ -229,6 +266,10 @@
             transparent
         );
     }
+
+    .countdown-simple {
+        padding: 50px 30px !important;
+    }
 }
 
 @media (max-width: 480px) {
@@ -254,6 +295,15 @@
     .time-unit .label {
         font-size: 0.9rem;
         letter-spacing: 2px;
+    }
+
+    .countdown-simple {
+        padding: 40px 20px !important;
+    }
+    
+    .countdown-simple .label {
+        font-size: 1rem !important;
+        letter-spacing: 2px !important;
     }
 }
 

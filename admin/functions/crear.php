@@ -42,6 +42,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             throw new Exception("Error al subir la imagen: {$archivo}");
         }
+
+        function subirImagenUbicacion($archivo, $plantilla_id, $slug, $tipo_ubicacion) {
+            if (!isset($_FILES[$archivo]) || $_FILES[$archivo]['error'] !== UPLOAD_ERR_OK) {
+                return null;
+            }
+            
+            $extension = strtolower(pathinfo($_FILES[$archivo]['name'], PATHINFO_EXTENSION));
+            $extensiones_permitidas = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+            
+            if (!in_array($extension, $extensiones_permitidas)) {
+                throw new Exception("Formato de imagen no permitido: {$extension}");
+            }
+            
+            $nombre_archivo = uniqid() . '.' . $extension;
+            $carpeta = "../../plantillas/plantilla-{$plantilla_id}/uploads/{$slug}/ubicaciones/";
+            
+            if (!is_dir($carpeta)) {
+                mkdir($carpeta, 0755, true);
+            }
+            
+            $ruta_completa = $carpeta . $nombre_archivo;
+            
+            if (move_uploaded_file($_FILES[$archivo]['tmp_name'], $ruta_completa)) {
+                return "plantillas/plantilla-{$plantilla_id}/uploads/{$slug}/ubicaciones/" . $nombre_archivo;
+            }
+            
+            throw new Exception("Error al subir la imagen de ubicación: {$archivo}");
+        }
         
         // Validar campos requeridos
         if (empty($_POST['plantilla_id']) || empty($_POST['nombres_novios']) || 
@@ -74,9 +102,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             padres_novia, padres_novio, padrinos_novia, padrinos_novio,
             musica_youtube_url, musica_autoplay, musica_volumen,
             imagen_hero, imagen_dedicatoria, imagen_destacada, whatsapp_confirmacion, 
-            tipo_rsvp, fecha_limite_rsvp
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            tipo_rsvp, fecha_limite_rsvp, mostrar_contador, tipo_contador, mostrar_cronograma
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         
+        $mostrar_contador = isset($_POST['mostrar_contador']) ? 1 : 0;
+        $tipo_contador = $_POST['tipo_contador'] ?? 'completo';
+        $mostrar_cronograma = isset($_POST['mostrar_cronograma']) ? 1 : 0;
+
         $stmt = $db->prepare($insert_query);
         $stmt->execute([
             $plantilla_id,
@@ -99,34 +131,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $imagen_hero,
             $imagen_dedicatoria,
             $imagen_destacada,
-            $_POST['whatsapp_confirmacion'] ?? '',
+            ($_POST['tipo_rsvp'] ?? 'digital') == 'whatsapp' ? ($_POST['whatsapp_confirmacion'] ?? '') : NULL,
             $_POST['tipo_rsvp'] ?? 'digital',
-            !empty($_POST['fecha_limite_rsvp']) ? $_POST['fecha_limite_rsvp'] : null
+            !empty($_POST['fecha_limite_rsvp']) ? $_POST['fecha_limite_rsvp'] : NULL,
+            $mostrar_contador,
+            $tipo_contador,
+            $mostrar_cronograma
         ]);
         
         $invitacion_id = $db->lastInsertId();
         
         // Insertar ceremonia si se proporcionó
         if (!empty($_POST['ceremonia_lugar'])) {
-            $stmt = $db->prepare("INSERT INTO invitacion_ubicaciones (invitacion_id, tipo, nombre_lugar, direccion, hora_inicio, google_maps_url) VALUES (?, 'ceremonia', ?, ?, ?, ?)");
+            $imagen_ceremonia = subirImagenUbicacion('ceremonia_imagen', $plantilla_id, $slug, 'ceremonia');
+            
+            $stmt = $db->prepare("INSERT INTO invitacion_ubicaciones (invitacion_id, tipo, nombre_lugar, direccion, hora_inicio, google_maps_url, imagen) VALUES (?, 'ceremonia', ?, ?, ?, ?, ?)");
             $stmt->execute([
                 $invitacion_id,
                 $_POST['ceremonia_lugar'],
                 $_POST['ceremonia_direccion'] ?? '',
                 $_POST['ceremonia_hora'] ?? null,
-                $_POST['ceremonia_maps'] ?? ''
+                $_POST['ceremonia_maps'] ?? '',
+                $imagen_ceremonia
             ]);
         }
         
         // Insertar evento si se proporcionó
         if (!empty($_POST['evento_lugar'])) {
-            $stmt = $db->prepare("INSERT INTO invitacion_ubicaciones (invitacion_id, tipo, nombre_lugar, direccion, hora_inicio, google_maps_url) VALUES (?, 'evento', ?, ?, ?, ?)");
+            $imagen_evento = subirImagenUbicacion('evento_imagen', $plantilla_id, $slug, 'evento');
+            
+            $stmt = $db->prepare("INSERT INTO invitacion_ubicaciones (invitacion_id, tipo, nombre_lugar, direccion, hora_inicio, google_maps_url, imagen) VALUES (?, 'evento', ?, ?, ?, ?, ?)");
             $stmt->execute([
                 $invitacion_id,
                 $_POST['evento_lugar'],
                 $_POST['evento_direccion'] ?? '',
                 $_POST['evento_hora'] ?? null,
-                $_POST['evento_maps'] ?? ''
+                $_POST['evento_maps'] ?? '',
+                $imagen_evento
             ]);
         }
         
@@ -320,6 +361,37 @@ $plantillas = $plantilla_stmt->fetchAll(PDO::FETCH_ASSOC);
                     </div>
                 </div>
             </div>
+            
+            <!-- Configuraciones del Contador -->
+            <div class="form-section">
+                <h3 class="section-title">
+                    <i class="bi bi-clock me-2"></i>
+                    Configuración del Contador
+                </h3>
+                
+                <div class="two-columns">
+                    <!-- Mostrar Contador -->
+                    <div class="form-group">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="mostrar_contador" name="mostrar_contador" value="1" checked>
+                            <label class="form-check-label" for="mostrar_contador">
+                                Mostrar contador regresivo
+                            </label>
+                        </div>
+                        <div class="form-text">Activa o desactiva el contador de días faltantes</div>
+                    </div>
+                    
+                    <!-- Tipo de Contador -->
+                    <div class="form-group">
+                        <label for="tipo_contador" class="form-label">Tipo de Contador</label>
+                        <select name="tipo_contador" id="tipo_contador" class="form-select">
+                            <option value="completo" selected>Completo (Días, Horas, Minutos, Segundos)</option>
+                            <option value="simple">Simple (Solo días)</option>
+                        </select>
+                        <div class="form-text">Elige el estilo del contador regresivo</div>
+                    </div>
+                </div>
+            </div>
 
             <!-- Información Básica -->
             <div class="form-section">
@@ -363,7 +435,7 @@ $plantillas = $plantilla_stmt->fetchAll(PDO::FETCH_ASSOC);
                 </h3>
                 
                 <div class="two-columns">
-                    <!-- Ceremonia -->
+                    <!-- Columna izquierda - Ceremonia -->
                     <div>
                         <h5 class="text-primary mb-3">Ceremonia</h5>
                         <div class="form-group">
@@ -389,9 +461,26 @@ $plantillas = $plantilla_stmt->fetchAll(PDO::FETCH_ASSOC);
                                 class="form-control" placeholder="https://maps.google.com/?q=..."
                                 value="<?php echo htmlspecialchars($_POST['ceremonia_maps'] ?? ''); ?>">
                         </div>
+                        
+                        <!-- Imagen Ceremonia - DENTRO de la columna de ceremonia -->
+                        <div class="form-group">
+                            <label for="ceremonia_imagen" class="form-label">Imagen de la Ceremonia (opcional)</label>
+                            <div class="input-group">
+                                <input type="file" name="ceremonia_imagen" id="ceremonia_imagen" accept="image/*" 
+                                    class="form-control" onchange="previewImage(this, 'ceremonia-imagen-preview')">
+                                <label class="input-group-text" for="ceremonia_imagen">
+                                    <i class="bi bi-image"></i>
+                                </label>
+                            </div>
+                            
+                            <div id="ceremonia-imagen-preview" class="mt-2">
+                                <img id="ceremonia-imagen-preview-img" src="#" alt="Preview" class="img-thumbnail d-none img-preview" style="max-height: 150px;">
+                            </div>
+                            <div class="form-text">Agrega una imagen de referencia del lugar (opcional)</div>
+                        </div>
                     </div>
                     
-                    <!-- Evento/Recepción -->
+                    <!-- Columna derecha - Evento/Recepción -->
                     <div>
                         <h5 class="text-primary mb-3">Evento/Recepción</h5>
                         <div class="form-group">
@@ -416,6 +505,23 @@ $plantillas = $plantilla_stmt->fetchAll(PDO::FETCH_ASSOC);
                             <input type="url" id="evento_maps" name="evento_maps" 
                                 class="form-control" placeholder="https://maps.google.com/?q=..."
                                 value="<?php echo htmlspecialchars($_POST['evento_maps'] ?? ''); ?>">
+                        </div>
+                        
+                        <!-- Imagen Evento - DENTRO de la columna de evento -->
+                        <div class="form-group">
+                            <label for="evento_imagen" class="form-label">Imagen del Evento (opcional)</label>
+                            <div class="input-group">
+                                <input type="file" name="evento_imagen" id="evento_imagen" accept="image/*" 
+                                    class="form-control" onchange="previewImage(this, 'evento-imagen-preview')">
+                                <label class="input-group-text" for="evento_imagen">
+                                    <i class="bi bi-image"></i>
+                                </label>
+                            </div>
+                            
+                            <div id="evento-imagen-preview" class="mt-2">
+                                <img id="evento-imagen-preview-img" src="#" alt="Preview" class="img-thumbnail d-none img-preview" style="max-height: 150px;">
+                            </div>
+                            <div class="form-text">Agrega una imagen de referencia del lugar (opcional)</div>
                         </div>
                     </div>
                 </div>
@@ -557,44 +663,58 @@ $plantillas = $plantilla_stmt->fetchAll(PDO::FETCH_ASSOC);
                     Cronograma del Evento
                 </h3>
                 
-                <div id="cronograma-container">
-                    <div class="cronograma-item">
-                        <div class="row g-2">
-                            <div class="col-md-2">
-                                <label class="form-label">Hora</label>
-                                <input type="time" name="cronograma_hora[]" class="form-control">
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label">Evento</label>
-                                <input type="text" name="cronograma_evento[]" class="form-control" 
-                                    placeholder="Ceremonia">
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Descripción</label>
-                                <input type="text" name="cronograma_descripcion[]" class="form-control" 
-                                    placeholder="Descripción del evento">
-                            </div>
-                            <div class="col-md-2">
-                                <label class="form-label">Icono</label>
-                                <select name="cronograma_icono[]" class="form-select">
-                                    <option value="anillos">Anillos</option>
-                                    <option value="cena">Cena</option>
-                                    <option value="fiesta">Fiesta</option>
-                                    <option value="luna">Luna</option>
-                                </select>
-                            </div>
-                            <div class="col-md-1 d-flex align-items-end">
-                                <button type="button" onclick="eliminarCronograma(this)" class="btn btn-outline-danger btn-sm mt-2">
-                                    <i class="bi bi-trash"></i>
-                                </button>
+                <!-- Control para mostrar/ocultar cronograma -->
+                <div class="form-group mb-4">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="mostrar_cronograma" name="mostrar_cronograma" value="1" checked>
+                        <label class="form-check-label" for="mostrar_cronograma">
+                            Mostrar sección de cronograma
+                        </label>
+                    </div>
+                    <div class="form-text">Activa o desactiva la sección completa del cronograma en la invitación</div>
+                </div>
+                
+                <div id="cronograma-content">
+                    <div id="cronograma-container">
+                        <div class="cronograma-item">
+                            <input type="hidden" name="cronograma_orden[]" value="1">
+                            <div class="row g-2">
+                                <div class="col-md-2">
+                                    <label class="form-label">Hora</label>
+                                    <input type="time" name="cronograma_hora[]" class="form-control">
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Evento</label>
+                                    <input type="text" name="cronograma_evento[]" class="form-control" 
+                                        placeholder="Ceremonia">
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Descripción</label>
+                                    <input type="text" name="cronograma_descripcion[]" class="form-control" 
+                                        placeholder="Descripción del evento">
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">Icono</label>
+                                    <select name="cronograma_icono[]" class="form-select">
+                                        <option value="anillos">Anillos</option>
+                                        <option value="cena">Cena</option>
+                                        <option value="fiesta">Fiesta</option>
+                                        <option value="luna">Luna</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-1 d-flex align-items-end">
+                                    <button type="button" onclick="eliminarCronograma(this)" class="btn btn-outline-danger btn-sm mt-2">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
+                    <button type="button" onclick="agregarCronograma()" class="btn btn-outline-primary mt-2">
+                        <i class="bi bi-plus-circle me-1"></i>
+                        Agregar Evento
+                    </button>
                 </div>
-                <button type="button" onclick="agregarCronograma()" class="btn btn-outline-primary mt-2">
-                    <i class="bi bi-plus-circle me-1"></i>
-                    Agregar Evento
-                </button>
             </div>
 
             <!-- Dresscode -->
