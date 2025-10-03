@@ -164,6 +164,19 @@
     .time-unit .label {
         font-size: 0.8rem;
     }
+
+    .contador-simple .time-unit-large {
+        padding: 2.5rem 1.5rem;
+        margin: 0 1rem;
+    }
+    
+    .contador-simple .time-unit-large .number {
+        font-size: clamp(3.5rem, 10vw, 5rem);
+    }
+    
+    .contador-simple .time-unit-large .label {
+        font-size: clamp(0.8rem, 3vw, 1rem);
+    }
 }
 
 @media (max-width: 480px) {
@@ -181,5 +194,218 @@
     .time-unit .label {
         font-size: 0.7rem;
         letter-spacing: 0.5px;
+    }
+
+    .contador-simple .time-unit-large {
+        padding: 2rem 1rem;
+        border-radius: 20px;
+    }
+    
+    .contador-simple .time-unit-large .number {
+        font-size: clamp(3rem, 12vw, 4rem);
+        margin-bottom: 0.8rem;
+    }
+    
+    .contador-simple .time-unit-large .label {
+        font-size: 0.8rem;
+        line-height: 1.3;
+    }
+    
+    .contador-simple .time-unit-large::after {
+        top: 15px;
+        right: 15px;
+        width: 8px;
+        height: 8px;
+    }
+}
+
+/* Estados especiales para números bajos */
+.contador-simple .time-unit-large .number[data-days="0"],
+.contador-simple .time-unit-large .number[data-days="1"],
+.contador-simple .time-unit-large .number[data-days="2"] {
+    color: var(--dark-olive);
+    font-weight: 400;
+}
+
+.contador-simple .time-unit-large .number[data-days="0"] {
+    animation: pulse 2s ease-in-out infinite;
+}
+
+/* Contador Sencillo - Estilo Natural */
+.contador-simple .countdown-simple {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.contador-simple .time-unit-large {
+    background: rgba(255, 255, 255, 0.85);
+    padding: 3rem 2rem;
+    border-radius: 25px;
+    border: 2px solid rgba(107, 123, 58, 0.15);
+    box-shadow: 
+        0 10px 30px rgba(107, 123, 58, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    transition: var(--transition-smooth);
+    backdrop-filter: blur(15px);
+    position: relative;
+    overflow: hidden;
+}
+
+.contador-simple .time-unit-large::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 20% 80%, rgba(107, 123, 58, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(212, 184, 150, 0.05) 0%, transparent 50%);
+    z-index: 0;
+}
+
+.contador-simple .time-unit-large:hover {
+    transform: translateY(-5px);
+    box-shadow: 
+        0 15px 40px rgba(107, 123, 58, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    border-color: rgba(107, 123, 58, 0.25);
+}
+
+.contador-simple .time-unit-large .number {
+    font-family: var(--font-serif);
+    font-size: clamp(4rem, 8vw, 6rem);
+    font-weight: 300;
+    color: var(--primary-olive);
+    line-height: 1;
+    margin-bottom: 1rem;
+    display: block;
+    position: relative;
+    z-index: 1;
+    transition: var(--transition-smooth);
+}
+
+.contador-simple .time-unit-large:hover .number {
+    color: var(--dark-olive);
+    transform: scale(1.05);
+}
+
+.contador-simple .time-unit-large .label {
+    font-family: var(--font-sans);
+    font-size: clamp(0.9rem, 2vw, 1.1rem);
+    font-weight: 500;
+    color: var(--soft-gray);
+    text-align: center;
+    line-height: 1.4;
+    display: block;
+    position: relative;
+    z-index: 1;
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+/* Efectos decorativos para el contador simple */
+.contador-simple .time-unit-large::after {
+    content: '';
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 12px;
+    height: 12px;
+    background: var(--sand);
+    border-radius: 50%;
+    opacity: 0.6;
+    transition: var(--transition-smooth);
+}
+
+.contador-simple .time-unit-large:hover::after {
+    transform: scale(1.2);
+    opacity: 0.8;
+}
+
+/* Borde decorativo */
+.contador-simple .time-unit-large {
+    border: 2px solid transparent;
+    background: 
+        linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7)),
+        linear-gradient(135deg, var(--primary-olive), var(--sand));
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+}
+
+/* Animación específica para contador simple */
+.contador-simple .time-unit-large {
+    animation: fadeInScale 1s ease-out forwards;
+    opacity: 0;
+    transform: scale(0.9);
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.9) translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* Efecto de partículas decorativas */
+.contador-simple .time-unit-large {
+    position: relative;
+}
+
+.contador-simple .time-unit-large .particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: var(--sand);
+    border-radius: 50%;
+    opacity: 0;
+}
+
+.contador-simple .time-unit-large:hover .particle {
+    animation: floatParticles 3s ease-in-out infinite;
+}
+
+.contador-simple .time-unit-large .particle:nth-child(1) {
+    top: 15%;
+    left: 10%;
+    animation-delay: 0s;
+}
+
+.contador-simple .time-unit-large .particle:nth-child(2) {
+    top: 25%;
+    right: 15%;
+    animation-delay: 0.5s;
+}
+
+.contador-simple .time-unit-large .particle:nth-child(3) {
+    bottom: 30%;
+    left: 20%;
+    animation-delay: 1s;
+}
+
+@keyframes floatParticles {
+    0%, 100% {
+        transform: translateY(0) scale(1);
+        opacity: 0.3;
+    }
+    50% {
+        transform: translateY(-10px) scale(1.2);
+        opacity: 0.6;
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
     }
 }
