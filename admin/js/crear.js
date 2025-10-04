@@ -1,4 +1,4 @@
-// crear.js - JavaScript para el formulario de creación de invitaciones (actualizado)
+// crear.js - JavaScript para el formulario de creación de invitaciones (actualizado con SweetAlert2)
 
 // Generar slug automáticamente desde los nombres de los novios
 function initSlugGeneration() {
@@ -96,7 +96,12 @@ function initDateValidation() {
             const fechaLimiteValue = this.value;
            
             if (fechaEventoValue && fechaLimiteValue && fechaLimiteValue > fechaEventoValue) {
-                alert('La fecha límite para RSVP no puede ser posterior a la fecha del evento');
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Fecha inválida',
+                    text: 'La fecha límite para RSVP no puede ser posterior a la fecha del evento',
+                    confirmButtonColor: '#3085d6'
+                });
                 this.value = '';
             }
         });
@@ -106,7 +111,12 @@ function initDateValidation() {
             const fechaEventoValue = this.value;
            
             if (fechaEventoValue && fechaLimiteValue && fechaLimiteValue > fechaEventoValue) {
-                alert('La fecha límite para RSVP no puede ser posterior a la fecha del evento');
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Fecha inválida',
+                    text: 'La fecha límite para RSVP no puede ser posterior a la fecha del evento',
+                    confirmButtonColor: '#3085d6'
+                });
                 fechaLimiteRsvp.value = '';
             }
         });
@@ -155,13 +165,38 @@ function agregarCronograma() {
         `;
         container.appendChild(newItem);
     } else {
-        alert('Activa la sección de cronograma primero para agregar eventos.');
+        Swal.fire({
+            icon: 'info',
+            title: 'Cronograma desactivado',
+            text: 'Activa la sección de cronograma primero para agregar eventos.',
+            confirmButtonColor: '#3085d6'
+        });
     }
 }
 
 // Función para eliminar elementos del cronograma
 function eliminarCronograma(button) {
-    button.closest('.cronograma-item').remove();
+    Swal.fire({
+        title: '¿Eliminar evento?',
+        text: 'Esta acción no se puede deshacer',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            button.closest('.cronograma-item').remove();
+            Swal.fire({
+                title: 'Eliminado',
+                text: 'Evento eliminado del cronograma',
+                icon: 'success',
+                timer: 1500,
+                showConfirmButton: false
+            });
+        }
+    });
 }
 
 // Función para mostrar/ocultar campos según el tipo de RSVP
@@ -239,10 +274,46 @@ function initFormValidation() {
             
             if (!regex.test(slug)) {
                 e.preventDefault();
-                alert('La URL (slug) solo puede contener letras minúsculas, números y guiones');
-                document.getElementById('slug').focus();
+                Swal.fire({
+                    icon: 'error',
+                    title: 'URL inválida',
+                    text: 'La URL (slug) solo puede contener letras minúsculas, números y guiones',
+                    confirmButtonColor: '#3085d6'
+                }).then(() => {
+                    document.getElementById('slug').focus();
+                });
                 return false;
             }
+        });
+    }
+}
+
+// Mostrar alerta de éxito si hay parámetro en la URL
+function showSuccessAlert() {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('success')) {
+        Swal.fire({
+            title: '¡Éxito!',
+            text: 'Invitación creada correctamente',
+            icon: 'success',
+            timer: 3000,
+            showConfirmButton: false,
+            position: 'top-end',
+            toast: true
+        });
+    }
+}
+
+// Mostrar alerta de error si hay error del servidor
+function showErrorAlert() {
+    const errorElement = document.querySelector('.error-alert');
+    if (errorElement) {
+        const errorText = errorElement.querySelector('p').textContent;
+        Swal.fire({
+            title: 'Error',
+            text: errorText,
+            icon: 'error',
+            confirmButtonColor: '#3085d6'
         });
     }
 }
@@ -259,6 +330,10 @@ document.addEventListener('DOMContentLoaded', function() {
     toggleRSVPFields();
     toggleContadorFields();
     toggleCronogramaFields();
+    
+    // Mostrar alertas
+    showSuccessAlert();
+    showErrorAlert();
     
     // Agregar eventos
     const tipoRsvp = document.getElementById('tipo_rsvp');

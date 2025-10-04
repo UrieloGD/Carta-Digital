@@ -103,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             musica_youtube_url, musica_autoplay, musica_volumen,
             imagen_hero, imagen_dedicatoria, imagen_destacada, whatsapp_confirmacion, 
             tipo_rsvp, fecha_limite_rsvp, mostrar_contador, tipo_contador, mostrar_cronograma
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         
         $mostrar_contador = isset($_POST['mostrar_contador']) ? 1 : 0;
         $tipo_contador = $_POST['tipo_contador'] ?? 'completo';
@@ -260,9 +260,12 @@ $plantillas = $plantilla_stmt->fetchAll(PDO::FETCH_ASSOC);
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="./../css/editar.css?v=<?php echo filemtime('./../css/editar.css'); ?>" />
     <!-- Icon page -->
     <link rel="shortcut icon" href="./../../images/logo.webp" />
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="./../css/forms.css?v=<?php echo filemtime('./../css/forms.css'); ?>" />
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 </head>
 <body>
     <!-- Navbar con más opciones (alternativa) -->
@@ -857,7 +860,9 @@ $plantillas = $plantilla_stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
     <script src="./../js/crear.js?v=<?php echo filemtime('../js/crear.js'); ?>"></script>
-
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 </html>

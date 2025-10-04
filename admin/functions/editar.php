@@ -373,9 +373,12 @@ foreach($ubicaciones as $ub) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="./../css/editar.css?v=<?php echo filemtime('./../css/editar.css'); ?>" />
     <!-- Icon page -->
     <link rel="shortcut icon" href="./../../images/logo.webp" />
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="./../css/forms.css?v=<?php echo filemtime('./../css/forms.css'); ?>" />
 </head>
 <body>
     <!-- Navbar -->
@@ -585,14 +588,20 @@ foreach($ubicaciones as $ub) {
                                 value="<?php echo $ceremonia ? htmlspecialchars($ceremonia['google_maps_url']) : ''; ?>">
                         </div>
                         
-                        <!-- Imagen Ceremonia - DENTRO de la columna de ceremonia -->
+                        <!-- Imagen Ceremonia -->
                         <div class="form-group">
                             <label for="ceremonia_imagen" class="form-label">Imagen de la Ceremonia (opcional)</label>
                             
                             <?php if ($ceremonia && $ceremonia['imagen']): ?>
                                 <div class="current-image mb-2">
                                     <img src="../../<?php echo $ceremonia['imagen']; ?>" alt="Imagen actual" class="img-thumbnail" style="max-height: 150px;">
-                                    <div class="form-text mt-1">Imagen actual</div>
+                                    <div class="d-flex justify-content-between align-items-center mt-2">
+                                        <div class="form-text">Imagen actual</div>
+                                        <button type="button" onclick="eliminarImagen('ceremonia', <?php echo $id; ?>)" 
+                                            class="btn btn-danger btn-sm">
+                                            <i class="bi bi-trash"></i> Eliminar
+                                        </button>
+                                    </div>
                                 </div>
                             <?php endif; ?>
                             
@@ -638,14 +647,20 @@ foreach($ubicaciones as $ub) {
                                 value="<?php echo $evento ? htmlspecialchars($evento['google_maps_url']) : ''; ?>">
                         </div>
                         
-                        <!-- Imagen Evento - DENTRO de la columna de evento -->
+                        <!-- Imagen Evento -->
                         <div class="form-group">
                             <label for="evento_imagen" class="form-label">Imagen del Evento (opcional)</label>
                             
                             <?php if ($evento && $evento['imagen']): ?>
                                 <div class="current-image mb-2">
                                     <img src="../../<?php echo $evento['imagen']; ?>" alt="Imagen actual" class="img-thumbnail" style="max-height: 150px;">
-                                    <div class="form-text mt-1">Imagen actual</div>
+                                    <div class="d-flex justify-content-between align-items-center mt-2">
+                                        <div class="form-text">Imagen actual</div>
+                                        <button type="button" onclick="eliminarImagen('evento', <?php echo $id; ?>)" 
+                                            class="btn btn-danger btn-sm">
+                                            <i class="bi bi-trash"></i> Eliminar
+                                        </button>
+                                    </div>
                                 </div>
                             <?php endif; ?>
                             
@@ -695,7 +710,13 @@ foreach($ubicaciones as $ub) {
                         <?php if ($invitacion['imagen_hero']): ?>
                             <div class="current-image mb-2">
                                 <img src="../../<?php echo $invitacion['imagen_hero']; ?>" alt="Imagen actual" class="img-thumbnail">
-                                <div class="form-text mt-1">Imagen actual</div>
+                                <div class="d-flex justify-content-between align-items-center mt-2">
+                                    <div class="form-text">Imagen actual</div>
+                                    <button type="button" onclick="eliminarImagen('hero', <?php echo $id; ?>)" 
+                                        class="btn btn-danger btn-sm">
+                                        <i class="bi bi-trash"></i> Eliminar
+                                    </button>
+                                </div>
                             </div>
                         <?php endif; ?>
                         
@@ -710,17 +731,23 @@ foreach($ubicaciones as $ub) {
                         <div id="hero-preview" class="mt-2">
                             <img id="hero-preview-img" src="#" alt="Preview" class="img-thumbnail d-none img-preview">
                         </div>
-                        <div class="form-text">Deja vacío para mantener la imagen actual</div>
+                        <div class="form-text">Sube una nueva imagen o deja vacío para mantener la actual</div>
                     </div>
                     
-                    <!-- Imagen Dedicatoria -->
+                   <!-- Imagen Dedicatoria -->
                     <div class="form-group">
                         <label for="imagen_dedicatoria" class="form-label">Imagen Dedicatoria</label>
                         
                         <?php if ($invitacion['imagen_dedicatoria']): ?>
                             <div class="current-image mb-2">
                                 <img src="../../<?php echo $invitacion['imagen_dedicatoria']; ?>" alt="Imagen actual" class="img-thumbnail">
-                                <div class="form-text mt-1">Imagen actual</div>
+                                <div class="d-flex justify-content-between align-items-center mt-2">
+                                    <div class="form-text">Imagen actual</div>
+                                    <button type="button" onclick="eliminarImagen('dedicatoria', <?php echo $id; ?>)" 
+                                        class="btn btn-danger btn-sm">
+                                        <i class="bi bi-trash"></i> Eliminar
+                                    </button>
+                                </div>
                             </div>
                         <?php endif; ?>
                         
@@ -735,9 +762,9 @@ foreach($ubicaciones as $ub) {
                         <div id="dedicatoria-preview" class="mt-2">
                             <img id="dedicatoria-preview-img" src="#" alt="Preview" class="img-thumbnail d-none img-preview">
                         </div>
-                        <div class="form-text">Deja vacío para mantener la imagen actual</div>
+                        <div class="form-text">Sube una nueva imagen o deja vacío para mantener la actual</div>
                     </div>
-                    
+
                     <!-- Imagen Destacada -->
                     <div class="form-group">
                         <label for="imagen_destacada" class="form-label">Imagen Destacada</label>
@@ -745,7 +772,13 @@ foreach($ubicaciones as $ub) {
                         <?php if ($invitacion['imagen_destacada']): ?>
                             <div class="current-image mb-2">
                                 <img src="../../<?php echo $invitacion['imagen_destacada']; ?>" alt="Imagen actual" class="img-thumbnail">
-                                <div class="form-text mt-1">Imagen actual</div>
+                                <div class="d-flex justify-content-between align-items-center mt-2">
+                                    <div class="form-text">Imagen actual</div>
+                                    <button type="button" onclick="eliminarImagen('destacada', <?php echo $id; ?>)" 
+                                        class="btn btn-danger btn-sm">
+                                        <i class="bi bi-trash"></i> Eliminar
+                                    </button>
+                                </div>
                             </div>
                         <?php endif; ?>
                         
@@ -760,7 +793,7 @@ foreach($ubicaciones as $ub) {
                         <div id="destacada-preview" class="mt-2">
                             <img id="destacada-preview-img" src="#" alt="Preview" class="img-thumbnail d-none img-preview">
                         </div>
-                        <div class="form-text">Deja vacío para mantener la imagen actual</div>
+                        <div class="form-text">Sube una nueva imagen o deja vacío para mantener la actual</div>
                     </div>
                 </div>
             </div>
@@ -956,7 +989,13 @@ foreach($ubicaciones as $ub) {
                         <?php if ($dresscode_data && $dresscode_data['hombres']): ?>
                             <div class="current-image mb-2">
                                 <img src="../../<?php echo $dresscode_data['hombres']; ?>" alt="Imagen actual" class="img-thumbnail">
-                                <div class="form-text mt-1">Imagen actual</div>
+                                <div class="d-flex justify-content-between align-items-center mt-2">
+                                    <div class="form-text">Imagen actual</div>
+                                    <button type="button" onclick="eliminarImagen('dresscode_hombres', <?php echo $id; ?>)" 
+                                        class="btn btn-danger btn-sm">
+                                        <i class="bi bi-trash"></i> Eliminar
+                                    </button>
+                                </div>
                             </div>
                         <?php endif; ?>
                         
@@ -971,7 +1010,7 @@ foreach($ubicaciones as $ub) {
                         <div id="dresscode-hombres-preview" class="mt-2">
                             <img id="dresscode-hombres-preview-img" src="#" alt="Preview" class="img-thumbnail d-none img-preview">
                         </div>
-                        <div class="form-text">Deja vacío para mantener la imagen actual</div>
+                        <div class="form-text">Sube una nueva imagen o deja vacío para mantener la actual</div>
                     </div>
                     
                     <div class="form-group">
@@ -980,7 +1019,13 @@ foreach($ubicaciones as $ub) {
                         <?php if ($dresscode_data && $dresscode_data['mujeres']): ?>
                             <div class="current-image mb-2">
                                 <img src="../../<?php echo $dresscode_data['mujeres']; ?>" alt="Imagen actual" class="img-thumbnail">
-                                <div class="form-text mt-1">Imagen actual</div>
+                                <div class="d-flex justify-content-between align-items-center mt-2">
+                                    <div class="form-text">Imagen actual</div>
+                                    <button type="button" onclick="eliminarImagen('dresscode_mujeres', <?php echo $id; ?>)" 
+                                        class="btn btn-danger btn-sm">
+                                        <i class="bi bi-trash"></i> Eliminar
+                                    </button>
+                                </div>
                             </div>
                         <?php endif; ?>
                         
@@ -995,7 +1040,7 @@ foreach($ubicaciones as $ub) {
                         <div id="dresscode-mujeres-preview" class="mt-2">
                             <img id="dresscode-mujeres-preview-img" src="#" alt="Preview" class="img-thumbnail d-none img-preview">
                         </div>
-                        <div class="form-text">Deja vacío para mantener la imagen actual</div>
+                        <div class="form-text">Sube una nueva imagen o deja vacío para mantener la actual</div>
                     </div>
                 </div>
                 <div class="form-group">
@@ -1101,6 +1146,9 @@ foreach($ubicaciones as $ub) {
 
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Custom JS -->
     <script src="./../js/editar.js?v=<?php echo filemtime('./../js/editar.js'); ?>"></script>
 </body>
 </html>

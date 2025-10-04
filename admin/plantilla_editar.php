@@ -6,7 +6,6 @@ $db = $database->getConnection();
 
 $id = $_GET['id'] ?? 0;
 
-// --- NUEVA LÓGICA: VERIFICAR SI LA COLUMNA invitacion_ejemplo_id EXISTE ---
 $invitacionEjemploColumnExists = false;
 try {
     $check_column_query = "DESCRIBE plantillas invitacion_ejemplo_id";
@@ -15,10 +14,8 @@ try {
         $invitacionEjemploColumnExists = true;
     }
 } catch (PDOException $e) {
-    // La columna no existe, lo cual es esperado en algunos casos.
     $invitacionEjemploColumnExists = false;
 }
-// --- FIN DE LA NUEVA LÓGICA ---
 
 // Solo obtenemos las invitaciones si la columna existe
 $invitaciones = [];
@@ -60,7 +57,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($nombre) || empty($carpeta) || empty($archivo_principal)) {
         $error = "Los campos Nombre, Carpeta y Archivo PHP son obligatorios.";
     } else {
-        // --- LÓGICA DINÁMICA PARA ACTUALIZAR ---
         if ($invitacionEjemploColumnExists) {
             $invitacion_ejemplo_id = !empty($_POST['invitacion_ejemplo_id']) ? $_POST['invitacion_ejemplo_id'] : null;
             
@@ -81,7 +77,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             $error = "Error al actualizar la plantilla.";
         }
-        // --- FIN DE LA LÓGICA DINÁMICA ---
     }
 }
 ?>
@@ -92,9 +87,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Plantilla - <?php echo htmlspecialchars($plantilla['nombre']); ?></title>
+    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="./css/plantilla_editar.css">
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="./css/plantilla_editar.css?v=<?php echo filemtime('./css/plantilla_editar.css'); ?>">
+    <!-- Icon page -->
     <link rel="shortcut icon" href="./../images/logo.webp" />
 </head>
 <body>
@@ -114,6 +115,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </nav>
 
     <div class="container py-4">
+        <!-- Alertas de Bootstrap (serán reemplazadas por SweetAlert2) -->
         <?php if (isset($success)): ?>
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 <i class="bi bi-check-circle me-2"></i>
@@ -323,66 +325,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </form>
     </div>
 
+    <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <script>
-        // Validación de formulario Bootstrap
-        (function() {
-            'use strict';
-            window.addEventListener('load', function() {
-                var forms = document.getElementsByClassName('needs-validation');
-                var validation = Array.prototype.filter.call(forms, function(form) {
-                    form.addEventListener('submit', function(event) {
-                        if (form.checkValidity() === false) {
-                            event.preventDefault();
-                            event.stopPropagation();
-                        }
-                        form.classList.add('was-validated');
-                    }, false);
-                });
-            }, false);
-        })();
-
-        // Auto-ocultar mensajes de éxito después de 5 segundos
-        setTimeout(function() {
-            const alerts = document.querySelectorAll('.alert-success');
-            alerts.forEach(function(alert) {
-                const bsAlert = new bootstrap.Alert(alert);
-                bsAlert.close();
-            });
-        }, 5000);
-
-        // Actualizar preview del estado en tiempo real
-        document.getElementById('activa').addEventListener('change', function() {
-            const badge = this.closest('.form-check').querySelector('.badge');
-            const icon = badge.querySelector('i');
-            const text = badge.querySelector('i').nextSibling;
-            
-            if (this.checked) {
-                badge.className = 'badge bg-success';
-                icon.className = 'bi bi-check-circle me-1';
-                badge.innerHTML = '<i class="bi bi-check-circle me-1"></i>Activa';
-            } else {
-                badge.className = 'badge bg-secondary';
-                icon.className = 'bi bi-pause-circle me-1';
-                badge.innerHTML = '<i class="bi bi-pause-circle me-1"></i>Inactiva';
-            }
-        });
-
-        <?php if ($invitacionEjemploColumnExists): ?>
-        // Mejorar el selector de invitación con información adicional
-        document.getElementById('invitacion_ejemplo_id').addEventListener('change', function() {
-            if (this.value) {
-                const selectedOption = this.options[this.selectedIndex];
-                const match = selectedOption.text.match(/\(([^)]+)\)$/);
-                if (match) {
-                    const slug = match[1];
-                    console.log('Invitación seleccionada:', selectedOption.text);
-                    console.log('URL que se usará:', `/invitacion/${slug}`);
-                }
-            }
-        });
-        <?php endif; ?>
-    </script>
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Custom JS -->
+    <script src="./js/plantilla_editar.js?v=<?php echo filemtime('./js/plantilla_editar.js'); ?>"></script>
 </body>
 </html>

@@ -131,6 +131,11 @@ body {
     font-weight: 600;
 }
 
+.success-alert,
+.error-alert {
+    display: none;
+}
+
 /* Layout para Desktop (1200px+) */
 @media (min-width: 1200px) {
     /* Grid de dos columnas para secciones normales */

@@ -4,7 +4,6 @@ require_once '../config/database.php';
 $database = new Database();
 $db = $database->getConnection();
 
-// --- NUEVA LÓGICA: VERIFICAR SI LA COLUMNA EXISTE ---
 $invitacionEjemploColumnExists = false;
 try {
     $check_column_query = "DESCRIBE plantillas invitacion_ejemplo_id";
@@ -13,10 +12,8 @@ try {
         $invitacionEjemploColumnExists = true;
     }
 } catch (PDOException $e) {
-    // La columna no existe, lo cual es esperado en algunos casos.
     $invitacionEjemploColumnExists = false;
 }
-// --- FIN DE LA NUEVA LÓGICA ---
 
 // Solo obtenemos las invitaciones si la columna existe
 $invitaciones = [];
@@ -27,7 +24,6 @@ if ($invitacionEjemploColumnExists) {
     $invitaciones = $invitaciones_stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nombre = $_POST['nombre'];
     $descripcion = $_POST['descripcion'];
@@ -35,7 +31,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $archivo_principal = $_POST['archivo_principal'];
     $imagen_preview = $_POST['imagen_preview'];
 
-    // --- LÓGICA DINÁMICA PARA INSERTAR ---
     if ($invitacionEjemploColumnExists) {
         $invitacion_ejemplo_id = !empty($_POST['invitacion_ejemplo_id']) ? $_POST['invitacion_ejemplo_id'] : null;
         
@@ -50,7 +45,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $stmt = $db->prepare($query);
     $stmt->execute($params);
-    // --- FIN DE LA LÓGICA DINÁMICA ---
 
     header("Location: plantillas.php");
     exit;
@@ -67,9 +61,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="./css/plantilla_nueva.css">
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <!-- Icon page -->
-    <link rel="shortcut icon" href="./../images/logo.webp" />
+    <link rel="shortcut icon" href="./../images/logo.webp"/>
 </head>
 <body>
     <!-- Navbar -->
@@ -184,7 +181,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                 </div>
 
-                <!-- NUEVO CAMPO: Invitación Ejemplo -->
+                <!-- Invitación Ejemplo -->
                 <div class="row">
                     <div class="col-12">
                         <div class="mb-3">
@@ -240,44 +237,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <script>
-        // Validación de formulario Bootstrap
-        (function() {
-            'use strict';
-            window.addEventListener('load', function() {
-                var forms = document.getElementsByClassName('needs-validation');
-                var validation = Array.prototype.filter.call(forms, function(form) {
-                    form.addEventListener('submit', function(event) {
-                        if (form.checkValidity() === false) {
-                            event.preventDefault();
-                            event.stopPropagation();
-                        }
-                        form.classList.add('was-validated');
-                    }, false);
-                });
-            }, false);
-        })();
-
-        // Auto-generar nombre de carpeta basado en el nombre
-        document.getElementById('nombre').addEventListener('input', function(e) {
-            const nombre = e.target.value;
-            const carpeta = 'plantilla-' + nombre.toLowerCase()
-                .replace(/[^a-z0-9\s-]/g, '')
-                .replace(/\s+/g, '-')
-                .replace(/-+/g, '-');
-            document.getElementById('carpeta').value = carpeta;
-        });
-
-        // Mejorar el selector de invitación con búsqueda (opcional)
-        document.getElementById('invitacion_ejemplo_id').addEventListener('change', function() {
-            if (this.value) {
-                const selectedOption = this.options[this.selectedIndex];
-                const slug = selectedOption.text.match(/\(([^)]+)\)$/)[1];
-                console.log('Invitación seleccionada:', selectedOption.text);
-                console.log('URL que se usará:', `/invitacion/${slug}`);
-            }
-        });
-    </script>
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Custom JS -->
+    <script src="./js/plantilla_nueva.js?v=<?php echo filemtime('./js/plantilla_nueva.js'); ?>"></script>
 </body>
 </html>
