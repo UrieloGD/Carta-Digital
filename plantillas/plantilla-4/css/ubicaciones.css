@@ -1,5 +1,6 @@
 /* ================================================
    SECCIÓN UBICACIONES - ELEGANTE MINIMALISTA MEJORADA
+   CON SOPORTE PARA IMÁGENES OPCIONALES
    ================================================ */
 
 .ubicaciones {
@@ -92,7 +93,7 @@
     margin: 0 auto;
 }
 
-/* Cards con diseño elegante */
+/* Cards con diseño elegante - VERSIÓN BASE (sin imágenes) */
 .ubicacion-card {
     opacity: 0;
     transform: translateY(40px);
@@ -139,17 +140,23 @@
     opacity: 1;
 }
 
-/* Imagen optimizada */
+/* ================================================
+   VERSIÓN CON IMÁGENES - MANTIENE PROPORCIONES
+   ================================================ */
+
+/* Contenedor de imagen optimizado para mantener proporciones */
 .ubicacion-image {
     position: relative;
     height: 220px;
     overflow: hidden;
+    background: var(--bg-dark-light); /* Fondo de respaldo */
 }
 
 .ubicacion-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center;
     transition: var(--transition-smooth);
     filter: grayscale(15%) brightness(0.85) contrast(1.1);
 }
@@ -159,42 +166,10 @@
     filter: grayscale(0%) brightness(1) contrast(1.1);
 }
 
-.ubicacion-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(
-        to bottom, 
-        rgba(10, 10, 10, 0.1) 0%,
-        rgba(10, 10, 10, 0.3) 50%,
-        rgba(10, 10, 10, 0.8) 100%
-    );
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: var(--transition-smooth);
-}
+/* ELIMINADO: Overlay con emojis que aparecía en hover */
+/* .ubicacion-overlay y .ubicacion-icon han sido removidos */
 
-.ubicacion-card-inner:hover .ubicacion-overlay {
-    opacity: 1;
-}
-
-.ubicacion-icon {
-    font-size: 3rem;
-    opacity: 0.9;
-    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
-    animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-}
-
-/* Badge mejorado */
+/* Badge mejorado - posición adaptativa */
 .ubicacion-badge {
     position: absolute;
     top: 20px;
@@ -213,11 +188,19 @@
     backdrop-filter: blur(10px);
 }
 
-/* Contenido elegante */
+/* ================================================
+   CONTENIDO ELEGANTE - ADAPTATIVO PARA CON/SIN IMÁGENES
+   ================================================ */
+
 .ubicacion-content {
     padding: 45px 35px;
     position: relative;
     z-index: 2;
+}
+
+/* Ajuste específico para cards con imágenes */
+.ubicacion-card:has(.ubicacion-image) .ubicacion-content {
+    padding: 35px 30px 40px;
 }
 
 .ubicacion-nombre {
@@ -229,6 +212,12 @@
     letter-spacing: 1px;
     line-height: 1.3;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Ajuste para nombre cuando hay imagen */
+.ubicacion-card:has(.ubicacion-image) .ubicacion-nombre {
+    margin-bottom: 25px;
+    font-size: 1.8rem;
 }
 
 /* Detalles con iconos SVG */
@@ -310,6 +299,12 @@
     font-style: italic;
 }
 
+/* Ajuste para descripción cuando hay imagen */
+.ubicacion-card:has(.ubicacion-image) .ubicacion-descripcion {
+    margin-bottom: 25px;
+    padding: 15px;
+}
+
 /* Botones mejorados */
 .ubicacion-actions {
     margin-top: 35px;
@@ -374,6 +369,25 @@
     font-weight: 600;
 }
 
+/* Ajuste para botones cuando hay imagen */
+.ubicacion-card:has(.ubicacion-image) .ubicacion-actions {
+    margin-top: 25px;
+}
+
+/* ================================================
+   ESTADOS ESPECIALES Y ANIMACIONES
+   ================================================ */
+
+/* Estados para cuando no hay imágenes en ninguna card */
+.ubicaciones:not(:has(.ubicacion-image)) .ubicaciones-grid {
+    max-width: 900px;
+}
+
+/* Estados para cuando todas las cards tienen imágenes */
+.ubicaciones:has(.ubicacion-card:has(.ubicacion-image)) .ubicaciones-grid {
+    gap: 40px;
+}
+
 /* Animaciones mejoradas */
 @keyframes fadeInUp {
     from {
@@ -386,7 +400,9 @@
     }
 }
 
-/* RESPONSIVE DESIGN OPTIMIZADO */
+/* ================================================
+   RESPONSIVE DESIGN OPTIMIZADO PARA AMBAS VERSIONES
+   ================================================ */
 
 /* Tablet grande */
 @media (max-width: 1024px) {
@@ -403,8 +419,16 @@
         padding: 40px 30px;
     }
     
+    .ubicacion-card:has(.ubicacion-image) .ubicacion-content {
+        padding: 30px 25px 35px;
+    }
+    
     .ubicacion-nombre {
         font-size: 1.75rem;
+    }
+    
+    .ubicacion-card:has(.ubicacion-image) .ubicacion-nombre {
+        font-size: 1.7rem;
     }
 }
 
@@ -432,9 +456,18 @@
         padding: 35px 25px;
     }
     
+    .ubicacion-card:has(.ubicacion-image) .ubicacion-content {
+        padding: 25px 20px 30px;
+    }
+    
     .ubicacion-nombre {
         font-size: 1.6rem;
         margin-bottom: 30px;
+    }
+    
+    .ubicacion-card:has(.ubicacion-image) .ubicacion-nombre {
+        font-size: 1.5rem;
+        margin-bottom: 20px;
     }
     
     .detail-item {
@@ -488,10 +521,19 @@
         padding: 30px 20px;
     }
     
+    .ubicacion-card:has(.ubicacion-image) .ubicacion-content {
+        padding: 20px 15px 25px;
+    }
+    
     .ubicacion-nombre {
         font-size: 1.45rem;
         margin-bottom: 25px;
         line-height: 1.4;
+    }
+    
+    .ubicacion-card:has(.ubicacion-image) .ubicacion-nombre {
+        font-size: 1.35rem;
+        margin-bottom: 15px;
     }
     
     .detail-item {
@@ -513,6 +555,11 @@
     .ubicacion-descripcion {
         padding: 15px;
         margin-bottom: 25px;
+    }
+    
+    .ubicacion-card:has(.ubicacion-image) .ubicacion-descripcion {
+        padding: 12px;
+        margin-bottom: 20px;
     }
     
     .ubicacion-descripcion p {
@@ -553,8 +600,16 @@
         padding: 25px 18px;
     }
     
+    .ubicacion-card:has(.ubicacion-image) .ubicacion-content {
+        padding: 18px 15px 22px;
+    }
+    
     .ubicacion-nombre {
         font-size: 1.3rem;
+    }
+    
+    .ubicacion-card:has(.ubicacion-image) .ubicacion-nombre {
+        font-size: 1.25rem;
     }
     
     .ubicacion-image {
@@ -577,11 +632,57 @@
         padding: 20px 15px;
     }
     
+    .ubicacion-card:has(.ubicacion-image) .ubicacion-content {
+        padding: 15px 12px 18px;
+    }
+    
     .ubicacion-nombre {
         font-size: 1.2rem;
+    }
+    
+    .ubicacion-card:has(.ubicacion-image) .ubicacion-nombre {
+        font-size: 1.15rem;
     }
     
     .ubicacion-image {
         height: 150px;
     }
+}
+
+/* ================================================
+   MEJORAS DE ACCESIBILIDAD Y RENDIMIENTO
+   ================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+    .ubicacion-card-inner,
+    .ubicacion-image img,
+    .ubicacion-overlay,
+    .ubicacion-icon,
+    .detail-item,
+    .detail-icon,
+    .ubicacion-button {
+        transition: none;
+        animation: none;
+    }
+    
+    .ubicacion-card-inner:hover {
+        transform: none;
+    }
+    
+    .ubicacion-card-inner:hover .ubicacion-image img {
+        transform: none;
+        filter: none;
+    }
+}
+
+/* Estados de carga */
+.ubicaciones.loading .ubicacion-card {
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+.ubicaciones.loaded .ubicacion-card {
+    opacity: 1;
+    transform: translateY(0);
+    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }

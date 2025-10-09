@@ -3,6 +3,18 @@ let previousValues = { days: null, hours: null, minutes: null, seconds: null };
 let countdownInterval;
 let isAnimating = false;
 
+// Detectar tipo de contador
+function getCountdownType() {
+    const countdownElement = document.getElementById('countdown');
+    if (!countdownElement) return null;
+    
+    if (countdownElement.classList.contains('countdown-simple')) {
+        return 'simple';
+    } else {
+        return 'complete';
+    }
+}
+
 // Mejorar la animación de cambio de números
 function animateNumberChange(element, newValue) {
     if (!element || isAnimating) return;
@@ -121,18 +133,66 @@ function isMobileDevice() {
     return window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 }
 
-function initCountdown() {
-    // Verificar si se debe mostrar el contador
-    if (!invitacionData?.mostrarContador) {
-        const contadorElement = document.querySelector('.contador');
-        if (contadorElement) {
-            contadorElement.style.display = 'none';
-        }
-        console.log('Contador deshabilitado por configuración');
+// CONTADOR SIMPLE - FUNCIÓN ESPECÍFICA
+function initSimpleCountdown(fechaEvento) {
+    const daysElement = document.getElementById('days');
+    const contadorContainer = document.querySelector('.contador-simple');
+    
+    if (!daysElement) {
+        console.error('No se encontró el elemento days para contador simple');
         return;
     }
+
+    function updateSimpleCountdown() {
+        const ahora = new Date();
+        const diferencia = fechaEvento - ahora;
+        
+        if (diferencia <= 0) {
+            // El evento ya pasó
+            daysElement.textContent = '0';
+            if (contadorContainer) {
+                contadorContainer.classList.add('countdown-expired');
+            }
+            return;
+        }
+        
+        // Calcular días restantes
+        const diasRestantes = Math.floor(diferencia / (1000 * 60 * 60 * 24));
+        
+        // Actualizar el elemento solo si cambió
+        if (previousValues.days !== diasRestantes.toString()) {
+            daysElement.textContent = diasRestantes.toString();
+            
+            // Efecto visual de actualización
+            daysElement.classList.add('updating');
+            setTimeout(() => {
+                daysElement.classList.remove('updating');
+            }, 600);
+            
+            previousValues.days = diasRestantes.toString();
+        }
+        
+        // Estados especiales
+        if (contadorContainer) {
+            contadorContainer.classList.toggle('very-close', diasRestantes <= 7);
+            contadorContainer.classList.toggle('final-countdown', diasRestantes <= 3);
+            
+            if (diasRestantes === 0) {
+                const horasRestantes = Math.floor((diferencia % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                if (horasRestantes <= 24) {
+                    contadorContainer.classList.add('countdown-expired');
+                }
+            }
+        }
+    }
     
-    // Obtener elementos del DOM
+    // Actualizar inmediatamente y luego cada minuto
+    updateSimpleCountdown();
+    return setInterval(updateSimpleCountdown, 60000); // Actualizar cada minuto
+}
+
+// CONTADOR COMPLETO - FUNCIÓN EXISTENTE (ligeramente modificada)
+function initCompleteCountdown(fechaEvento) {
     const contadorElement = document.querySelector('.contador');
     const countdownElement = document.getElementById('countdown');
     
@@ -143,26 +203,6 @@ function initCountdown() {
     
     // Agregar clase de cargado
     document.body.classList.add('loaded');
-    
-    // Crear la fecha del evento con manejo de errores mejorado
-    let fechaEvento;
-    try {
-        fechaEvento = parseEventDate(invitacionData.fecha, invitacionData.hora);
-        console.log('Fecha del evento parseada:', fechaEvento);
-    } catch (error) {
-        console.error('Error al parsear la fecha del evento:', error);
-        
-        // Mostrar error al usuario
-        countdownElement.innerHTML = `
-            <div class="time-unit error">
-                <div class="error-message">
-                    <span class="number">⚠️</span>
-                    <span class="label">Error en la fecha</span>
-                </div>
-            </div>
-        `;
-        return;
-    }
     
     function updateCountdown() {
         try {
@@ -205,7 +245,7 @@ function initCountdown() {
             if (contadorElement) {
                 contadorElement.classList.toggle('close-date', dias <= 14);
                 contadorElement.classList.toggle('very-close', dias <= 7);
-                contadorElement.classList.toggle('final-countdown', dias <= 1);
+                contadorContainer.classList.toggle('final-countdown', dias <= 1);
             }
             
             // Obtener elementos del DOM
@@ -296,9 +336,71 @@ function initCountdown() {
     
     // Ejecutar inmediatamente y luego cada segundo
     updateCountdown();
-    countdownInterval = setInterval(updateCountdown, 1000);
+    return setInterval(updateCountdown, 1000);
+}
+
+// FUNCIÓN PRINCIPAL MEJORADA
+function initCountdown() {
+    // Verificar si se debe mostrar el contador
+    if (!invitacionData?.mostrarContador) {
+        const contadorElement = document.querySelector('.contador');
+        if (contadorElement) {
+            contadorElement.style.display = 'none';
+        }
+        console.log('Contador deshabilitado por configuración');
+        return;
+    }
     
-    console.log('Contador inicializado correctamente');
+    // Detectar tipo de contador
+    const countdownType = getCountdownType();
+    if (!countdownType) {
+        console.error('No se pudo determinar el tipo de contador');
+        return;
+    }
+    
+    // Crear la fecha del evento con manejo de errores mejorado
+    let fechaEvento;
+    try {
+        fechaEvento = parseEventDate(invitacionData.fecha, invitacionData.hora);
+        console.log('Fecha del evento parseada:', fechaEvento);
+        console.log('Tipo de contador:', countdownType);
+    } catch (error) {
+        console.error('Error al parsear la fecha del evento:', error);
+        
+        // Mostrar error al usuario
+        const countdownElement = document.getElementById('countdown');
+        if (countdownElement) {
+            countdownElement.innerHTML = `
+                <div class="time-unit error">
+                    <div class="error-message">
+                        <span class="number">⚠️</span>
+                        <span class="label">Error en la fecha</span>
+                    </div>
+                </div>
+            `;
+        }
+        return;
+    }
+    
+    // Inicializar el contador según el tipo
+    if (countdownType === 'simple') {
+        countdownInterval = initSimpleCountdown(fechaEvento);
+        console.log('Contador simple inicializado');
+    } else {
+        countdownInterval = initCompleteCountdown(fechaEvento);
+        console.log('Contador completo inicializado');
+    }
+    
+    // Para desarrollo: actualizar más frecuentemente
+    if ((window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && countdownType === 'simple') {
+        setInterval(() => {
+            const updateFunction = countdownType === 'simple' ? initSimpleCountdown : initCompleteCountdown;
+            if (countdownInterval) {
+                clearInterval(countdownInterval);
+            }
+            countdownInterval = updateFunction(fechaEvento);
+        }, 10000); // Actualizar cada 10 segundos en desarrollo
+    }
 }
 
 // Función para limpiar recursos
@@ -319,14 +421,12 @@ document.addEventListener('visibilitychange', function() {
         // Pausar animaciones cuando la página no es visible
         if (countdownInterval) {
             clearInterval(countdownInterval);
+            countdownInterval = null;
         }
     } else {
         // Reanudar cuando la página es visible
         if (invitacionData?.mostrarContador && !countdownInterval) {
-            const updateCountdown = document.querySelector('.contador')?.updateCountdown;
-            if (updateCountdown) {
-                countdownInterval = setInterval(updateCountdown, 1000);
-            }
+            setTimeout(initCountdown, 1000);
         }
     }
 });
@@ -352,6 +452,15 @@ function safeInit() {
             setTimeout(safeInit, 500);
             return;
         }
+        
+        // Verificar que existe el elemento del contador
+        const countdownElement = document.getElementById('countdown');
+        if (!countdownElement) {
+            console.warn('Elemento countdown no encontrado, reintentando...');
+            setTimeout(safeInit, 500);
+            return;
+        }
+        
         initCountdown();
     } catch (error) {
         console.error('Error en la inicialización del contador:', error);
@@ -367,3 +476,7 @@ if (document.readyState === 'loading') {
 
 // Limpiar recursos al salir
 window.addEventListener('beforeunload', cleanupCountdown);
+
+// Exportar funciones para uso global (opcional)
+window.cleanupCountdown = cleanupCountdown;
+window.reinitCountdown = safeInit;

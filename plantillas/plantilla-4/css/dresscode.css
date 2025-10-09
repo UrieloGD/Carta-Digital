@@ -1,4 +1,4 @@
-/* Sección Dress Code Elegante Minimalista */
+/* Sección Dress Code Elegante Minimalista*/
 .dresscode {
     padding: 2rem 0;
     background: var(--bg-dark);
@@ -66,11 +66,20 @@
     font-weight: 300;
 }
 
+/* Grid mejorado para manejar casos sin imágenes */
 .dresscode-examples {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
     gap: 3rem;
     margin-bottom: 4rem;
+}
+
+/* Estados para tarjetas sin imágenes */
+.dresscode-examples:has(.dresscode-card:only-child) {
+    grid-template-columns: 1fr;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .dresscode-card {
@@ -112,15 +121,26 @@
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
 }
 
+/* Contenedor de imagen - MEJORADO para flexibilidad */
 .dresscode-image-container {
     position: relative;
     margin-bottom: 2rem;
 }
 
+/* Estado cuando no hay imagen */
+.dresscode-card:not(:has(.dresscode-image)) .dresscode-image-container {
+    display: none;
+}
+
+.dresscode-card:not(:has(.dresscode-image)) .dresscode-info {
+    text-align: center;
+    padding: 1rem 0;
+}
+
 .dresscode-image {
     position: relative;
     width: 100%;
-    height: 280px; /* Reducido para hacer más cuadrada */
+    height: 280px;
     border-radius: 10px;
     overflow: hidden;
 }
@@ -129,7 +149,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: top; /* Esto hace que muestre la parte superior */
+    object-position: top;
     transition: var(--transition-smooth);
 }
 
@@ -204,6 +224,7 @@
     font-weight: 300;
 }
 
+/* Paleta de colores - OPCIONAL (mantenemos comentado como en el HTML) */
 .color-palette {
     border-top: 1px solid rgba(212, 196, 168, 0.1);
     padding-top: 1.5rem;
@@ -260,6 +281,7 @@
     opacity: 1;
 }
 
+/* Footer del dresscode - MEJORADO para casos sin tarjetas */
 .dresscode-footer {
     text-align: center;
     border-top: 1px solid rgba(212, 196, 168, 0.1);
@@ -286,7 +308,16 @@
     font-weight: 400;
 }
 
-/* Responsive Design */
+/* Estados para cuando no hay ejemplos de dresscode */
+.dresscode:not(:has(.dresscode-examples .dresscode-card)) .dresscode-examples {
+    display: none;
+}
+
+.dresscode:not(:has(.dresscode-examples .dresscode-card)) .dresscode-description {
+    margin-bottom: 2rem;
+}
+
+/* Responsive Design - MEJORADO */
 @media (max-width: 768px) {
     .dresscode {
         padding: 6rem 0;
@@ -302,7 +333,7 @@
     }
     
     .dresscode-image {
-        height: 220px; /* Más cuadrada en móvil */
+        height: 220px;
     }
     
     .dresscode-header .section-title {
@@ -317,6 +348,11 @@
         width: 20px;
         height: 20px;
     }
+    
+    /* Ajustes para tarjetas sin imágenes en móvil */
+    .dresscode-card:not(:has(.dresscode-image)) {
+        padding: 2rem 1.5rem;
+    }
 }
 
 @media (max-width: 480px) {
@@ -330,11 +366,24 @@
     }
     
     .dresscode-image {
-        height: 200px; /* Proporción más cuadrada */
+        height: 200px;
     }
     
     .note-text {
         font-size: 1.2rem;
+    }
+    
+    .dresscode-title {
+        font-size: 1.6rem;
+    }
+    
+    .dresscode-description-text {
+        font-size: 0.95rem;
+    }
+    
+    /* Ajustes específicos para móvil cuando no hay imágenes */
+    .dresscode-card:not(:has(.dresscode-image)) {
+        margin: 0 0.5rem;
     }
 }
 
@@ -359,4 +408,52 @@
 .dresscode-footer[data-animate="fadeInUp"] {
     animation: fadeInUp 0.8s ease-out forwards;
     animation-delay: var(--delay, 0s);
+}
+
+/* Estados de carga mejorados */
+.dresscode.loading .dresscode-card,
+.dresscode.loading .dresscode-footer {
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.dresscode.loaded .dresscode-card,
+.dresscode.loaded .dresscode-footer {
+    opacity: 1;
+    transform: translateY(0);
+    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Mejoras de accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+    .dresscode-card,
+    .dresscode-card:hover,
+    .dresscode-image img,
+    .color-dot {
+        transition: none;
+        transform: none;
+    }
+    
+    .dresscode-card[data-animate="fadeInUp"],
+    .dresscode-footer[data-animate="fadeInUp"] {
+        animation: none;
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Estados especiales para diferentes configuraciones */
+.dresscode.single-card .dresscode-examples {
+    grid-template-columns: 1fr;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.dresscode.no-cards .dresscode-examples {
+    display: none;
+}
+
+.dresscode.no-cards .dresscode-description {
+    margin-bottom: 2rem;
 }
