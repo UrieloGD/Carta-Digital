@@ -3,14 +3,36 @@ let previousValues = { days: null, hours: null, minutes: null, seconds: null };
 let countdownInterval;
 let isAnimating = false;
 
-// Mejorar la animación de cambio de números
+// Detectar si es contador simple
+function isSimpleCountdown() {
+    return document.querySelector('.countdown-simple') !== null;
+}
+
+// Animación mejorada para contador simple
+function animateSimpleNumberChange(element, newValue) {
+    if (!element || isAnimating) return;
+    
+    isAnimating = true;
+    element.classList.add('updating');
+    
+    setTimeout(() => {
+        element.textContent = newValue;
+        element.setAttribute('data-number', newValue);
+    }, 300);
+    
+    setTimeout(() => {
+        element.classList.remove('updating');
+        isAnimating = false;
+    }, 600);
+}
+
+// Animación para contador completo
 function animateNumberChange(element, newValue) {
     if (!element || isAnimating) return;
     
     isAnimating = true;
     element.classList.add('updating');
     
-    // Crear efecto de parpadeo suave para segundos
     if (element.id === 'seconds') {
         element.style.transform = 'scale(1.1)';
     }
@@ -35,52 +57,25 @@ function createCelebrationEffect() {
     const contador = document.querySelector('.contador');
     if (!contador) return;
     
-    // Agregar clase de celebración
     contador.classList.add('celebration-mode');
     
-    // Crear partículas de celebración (opcional)
-    const particles = [];
-    for (let i = 0; i < 20; i++) {
-        const particle = document.createElement('div');
-        particle.className = 'celebration-particle';
-        particle.style.cssText = `
-            position: absolute;
-            width: 6px;
-            height: 6px;
-            background: var(--gold-accent);
-            border-radius: 50%;
-            left: ${Math.random() * 100}%;
-            top: ${Math.random() * 100}%;
-            opacity: 0;
-            animation: celebrate-particle 3s ease-out infinite;
-            animation-delay: ${Math.random() * 2}s;
-        `;
-        contador.appendChild(particle);
-        particles.push(particle);
+    if (isSimpleCountdown()) {
+        // Efecto especial para contador simple
+        const numberElement = document.querySelector('.time-unit-large .number');
+        if (numberElement) {
+            numberElement.style.animation = 'celebrateSimple 2s infinite ease-in-out';
+        }
     }
-    
-    // Limpiar partículas después de 10 segundos
-    setTimeout(() => {
-        particles.forEach(particle => {
-            if (particle.parentNode) {
-                particle.parentNode.removeChild(particle);
-            }
-        });
-    }, 10000);
 }
 
 // Función mejorada para manejar diferentes formatos de fecha
 function parseEventDate(fecha, hora) {
-    // Lista de formatos posibles
     const formats = [
-        // Con hora específica
         () => new Date(`${fecha} ${hora}`),
         () => new Date(`${fecha}T${hora}`),
         () => new Date(`${fecha}T${hora}:00`),
-        // Solo fecha (mediodía por defecto)
         () => new Date(`${fecha}T12:00:00`),
         () => new Date(`${fecha} 12:00:00`),
-        // Formato manual
         () => {
             const [year, month, day] = fecha.split('-').map(Number);
             const [hours, minutes, seconds = 0] = (hora || '12:00:00').split(':').map(Number);
@@ -102,7 +97,7 @@ function parseEventDate(fecha, hora) {
     throw new Error(`No se pudo parsear la fecha: ${fecha} ${hora || ''}`);
 }
 
-// Función para formatear tiempo con lógica mejorada
+// Función para formatear tiempo
 function formatTimeValue(value, unit) {
     switch (unit) {
         case 'days':
@@ -121,6 +116,7 @@ function isMobileDevice() {
     return window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 }
 
+// Función principal del contador
 function initCountdown() {
     // Verificar si se debe mostrar el contador
     if (!invitacionData?.mostrarContador) {
@@ -132,7 +128,7 @@ function initCountdown() {
         return;
     }
     
-    // Obtener elementos del DOM
+    const isSimple = isSimpleCountdown();
     const contadorElement = document.querySelector('.contador');
     const countdownElement = document.getElementById('countdown');
     
@@ -144,7 +140,7 @@ function initCountdown() {
     // Agregar clase de cargado
     document.body.classList.add('loaded');
     
-    // Crear la fecha del evento con manejo de errores mejorado
+    // Crear la fecha del evento
     let fechaEvento;
     try {
         fechaEvento = parseEventDate(invitacionData.fecha, invitacionData.hora);
@@ -153,14 +149,23 @@ function initCountdown() {
         console.error('Error al parsear la fecha del evento:', error);
         
         // Mostrar error al usuario
-        countdownElement.innerHTML = `
-            <div class="time-unit error">
-                <div class="error-message">
+        if (isSimple) {
+            countdownElement.innerHTML = `
+                <div class="time-unit-large error">
                     <span class="number">⚠️</span>
                     <span class="label">Error en la fecha</span>
                 </div>
-            </div>
-        `;
+            `;
+        } else {
+            countdownElement.innerHTML = `
+                <div class="time-unit error">
+                    <div class="error-message">
+                        <span class="number">⚠️</span>
+                        <span class="label">Error en la fecha</span>
+                    </div>
+                </div>
+            `;
+        }
         return;
     }
     
@@ -172,22 +177,33 @@ function initCountdown() {
             
             // Si el evento ya pasó
             if (distancia < 0) {
-                countdownElement.innerHTML = `
-                    <div class="countdown-expired">
-                        <div class="time-unit celebration">
-                            <div class="celebration-content">
-                                <span class="celebration-emoji">🎉</span>
-                                <span class="celebration-text">¡Es hoy!</span>
-                                <span class="celebration-subtitle">¡Nuestro día especial ha llegado!</span>
+                if (isSimple) {
+                    countdownElement.innerHTML = `
+                        <div class="time-unit-large celebration">
+                            <span class="particle"></span>
+                            <span class="particle"></span>
+                            <span class="particle"></span>
+                            <span class="label">¡Hoy es nuestro gran día!</span>
+                            <span class="number">0</span>
+                        </div>
+                    `;
+                } else {
+                    countdownElement.innerHTML = `
+                        <div class="countdown-expired">
+                            <div class="time-unit celebration">
+                                <div class="celebration-content">
+                                    <span class="celebration-emoji">🎉</span>
+                                    <span class="celebration-text">¡Es hoy!</span>
+                                    <span class="celebration-subtitle">¡Nuestro día especial ha llegado!</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                `;
+                    `;
+                }
                 
                 countdownElement.classList.add('final-day');
                 createCelebrationEffect();
                 
-                // Limpiar el intervalo
                 if (countdownInterval) {
                     clearInterval(countdownInterval);
                     countdownInterval = null;
@@ -208,59 +224,68 @@ function initCountdown() {
                 contadorElement.classList.toggle('final-countdown', dias <= 1);
             }
             
-            // Obtener elementos del DOM
-            const elements = {
-                days: document.getElementById('days'),
-                hours: document.getElementById('hours'),
-                minutes: document.getElementById('minutes'),
-                seconds: document.getElementById('seconds')
-            };
-            
-            // Verificar que todos los elementos existen
-            const missingElements = Object.keys(elements).filter(key => !elements[key]);
-            if (missingElements.length > 0) {
-                console.warn('Elementos faltantes en el contador:', missingElements);
-                return;
-            }
-            
-            // Formatear valores
-            const newValues = {
-                days: formatTimeValue(dias, 'days'),
-                hours: formatTimeValue(horas, 'hours'),
-                minutes: formatTimeValue(minutos, 'minutes'),
-                seconds: formatTimeValue(segundos, 'seconds')
-            };
-            
-            // Actualizar con animación solo si hay cambios
-            Object.keys(newValues).forEach(key => {
-                if (elements[key] && previousValues[key] !== newValues[key]) {
-                    if (previousValues[key] !== null) {
-                        // Solo animar en desktop o si no es segundos
-                        if (!isMobileDevice() || key !== 'seconds') {
-                            animateNumberChange(elements[key], newValues[key]);
+            if (isSimple) {
+                // CONTADOR SIMPLE - Solo días
+                const daysElement = document.getElementById('days');
+                if (daysElement) {
+                    const newValue = formatTimeValue(dias, 'days');
+                    if (previousValues.days !== newValue) {
+                        animateSimpleNumberChange(daysElement, newValue);
+                        previousValues.days = newValue;
+                    }
+                }
+                
+                // Actualizar mensaje para contador simple
+                updateSimpleCountdownMessage(dias);
+                
+            } else {
+                // CONTADOR COMPLETO - Todos los elementos
+                const elements = {
+                    days: document.getElementById('days'),
+                    hours: document.getElementById('hours'),
+                    minutes: document.getElementById('minutes'),
+                    seconds: document.getElementById('seconds')
+                };
+                
+                const missingElements = Object.keys(elements).filter(key => !elements[key]);
+                if (missingElements.length > 0) {
+                    console.warn('Elementos faltantes en el contador:', missingElements);
+                    return;
+                }
+                
+                const newValues = {
+                    days: formatTimeValue(dias, 'days'),
+                    hours: formatTimeValue(horas, 'hours'),
+                    minutes: formatTimeValue(minutos, 'minutes'),
+                    seconds: formatTimeValue(segundos, 'seconds')
+                };
+                
+                Object.keys(newValues).forEach(key => {
+                    if (elements[key] && previousValues[key] !== newValues[key]) {
+                        if (previousValues[key] !== null) {
+                            if (!isMobileDevice() || key !== 'seconds') {
+                                animateNumberChange(elements[key], newValues[key]);
+                            } else {
+                                elements[key].textContent = newValues[key];
+                                elements[key].setAttribute('data-number', newValues[key]);
+                            }
                         } else {
-                            // En móvil, cambio directo para segundos
                             elements[key].textContent = newValues[key];
                             elements[key].setAttribute('data-number', newValues[key]);
                         }
-                    } else {
-                        // Primera carga sin animación
-                        elements[key].textContent = newValues[key];
-                        elements[key].setAttribute('data-number', newValues[key]);
+                        previousValues[key] = newValues[key];
                     }
-                    previousValues[key] = newValues[key];
-                }
-            });
-            
-            // Actualizar mensaje dinámico
-            updateCountdownMessage(dias, horas, minutos);
+                });
+                
+                updateCountdownMessage(dias, horas, minutos);
+            }
             
         } catch (error) {
             console.error('Error en updateCountdown:', error);
         }
     }
     
-    // Función para mensaje dinámico
+    // Función para mensaje dinámico del contador completo
     function updateCountdownMessage(dias, horas, minutos) {
         const messageElement = document.querySelector('.countdown-message .script-text');
         if (!messageElement) return;
@@ -294,11 +319,48 @@ function initCountdown() {
         }
     }
     
+    // Función para mensaje del contador simple
+    function updateSimpleCountdownMessage(dias) {
+        const labelElement = document.querySelector('.time-unit-large .label');
+        if (!labelElement) return;
+        
+        let mensaje = '';
+        
+        if (dias === 0) {
+            mensaje = '¡Hoy es nuestro gran día!';
+        } else if (dias === 1) {
+            mensaje = 'Mañana será nuestro día especial';
+        } else if (dias <= 7) {
+            mensaje = `¡Solo ${dias} días para nuestro gran día!`;
+        } else if (dias <= 30) {
+            mensaje = `Faltan ${dias} días para celebrar juntos`;
+        } else {
+            // Mantener la frase aleatoria original para más de 30 días
+            mensaje = labelElement.getAttribute('data-original-text') || labelElement.textContent;
+        }
+        
+        if (labelElement.textContent !== mensaje) {
+            labelElement.style.opacity = '0.7';
+            setTimeout(() => {
+                labelElement.textContent = mensaje;
+                labelElement.style.opacity = '1';
+            }, 300);
+        }
+    }
+    
+    // Guardar texto original para contador simple
+    if (isSimpleCountdown()) {
+        const labelElement = document.querySelector('.time-unit-large .label');
+        if (labelElement) {
+            labelElement.setAttribute('data-original-text', labelElement.textContent);
+        }
+    }
+    
     // Ejecutar inmediatamente y luego cada segundo
     updateCountdown();
     countdownInterval = setInterval(updateCountdown, 1000);
     
-    console.log('Contador inicializado correctamente');
+    console.log('Contador inicializado correctamente - Tipo:', isSimple ? 'Simple' : 'Completo');
 }
 
 // Función para limpiar recursos
@@ -308,43 +370,24 @@ function cleanupCountdown() {
         countdownInterval = null;
     }
     
-    // Limpiar variables
     previousValues = { days: null, hours: null, minutes: null, seconds: null };
     isAnimating = false;
 }
 
-// Manejar visibilidad de la página para optimizar rendimiento
+// Manejar visibilidad de la página
 document.addEventListener('visibilitychange', function() {
     if (document.hidden) {
-        // Pausar animaciones cuando la página no es visible
         if (countdownInterval) {
             clearInterval(countdownInterval);
         }
     } else {
-        // Reanudar cuando la página es visible
         if (invitacionData?.mostrarContador && !countdownInterval) {
-            const updateCountdown = document.querySelector('.contador')?.updateCountdown;
-            if (updateCountdown) {
-                countdownInterval = setInterval(updateCountdown, 1000);
-            }
+            initCountdown();
         }
     }
 });
 
-// Manejar redimensionado de ventana
-let resizeTimeout;
-window.addEventListener('resize', function() {
-    clearTimeout(resizeTimeout);
-    resizeTimeout = setTimeout(() => {
-        // Reajustar elementos si es necesario
-        const contador = document.querySelector('.contador');
-        if (contador) {
-            contador.classList.toggle('mobile-layout', isMobileDevice());
-        }
-    }, 250);
-});
-
-// Inicialización con múltiples puntos de entrada
+// Inicialización segura
 function safeInit() {
     try {
         if (typeof invitacionData === 'undefined') {

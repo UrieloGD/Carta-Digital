@@ -84,7 +84,7 @@ foreach ($ubicaciones_result as $ubicacion_item) {
 }
 
 // Obtener cronograma
-$cronograma_query = "SELECT * FROM invitacion_cronograma WHERE invitacion_id = ? ORDER BY orden";
+$cronograma_query = "SELECT * FROM invitacion_cronograma WHERE invitacion_id = ? ORDER BY orden, hora";
 $cronograma_stmt = $db->prepare($cronograma_query);
 $cronograma_stmt->execute([$invitacion['id']]);
 $cronograma = $cronograma_stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -99,11 +99,11 @@ $galeria = array_column($galeria_result, 'ruta');
 // Si no hay imágenes en la galería, usar las por defecto
 if (empty($galeria)) {
     $galeria = [
-        "./plantillas/plantilla-1/img/galeria/pareja1.jpg",
-        "./plantillas/plantilla-1/img/galeria/pareja2.jpg", 
-        "./plantillas/plantilla-1/img/galeria/pareja3.jpg",
-        "./plantillas/plantilla-1/img/galeria/pareja4.jpg",
-        "./plantillas/plantilla-1/img/galeria/pareja5.jpg"
+        "./plantillas/plantilla-4.1/img/galeria/pareja1.jpg",
+        "./plantillas/plantilla-4.1/img/galeria/pareja2.jpg", 
+        "./plantillas/plantilla-4.1/img/galeria/pareja3.jpg",
+        "./plantillas/plantilla-4.1/img/galeria/pareja4.jpg",
+        "./plantillas/plantilla-4.1/img/galeria/pareja5.jpg"
     ];
 }
 
@@ -118,15 +118,16 @@ $musica_youtube_url = $invitacion['musica_youtube_url'] ?? '';
 $musica_autoplay = (bool)($invitacion['musica_autoplay'] ?? false);
 $musica_volumen = $invitacion['musica_volumen'] ?? 0.5;
 
-// Construir las rutas de imágenes de dresscode
+// Construir las rutas de imágenes de dresscode - LÓGICA MEJORADA DE PLANTILLA 2
 if ($dresscode_info) {
-    $img_dresscode_hombres = !empty($dresscode_info['hombres']) ? './' . ltrim($dresscode_info['hombres'], '/') : './plantillas/plantilla-4.1/img/dresscode-hombre.jpg';
-    $img_dresscode_mujeres = !empty($dresscode_info['mujeres']) ? './' . ltrim($dresscode_info['mujeres'], '/') : './plantillas/plantilla-4.1/img/dresscode-mujer.jpg';
+    $img_dresscode_hombres = !empty($dresscode_info['hombres']) ? './' . ltrim($dresscode_info['hombres'], '/') : null;
+    $img_dresscode_mujeres = !empty($dresscode_info['mujeres']) ? './' . ltrim($dresscode_info['mujeres'], '/') : null;
     $descripcion_dresscode_hombres = $dresscode_info['descripcion_hombres'] ?? '';
     $descripcion_dresscode_mujeres = $dresscode_info['descripcion_mujeres'] ?? '';
 } else {
-    $img_dresscode_hombres = './plantillas/plantilla-1/img/dresscode2.webp';
-    $img_dresscode_mujeres = './plantillas/plantilla-1/img/dresscode.webp';
+    // Si no hay registro en la tabla dresscode, no mostrar imágenes
+    $img_dresscode_hombres = null;
+    $img_dresscode_mujeres = null;
     $descripcion_dresscode_hombres = '';
     $descripcion_dresscode_mujeres = '';
 }
@@ -164,8 +165,25 @@ $padres_novio = $invitacion['padres_novio'] ?? '';
 $padrinos_novia = $invitacion['padrinos_novia'] ?? '';
 $padrinos_novio = $invitacion['padrinos_novio'] ?? '';
 
-// Configuraciones
+// Configuraciones MEJORADAS con lógica de plantilla 2
 $mostrar_contador = (bool)($invitacion['mostrar_contador'] ?? true);
+$tipo_contador = $invitacion['tipo_contador'] ?? 'completo';
+$mostrar_cronograma = (bool)($invitacion['mostrar_cronograma'] ?? true);
+
+// Frases aleatorias para contador simple (de plantilla 2)
+$frases = [
+    "Días que nos separan del gran día",
+    "Cada día más cerca de nuestro gran día",
+    "Cuenta regresiva en días",
+    "Días antes de vivir algo único",
+    "Solo faltan estos días…",
+    "Días para celebrar juntos",
+    "Días llenos de emoción por venir",
+    "Faltan pocos días para el gran momento"
+];
+
+// Elegir una frase al azar
+$frase_aleatoria = $frases[array_rand($frases)];
 
 // Número de WhatsApp para RSVP desde la base de datos
 $numero_whatsapp_rsvp = !empty($invitacion['whatsapp_confirmacion']) ? $invitacion['whatsapp_confirmacion'] : '3339047672';
@@ -258,7 +276,7 @@ try {
 
 <!-- Contador regresivo elegante minimalista -->
 <?php if ($mostrar_contador): ?>
-<section class="contador" id="contador">
+<section class="contador <?php echo $tipo_contador === 'simple' ? 'contador-simple' : ''; ?>" id="contador">
     <div class="container">
         <div class="contador-content">
             <div class="contador-header">
@@ -267,6 +285,19 @@ try {
                 <p class="contador-subtitle">Hasta nuestro día especial</p>
             </div>
             
+            <?php if ($tipo_contador === 'simple'): ?>
+            <!-- Versión Simple: Solo días (lógica de plantilla 2) -->
+            <div class="countdown countdown-simple" id="countdown">
+                <div class="time-unit time-unit-large">
+                    <span class="particle"></span>
+                    <span class="particle"></span>
+                    <span class="particle"></span>
+                    <span class="label"><?= htmlspecialchars($frase_aleatoria) ?></span>
+                    <span class="number" id="days">0</span>
+                </div>
+            </div>
+            <?php else: ?>
+            <!-- Versión Completa: Días, Horas, Minutos, Segundos -->
             <div class="countdown-wrapper">
                 <div class="countdown-grid" id="countdown">
                     <div class="time-unit">
@@ -302,6 +333,7 @@ try {
                     <p class="script-text">Faltan muy pocos días para celebrar juntos</p>
                 </div>
             </div>
+            <?php endif; ?>
         </div>
     </div>
 </section>
@@ -638,6 +670,7 @@ try {
 <?php endif; ?>
 
 <!-- Sección Cronograma Elegante Minimalista -->
+ <?php if ($mostrar_cronograma && !empty($cronograma)): ?>
 <section class="cronograma" id="cronograma">
     <div class="container">
         <div class="cronograma-content">
@@ -686,6 +719,7 @@ try {
         </div>
     </div>
 </section>
+<?php endif; ?>
 
 <!-- Sección Galería -->
 <section class="galeria" id="galeria" aria-labelledby="galeria-title">
@@ -770,11 +804,9 @@ try {
                 <p class="section-subtitle">Se solicita vestimenta rigurosamente formal para el evento.</p>
             </div>
             
-            <!-- <div class="dresscode-description">
-                <p class="dresscode-text"><?php echo htmlspecialchars($dresscode); ?></p>
-            </div> -->
-            
+            <?php if (!empty($img_dresscode_mujeres) || !empty($img_dresscode_hombres)): ?>
             <div class="dresscode-examples">
+                <?php if (!empty($img_dresscode_mujeres)): ?>
                 <div class="dresscode-card" data-animate="fadeInUp" data-delay="0.2s">
                     <div class="dresscode-image-container">
                         <div class="dresscode-image">
@@ -795,19 +827,11 @@ try {
                             <p class="dresscode-description-text">Rigurosa Formal.</p>
                             <?php endif; ?>
                         </div>
-                        
-                        <!-- <div class="color-palette">
-                            <div class="palette-title">Paleta recomendada</div>
-                            <div class="color-dots">
-                                <div class="color-dot" style="background-color: #8B7355;" title="Marrón elegante"></div>
-                                <div class="color-dot" style="background-color: #D4C4A8;" title="Beige sofisticado"></div>
-                                <div class="color-dot" style="background-color: #2C3E50;" title="Azul marino"></div>
-                                <div class="color-dot" style="background-color: #5D4E75;" title="Ciruela"></div>
-                            </div>
-                        </div> -->
                     </div>
                 </div>
+                <?php endif; ?>
                 
+                <?php if (!empty($img_dresscode_hombres)): ?>
                 <div class="dresscode-card" data-animate="fadeInUp" data-delay="0.4s">
                     <div class="dresscode-image-container">
                         <div class="dresscode-image">
@@ -828,22 +852,15 @@ try {
                             <p class="dresscode-description-text">Rigurosa Formal.</p>
                             <?php endif; ?>
                         </div>
-                        
-                        <!-- <div class="color-palette">
-                            <div class="palette-title">Paleta recomendada</div>
-                            <div class="color-dots">
-                                <div class="color-dot" style="background-color: #1C1C1C;" title="Negro clásico"></div>
-                                <div class="color-dot" style="background-color: #2C3E50;" title="Azul marino"></div>
-                                <div class="color-dot" style="background-color: #4A4A4A;" title="Gris carbón"></div>
-                                <div class="color-dot" style="background-color: #8B7355;" title="Marrón elegante"></div>
-                            </div>
-                        </div> -->
                     </div>
                 </div>
+                <?php endif; ?>
             </div>
+            <?php endif; ?>
         </div>
     </div>
 </section>
+
 
 <!-- Sección Mesa de Regalos Elegante Minimalista 
 <?php if (!empty($mesa_regalos)): ?>
@@ -1083,7 +1100,7 @@ $tipo_rsvp = $invitacion['tipo_rsvp'] ?? 'whatsapp';
                 </div>
 
                 <div class="form-buttons">
-                    <button type="button" class="btn btn-warning" onclick="editarRespuesta()" id="btn-editar-respuesta">
+                    <button type="button" class="btn btn-primary" onclick="editarRespuesta()" id="btn-editar-respuesta">
                         Modificar Respuesta
                     </button>
                     <button type="button" class="btn btn-secondary" onclick="closeRSVPModal()">Cerrar</button>
@@ -1128,7 +1145,7 @@ $tipo_rsvp = $invitacion['tipo_rsvp'] ?? 'whatsapp';
                     </div>
                 </div>
                 
-                <div class="footer-actions">
+                <!-- <div class="footer-actions">
                     <button class="footer-button" onclick="shareWhatsApp()" type="button">
                         <span class="button-icon" style="font-size: 1.1em;">📱</span>
                         <span class="button-text">Compartir invitación</span>
@@ -1137,7 +1154,7 @@ $tipo_rsvp = $invitacion['tipo_rsvp'] ?? 'whatsapp';
                         <span class="button-icon" style="font-size: 1.1em;">🔗</span>
                         <span class="button-text">Copiar enlace</span>
                     </button>
-                </div>
+                </div> -->
                 
                 <div class="footer-thanks">
                     <p class="thanks-text">Gracias por ser parte de nuestro día especial</p>
@@ -1223,6 +1240,8 @@ const invitacionData = {
     fecha: '<?php echo $invitacion['fecha_evento']; ?>',
     hora: '<?php echo $invitacion['hora_evento']; ?>',
     mostrarContador: <?php echo $mostrar_contador ? 'true' : 'false'; ?>,
+    tipoContador: '<?php echo $tipo_contador; ?>',
+    mostrarCronograma: <?php echo $mostrar_cronograma ? 'true' : 'false'; ?>,
 };
 
 // Configurar número de WhatsApp para RSVP

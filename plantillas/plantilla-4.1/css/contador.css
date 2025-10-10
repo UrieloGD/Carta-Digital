@@ -519,3 +519,213 @@
     padding: 2rem;
     color: #c74545; /* Color de error más adecuado para fondo claro */
 }
+
+/* Contador Simple - Adaptado de Plantilla 2 */
+.contador-simple {
+    background: var(--bg-dark-light);
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.contador-simple .contador-content {
+    text-align: center;
+    width: 100%;
+    position: relative;
+    z-index: 2;
+}
+
+.contador-simple .contador-header {
+    margin-bottom: 3rem;
+}
+
+.contador-simple .contador-header h2 {
+    font-family: var(--font-script);
+    font-size: clamp(2rem, 5vw, 2.8rem);
+    color: var(--accent-beige);
+    font-weight: 400;
+    margin-bottom: 1rem;
+}
+
+.contador-simple .countdown-simple {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 2rem 0;
+}
+
+.contador-simple .time-unit-large {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 2rem;
+}
+
+.contador-simple .time-unit-large .number {
+    font-family: var(--font-serif);
+    font-size: clamp(4rem, 12vw, 8rem);
+    color: var(--gold-accent);
+    font-weight: 400;
+    line-height: 1;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.contador-simple .time-unit-large .label {
+    font-family: var(--font-sans);
+    font-size: clamp(1rem, 3vw, 1.3rem);
+    color: var(--accent-beige);
+    font-weight: 300;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    opacity: 0.9;
+}
+
+/* Partículas para el contador simple */
+.contador-simple .particle {
+    position: absolute;
+    background: var(--gold-accent);
+    border-radius: 50%;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.contador-simple .particle:nth-child(1) {
+    width: 6px;
+    height: 6px;
+    top: 20%;
+    left: 30%;
+    animation: floatParticle 3s ease-in-out infinite;
+}
+
+.contador-simple .particle:nth-child(2) {
+    width: 4px;
+    height: 4px;
+    top: 60%;
+    left: 70%;
+    animation: floatParticle 4s ease-in-out infinite 0.5s;
+}
+
+.contador-simple .particle:nth-child(3) {
+    width: 5px;
+    height: 5px;
+    top: 80%;
+    left: 40%;
+    animation: floatParticle 3.5s ease-in-out infinite 1s;
+}
+
+@keyframes floatParticle {
+    0%, 100% {
+        transform: translateY(0) translateX(0);
+        opacity: 0;
+    }
+    50% {
+        transform: translateY(-20px) translateX(10px);
+        opacity: 0.6;
+    }
+}
+
+/* Efecto de actualización para el número simple */
+.contador-simple .time-unit-large .number.updating {
+    animation: pulseSimple 0.8s ease;
+}
+
+@keyframes pulseSimple {
+    0% {
+        transform: scale(1);
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    50% {
+        transform: scale(1.05);
+        text-shadow: 0 0 20px rgba(139, 115, 85, 0.3);
+        color: var(--accent-beige);
+    }
+    100% {
+        transform: scale(1);
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    }
+}
+
+/* Estados especiales para contador simple */
+.contador-simple.final-countdown .time-unit-large .number {
+    animation: celebrateSimple 2s infinite ease-in-out;
+    color: var(--gold-accent);
+}
+
+@keyframes celebrateSimple {
+    0%, 100% {
+        transform: scale(1);
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    50% {
+        transform: scale(1.08);
+        text-shadow: 0 0 25px rgba(139, 115, 85, 0.4);
+    }
+}
+
+.contador-simple.countdown-expired .time-unit-large {
+    animation: bounceIn 1s ease-out;
+}
+
+@keyframes bounceIn {
+    0% {
+        transform: scale(0.3);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    70% {
+        transform: scale(0.9);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Responsive para contador simple */
+@media (max-width: 768px) {
+    .contador-simple {
+        min-height: 50vh;
+        padding: 2rem 0;
+    }
+    
+    .contador-simple .time-unit-large {
+        margin: 0 1rem;
+    }
+    
+    .contador-simple .time-unit-large .number {
+        font-size: clamp(3rem, 10vw, 6rem);
+    }
+    
+    .contador-simple .time-unit-large .label {
+        font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+        letter-spacing: 1px;
+    }
+}
+
+@media (max-width: 480px) {
+    .contador-simple {
+        min-height: 40vh;
+    }
+    
+    .contador-simple .time-unit-large {
+        margin: 0 0.5rem;
+    }
+    
+    .contador-simple .time-unit-large .number {
+        font-size: clamp(2.5rem, 8vw, 4rem);
+    }
+    
+    .contador-simple .time-unit-large .label {
+        font-size: 0.8rem;
+        letter-spacing: 0.5px;
+    }
+}
