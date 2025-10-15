@@ -951,14 +951,14 @@ $tipo_rsvp = $invitacion['tipo_rsvp'] ?? 'whatsapp';
                 
                 <div class="rsvp-details">
                     <div class="detail-grid">
-                        <div class="detail-item">
+                        <!-- <div class="detail-item">
                             <div class="detail-icon">📅</div>
                             <div class="detail-content">
                                 <span class="detail-label">Fecha límite</span>
                                 <span class="detail-value"><?php echo fechaEnEspanol(date('Y-m-d', strtotime($invitacion['fecha_evento'] . ' -15 days'))); ?></span>
                                 <span class="detail-value">Queremos asegurarnos que tu lugar esté reservado.</span>
                             </div>
-                        </div>
+                        </div> -->
                         
                         <div class="detail-item">
                             <div class="detail-icon">👨‍👩‍👧‍👦</div>
