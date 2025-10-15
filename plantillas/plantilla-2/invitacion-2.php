@@ -225,6 +225,7 @@ try {
     <link rel="stylesheet" href="./plantillas/plantilla-2/css/galeria.css?v=<?php echo filemtime('./plantillas/plantilla-2/css/galeria.css'); ?>" />
     <link rel="stylesheet" href="./plantillas/plantilla-2/css/dresscode.css?v=<?php echo filemtime('./plantillas/plantilla-2/css/dresscode.css'); ?>" />
     <link rel="stylesheet" href="./plantillas/plantilla-2/css/rsvp.css?v=<?php echo filemtime('./plantillas/plantilla-2/css/rsvp.css'); ?>" />
+    <link rel="stylesheet" href="./plantillas/plantilla-2/css/mesa-regalos.css?v=<?php echo filemtime('./plantillas/plantilla-2/css/mesa-regalos.css'); ?>" />
     <link rel="stylesheet" href="./plantillas/plantilla-2/css/footer.css?v=<?php echo filemtime('./plantillas/plantilla-2/css/footer.css'); ?>" />
     <link rel="stylesheet" href="./plantillas/plantilla-2/css/responsive.css?v=<?php echo filemtime('./plantillas/plantilla-2/css/responsive.css'); ?>" />
     <link rel="stylesheet" href="./plantillas/plantilla-2/css/music-player.css?v=<?php echo filemtime('./plantillas/plantilla-2/css/music-player.css'); ?>" />
@@ -564,37 +565,37 @@ try {
 <section class="mesa-regalos" id="mesa-regalos">
     <div class="container">
         <div class="mesa-regalos-header">
+            <div class="header-icon">🎁</div>
             <h2>Mesa de Regalos</h2>
             <div class="decorative-line"></div>
             <p>Tu presencia es nuestro mejor regalo, pero si deseas obsequiarnos algo especial:</p>
         </div>
-        <div class="regalos-grid">
-            <?php foreach($mesa_regalos as $regalo): ?>
-            <div class="regalo-card">
-                <?php if ($regalo['icono']): ?>
-                <div class="regalo-icon">
-                    <img src="<?php echo htmlspecialchars($regalo['icono']); ?>" alt="<?php echo htmlspecialchars($regalo['nombre_tienda'] ?: $regalo['tienda']); ?>" />
-                </div>
-                <?php endif; ?>
-                <div class="regalo-content">
-                    <h3><?php echo htmlspecialchars($regalo['nombre_tienda'] ?: ucfirst(str_replace('_', ' ', $regalo['tienda']))); ?></h3>
-                    <?php if ($regalo['numero_evento']): ?>
-                    <p><strong>Número de evento:</strong> <?php echo htmlspecialchars($regalo['numero_evento']); ?></p>
-                    <?php endif; ?>
-                    <?php if ($regalo['codigo_evento']): ?>
-                    <p><strong>Código:</strong> <?php echo htmlspecialchars($regalo['codigo_evento']); ?></p>
-                    <?php endif; ?>
-                    <?php if ($regalo['descripcion']): ?>
-                    <p><?php echo htmlspecialchars($regalo['descripcion']); ?></p>
-                    <?php endif; ?>
-                    <?php if ($regalo['url']): ?>
-                    <a href="<?php echo htmlspecialchars($regalo['url']); ?>" target="_blank" class="regalo-link">
-                        Visitar tienda
-                    </a>
-                    <?php endif; ?>
-                </div>
+        <div class="regalos-wrapper">
+            <div class="regalos-grid">
+                <?php foreach($mesa_regalos as $regalo): ?>
+                <a href="<?php echo htmlspecialchars($regalo['url']); ?>" 
+                   target="_blank" 
+                   rel="noopener noreferrer"
+                   class="regalo-card">
+                    <div class="regalo-content">
+                        <?php if ($regalo['icono']): ?>
+                            <div class="regalo-icon">
+                                <img src="<?php echo htmlspecialchars($regalo['icono']); ?>" 
+                                     alt="<?php echo htmlspecialchars($regalo['nombre_tienda'] ?: $regalo['tienda']); ?>" />
+                            </div>
+                        <?php else: ?>
+                            <div class="regalo-text">
+                                <span><?php echo htmlspecialchars($regalo['nombre_tienda'] ?: ucfirst(str_replace('_', ' ', $regalo['tienda']))); ?></span>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                    <div class="card-shine"></div>
+                </a>
+                <?php endforeach; ?>
             </div>
-            <?php endforeach; ?>
+        </div>
+        <div class="mesa-regalos-footer">
+            <p>Con cariño, agradecemos tu generosidad</p>
         </div>
     </div>
 </section>

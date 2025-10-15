@@ -300,6 +300,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ]);
             }
         }
+
+        // Procesar mesas de regalos
+        $db->prepare("DELETE FROM invitacion_mesa_regalos WHERE invitacion_id = ?")->execute([$id]);
+
+        if (!empty($_POST['mesa_regalos_tienda']) && is_array($_POST['mesa_regalos_tienda'])) {
+            $stmt = $db->prepare("INSERT INTO invitacion_mesa_regalos (invitacion_id, tienda, nombre_tienda, url, numero_evento, descripcion, orden, activa) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+            
+            foreach ($_POST['mesa_regalos_tienda'] as $index => $tienda) {
+                if (!empty($tienda) && (!empty($_POST['mesa_regalos_numero'][$index]) || !empty($_POST['mesa_regalos_url'][$index]))) {
+                    $activa = isset($_POST['mesa_regalos_activa'][$index]) ? 1 : 0;
+                    
+                    $stmt->execute([
+                        $id,
+                        $tienda,
+                        $tienda === 'otro' ? ($_POST['mesa_regalos_descripcion'][$index] ?? '') : null,
+                        $_POST['mesa_regalos_url'][$index] ?? '',
+                        $_POST['mesa_regalos_numero'][$index] ?? '',
+                        $_POST['mesa_regalos_descripcion'][$index] ?? '',
+                        $index,
+                        $activa
+                    ]);
+                }
+            }
+        }
         
         $db->commit();
         $success = true;
@@ -354,6 +378,12 @@ $ubicaciones_query = "SELECT * FROM invitacion_ubicaciones WHERE invitacion_id =
 $ubicaciones_stmt = $db->prepare($ubicaciones_query);
 $ubicaciones_stmt->execute([$id]);
 $ubicaciones = $ubicaciones_stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Obtener mesas de regalos existentes
+$mesas_regalos_query = "SELECT * FROM invitacion_mesa_regalos WHERE invitacion_id = ? ORDER BY orden ASC";
+$mesas_regalos_stmt = $db->prepare($mesas_regalos_query);
+$mesas_regalos_stmt->execute([$id]);
+$mesas_regalos = $mesas_regalos_stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Separar ubicaciones por tipo
 $ceremonia = null;
@@ -1047,6 +1077,133 @@ foreach($ubicaciones as $ub) {
                     <label for="dresscode" class="form-label">Descripción del Código de Vestimenta</label>
                     <textarea id="dresscode" name="dresscode" rows="2" class="form-control" 
                         placeholder="Por favor, viste atuendo elegante..."><?php echo htmlspecialchars($invitacion['dresscode']); ?></textarea>
+                </div>
+            </div>
+
+            <!-- Mesas de Regalos -->
+            <div class="form-section">
+                <h3 class="section-title">
+                    <i class="bi bi-gift me-2"></i>
+                    Mesas de Regalos
+                </h3>
+                
+                <div id="mesas-regalos-container">
+                    <?php if (!empty($mesas_regalos)): ?>
+                        <?php foreach($mesas_regalos as $index => $mesa): ?>
+                        <div class="mesa-regalos-item">
+                            <input type="hidden" name="mesa_regalos_id[]" value="<?php echo $mesa['id']; ?>">
+                            <div class="row g-2">
+                                <div class="col-md-3">
+                                    <label class="form-label">Tienda</label>
+                                    <select name="mesa_regalos_tienda[]" class="form-select">
+                                        <option value="liverpool" <?php echo $mesa['tienda'] == 'liverpool' ? 'selected' : ''; ?>>Liverpool</option>
+                                        <option value="amazon" <?php echo $mesa['tienda'] == 'amazon' ? 'selected' : ''; ?>>Amazon</option>
+                                        <option value="sears" <?php echo $mesa['tienda'] == 'sears' ? 'selected' : ''; ?>>Sears</option>
+                                        <option value="palacio_hierro" <?php echo $mesa['tienda'] == 'palacio_hierro' ? 'selected' : ''; ?>>Palacio de Hierro</option>
+                                        <option value="walmart" <?php echo $mesa['tienda'] == 'walmart' ? 'selected' : ''; ?>>Walmart</option>
+                                        <option value="costco" <?php echo $mesa['tienda'] == 'costco' ? 'selected' : ''; ?>>Costco</option>
+                                        <option value="coppel" <?php echo $mesa['tienda'] == 'coppel' ? 'selected' : ''; ?>>Coppel</option>
+                                        <option value="elektra" <?php echo $mesa['tienda'] == 'elektra' ? 'selected' : ''; ?>>Elektra</option>
+                                        <option value="otro" <?php echo $mesa['tienda'] == 'otro' ? 'selected' : ''; ?>>Otra tienda</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Número de Evento</label>
+                                    <input type="text" name="mesa_regalos_numero[]" class="form-control" 
+                                        placeholder="Ej: 123456" value="<?php echo htmlspecialchars($mesa['numero_evento']); ?>">
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">URL del Registro</label>
+                                    <input type="url" name="mesa_regalos_url[]" class="form-control" 
+                                        placeholder="https://..." value="<?php echo htmlspecialchars($mesa['url']); ?>">
+                                </div>
+                                <div class="col-md-2 d-flex align-items-end">
+                                    <button type="button" onclick="eliminarMesaRegalos(this)" class="btn btn-outline-danger btn-sm">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="row g-2 mt-1">
+                                <div class="col-md-6">
+                                    <label class="form-label">Descripción (opcional)</label>
+                                    <input type="text" name="mesa_regalos_descripcion[]" class="form-control" 
+                                        placeholder="Ej: Mesa principal en Liverpool"
+                                        value="<?php echo htmlspecialchars($mesa['descripcion']); ?>">
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-check mt-4">
+                                        <input class="form-check-input" type="checkbox" name="mesa_regalos_activa[]" value="1" 
+                                            <?php echo $mesa['activa'] ? 'checked' : ''; ?>>
+                                        <label class="form-check-label">
+                                            Mostrar en la invitación
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr class="my-3">
+                        </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <!-- Mesa vacía por defecto -->
+                        <div class="mesa-regalos-item">
+                            <div class="row g-2">
+                                <div class="col-md-3">
+                                    <label class="form-label">Tienda</label>
+                                    <select name="mesa_regalos_tienda[]" class="form-select">
+                                        <option value="">Selecciona una tienda</option>
+                                        <option value="liverpool">Liverpool</option>
+                                        <option value="amazon">Amazon</option>
+                                        <option value="sears">Sears</option>
+                                        <option value="palacio_hierro">Palacio de Hierro</option>
+                                        <option value="walmart">Walmart</option>
+                                        <option value="costco">Costco</option>
+                                        <option value="coppel">Coppel</option>
+                                        <option value="elektra">Elektra</option>
+                                        <option value="otro">Otra tienda</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Número de Evento</label>
+                                    <input type="text" name="mesa_regalos_numero[]" class="form-control" placeholder="Ej: 123456">
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">URL del Registro</label>
+                                    <input type="url" name="mesa_regalos_url[]" class="form-control" placeholder="https://...">
+                                </div>
+                                <div class="col-md-2 d-flex align-items-end">
+                                    <button type="button" onclick="eliminarMesaRegalos(this)" class="btn btn-outline-danger btn-sm">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="row g-2 mt-1">
+                                <div class="col-md-6">
+                                    <label class="form-label">Descripción (opcional)</label>
+                                    <input type="text" name="mesa_regalos_descripcion[]" class="form-control" 
+                                        placeholder="Ej: Mesa principal en Liverpool">
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-check mt-4">
+                                        <input class="form-check-input" type="checkbox" name="mesa_regalos_activa[]" value="1" checked>
+                                        <label class="form-check-label">
+                                            Mostrar en la invitación
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr class="my-3">
+                        </div>
+                    <?php endif; ?>
+                </div>
+                
+                <button type="button" onclick="agregarMesaRegalos()" class="btn btn-outline-primary">
+                    <i class="bi bi-plus-circle me-1"></i>
+                    Agregar Otra Mesa de Regalos
+                </button>
+                
+                <div class="form-text mt-2">
+                    <i class="bi bi-info-circle me-1"></i>
+                    Puedes agregar múltiples mesas de regalos. Los números de evento los proporciona cada tienda cuando te registras.
                 </div>
             </div>
 

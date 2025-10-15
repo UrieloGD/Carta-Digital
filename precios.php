@@ -113,6 +113,7 @@ try {
                         <li><i class="fas fa-check"></i>Todo lo del plan Intermedio</li>
                         <!-- <li><i class="fas fa-check"></i>Ubicación con mapa interactivo</li> -->
                         <li><i class="fas fa-check"></i>Galería 15 fotos</li>
+                        <li><i class="fas fa-check"></i>Sección para tu mesa de regalos</li>
                         <li><i class="fas fa-check"></i>Reservación con boletaje digital</li>
                         <li><i class="fas fa-check"></i>Soporte hasta el evento</li>
                         <li><i class="fas fa-check"></i>Cambios de colores, tipografía y ajustes de la plantilla</li>
