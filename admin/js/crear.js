@@ -318,6 +318,100 @@ function showErrorAlert() {
     }
 }
 
+// Función para agregar nueva mesa de regalos
+function agregarMesaRegalos() {
+    const container = document.getElementById('mesas-regalos-container');
+    const newItem = document.createElement('div');
+    newItem.className = 'mesa-regalos-item';
+    newItem.innerHTML = `
+        <div class="row g-2">
+            <div class="col-md-3">
+                <label class="form-label">Tienda</label>
+                <select name="mesa_regalos_tienda[]" class="form-select">
+                    <option value="">Selecciona una tienda</option>
+                    <option value="liverpool">Liverpool</option>
+                    <option value="amazon">Amazon</option>
+                    <option value="sears">Sears</option>
+                    <option value="palacio_hierro">Palacio de Hierro</option>
+                    <option value="walmart">Walmart</option>
+                    <option value="costco">Costco</option>
+                    <option value="coppel">Coppel</option>
+                    <option value="elektra">Elektra</option>
+                    <option value="otro">Otra tienda</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Número de Evento</label>
+                <input type="text" name="mesa_regalos_numero[]" class="form-control" placeholder="Ej: 123456">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">URL del Registro</label>
+                <input type="url" name="mesa_regalos_url[]" class="form-control" placeholder="https://...">
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <button type="button" onclick="eliminarMesaRegalos(this)" class="btn btn-outline-danger btn-sm">
+                    <i class="bi bi-trash"></i>
+                </button>
+            </div>
+        </div>
+        <div class="row g-2 mt-1">
+            <div class="col-md-6">
+                <label class="form-label">Descripción (opcional)</label>
+                <input type="text" name="mesa_regalos_descripcion[]" class="form-control" 
+                    placeholder="Ej: Mesa principal en Liverpool">
+            </div>
+            <div class="col-md-6">
+                <div class="form-check mt-4">
+                    <input class="form-check-input" type="checkbox" name="mesa_regalos_activa[]" value="1" checked>
+                    <label class="form-check-label">
+                        Mostrar en la invitación
+                    </label>
+                </div>
+            </div>
+        </div>
+        <hr class="my-3">
+    `;
+    container.appendChild(newItem);
+}
+
+// Función para eliminar mesa de regalos
+function eliminarMesaRegalos(button) {
+    const item = button.closest('.mesa-regalos-item');
+    const itemsCount = document.querySelectorAll('.mesa-regalos-item').length;
+    
+    if (itemsCount <= 1) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'No se puede eliminar',
+            text: 'Debe haber al menos una mesa de regalos',
+            confirmButtonColor: '#3085d6'
+        });
+        return;
+    }
+    
+    Swal.fire({
+        title: '¿Eliminar mesa de regalos?',
+        text: 'Esta acción no se puede deshacer',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            item.remove();
+            Swal.fire({
+                title: 'Eliminada',
+                text: 'Mesa de regalos eliminada',
+                icon: 'success',
+                timer: 1500,
+                showConfirmButton: false
+            });
+        }
+    });
+}
+
 // Inicialización cuando el DOM está listo
 document.addEventListener('DOMContentLoaded', function() {    
     // Inicializar todas las funciones

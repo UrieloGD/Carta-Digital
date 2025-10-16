@@ -95,28 +95,6 @@
     opacity: 0.6;
 }
 
-/* Diamantes decorativos */
-.mesa-regalos-header h2::before {
-    content: '◆';
-    position: absolute;
-    left: -40px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 0.4em;
-    color: var(--color-primary);
-    opacity: 0.5;
-}
-
-.mesa-regalos-header::before {
-    content: '◆';
-    position: absolute;
-    right: calc(50% - 45px);
-    top: 28px;
-    font-size: 0.6rem;
-    color: var(--color-primary);
-    opacity: 0.5;
-}
-
 .mesa-regalos-header p {
     font-family: var(--font-sans);
     font-size: clamp(1rem, 2.5vw, 1.1rem);
@@ -310,18 +288,6 @@
         transparent);
 }
 
-/* Diamante central en la línea */
-.mesa-regalos-footer::after {
-    content: '◆';
-    position: absolute;
-    top: -6px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 0.7rem;
-    color: var(--color-primary);
-    opacity: 0.6;
-}
-
 .mesa-regalos-footer p {
     font-family: var(--font-sans);
     font-size: clamp(0.95rem, 2.3vw, 1.05rem);
@@ -366,14 +332,6 @@
         margin-bottom: 4.5rem;
     }
     
-    .mesa-regalos-header h2::before {
-        left: -50px;
-    }
-    
-    .mesa-regalos-header::before {
-        right: calc(50% - 55px);
-    }
-    
     .regalos-grid {
         flex-direction: row;
         flex-wrap: wrap;
@@ -406,16 +364,6 @@
     
     .mesa-regalos-header {
         margin-bottom: 5rem;
-    }
-    
-    .mesa-regalos-header h2::before {
-        left: -60px;
-        font-size: 0.45em;
-    }
-    
-    .mesa-regalos-header::before {
-        right: calc(50% - 65px);
-        font-size: 0.7rem;
     }
     
     .regalos-grid {
