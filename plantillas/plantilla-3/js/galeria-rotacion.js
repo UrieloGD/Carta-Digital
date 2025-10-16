@@ -1,264 +1,334 @@
-// Galería con rotación automática y estructura estable - SIN PLACEHOLDERS
-class GaleriaRotativa {
-    constructor(imagenes, contenedor = 'galeria-grid') {
-        this.imagenes = imagenes || [];
-        this.contenedor = document.getElementById(contenedor);
+// ================================================
+// GALERÍA ELEGANTE CON ROTACIÓN DE 3 IMÁGENES
+// ================================================
+
+class GaleriaEleganteRotativa {
+    constructor(images, containerId = 'galeria-grid') {
+        this.images = images || [];
+        this.container = document.getElementById(containerId);
+        this.modal = document.getElementById('galeria-modal');
+        this.modalImage = document.getElementById('modal-image');
+        this.counterText = document.getElementById('modal-counter-text');
         
-        if (!this.contenedor || this.imagenes.length === 0) {
-            console.log('No se puede inicializar la galería: contenedor o imágenes no encontrados');
+        if (!this.container || this.images.length === 0) {
+            console.warn('GaleriaEleganteRotativa: Container not found or no images provided');
             return;
         }
         
-        this.imagenesPorPagina = this.calcularImagenesPorPagina();
-        this.paginaActual = 0;
-        // Cambio importante: calculamos páginas basándose en las imágenes visibles
-        this.totalPaginas = Math.max(1, Math.ceil(this.imagenes.length / this.imagenesPorPagina));
+        // Configuración del carrusel
+        this.imagenesMostradas = 3; // Siempre mostrar 3 imágenes
+        this.indiceInicial = 0;
         this.autoRotacion = null;
         this.tiempoRotacion = 4000; // 4 segundos
+        this.isMobile = window.innerWidth < 768;
         
-        // Elementos mínimos para mantener estructura estable
-        this.elementosMinimos = this.calcularElementosMinimos();
+        // Modal
+        this.currentIndex = 0;
+        this.isModalOpen = false;
+        this.touchStartX = 0;
+        this.touchEndX = 0;
         
-        console.log(`Galería automática: ${this.imagenes.length} imágenes, ${this.totalPaginas} páginas, ${this.elementosMinimos} elementos mínimos`);
+        // Preparar imágenes para mostrar
+        this.prepararImagenes();
+        
+        console.log(`Galería: ${this.images.length} imágenes, mostrando ${this.imagenesMostradas}`);
         
         this.init();
     }
     
-    calcularImagenesPorPagina() {
-        const width = window.innerWidth;
-        if (width < 480) return 4;
-        if (width < 768) return 6;
-        return 8;
-    }
-    
-    calcularElementosMinimos() {
-        const width = window.innerWidth;
-        if (width < 480) return 4;
-        if (width < 768) return 6;
-        return 6;
-    }
-    
-    // NUEVA FUNCIÓN: Obtener imagen cíclica para evitar placeholders
-    getImagenCiclica(indice) {
-        if (this.imagenes.length === 0) return null;
-        return this.imagenes[indice % this.imagenes.length];
+    prepararImagenes() {
+        // Si tenemos menos de 3 imágenes, las repetimos hasta completar 3
+        this.imagenesParaMostrar = [];
+        
+        if (this.images.length === 0) return;
+        
+        for (let i = 0; i < this.imagenesMostradas; i++) {
+            const imagen = this.images[i % this.images.length];
+            this.imagenesParaMostrar.push({
+                src: imagen,
+                originalIndex: i % this.images.length,
+                displayIndex: i
+            });
+        }
     }
     
     init() {
-        this.crearEstructuraEstable();
-        this.mostrarPagina(0);
+        this.crearElementosGaleria();
         this.configurarEventos();
-        
-        // Solo iniciar auto-rotación si hay suficientes imágenes para mostrar diferentes páginas
-        if (this.imagenes.length > this.imagenesPorPagina) {
-            this.iniciarAutoRotacion();
-        }
+        this.iniciarAutoRotacion();
         
         // Recalcular en resize
-        let resizeTimeout;
-        window.addEventListener('resize', () => {
-            clearTimeout(resizeTimeout);
-            resizeTimeout = setTimeout(() => {
-                const nuevasImagenesPorPagina = this.calcularImagenesPorPagina();
-                const nuevosElementosMinimos = this.calcularElementosMinimos();
-                
-                if (nuevasImagenesPorPagina !== this.imagenesPorPagina || nuevosElementosMinimos !== this.elementosMinimos) {
-                    this.imagenesPorPagina = nuevasImagenesPorPagina;
-                    this.elementosMinimos = nuevosElementosMinimos;
-                    this.totalPaginas = Math.max(1, Math.ceil(this.imagenes.length / this.imagenesPorPagina));
-                    this.paginaActual = 0;
-                    this.crearEstructuraEstable();
-                    this.mostrarPagina(0);
-                    this.reiniciarAutoRotacion();
-                }
-            }, 250);
+        window.addEventListener('resize', this.manejarResize.bind(this));
+    }
+    
+    crearElementosGaleria() {
+        this.container.innerHTML = '';
+        const fragment = document.createDocumentFragment();
+        
+        this.imagenesParaMostrar.forEach((imagen, index) => {
+            const item = this.crearItemGaleria(imagen, index);
+            fragment.appendChild(item);
         });
+        
+        this.container.appendChild(fragment);
+        
+        // Animación inicial escalonada
+        setTimeout(() => {
+            const items = this.container.querySelectorAll('.galeria-item');
+            items.forEach((item, index) => {
+                setTimeout(() => {
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateY(0)';
+                }, index * 150);
+            });
+        }, 100);
     }
     
-    crearEstructuraEstable() {
-        if (!this.contenedor) return;
+    crearItemGaleria(imagen, index) {
+        const item = document.createElement('div');
+        item.className = 'galeria-item';
+        item.setAttribute('role', 'gridcell');
+        item.setAttribute('tabindex', '0');
+        item.setAttribute('data-original-index', imagen.originalIndex);
+        item.setAttribute('data-display-index', index);
+        item.style.opacity = '0';
+        item.style.transform = 'translateY(20px)';
+        item.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
         
-        this.contenedor.innerHTML = '';
+        const img = document.createElement('img');
+        img.className = 'galeria-image';
+        img.src = imagen.src;
+        img.alt = `Momento especial ${imagen.originalIndex + 1}`;
+        img.loading = 'eager';
         
-        // Crear el número mínimo de elementos para mantener estructura estable
-        for (let i = 0; i < this.elementosMinimos; i++) {
-            const item = document.createElement('div');
-            item.className = 'galeria-item';
-            item.style.setProperty('--item-delay', i);
-            item.innerHTML = `
-                <div class="galeria-overlay">
-                    <div class="galeria-icon">🔍</div>
-                </div>
-                <img src="" alt="" style="opacity: 0;" />
-                <div class="image-overlay"></div>
-            `;
-            
-            this.contenedor.appendChild(item);
+        const overlay = document.createElement('div');
+        overlay.className = 'galeria-overlay';
+        overlay.setAttribute('aria-hidden', 'true');
+        
+        const zoomIcon = document.createElement('div');
+        zoomIcon.className = 'galeria-zoom-icon';
+        zoomIcon.innerHTML = '⊕';
+        
+        overlay.appendChild(zoomIcon);
+        item.appendChild(img);
+        item.appendChild(overlay);
+        
+        return item;
+    }
+    
+    rotarImagenes() {
+        // Obtener las próximas 3 imágenes
+        this.indiceInicial = (this.indiceInicial + 1) % this.images.length;
+        
+        // Actualizar las imágenes a mostrar
+        for (let i = 0; i < this.imagenesMostradas; i++) {
+            const indiceImagen = (this.indiceInicial + i) % this.images.length;
+            this.imagenesParaMostrar[i] = {
+                src: this.images[indiceImagen],
+                originalIndex: indiceImagen,
+                displayIndex: i
+            };
         }
-    }
-    
-    // FUNCIÓN MODIFICADA: Siempre mostrar imágenes reales
-    mostrarPagina(numeroPagina) {
-        if (!this.contenedor || this.imagenes.length === 0) return;
         
-        const items = this.contenedor.querySelectorAll('.galeria-item');
+        // Actualizar DOM con animación
+        const items = this.container.querySelectorAll('.galeria-item');
         
-        // Animar salida de imágenes actuales
+        // Animación de salida
         items.forEach((item, index) => {
-            const img = item.querySelector('img');
-            
             setTimeout(() => {
-                if (img) {
-                    img.style.opacity = '0';
-                    img.style.transform = 'scale(0.95)';
-                }
+                item.style.opacity = '0.3';
+                item.style.transform = 'translateY(-10px) scale(0.98)';
             }, index * 50);
         });
         
-        // Cambiar contenido después de la animación de salida
+        // Cambiar imágenes y animar entrada
         setTimeout(() => {
             items.forEach((item, index) => {
-                const img = item.querySelector('img');
+                const nuevaImagen = this.imagenesParaMostrar[index];
+                const img = item.querySelector('.galeria-image');
                 
-                // CAMBIO CLAVE: Calcular índice de imagen de forma cíclica
-                const indiceImagen = (numeroPagina * this.imagenesPorPagina + index) % this.imagenes.length;
-                const imagenSrc = this.getImagenCiclica(numeroPagina * this.imagenesPorPagina + index);
+                item.setAttribute('data-original-index', nuevaImagen.originalIndex);
+                img.src = nuevaImagen.src;
+                img.alt = `Momento especial ${nuevaImagen.originalIndex + 1}`;
                 
-                if (img && imagenSrc) {
-                    img.src = imagenSrc;
-                    img.alt = `Momento especial ${indiceImagen + 1}`;
-                    img.style.opacity = '0';
-                    img.style.transform = 'scale(0.95)';
-                    
-                    // Manejar errores de carga
-                    img.onerror = function() {
-                        console.error('Error cargando imagen:', this.src);
-                        // En caso de error, intentar con la primera imagen disponible
-                        if (this.src !== this.imagenes[0]) {
-                            this.src = this.imagenes[0];
-                        }
-                    };
-                    
-                    img.onload = function() {
-                        this.style.display = 'block';
-                    };
-                    
-                    // Hacer el item clickeable
-                    item.onclick = () => this.abrirImagenModal(imagenSrc);
-                    item.style.cursor = 'pointer';
-                    
-                    // ELIMINAR cualquier clase de placeholder
-                    item.classList.remove('galeria-placeholder');
-                    
-                    // Animación de entrada
-                    setTimeout(() => {
-                        if (img) {
-                            img.style.opacity = '1';
-                            img.style.transform = 'scale(1)';
-                        }
-                    }, index * 100);
-                }
+                // Animación de entrada
+                setTimeout(() => {
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateY(0) scale(1)';
+                }, index * 80);
             });
         }, 300);
-        
-        this.paginaActual = numeroPagina;
-    }
-    
-    abrirImagenModal(imagenSrc) {
-        // Crear modal si no existe
-        let modal = document.getElementById('galeria-modal');
-        if (!modal) {
-            modal = document.createElement('div');
-            modal.id = 'galeria-modal';
-            modal.className = 'galeria-modal';
-            modal.innerHTML = `
-                <img src="" alt="Imagen ampliada" id="modal-imagen">
-                <button class="galeria-close" onclick="this.parentElement.classList.remove('active')">&times;</button>
-            `;
-            document.body.appendChild(modal);
-            
-            // Cerrar con ESC
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') {
-                    modal.classList.remove('active');
-                }
-            });
-            
-            // Cerrar al hacer clic fuera de la imagen
-            modal.addEventListener('click', function(e) {
-                if (e.target === modal) {
-                    modal.classList.remove('active');
-                }
-            });
-        }
-        
-        const modalImg = modal.querySelector('#modal-imagen');
-        if (modalImg) {
-            modalImg.src = imagenSrc;
-            modalImg.alt = 'Imagen ampliada';
-        }
-        
-        modal.classList.add('active');
-        
-        // Pausar auto-rotación mientras el modal está abierto
-        this.pausarAutoRotacion();
-        
-        // Reanudar auto-rotación cuando se cierre el modal
-        const observer = new MutationObserver((mutations) => {
-            mutations.forEach((mutation) => {
-                if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
-                    if (!modal.classList.contains('active')) {
-                        this.iniciarAutoRotacion();
-                        observer.disconnect();
-                    }
-                }
-            });
-        });
-        
-        observer.observe(modal, { attributes: true });
-    }
-    
-    siguientePagina() {
-        // MODIFICACIÓN: Usar páginas infinitas basadas en imágenes disponibles
-        const siguiente = (this.paginaActual + 1) % Math.max(1, Math.ceil(this.imagenes.length / this.imagenesPorPagina));
-        this.mostrarPagina(siguiente);
     }
     
     configurarEventos() {
-        // Pausar auto-rotación al hacer hover en la galería
-        if (this.contenedor) {
-            this.contenedor.addEventListener('mouseenter', () => {
-                this.pausarAutoRotacion();
-            });
-            
-            this.contenedor.addEventListener('mouseleave', () => {
-                if (!document.querySelector('.galeria-modal.active')) {
-                    this.iniciarAutoRotacion();
-                }
-            });
-        }
+        // Eventos de galería
+        this.container.addEventListener('click', this.manejarClickGaleria.bind(this));
+        this.container.addEventListener('keydown', this.manejarTeclaGaleria.bind(this));
         
-        // Pausar auto-rotación cuando el usuario interactúa
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden) {
-                this.pausarAutoRotacion();
-            } else if (!document.querySelector('.galeria-modal.active')) {
-                this.iniciarAutoRotacion();
-            }
+        // Pausar rotación en hover
+        this.container.addEventListener('mouseenter', () => {
+            this.pausarAutoRotacion();
         });
+        
+        this.container.addEventListener('mouseleave', () => {
+            this.iniciarAutoRotacion();
+        });
+        
+        // Eventos de modal
+        this.configurarEventosModal();
     }
     
-    iniciarAutoRotacion() {
-        // MODIFICACIÓN: Solo iniciar si hay suficientes imágenes para rotar
-        if (this.imagenes.length <= this.imagenesPorPagina) return;
+    configurarEventosModal() {
+        if (!this.modal) return;
         
-        this.pausarAutoRotacion(); // Limpiar cualquier intervalo existente
+        this.modal.addEventListener('click', this.manejarClickModal.bind(this));
+        document.addEventListener('keydown', this.manejarTeclaModal.bind(this));
+        
+        // Touch events
+        this.modal.addEventListener('touchstart', this.manejarTouchStart.bind(this), { passive: true });
+        this.modal.addEventListener('touchend', this.manejarTouchEnd.bind(this), { passive: true });
+        
+        // Navegación
+        const prevBtn = this.modal.querySelector('.modal-prev');
+        const nextBtn = this.modal.querySelector('.modal-next');
+        const closeBtn = this.modal.querySelector('.modal-close');
+        
+        prevBtn?.addEventListener('click', () => this.navegarModal(-1));
+        nextBtn?.addEventListener('click', () => this.navegarModal(1));
+        closeBtn?.addEventListener('click', () => this.cerrarModal());
+    }
+    
+    manejarClickGaleria(e) {
+        const item = e.target.closest('.galeria-item');
+        if (item) {
+            const originalIndex = parseInt(item.getAttribute('data-original-index'));
+            this.abrirModal(originalIndex);
+        }
+    }
+    
+    manejarTeclaGaleria(e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            const item = e.target.closest('.galeria-item');
+            if (item) {
+                const originalIndex = parseInt(item.getAttribute('data-original-index'));
+                this.abrirModal(originalIndex);
+            }
+        }
+    }
+    
+    manejarResize() {
+        const wasMobile = this.isMobile;
+        this.isMobile = window.innerWidth < 768;
+        
+        if (wasMobile !== this.isMobile) {
+            this.pausarAutoRotacion();
+            this.crearElementosGaleria();
+            this.iniciarAutoRotacion();
+        }
+    }
+    
+    // Métodos de modal
+    abrirModal(index) {
+        if (!this.modal || !this.images[index]) return;
+        
+        this.currentIndex = index;
+        this.isModalOpen = true;
+        
+        this.modalImage.src = this.images[index];
+        this.modalImage.alt = `Momento especial ${index + 1}`;
+        
+        this.actualizarContador();
+        
+        this.modal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+        
+        const closeBtn = this.modal.querySelector('.modal-close');
+        setTimeout(() => closeBtn?.focus(), 100);
+        
+        // Pausar rotación mientras el modal está abierto
+        this.pausarAutoRotacion();
+    }
+    
+    cerrarModal() {
+        if (!this.modal) return;
+        
+        this.isModalOpen = false;
+        this.modal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+        
+        // Reanudar rotación
+        this.iniciarAutoRotacion();
+    }
+    
+    navegarModal(direccion) {
+        const nuevoIndex = this.currentIndex + direccion;
+        
+        if (nuevoIndex >= 0 && nuevoIndex < this.images.length) {
+            this.currentIndex = nuevoIndex;
+            this.modalImage.src = this.images[nuevoIndex];
+            this.modalImage.alt = `Momento especial ${nuevoIndex + 1}`;
+            this.actualizarContador();
+        }
+    }
+    
+    actualizarContador() {
+        if (this.counterText) {
+            this.counterText.textContent = `${this.currentIndex + 1} de ${this.images.length}`;
+        }
+    }
+    
+    manejarClickModal(e) {
+        if (e.target.classList.contains('modal-backdrop') || 
+            e.target.classList.contains('galeria-modal')) {
+            this.cerrarModal();
+        }
+    }
+    
+    manejarTeclaModal(e) {
+        if (!this.isModalOpen) return;
+        
+        switch(e.key) {
+            case 'Escape':
+                e.preventDefault();
+                this.cerrarModal();
+                break;
+            case 'ArrowLeft':
+                e.preventDefault();
+                this.navegarModal(-1);
+                break;
+            case 'ArrowRight':
+                e.preventDefault();
+                this.navegarModal(1);
+                break;
+        }
+    }
+    
+    manejarTouchStart(e) {
+        this.touchStartX = e.touches[0].clientX;
+    }
+    
+    manejarTouchEnd(e) {
+        this.touchEndX = e.changedTouches[0].clientX;
+        const diffX = this.touchStartX - this.touchEndX;
+        
+        if (Math.abs(diffX) > 50) {
+            if (diffX > 0) {
+                this.navegarModal(1);
+            } else {
+                this.navegarModal(-1);
+            }
+        }
+    }
+    
+    // Métodos de rotación automática
+    iniciarAutoRotacion() {
+        if (this.images.length <= 1 || this.isModalOpen) return;
+        
+        this.pausarAutoRotacion();
         
         this.autoRotacion = setInterval(() => {
-            // Verificar si el modal está abierto
-            if (!document.querySelector('.galeria-modal.active')) {
-                this.siguientePagina();
-            }
+            this.rotarImagenes();
         }, this.tiempoRotacion);
     }
     
@@ -269,37 +339,38 @@ class GaleriaRotativa {
         }
     }
     
-    reiniciarAutoRotacion() {
+    // Métodos públicos
+    destruir() {
         this.pausarAutoRotacion();
-        if (!document.querySelector('.galeria-modal.active') && this.imagenes.length > this.imagenesPorPagina) {
-            this.iniciarAutoRotacion();
+        this.cerrarModal();
+        if (this.container) {
+            this.container.innerHTML = '';
         }
     }
     
-    // Método para destruir la galería si es necesario
-    destruir() {
-        this.pausarAutoRotacion();
-        if (this.contenedor) {
-            this.contenedor.innerHTML = '';
+    agregarImagenes(nuevasImagenes) {
+        this.images.push(...nuevasImagenes);
+        this.prepararImagenes();
+        this.crearElementosGaleria();
+        this.iniciarAutoRotacion();
+    }
+    
+    cambiarTiempoRotacion(nuevoTiempo) {
+        this.tiempoRotacion = nuevoTiempo;
+        if (this.autoRotacion) {
+            this.iniciarAutoRotacion();
         }
     }
 }
 
-// Inicializar cuando el DOM esté listo
-document.addEventListener('DOMContentLoaded', function() {
-    if (typeof galeriaImagenes !== 'undefined' && galeriaImagenes.length > 0) {
-        // Pequeño delay para asegurar que el CSS esté cargado
-        setTimeout(() => {
-            window.galeriaInstance = new GaleriaRotativa(galeriaImagenes);
-        }, 100);
-    } else {
-        console.log('No hay imágenes de galería definidas');
+// Inicialización automática
+document.addEventListener('DOMContentLoaded', () => {
+    if (typeof galeriaImagenes !== 'undefined' && Array.isArray(galeriaImagenes) && galeriaImagenes.length > 0) {
+        window.galeriaElegante = new GaleriaEleganteRotativa(galeriaImagenes);
     }
 });
 
-// Limpiar al salir de la página
+// Cleanup
 window.addEventListener('beforeunload', () => {
-    if (window.galeriaInstance) {
-        window.galeriaInstance.destruir();
-    }
+    window.galeriaElegante?.destruir();
 });

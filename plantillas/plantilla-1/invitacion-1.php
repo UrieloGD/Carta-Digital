@@ -252,6 +252,7 @@ try {
     <link rel="stylesheet" href="./plantillas/plantilla-1/css/galeria.css?v=<?php echo filemtime('./plantillas/plantilla-1/css/galeria.css'); ?>" />
     <link rel="stylesheet" href="./plantillas/plantilla-1/css/dresscode.css?v=<?php echo filemtime('./plantillas/plantilla-1/css/dresscode.css'); ?>" />
     <link rel="stylesheet" href="./plantillas/plantilla-1/css/rsvp.css?v=<?php echo filemtime('./plantillas/plantilla-1/css/rsvp.css'); ?>" />
+    <link rel="stylesheet" href="./plantillas/plantilla-1/css/mesa-regalos.css?v=<?php echo filemtime('./plantillas/plantilla-1/css/mesa-regalos.css'); ?>" />
     <link rel="stylesheet" href="./plantillas/plantilla-1/css/footer.css?v=<?php echo filemtime('./plantillas/plantilla-1/css/footer.css'); ?>" />
     <link rel="stylesheet" href="./plantillas/plantilla-1/css/responsive.css?v=<?php echo filemtime('./plantillas/plantilla-1/css/responsive.css'); ?>" />
     <link rel="stylesheet" href="./plantillas/plantilla-1/css/music-player.css?v=<?php echo filemtime('./plantillas/plantilla-1/css/music-player.css'); ?>" />
@@ -458,6 +459,31 @@ try {
 </section>
 <?php endif; ?>
 
+
+<!-- Sección Galería -->
+<section class="galeria" id="galeria">
+   <div class="container">
+       <h2>Momentos Especiales</h2>
+       <div class="galeria-carousel">
+           <div class="carousel-track">
+               <?php 
+               // Crear un array con suficientes repeticiones para bucle infinito
+               $imagenes_infinitas = [];
+               for($i = 0; $i < 6; $i++) { // 6 repeticiones
+                   $imagenes_infinitas = array_merge($imagenes_infinitas, $galeria);
+               }
+               
+               foreach($imagenes_infinitas as $index => $imagen): 
+               ?>
+               <div class="galeria-item">
+                   <img src="<?php echo htmlspecialchars($imagen); ?>" alt="Momento especial" />
+               </div>
+               <?php endforeach; ?>
+           </div>
+       </div>
+   </div>
+</section>
+
 <!-- Sección Ubicaciones -->
 <?php if (!empty($ubicaciones_result)): ?>
 <section class="ubicaciones" id="ubicaciones">
@@ -503,30 +529,6 @@ try {
 </section>
 <?php endif; ?>
 
-<!-- Sección Galería -->
-<section class="galeria" id="galeria">
-   <div class="container">
-       <h2>Momentos Especiales</h2>
-       <div class="galeria-carousel">
-           <div class="carousel-track">
-               <?php 
-               // Crear un array con suficientes repeticiones para bucle infinito
-               $imagenes_infinitas = [];
-               for($i = 0; $i < 6; $i++) { // 6 repeticiones
-                   $imagenes_infinitas = array_merge($imagenes_infinitas, $galeria);
-               }
-               
-               foreach($imagenes_infinitas as $index => $imagen): 
-               ?>
-               <div class="galeria-item">
-                   <img src="<?php echo htmlspecialchars($imagen); ?>" alt="Momento especial" />
-               </div>
-               <?php endforeach; ?>
-           </div>
-       </div>
-   </div>
-</section>
-
 <!-- Sección Dress Code -->
 <section class="dresscode <?php echo (!$dresscode_info || (empty($dresscode_info['hombres']) && empty($dresscode_info['mujeres']))) ? 'sin-imagenes' : ''; ?>" id="dresscode">
    <div class="container">
@@ -570,6 +572,46 @@ try {
        </div>
    </div>
 </section>
+
+<!-- Sección Mesa de Regalos -->
+<?php if (!empty($mesa_regalos)): ?>
+<section class="mesa-regalos" id="mesa-regalos">
+   <div class="container">
+       <div class="mesa-regalos-header">
+           <!-- <div class="header-icon">🎁</div> -->
+           <h2>Mesa de Regalos</h2>
+           <p>Tu presencia es nuestro mejor regalo, pero si deseas obsequiarnos algo especial:</p>
+       </div>
+       <div class="regalos-wrapper">
+           <div class="regalos-grid">
+               <?php foreach($mesa_regalos as $regalo): ?>
+               <a href="<?php echo htmlspecialchars($regalo['url']); ?>" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  class="regalo-card">
+                   <div class="regalo-content">
+                       <?php if ($regalo['icono']): ?>
+                           <div class="regalo-icon">
+                               <img src="<?php echo htmlspecialchars($regalo['icono']); ?>" 
+                                    alt="<?php echo htmlspecialchars($regalo['nombre_tienda'] ?: $regalo['tienda']); ?>" />
+                           </div>
+                       <?php else: ?>
+                           <div class="regalo-text">
+                               <span><?php echo htmlspecialchars($regalo['nombre_tienda'] ?: ucfirst(str_replace('_', ' ', $regalo['tienda']))); ?></span>
+                           </div>
+                       <?php endif; ?>
+                   </div>
+                   <div class="card-shine"></div>
+               </a>
+               <?php endforeach; ?>
+           </div>
+       </div>
+       <div class="mesa-regalos-footer">
+           <p>Con cariño, agradecemos tu generosidad</p>
+       </div>
+   </div>
+</section>
+<?php endif; ?>
 
 <!-- Sección RSVP -->
 
@@ -738,14 +780,14 @@ $tipo_rsvp = $invitacion['tipo_rsvp'] ?? 'whatsapp';
           <p class="footer-message">
               <?php echo htmlspecialchars($mensaje_footer); ?>
           </p>
-          <div class="footer-actions">
+          <!-- <div class="footer-actions">
               <button class="share-button" onclick="shareWhatsApp()">
                   <span>📱</span> Compartir por WhatsApp
               </button>
               <button class="copy-button" onclick="copyLink()">
                   <span>🔗</span> Copiar enlace
               </button>
-          </div>
+          </div> -->
           <p class="footer-thanks">
               Gracias por ser parte de nuestro día especial
           </p>
@@ -806,6 +848,7 @@ const invitacionData = {
 <script src="./plantillas/plantilla-1/js/contador.js?v=<?php echo filemtime('./plantillas/plantilla-1/js/contador.js'); ?>"></script>
 <script src="./plantillas/plantilla-1/js/compartir.js?v=<?php echo filemtime('./plantillas/plantilla-1/js/compartir.js'); ?>"></script>
 <script src="./plantillas/plantilla-1/js/rsvp.js?v=<?php echo filemtime('./plantillas/plantilla-1/js/rsvp.js'); ?>"></script>
+<script src="./plantillas/plantilla-1/js/mesa-regalos.js?v=<?php echo filemtime('./plantillas/plantilla-1/js/mesa-regalos.js'); ?>"></script>
 <script src="./plantillas/plantilla-1/js/estadisticas.js?v=<?php echo filemtime('./plantillas/plantilla-1/js/estadisticas.js'); ?>"></script>
 <script src="./plantillas/plantilla-1/js/invitacion.js?v=<?php echo filemtime('./plantillas/plantilla-1/js/invitacion.js'); ?>"></script>
 <script src="./plantillas/plantilla-1/js/music-player.js?v=<?php echo filemtime('./plantillas/plantilla-1/js/music-player.js'); ?>"></script>

@@ -1,6 +1,7 @@
+/* Sección Dress Code Elegante Minimalista */
 .dresscode {
-    padding: 6rem 0;
-    background: var(--gradient-soft);
+    padding: 2rem 0;
+    background: var(--bg-dark);
     position: relative;
     overflow: hidden;
 }
@@ -8,25 +9,12 @@
 .dresscode::before {
     content: '';
     position: absolute;
-    top: 10%;
-    left: -10%;
-    width: 300px;
-    height: 300px;
-    background: radial-gradient(circle, rgba(52, 152, 219, 0.05) 0%, transparent 70%);
-    border-radius: 50%;
-    animation: float 6s ease-in-out infinite;
-}
-
-.dresscode::after {
-    content: '';
-    position: absolute;
-    bottom: 10%;
-    right: -10%;
-    width: 200px;
-    height: 200px;
-    background: radial-gradient(circle, rgba(155, 89, 182, 0.05) 0%, transparent 70%);
-    border-radius: 50%;
-    animation: float 8s ease-in-out infinite reverse;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(ellipse at center, rgba(139, 115, 85, 0.03) 0%, transparent 70%);
+    pointer-events: none;
 }
 
 .dresscode-content {
@@ -34,58 +22,119 @@
     z-index: 2;
 }
 
+.dresscode-header {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.dresscode-header .section-title {
+    font-family: var(--font-serif);
+    font-size: clamp(2.5rem, 4vw, 3.5rem);
+    font-weight: 300;
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.02em;
+}
+
+.dresscode-header .decorative-line {
+    width: 80px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent-beige), transparent);
+    margin: 0 auto 1.5rem;
+}
+
+.dresscode-header .section-subtitle {
+    font-family: var(--font-script);
+    font-size: 1.3rem;
+    color: var(--text-secondary);
+    font-weight: 400;
+}
+
 .dresscode-description {
     text-align: center;
-    font-size: 1.2rem;
-    color: var(--text-light);
-    max-width: 600px;
-    margin: 0 auto 4rem;
+    margin-bottom: 4rem;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.dresscode-description .dresscode-text {
+    font-family: var(--font-sans);
+    font-size: 1.1rem;
+    color: var(--text-secondary);
     line-height: 1.8;
-    animation: fadeInUp 0.8s ease-out;
+    font-weight: 300;
 }
 
 .dresscode-examples {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 4rem;
-    max-width: 900px;
-    margin: 0 auto;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 3rem;
+    margin-bottom: 4rem;
 }
 
-.dresscode-example {
-    text-align: center;
-    animation: fadeInUp 0.8s ease-out;
-    animation-delay: calc(var(--example-delay, 0) * 0.2s);
-    animation-fill-mode: both;
+.dresscode-card {
+    background: var(--bg-card);
+    border-radius: 15px;
+    padding: 2rem;
+    border: 1px solid var(--border-subtle);
+    transition: var(--transition-smooth);
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(30px);
 }
 
-.dresscode-example:nth-child(1) { --example-delay: 1; }
-.dresscode-example:nth-child(2) { --example-delay: 2; }
+.dresscode-card.animate-in {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.dresscode-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(139, 115, 85, 0.05) 0%, transparent 50%);
+    opacity: 0;
+    transition: var(--transition-smooth);
+}
+
+.dresscode-card:hover::before {
+    opacity: 1;
+}
+
+.dresscode-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(139, 115, 85, 0.2);
+    box-shadow: var(--shadow-card);
+}
+
+.dresscode-image-container {
+    position: relative;
+    margin-bottom: 2rem;
+}
 
 .dresscode-image {
     position: relative;
-    margin-bottom: 2rem;
-    border-radius: 25px;
+    width: 100%;
+    height: 280px; /* Reducido para hacer más cuadrada */
+    border-radius: 10px;
     overflow: hidden;
-    box-shadow: var(--shadow-medium);
-    transition: all 0.3s ease;
-}
-
-.dresscode-image:hover {
-    transform: translateY(-10px) scale(1.02);
 }
 
 .dresscode-image img {
     width: 100%;
-    height: 350px;
+    height: 100%;
     object-fit: cover;
-    transition: all 0.3s ease;
-    filter: brightness(0.95) contrast(1.05);
+    object-position: top; /* Esto hace que muestre la parte superior */
+    transition: var(--transition-smooth);
 }
 
-.dresscode-image:hover img {
+.dresscode-card:hover .dresscode-image img {
     transform: scale(1.05);
-    filter: brightness(1) contrast(1.1);
 }
 
 .image-overlay {
@@ -96,212 +145,223 @@
     bottom: 0;
     background: linear-gradient(
         135deg,
-        rgba(52, 152, 219, 0.2) 0%,
-        rgba(155, 89, 182, 0.2) 100%
+        rgba(44, 44, 44, 0.6) 0%,
+        rgba(139, 115, 85, 0.1) 100%
     );
-    opacity: 0;
-    transition: opacity 0.3s ease;
+    transition: var(--transition-smooth);
 }
 
-.dresscode-image:hover .image-overlay {
-    opacity: 1;
+.dresscode-card:hover .image-overlay {
+    background: linear-gradient(
+        135deg,
+        rgba(44, 44, 44, 0.4) 0%,
+        rgba(139, 115, 85, 0.2) 100%
+    );
 }
 
-.dresscode-example h3 {
-    font-size: 1.8rem;
-    font-weight: 300;
-    color: var(--text-dark);
-    margin-bottom: 1rem;
-    position: relative;
-}
-
-.dresscode-example h3::after {
-    content: '';
+.dresscode-icon {
     position: absolute;
-    bottom: -5px;
-    left: 50%;
-    transform: translateX(-50%);
+    top: 15px;
+    right: 15px;
     width: 40px;
-    height: 2px;
-    background: var(--accent-color);
-    border-radius: 2px;
+    height: 40px;
+    background: rgba(139, 115, 85, 0.2);
+    backdrop-filter: blur(10px);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(139, 115, 85, 0.3);
 }
 
-.dresscode-example p {
-    color: var(--text-light);
-    line-height: 1.7;
-    font-size: 1rem;
+.icon-symbol {
+    font-size: 1.5rem;
+    color: var(--accent-beige);
+}
+
+.dresscode-info {
+    text-align: center;
+}
+
+.dresscode-title {
+    font-family: var(--font-serif);
+    font-size: 1.8rem;
+    font-weight: 400;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    letter-spacing: 0.02em;
+}
+
+.dresscode-text-content {
     margin-bottom: 2rem;
 }
 
+.dresscode-description-text {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    font-weight: 300;
+}
+
 .color-palette {
+    border-top: 1px solid var(--border-subtle);
+    padding-top: 1.5rem;
+}
+
+.palette-title {
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.color-dots {
     display: flex;
     justify-content: center;
     gap: 1rem;
-    margin-top: 1.5rem;
 }
 
 .color-dot {
-    width: 30px;
-    height: 30px;
+    width: 25px;
+    height: 25px;
     border-radius: 50%;
-    border: 2px solid white;
-    box-shadow: var(--shadow-light);
-    transition: all 0.3s ease;
+    border: 2px solid rgba(139, 115, 85, 0.3);
+    transition: var(--transition-smooth);
     cursor: pointer;
+    position: relative;
+}
+
+.color-dot::after {
+    content: attr(title);
+    position: absolute;
+    bottom: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(44, 44, 44, 0.9);
+    color: var(--bg-dark);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    white-space: nowrap;
+    opacity: 0;
+    transition: var(--transition-smooth);
+    pointer-events: none;
 }
 
 .color-dot:hover {
     transform: scale(1.2);
-    box-shadow: var(--shadow-medium);
+    border-color: var(--accent-beige);
 }
 
-.color-dot.olive {
-    background: linear-gradient(135deg, #8B8D47 0%, #A8AA5C 100%);
-}
-
-.color-dot.sand {
-    background: linear-gradient(135deg, #D4C4A8 0%, #E6D7C3 100%);
-}
-
-.color-dot.cream {
-    background: linear-gradient(135deg, #F5F5DC 0%, #FFFDD0 100%);
-}
-
-.color-dot.navy {
-    background: linear-gradient(135deg, #2C3E50 0%, #34495E 100%);
-}
-
-.color-dot.blush {
-    background: linear-gradient(135deg, #F8BBD9 0%, #FADDE1 100%);
-}
-
-/* Tooltip para colores */
-.color-dot::before {
-    content: attr(data-color);
-    position: absolute;
-    bottom: -40px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--text-dark);
-    color: white;
-    padding: 0.3rem 0.8rem;
-    border-radius: 15px;
-    font-size: 0.8rem;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s ease;
-    white-space: nowrap;
-}
-
-.color-dot:hover::before {
+.color-dot:hover::after {
     opacity: 1;
-    visibility: visible;
-    bottom: -35px;
 }
 
-/* Detalles decorativos */
-.dresscode-detail {
-    background: white;
-    border-radius: 20px;
-    padding: 2rem;
-    margin-top: 2rem;
-    box-shadow: var(--shadow-light);
-    border: 1px solid var(--border-color);
-}
-
-.dresscode-tips {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;
-    margin-top: 3rem;
-}
-
-.tip-card {
-    background: white;
-    padding: 1.5rem;
-    border-radius: 15px;
+.dresscode-footer {
     text-align: center;
-    box-shadow: var(--shadow-light);
-    transition: all 0.3s ease;
-    border: 1px solid var(--border-color);
+    border-top: 1px solid var(--border-subtle);
+    padding-top: 3rem;
+    opacity: 0;
+    transform: translateY(20px);
 }
 
-.tip-card:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-medium);
+.dresscode-footer.animate-in {
+    opacity: 1;
+    transform: translateY(0);
 }
 
-.tip-icon {
-    font-size: 2rem;
-    margin-bottom: 1rem;
-    display: block;
+.dresscode-note {
+    max-width: 500px;
+    margin: 0 auto;
 }
 
-.tip-card h4 {
-    font-size: 1.1rem;
-    color: var(--text-dark);
-    margin-bottom: 0.5rem;
+.note-text {
+    font-family: var(--font-script);
+    font-size: 1.4rem;
+    color: var(--accent-beige);
+    line-height: 1.6;
+    font-weight: 400;
 }
 
-.tip-card p {
-    font-size: 0.9rem;
-    color: var(--text-light);
-    line-height: 1.5;
-}
-
-/* Responsive Dresscode */
-@media (max-width: 968px) {
-    .dresscode-examples {
-        gap: 3rem;
-    }
-    
-    .dresscode-image img {
-        height: 300px;
-    }
-}
-
+/* Responsive Design */
 @media (max-width: 768px) {
     .dresscode {
-        padding: 4rem 0;
+        padding: 6rem 0;
     }
     
     .dresscode-examples {
         grid-template-columns: 1fr;
-        gap: 3rem;
-        max-width: 400px;
+        gap: 2rem;
     }
     
-    .dresscode-image img {
-        height: 350px;
+    .dresscode-card {
+        padding: 1.5rem;
     }
     
-    .dresscode-tips {
-        grid-template-columns: 1fr;
-        gap: 1rem;
+    .dresscode-image {
+        height: 220px; /* Más cuadrada en móvil */
+    }
+    
+    .dresscode-header .section-title {
+        font-size: 2.5rem;
+    }
+    
+    .color-dots {
+        gap: 0.8rem;
+    }
+    
+    .color-dot {
+        width: 20px;
+        height: 20px;
+    }
+
+    .dresscode-title {
+        background-color: var(--bg-dark);
+        border-radius: 5px;
     }
 }
 
 @media (max-width: 480px) {
-    .dresscode-description {
-        font-size: 1.1rem;
-        margin-bottom: 3rem;
+    .dresscode-examples {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
     }
     
-    .dresscode-example h3 {
-        font-size: 1.5rem;
+    .dresscode-card {
+        padding: 1.2rem;
     }
     
     .dresscode-image {
-        border-radius: 20px;
+        height: 200px; /* Proporción más cuadrada */
     }
     
-    .dresscode-image img {
-        height: 280px;
+    .note-text {
+        font-size: 1.2rem;
     }
-    
-    .color-dot {
-        width: 25px;
-        height: 25px;
+}
+
+/* Animaciones de entrada secuenciales */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
     }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Inicialización de animaciones */
+.dresscode-card[data-animate="fadeInUp"] {
+    animation: fadeInUp 0.8s ease-out forwards;
+    animation-delay: var(--delay, 0s);
+}
+
+.dresscode-footer[data-animate="fadeInUp"] {
+    animation: fadeInUp 0.8s ease-out forwards;
+    animation-delay: var(--delay, 0s);
 }

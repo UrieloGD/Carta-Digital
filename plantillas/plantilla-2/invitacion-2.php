@@ -99,11 +99,11 @@ $galeria = array_column($galeria_result, 'ruta');
 // Si no hay imágenes en la galería, usar las por defecto
 if (empty($galeria)) {
     $galeria = [
-        "./plantillas/plantilla-1/img/galeria/pareja1.jpg",
-        "./plantillas/plantilla-1/img/galeria/pareja2.jpg", 
-        "./plantillas/plantilla-1/img/galeria/pareja3.jpg",
-        "./plantillas/plantilla-1/img/galeria/pareja4.jpg",
-        "./plantillas/plantilla-1/img/galeria/pareja5.jpg"
+        "./plantillas/plantilla-2/img/galeria/pareja1.jpg",
+        "./plantillas/plantilla-2/img/galeria/pareja2.jpg", 
+        "./plantillas/plantilla-2/img/galeria/pareja3.jpg",
+        "./plantillas/plantilla-2/img/galeria/pareja4.jpg",
+        "./plantillas/plantilla-2/img/galeria/pareja5.jpg"
     ];
 }
 
@@ -113,20 +113,16 @@ $dresscode_stmt = $db->prepare($dresscode_query);
 $dresscode_stmt->execute([$invitacion['id']]);
 $dresscode_info = $dresscode_stmt->fetch(PDO::FETCH_ASSOC);
 
-// Obtener musica
-$musica_youtube_url = $invitacion['musica_youtube_url'] ?? '';
-$musica_autoplay = (bool)($invitacion['musica_autoplay'] ?? false);
-$musica_volumen = $invitacion['musica_volumen'] ?? 0.5;
-
-// Construir las rutas de imágenes de dresscode
+// Construir las rutas de imágenes de dresscode - SOLO si existen en la base de datos
 if ($dresscode_info) {
-    $img_dresscode_hombres = !empty($dresscode_info['hombres']) ? './' . ltrim($dresscode_info['hombres'], '/') : './plantillas/plantilla-2/img/dresscode.webp';
-    $img_dresscode_mujeres = !empty($dresscode_info['mujeres']) ? './' . ltrim($dresscode_info['mujeres'], '/') : './plantillas/plantilla-2/img/dresscode2.webp';
+    $img_dresscode_hombres = !empty($dresscode_info['hombres']) ? './' . ltrim($dresscode_info['hombres'], '/') : null;
+    $img_dresscode_mujeres = !empty($dresscode_info['mujeres']) ? './' . ltrim($dresscode_info['mujeres'], '/') : null;
     $descripcion_dresscode_hombres = $dresscode_info['descripcion_hombres'] ?? '';
     $descripcion_dresscode_mujeres = $dresscode_info['descripcion_mujeres'] ?? '';
 } else {
-    $img_dresscode_hombres = './plantillas/plantilla-2/img/dresscode.webp';
-    $img_dresscode_mujeres = './plantillas/plantilla-2/img/dresscode2.webp';
+    // Si no hay registro en la tabla dresscode, no mostrar imágenes
+    $img_dresscode_hombres = null;
+    $img_dresscode_mujeres = null;
     $descripcion_dresscode_hombres = '';
     $descripcion_dresscode_mujeres = '';
 }
@@ -148,7 +144,7 @@ $direccion_completa = $invitacion['direccion_completa'] ?: ($ubicacion_ceremonia
 
 // Contenido principal con nuevos campos
 $historia_texto = $invitacion['historia'] ?: "Nuestra historia comenzó de manera inesperada, pero desde el primer momento supimos que estábamos destinados a estar juntos. Cada día compartido nos ha llevado hasta este momento especial.";
-$dresscode = $invitacion['dresscode'] ?: "Elegante casual. Colores plantilla-2es que armonicen con nuestro entorno verde.";
+$dresscode = $invitacion['dresscode'] ?: "Elegante casual. Colores que armonicen con nuestro entorno verde.";
 $texto_rsvp = $invitacion['texto_rsvp'] ?: 'Tu presencia es importante para nosotros. Por favor confirma tu asistencia.';
 $mensaje_footer = $invitacion['mensaje_footer'] ?: '"El amor crece mejor en la libertad, como las flores silvestres en el campo."';
 $firma_footer = $invitacion['firma_footer'] ?: $nombres;
@@ -166,6 +162,22 @@ $padrinos_novio = $invitacion['padrinos_novio'] ?? '';
 
 // Configuraciones
 $mostrar_contador = (bool)($invitacion['mostrar_contador'] ?? true);
+$tipo_contador = $invitacion['tipo_contador'] ?? 'completo';
+$mostrar_cronograma = (bool)($invitacion['mostrar_cronograma'] ?? true);
+
+$frases = [
+    "Días que nos separan del gran día",
+    "Cada día más cerca de nuestro gran día",
+    "Cuenta regresiva en días",
+    "Días antes de vivir algo único",
+    "Solo faltan estos días…",
+    "Días para celebrar juntos",
+    "Días llenos de emoción por venir",
+    "Faltan pocos días para el gran momento"
+];
+
+// Elegir una frase al azar
+$frase_aleatoria = $frases[array_rand($frases)];
 
 // Número de WhatsApp para RSVP desde la base de datos
 $numero_whatsapp_rsvp = !empty($invitacion['whatsapp_confirmacion']) ? $invitacion['whatsapp_confirmacion'] : '3339047672';
@@ -213,6 +225,7 @@ try {
     <link rel="stylesheet" href="./plantillas/plantilla-2/css/galeria.css?v=<?php echo filemtime('./plantillas/plantilla-2/css/galeria.css'); ?>" />
     <link rel="stylesheet" href="./plantillas/plantilla-2/css/dresscode.css?v=<?php echo filemtime('./plantillas/plantilla-2/css/dresscode.css'); ?>" />
     <link rel="stylesheet" href="./plantillas/plantilla-2/css/rsvp.css?v=<?php echo filemtime('./plantillas/plantilla-2/css/rsvp.css'); ?>" />
+    <link rel="stylesheet" href="./plantillas/plantilla-2/css/mesa-regalos.css?v=<?php echo filemtime('./plantillas/plantilla-2/css/mesa-regalos.css'); ?>" />
     <link rel="stylesheet" href="./plantillas/plantilla-2/css/footer.css?v=<?php echo filemtime('./plantillas/plantilla-2/css/footer.css'); ?>" />
     <link rel="stylesheet" href="./plantillas/plantilla-2/css/responsive.css?v=<?php echo filemtime('./plantillas/plantilla-2/css/responsive.css'); ?>" />
     <link rel="stylesheet" href="./plantillas/plantilla-2/css/music-player.css?v=<?php echo filemtime('./plantillas/plantilla-2/css/music-player.css'); ?>" />
@@ -223,7 +236,7 @@ try {
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Lato:wght@300;400;500&display=swap" rel="stylesheet">
     
     <!-- Icon page -->
-    <link rel="shortcut icon" href="./../../images/logo.webp" />
+    <link rel="shortcut icon" href="./images/logo.webp" />
 
 </head>
 <body>
@@ -238,7 +251,6 @@ try {
             <p class="hero-subtitle">Nos casamos</p>
             <h1 class="hero-names"><?php echo htmlspecialchars($nombres); ?></h1>
             <div class="hero-date"><?php echo $fecha; ?></div>
-            <!-- <div class="hero-location">< ?php echo htmlspecialchars($ubicacion); ?></div> -->
         </div>
         <div class="hero-ornament bottom"></div>
     </div>
@@ -356,10 +368,24 @@ try {
 
 <?php if ($mostrar_contador): ?>
 <!-- Contador regresivo -->
-<section class="contador" id="contador">
+<section class="contador <?php echo $tipo_contador === 'simple' ? 'contador-simple' : ''; ?>" id="contador">
     <div class="container">
         <div class="contador-content">
             <h2>Faltan...</h2>
+            
+            <?php if ($tipo_contador === 'simple'): ?>
+            <!-- Versión Simple: Solo días -->
+            <div class="countdown countdown-simple" id="countdown">
+                <div class="time-unit time-unit-large">
+                    <span class="particle"></span>
+                    <span class="particle"></span>
+                    <span class="particle"></span>
+                    <span class="label"><?= htmlspecialchars($frase_aleatoria) ?></span>
+                    <span class="number" id="days">0</span>
+                </div>
+            </div>
+            <?php else: ?>
+            <!-- Versión Completa: Días, Horas, Minutos, Segundos -->
             <div class="countdown" id="countdown">
                 <div class="time-unit">
                     <span class="number" id="days">0</span>
@@ -378,6 +404,36 @@ try {
                     <span class="label">Segundos</span>
                 </div>
             </div>
+            <?php endif; ?>
+        </div>
+    </div>
+</section>
+<?php endif; ?>
+
+<?php if ($mostrar_cronograma): ?>
+<!-- Sección Cronograma -->
+<section class="cronograma" id="cronograma">
+    <div class="container">
+        <div class="cronograma-header">
+            <h2>Cronograma del día</h2>
+            <div class="decorative-line"></div>
+        </div>
+        <div class="cronograma-timeline">
+            <?php foreach($cronograma as $index => $item): ?>
+            <div class="timeline-item">
+                <div class="timeline-time"><?php echo formatearHora($item['hora']); ?></div>
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <h3><?php echo htmlspecialchars($item['evento']); ?></h3>
+                    <p><?php echo htmlspecialchars($item['descripcion'] ?? ''); ?></p>
+                    <?php if (!empty($item['ubicacion'])): ?>
+                    <div class="timeline-location">
+                        📍 <?php echo htmlspecialchars($item['ubicacion']); ?>
+                    </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <?php endforeach; ?>
         </div>
     </div>
 </section>
@@ -393,13 +449,11 @@ try {
         </div>
         <div class="ubicaciones-grid">
             <?php foreach($ubicaciones_result as $ubicacion_item): ?>
-            <!-- NUEVO WRAPPER -->
             <div class="ubicacion-card-wrapper">
                 <div class="ubicacion-card">
-                    <!-- Badge del tipo ahora está correctamente posicionado -->
                     <div class="ubicacion-tipo"><?php echo ucfirst($ubicacion_item['tipo']); ?></div>
                     
-                    <?php if ($ubicacion_item['imagen']): ?>
+                    <?php if (!empty($ubicacion_item['imagen'])): ?>
                     <div class="ubicacion-image">
                         <div class="ubicacion-overlay">
                             <div class="ubicacion-overlay-icon">📍</div>
@@ -450,39 +504,11 @@ try {
                     </div>
                 </div>
             </div>
-            <!-- FIN WRAPPER -->
             <?php endforeach; ?>
         </div>
     </div>
 </section>
 <?php endif; ?>
-
-<!-- Sección Cronograma -->
-<section class="cronograma" id="cronograma">
-    <div class="container">
-        <div class="cronograma-header">
-            <h2>Cronograma del día</h2>
-            <div class="decorative-line"></div>
-        </div>
-        <div class="cronograma-timeline">
-            <?php foreach($cronograma as $index => $item): ?>
-            <div class="timeline-item">
-                <div class="timeline-time"><?php echo formatearHora($item['hora']); ?></div>
-                <div class="timeline-dot"></div>
-                <div class="timeline-content">
-                    <h3><?php echo htmlspecialchars($item['evento']); ?></h3>
-                    <p><?php echo htmlspecialchars($item['descripcion'] ?? ''); ?></p>
-                    <?php if (!empty($item['ubicacion'])): ?>
-                    <div class="timeline-location">
-                        📍 <?php echo htmlspecialchars($item['ubicacion']); ?>
-                    </div>
-                    <?php endif; ?>
-                </div>
-            </div>
-            <?php endforeach; ?>
-        </div>
-    </div>
-</section>
 
 <!-- Sección Galería -->
 <section class="galeria" id="galeria">
@@ -507,39 +533,29 @@ try {
             </div>
             <p class="dresscode-description"><?php echo htmlspecialchars($dresscode); ?></p>
             
+            <?php if (!empty($img_dresscode_mujeres) || !empty($img_dresscode_hombres)): ?>
             <div class="dresscode-examples">
+                <?php if (!empty($img_dresscode_mujeres)): ?>
                 <div class="dresscode-example">
+                    <h3>Mujeres</h3>
                     <div class="dresscode-image">
                         <img src="<?php echo htmlspecialchars($img_dresscode_mujeres); ?>" alt="Vestimenta femenina" />
                         <div class="image-overlay"></div>
                     </div>
-                    <h3>Mujeres</h3>
-                    <?php if ($descripcion_dresscode_mujeres): ?>
-                    <p><?php echo htmlspecialchars($descripcion_dresscode_mujeres); ?></p>
-                    <?php endif; ?>
-                    <!-- <div class="color-palette">
-                        <div class="color-dot olive"></div>
-                        <div class="color-dot sand"></div>
-                        <div class="color-dot cream"></div>
-                    </div> -->
                 </div>
+                <?php endif; ?>
                 
+                <?php if (!empty($img_dresscode_hombres)): ?>
                 <div class="dresscode-example">
+                    <h3>Hombres</h3>
                     <div class="dresscode-image">
                         <img src="<?php echo htmlspecialchars($img_dresscode_hombres); ?>" alt="Vestimenta masculina" />
                         <div class="image-overlay"></div>
                     </div>
-                    <h3>Hombres</h3>
-                    <?php if ($descripcion_dresscode_hombres): ?>
-                    <p><?php echo htmlspecialchars($descripcion_dresscode_hombres); ?></p>
-                    <?php endif; ?>
-                    <!-- <div class="color-palette">
-                        <div class="color-dot olive"></div>
-                        <div class="color-dot sand"></div>
-                        <div class="color-dot cream"></div>
-                    </div> -->
                 </div>
+                <?php endif; ?>
             </div>
+            <?php endif; ?>
         </div>
     </div>
 </section>
@@ -549,37 +565,37 @@ try {
 <section class="mesa-regalos" id="mesa-regalos">
     <div class="container">
         <div class="mesa-regalos-header">
+            <div class="header-icon">🎁</div>
             <h2>Mesa de Regalos</h2>
             <div class="decorative-line"></div>
             <p>Tu presencia es nuestro mejor regalo, pero si deseas obsequiarnos algo especial:</p>
         </div>
-        <div class="regalos-grid">
-            <?php foreach($mesa_regalos as $regalo): ?>
-            <div class="regalo-card">
-                <?php if ($regalo['icono']): ?>
-                <div class="regalo-icon">
-                    <img src="<?php echo htmlspecialchars($regalo['icono']); ?>" alt="<?php echo htmlspecialchars($regalo['nombre_tienda'] ?: $regalo['tienda']); ?>" />
-                </div>
-                <?php endif; ?>
-                <div class="regalo-content">
-                    <h3><?php echo htmlspecialchars($regalo['nombre_tienda'] ?: ucfirst(str_replace('_', ' ', $regalo['tienda']))); ?></h3>
-                    <?php if ($regalo['numero_evento']): ?>
-                    <p><strong>Número de evento:</strong> <?php echo htmlspecialchars($regalo['numero_evento']); ?></p>
-                    <?php endif; ?>
-                    <?php if ($regalo['codigo_evento']): ?>
-                    <p><strong>Código:</strong> <?php echo htmlspecialchars($regalo['codigo_evento']); ?></p>
-                    <?php endif; ?>
-                    <?php if ($regalo['descripcion']): ?>
-                    <p><?php echo htmlspecialchars($regalo['descripcion']); ?></p>
-                    <?php endif; ?>
-                    <?php if ($regalo['url']): ?>
-                    <a href="<?php echo htmlspecialchars($regalo['url']); ?>" target="_blank" class="regalo-link">
-                        Visitar tienda
-                    </a>
-                    <?php endif; ?>
-                </div>
+        <div class="regalos-wrapper">
+            <div class="regalos-grid">
+                <?php foreach($mesa_regalos as $regalo): ?>
+                <a href="<?php echo htmlspecialchars($regalo['url']); ?>" 
+                   target="_blank" 
+                   rel="noopener noreferrer"
+                   class="regalo-card">
+                    <div class="regalo-content">
+                        <?php if ($regalo['icono']): ?>
+                            <div class="regalo-icon">
+                                <img src="<?php echo htmlspecialchars($regalo['icono']); ?>" 
+                                     alt="<?php echo htmlspecialchars($regalo['nombre_tienda'] ?: $regalo['tienda']); ?>" />
+                            </div>
+                        <?php else: ?>
+                            <div class="regalo-text">
+                                <span><?php echo htmlspecialchars($regalo['nombre_tienda'] ?: ucfirst(str_replace('_', ' ', $regalo['tienda']))); ?></span>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                    <div class="card-shine"></div>
+                </a>
+                <?php endforeach; ?>
             </div>
-            <?php endforeach; ?>
+        </div>
+        <div class="mesa-regalos-footer">
+            <p>Con cariño, agradecemos tu generosidad</p>
         </div>
     </div>
 </section>
@@ -752,14 +768,14 @@ $tipo_rsvp = $invitacion['tipo_rsvp'] ?? 'whatsapp';
            <p class="footer-message">
                <?php echo htmlspecialchars($mensaje_footer); ?>
            </p>
-           <div class="footer-actions">
+           <!-- <div class="footer-actions">
                <button class="share-button" onclick="shareWhatsApp()">
                    <span>📱</span> Compartir por WhatsApp
                </button>
                <button class="copy-button" onclick="copyLink()">
                    <span>🔗</span> Copiar enlace
                </button>
-           </div>
+           </div> -->
            <p class="footer-thanks">
                Gracias por ser parte de nuestro día especial
            </p>
@@ -771,32 +787,6 @@ $tipo_rsvp = $invitacion['tipo_rsvp'] ?? 'whatsapp';
    </div>
 </footer>
 
-<?php if (!empty($musica_youtube_url)): ?>
-<link rel="stylesheet" href="./plantillas/plantilla-2/css/music-player.css">
-<script src="./plantillas/plantilla-2/js/music-player.js"></script>
-<script>
-(function() {
-    const musicConfig = {
-        youtubeUrl: '<?php echo addslashes($musica_youtube_url); ?>',
-        autoplay: true, // Siempre true para auto-reproducir
-        volume: <?php echo $musica_volumen; ?>
-    };
-    
-    console.log('Configuración de música:', musicConfig);
-    
-    if (window.initMusicPlayer) {
-        initMusicPlayer(musicConfig.youtubeUrl, musicConfig.autoplay, musicConfig.volume);
-    } else {
-        document.addEventListener('DOMContentLoaded', function() {
-            if (window.initMusicPlayer) {
-                initMusicPlayer(musicConfig.youtubeUrl, musicConfig.autoplay, musicConfig.volume);
-            }
-        });
-    }
-})();
-</script>
-<?php endif; ?>
-
 <script>
 // Variables globales para JavaScript
 const invitacionData = {
@@ -805,6 +795,8 @@ const invitacionData = {
     fecha: '<?php echo $invitacion['fecha_evento']; ?>',
     hora: '<?php echo $invitacion['hora_evento']; ?>',
     mostrarContador: <?php echo $mostrar_contador ? 'true' : 'false'; ?>,
+    tipoContador: '<?php echo $tipo_contador; ?>',
+    mostrarCronograma: <?php echo $mostrar_cronograma ? 'true' : 'false'; ?>,
 };
 
 // Configurar número de WhatsApp para RSVP

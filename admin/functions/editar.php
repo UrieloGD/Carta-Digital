@@ -300,6 +300,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ]);
             }
         }
+
+        // Procesar mesas de regalos
+        $db->prepare("DELETE FROM invitacion_mesa_regalos WHERE invitacion_id = ?")->execute([$id]);
+
+        if (!empty($_POST['mesa_regalos_tienda']) && is_array($_POST['mesa_regalos_tienda'])) {
+            $stmt = $db->prepare("INSERT INTO invitacion_mesa_regalos (invitacion_id, tienda, nombre_tienda, url, numero_evento, descripcion, orden, activa) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+            
+            foreach ($_POST['mesa_regalos_tienda'] as $index => $tienda) {
+                if (!empty($tienda) && (!empty($_POST['mesa_regalos_numero'][$index]) || !empty($_POST['mesa_regalos_url'][$index]))) {
+                    $activa = isset($_POST['mesa_regalos_activa'][$index]) ? 1 : 0;
+                    
+                    $stmt->execute([
+                        $id,
+                        $tienda,
+                        $tienda === 'otro' ? ($_POST['mesa_regalos_descripcion'][$index] ?? '') : null,
+                        $_POST['mesa_regalos_url'][$index] ?? '',
+                        $_POST['mesa_regalos_numero'][$index] ?? '',
+                        $_POST['mesa_regalos_descripcion'][$index] ?? '',
+                        $index,
+                        $activa
+                    ]);
+                }
+            }
+        }
         
         $db->commit();
         $success = true;
@@ -355,6 +379,12 @@ $ubicaciones_stmt = $db->prepare($ubicaciones_query);
 $ubicaciones_stmt->execute([$id]);
 $ubicaciones = $ubicaciones_stmt->fetchAll(PDO::FETCH_ASSOC);
 
+// Obtener mesas de regalos existentes
+$mesas_regalos_query = "SELECT * FROM invitacion_mesa_regalos WHERE invitacion_id = ? ORDER BY orden ASC";
+$mesas_regalos_stmt = $db->prepare($mesas_regalos_query);
+$mesas_regalos_stmt->execute([$id]);
+$mesas_regalos = $mesas_regalos_stmt->fetchAll(PDO::FETCH_ASSOC);
+
 // Separar ubicaciones por tipo
 $ceremonia = null;
 $evento = null;
@@ -373,9 +403,12 @@ foreach($ubicaciones as $ub) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="./../css/editar.css?v=<?php echo filemtime('./../css/editar.css'); ?>" />
     <!-- Icon page -->
     <link rel="shortcut icon" href="./../../images/logo.webp" />
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="./../css/forms.css?v=<?php echo filemtime('./../css/forms.css'); ?>" />
 </head>
 <body>
     <!-- Navbar -->
@@ -585,14 +618,20 @@ foreach($ubicaciones as $ub) {
                                 value="<?php echo $ceremonia ? htmlspecialchars($ceremonia['google_maps_url']) : ''; ?>">
                         </div>
                         
-                        <!-- Imagen Ceremonia - DENTRO de la columna de ceremonia -->
+                        <!-- Imagen Ceremonia -->
                         <div class="form-group">
                             <label for="ceremonia_imagen" class="form-label">Imagen de la Ceremonia (opcional)</label>
                             
                             <?php if ($ceremonia && $ceremonia['imagen']): ?>
                                 <div class="current-image mb-2">
                                     <img src="../../<?php echo $ceremonia['imagen']; ?>" alt="Imagen actual" class="img-thumbnail" style="max-height: 150px;">
-                                    <div class="form-text mt-1">Imagen actual</div>
+                                    <div class="d-flex justify-content-between align-items-center mt-2">
+                                        <div class="form-text">Imagen actual</div>
+                                        <button type="button" onclick="eliminarImagen('ceremonia', <?php echo $id; ?>)" 
+                                            class="btn btn-danger btn-sm">
+                                            <i class="bi bi-trash"></i> Eliminar
+                                        </button>
+                                    </div>
                                 </div>
                             <?php endif; ?>
                             
@@ -638,14 +677,20 @@ foreach($ubicaciones as $ub) {
                                 value="<?php echo $evento ? htmlspecialchars($evento['google_maps_url']) : ''; ?>">
                         </div>
                         
-                        <!-- Imagen Evento - DENTRO de la columna de evento -->
+                        <!-- Imagen Evento -->
                         <div class="form-group">
                             <label for="evento_imagen" class="form-label">Imagen del Evento (opcional)</label>
                             
                             <?php if ($evento && $evento['imagen']): ?>
                                 <div class="current-image mb-2">
                                     <img src="../../<?php echo $evento['imagen']; ?>" alt="Imagen actual" class="img-thumbnail" style="max-height: 150px;">
-                                    <div class="form-text mt-1">Imagen actual</div>
+                                    <div class="d-flex justify-content-between align-items-center mt-2">
+                                        <div class="form-text">Imagen actual</div>
+                                        <button type="button" onclick="eliminarImagen('evento', <?php echo $id; ?>)" 
+                                            class="btn btn-danger btn-sm">
+                                            <i class="bi bi-trash"></i> Eliminar
+                                        </button>
+                                    </div>
                                 </div>
                             <?php endif; ?>
                             
@@ -695,7 +740,13 @@ foreach($ubicaciones as $ub) {
                         <?php if ($invitacion['imagen_hero']): ?>
                             <div class="current-image mb-2">
                                 <img src="../../<?php echo $invitacion['imagen_hero']; ?>" alt="Imagen actual" class="img-thumbnail">
-                                <div class="form-text mt-1">Imagen actual</div>
+                                <div class="d-flex justify-content-between align-items-center mt-2">
+                                    <div class="form-text">Imagen actual</div>
+                                    <button type="button" onclick="eliminarImagen('hero', <?php echo $id; ?>)" 
+                                        class="btn btn-danger btn-sm">
+                                        <i class="bi bi-trash"></i> Eliminar
+                                    </button>
+                                </div>
                             </div>
                         <?php endif; ?>
                         
@@ -710,17 +761,23 @@ foreach($ubicaciones as $ub) {
                         <div id="hero-preview" class="mt-2">
                             <img id="hero-preview-img" src="#" alt="Preview" class="img-thumbnail d-none img-preview">
                         </div>
-                        <div class="form-text">Deja vacío para mantener la imagen actual</div>
+                        <div class="form-text">Sube una nueva imagen o deja vacío para mantener la actual</div>
                     </div>
                     
-                    <!-- Imagen Dedicatoria -->
+                   <!-- Imagen Dedicatoria -->
                     <div class="form-group">
                         <label for="imagen_dedicatoria" class="form-label">Imagen Dedicatoria</label>
                         
                         <?php if ($invitacion['imagen_dedicatoria']): ?>
                             <div class="current-image mb-2">
                                 <img src="../../<?php echo $invitacion['imagen_dedicatoria']; ?>" alt="Imagen actual" class="img-thumbnail">
-                                <div class="form-text mt-1">Imagen actual</div>
+                                <div class="d-flex justify-content-between align-items-center mt-2">
+                                    <div class="form-text">Imagen actual</div>
+                                    <button type="button" onclick="eliminarImagen('dedicatoria', <?php echo $id; ?>)" 
+                                        class="btn btn-danger btn-sm">
+                                        <i class="bi bi-trash"></i> Eliminar
+                                    </button>
+                                </div>
                             </div>
                         <?php endif; ?>
                         
@@ -735,9 +792,9 @@ foreach($ubicaciones as $ub) {
                         <div id="dedicatoria-preview" class="mt-2">
                             <img id="dedicatoria-preview-img" src="#" alt="Preview" class="img-thumbnail d-none img-preview">
                         </div>
-                        <div class="form-text">Deja vacío para mantener la imagen actual</div>
+                        <div class="form-text">Sube una nueva imagen o deja vacío para mantener la actual</div>
                     </div>
-                    
+
                     <!-- Imagen Destacada -->
                     <div class="form-group">
                         <label for="imagen_destacada" class="form-label">Imagen Destacada</label>
@@ -745,7 +802,13 @@ foreach($ubicaciones as $ub) {
                         <?php if ($invitacion['imagen_destacada']): ?>
                             <div class="current-image mb-2">
                                 <img src="../../<?php echo $invitacion['imagen_destacada']; ?>" alt="Imagen actual" class="img-thumbnail">
-                                <div class="form-text mt-1">Imagen actual</div>
+                                <div class="d-flex justify-content-between align-items-center mt-2">
+                                    <div class="form-text">Imagen actual</div>
+                                    <button type="button" onclick="eliminarImagen('destacada', <?php echo $id; ?>)" 
+                                        class="btn btn-danger btn-sm">
+                                        <i class="bi bi-trash"></i> Eliminar
+                                    </button>
+                                </div>
                             </div>
                         <?php endif; ?>
                         
@@ -760,7 +823,7 @@ foreach($ubicaciones as $ub) {
                         <div id="destacada-preview" class="mt-2">
                             <img id="destacada-preview-img" src="#" alt="Preview" class="img-thumbnail d-none img-preview">
                         </div>
-                        <div class="form-text">Deja vacío para mantener la imagen actual</div>
+                        <div class="form-text">Sube una nueva imagen o deja vacío para mantener la actual</div>
                     </div>
                 </div>
             </div>
@@ -956,7 +1019,13 @@ foreach($ubicaciones as $ub) {
                         <?php if ($dresscode_data && $dresscode_data['hombres']): ?>
                             <div class="current-image mb-2">
                                 <img src="../../<?php echo $dresscode_data['hombres']; ?>" alt="Imagen actual" class="img-thumbnail">
-                                <div class="form-text mt-1">Imagen actual</div>
+                                <div class="d-flex justify-content-between align-items-center mt-2">
+                                    <div class="form-text">Imagen actual</div>
+                                    <button type="button" onclick="eliminarImagen('dresscode_hombres', <?php echo $id; ?>)" 
+                                        class="btn btn-danger btn-sm">
+                                        <i class="bi bi-trash"></i> Eliminar
+                                    </button>
+                                </div>
                             </div>
                         <?php endif; ?>
                         
@@ -971,7 +1040,7 @@ foreach($ubicaciones as $ub) {
                         <div id="dresscode-hombres-preview" class="mt-2">
                             <img id="dresscode-hombres-preview-img" src="#" alt="Preview" class="img-thumbnail d-none img-preview">
                         </div>
-                        <div class="form-text">Deja vacío para mantener la imagen actual</div>
+                        <div class="form-text">Sube una nueva imagen o deja vacío para mantener la actual</div>
                     </div>
                     
                     <div class="form-group">
@@ -980,7 +1049,13 @@ foreach($ubicaciones as $ub) {
                         <?php if ($dresscode_data && $dresscode_data['mujeres']): ?>
                             <div class="current-image mb-2">
                                 <img src="../../<?php echo $dresscode_data['mujeres']; ?>" alt="Imagen actual" class="img-thumbnail">
-                                <div class="form-text mt-1">Imagen actual</div>
+                                <div class="d-flex justify-content-between align-items-center mt-2">
+                                    <div class="form-text">Imagen actual</div>
+                                    <button type="button" onclick="eliminarImagen('dresscode_mujeres', <?php echo $id; ?>)" 
+                                        class="btn btn-danger btn-sm">
+                                        <i class="bi bi-trash"></i> Eliminar
+                                    </button>
+                                </div>
                             </div>
                         <?php endif; ?>
                         
@@ -995,13 +1070,140 @@ foreach($ubicaciones as $ub) {
                         <div id="dresscode-mujeres-preview" class="mt-2">
                             <img id="dresscode-mujeres-preview-img" src="#" alt="Preview" class="img-thumbnail d-none img-preview">
                         </div>
-                        <div class="form-text">Deja vacío para mantener la imagen actual</div>
+                        <div class="form-text">Sube una nueva imagen o deja vacío para mantener la actual</div>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="dresscode" class="form-label">Descripción del Código de Vestimenta</label>
                     <textarea id="dresscode" name="dresscode" rows="2" class="form-control" 
                         placeholder="Por favor, viste atuendo elegante..."><?php echo htmlspecialchars($invitacion['dresscode']); ?></textarea>
+                </div>
+            </div>
+
+            <!-- Mesas de Regalos -->
+            <div class="form-section">
+                <h3 class="section-title">
+                    <i class="bi bi-gift me-2"></i>
+                    Mesas de Regalos
+                </h3>
+                
+                <div id="mesas-regalos-container">
+                    <?php if (!empty($mesas_regalos)): ?>
+                        <?php foreach($mesas_regalos as $index => $mesa): ?>
+                        <div class="mesa-regalos-item">
+                            <input type="hidden" name="mesa_regalos_id[]" value="<?php echo $mesa['id']; ?>">
+                            <div class="row g-2">
+                                <div class="col-md-3">
+                                    <label class="form-label">Tienda</label>
+                                    <select name="mesa_regalos_tienda[]" class="form-select">
+                                        <option value="liverpool" <?php echo $mesa['tienda'] == 'liverpool' ? 'selected' : ''; ?>>Liverpool</option>
+                                        <option value="amazon" <?php echo $mesa['tienda'] == 'amazon' ? 'selected' : ''; ?>>Amazon</option>
+                                        <option value="sears" <?php echo $mesa['tienda'] == 'sears' ? 'selected' : ''; ?>>Sears</option>
+                                        <option value="palacio_hierro" <?php echo $mesa['tienda'] == 'palacio_hierro' ? 'selected' : ''; ?>>Palacio de Hierro</option>
+                                        <option value="walmart" <?php echo $mesa['tienda'] == 'walmart' ? 'selected' : ''; ?>>Walmart</option>
+                                        <option value="costco" <?php echo $mesa['tienda'] == 'costco' ? 'selected' : ''; ?>>Costco</option>
+                                        <option value="coppel" <?php echo $mesa['tienda'] == 'coppel' ? 'selected' : ''; ?>>Coppel</option>
+                                        <option value="elektra" <?php echo $mesa['tienda'] == 'elektra' ? 'selected' : ''; ?>>Elektra</option>
+                                        <option value="otro" <?php echo $mesa['tienda'] == 'otro' ? 'selected' : ''; ?>>Otra tienda</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Número de Evento</label>
+                                    <input type="text" name="mesa_regalos_numero[]" class="form-control" 
+                                        placeholder="Ej: 123456" value="<?php echo htmlspecialchars($mesa['numero_evento']); ?>">
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">URL del Registro</label>
+                                    <input type="url" name="mesa_regalos_url[]" class="form-control" 
+                                        placeholder="https://..." value="<?php echo htmlspecialchars($mesa['url']); ?>">
+                                </div>
+                                <div class="col-md-2 d-flex align-items-end">
+                                    <button type="button" onclick="eliminarMesaRegalos(this)" class="btn btn-outline-danger btn-sm">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="row g-2 mt-1">
+                                <div class="col-md-6">
+                                    <label class="form-label">Descripción (opcional)</label>
+                                    <input type="text" name="mesa_regalos_descripcion[]" class="form-control" 
+                                        placeholder="Ej: Mesa principal en Liverpool"
+                                        value="<?php echo htmlspecialchars($mesa['descripcion']); ?>">
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-check mt-4">
+                                        <input class="form-check-input" type="checkbox" name="mesa_regalos_activa[]" value="1" 
+                                            <?php echo $mesa['activa'] ? 'checked' : ''; ?>>
+                                        <label class="form-check-label">
+                                            Mostrar en la invitación
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr class="my-3">
+                        </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <!-- Mesa vacía por defecto -->
+                        <div class="mesa-regalos-item">
+                            <div class="row g-2">
+                                <div class="col-md-3">
+                                    <label class="form-label">Tienda</label>
+                                    <select name="mesa_regalos_tienda[]" class="form-select">
+                                        <option value="">Selecciona una tienda</option>
+                                        <option value="liverpool">Liverpool</option>
+                                        <option value="amazon">Amazon</option>
+                                        <option value="sears">Sears</option>
+                                        <option value="palacio_hierro">Palacio de Hierro</option>
+                                        <option value="walmart">Walmart</option>
+                                        <option value="costco">Costco</option>
+                                        <option value="coppel">Coppel</option>
+                                        <option value="elektra">Elektra</option>
+                                        <option value="otro">Otra tienda</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Número de Evento</label>
+                                    <input type="text" name="mesa_regalos_numero[]" class="form-control" placeholder="Ej: 123456">
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">URL del Registro</label>
+                                    <input type="url" name="mesa_regalos_url[]" class="form-control" placeholder="https://...">
+                                </div>
+                                <div class="col-md-2 d-flex align-items-end">
+                                    <button type="button" onclick="eliminarMesaRegalos(this)" class="btn btn-outline-danger btn-sm">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="row g-2 mt-1">
+                                <div class="col-md-6">
+                                    <label class="form-label">Descripción (opcional)</label>
+                                    <input type="text" name="mesa_regalos_descripcion[]" class="form-control" 
+                                        placeholder="Ej: Mesa principal en Liverpool">
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-check mt-4">
+                                        <input class="form-check-input" type="checkbox" name="mesa_regalos_activa[]" value="1" checked>
+                                        <label class="form-check-label">
+                                            Mostrar en la invitación
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr class="my-3">
+                        </div>
+                    <?php endif; ?>
+                </div>
+                
+                <button type="button" onclick="agregarMesaRegalos()" class="btn btn-outline-primary">
+                    <i class="bi bi-plus-circle me-1"></i>
+                    Agregar Otra Mesa de Regalos
+                </button>
+                
+                <div class="form-text mt-2">
+                    <i class="bi bi-info-circle me-1"></i>
+                    Puedes agregar múltiples mesas de regalos. Los números de evento los proporciona cada tienda cuando te registras.
                 </div>
             </div>
 
@@ -1101,6 +1303,9 @@ foreach($ubicaciones as $ub) {
 
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Custom JS -->
     <script src="./../js/editar.js?v=<?php echo filemtime('./../js/editar.js'); ?>"></script>
 </body>
 </html>

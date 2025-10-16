@@ -1,0 +1,384 @@
+/* Mesa de Regalos - Plantilla Elegante Minimalista */
+.mesa-regalos {
+    background: var(--bg-dark);
+    padding: 5rem 1rem;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Patrón geométrico sutil de fondo */
+.mesa-regalos::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        linear-gradient(30deg, rgba(212, 196, 168, 0.02) 12%, transparent 12.5%, transparent 87%, rgba(212, 196, 168, 0.02) 87.5%, rgba(212, 196, 168, 0.02)),
+        linear-gradient(150deg, rgba(212, 196, 168, 0.02) 12%, transparent 12.5%, transparent 87%, rgba(212, 196, 168, 0.02) 87.5%, rgba(212, 196, 168, 0.02));
+    background-size: 80px 140px;
+    background-position: 0 0, 40px 70px;
+    opacity: 0.5;
+    z-index: 0;
+}
+
+.mesa-regalos .container {
+    max-width: var(--container-max);
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
+.mesa-regalos-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+}
+
+/* Header */
+.mesa-regalos-header {
+    text-align: center;
+    position: relative;
+}
+
+.header-ornament {
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold-accent), transparent);
+    margin: 0 auto 2rem;
+    opacity: 0.7;
+}
+
+.mesa-regalos-header .section-title {
+    font-family: var(--font-serif);
+    font-size: clamp(2.5rem, 6vw, 3.8rem);
+    color: var(--text-primary);
+    font-weight: 400;
+    margin-bottom: 1.5rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+}
+
+.mesa-regalos-header .decorative-line {
+    width: 120px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent-beige), transparent);
+    margin: 0 auto 2rem;
+    opacity: 0.6;
+}
+
+.mesa-regalos-header .section-subtitle {
+    font-family: var(--font-script);
+    font-size: clamp(1.3rem, 3vw, 1.8rem);
+    color: var(--accent-champagne);
+    margin-bottom: 1rem;
+    font-weight: 500;
+}
+
+.mesa-regalos-header .section-description {
+    font-family: var(--font-sans);
+    font-size: clamp(0.95rem, 2.2vw, 1.05rem);
+    color: var(--text-muted);
+    line-height: 1.7;
+    max-width: 650px;
+    margin: 0 auto;
+    font-weight: 300;
+}
+
+/* Wrapper centrado */
+.regalos-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+/* Grid */
+.regalos-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.8rem;
+    width: 100%;
+    max-width: 420px;
+}
+
+/* Cards */
+.regalo-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--border-radius);
+    background: var(--bg-card);
+    box-shadow: var(--shadow-card);
+    transition: var(--transition-smooth);
+    cursor: pointer;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 150px;
+    padding: 2.5rem;
+    border: 1px solid var(--border-subtle);
+}
+
+.regalo-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, 
+        var(--gold-accent) 0%, 
+        transparent 50%,
+        var(--gold-accent) 100%);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    z-index: 1;
+}
+
+.card-shine {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        45deg,
+        transparent 30%,
+        rgba(212, 196, 168, 0.3) 50%,
+        transparent 70%
+    );
+    transform: rotate(45deg);
+    transition: all 0.6s ease;
+    pointer-events: none;
+    z-index: 3;
+}
+
+.regalo-card:hover .card-shine {
+    transform: rotate(45deg) translate(50%, 50%);
+}
+
+.regalo-card:hover::before {
+    opacity: 0.15;
+}
+
+.regalo-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.5);
+    border-color: rgba(212, 196, 168, 0.3);
+}
+
+.regalo-card:active {
+    transform: translateY(-8px) scale(0.98);
+}
+
+.regalo-card-inner {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 2;
+}
+
+/* Logo de la tienda */
+.regalo-icon {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+}
+
+.regalo-icon img {
+    max-width: 180px;
+    max-height: 95px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    transition: transform 0.4s ease, filter 0.4s ease;
+    filter: brightness(0.95) drop-shadow(0 2px 6px rgba(0, 0, 0, 0.3));
+}
+
+.regalo-card:hover .regalo-icon img {
+    transform: scale(1.12);
+    filter: brightness(1.1) drop-shadow(0 4px 12px rgba(0, 0, 0, 0.4));
+}
+
+/* Texto cuando no hay logo */
+.regalo-text {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.regalo-text span {
+    font-family: var(--font-serif);
+    font-size: clamp(1.5rem, 3.8vw, 1.9rem);
+    color: var(--text-primary);
+    font-weight: 500;
+    line-height: 1.3;
+    transition: all 0.3s ease;
+    word-break: break-word;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.regalo-card:hover .regalo-text span {
+    transform: scale(1.08);
+    color: var(--accent-champagne);
+    text-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* Footer */
+.mesa-regalos-footer {
+    text-align: center;
+    padding-top: 2rem;
+    position: relative;
+}
+
+.footer-ornament {
+    width: 250px;
+    height: 1px;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(212, 196, 168, 0.3), 
+        transparent);
+    margin: 0 auto 2rem;
+}
+
+.mesa-regalos-footer .footer-note {
+    font-family: var(--font-sans);
+    font-size: clamp(0.95rem, 2.3vw, 1.05rem);
+    color: var(--text-muted);
+    font-style: italic;
+    font-weight: 300;
+    letter-spacing: 1px;
+}
+
+/* Animaciones de entrada escalonadas */
+.regalo-card {
+    opacity: 0;
+    animation: fadeInScale 0.7s ease-out forwards;
+}
+
+.regalo-card:nth-child(1) { animation-delay: 0.15s; }
+.regalo-card:nth-child(2) { animation-delay: 0.3s; }
+.regalo-card:nth-child(3) { animation-delay: 0.45s; }
+.regalo-card:nth-child(4) { animation-delay: 0.6s; }
+.regalo-card:nth-child(5) { animation-delay: 0.75s; }
+.regalo-card:nth-child(6) { animation-delay: 0.9s; }
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: translateY(25px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Tablet - 2 columnas */
+@media (min-width: 600px) {
+    .mesa-regalos {
+        padding: 6rem 1.5rem;
+    }
+    
+    .regalos-grid {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 2.5rem;
+        max-width: 800px;
+    }
+    
+    .regalo-card {
+        min-height: 160px;
+        width: calc(50% - 1.25rem);
+        max-width: 380px;
+    }
+    
+    .regalo-icon img {
+        max-width: 200px;
+        max-height: 105px;
+    }
+}
+
+/* Desktop - 3 columnas */
+@media (min-width: 992px) {
+    .mesa-regalos {
+        padding: 7rem 2rem;
+    }
+    
+    .regalos-grid {
+        max-width: 1100px;
+        gap: 3rem;
+    }
+    
+    .regalo-card {
+        min-height: 160px;
+        width: calc(33.333% - 2rem);
+        max-width: 360px;
+    }
+    
+    .regalo-icon img {
+        max-width: 200px;
+        max-height: 105px;
+    }
+    
+    .regalo-text span {
+        font-size: 1.7rem;
+    }
+}
+
+/* Desktop grande */
+@media (min-width: 1200px) {
+    .regalos-grid {
+        max-width: 1150px;
+        gap: 3.5rem;
+    }
+    
+    .regalo-card {
+        min-height: 165px;
+        width: calc(33.333% - 2.33rem);
+        max-width: 370px;
+    }
+}
+
+/* Accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+    .regalo-card,
+    .regalo-icon img,
+    .regalo-text span,
+    .card-shine {
+        animation: none;
+        transition: none;
+    }
+    
+    .regalo-card:hover {
+        transform: none;
+    }
+}
+
+/* Touch devices */
+@media (hover: none) and (pointer: coarse) {
+    .regalo-card {
+        min-height: 155px;
+        padding: 2.8rem;
+    }
+    
+    .regalo-card:active {
+        transform: scale(0.96);
+        transition: transform 0.15s ease;
+    }
+}

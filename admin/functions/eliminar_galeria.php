@@ -1,19 +1,21 @@
 <?php
-// admin/functions/eliminar_galeria.php
 require_once './../../config/database.php';
+
+header('Content-Type: application/json');
 
 $database = new Database();
 $db = $database->getConnection();
 
-$id = $_GET['id'] ?? 0;
-
-if (!$id) {
-    echo json_encode(['success' => false, 'message' => 'ID no válido']);
-    exit();
-}
+$response = ['success' => false, 'message' => ''];
 
 try {
-    // Obtener la ruta de la imagen antes de eliminarla
+    if (!isset($_GET['id'])) {
+        throw new Exception('ID no proporcionado');
+    }
+    
+    $id = $_GET['id'];
+    
+    // Obtener la ruta de la imagen
     $query = "SELECT ruta FROM invitacion_galeria WHERE id = ?";
     $stmt = $db->prepare($query);
     $stmt->execute([$id]);
@@ -26,17 +28,20 @@ try {
             unlink($ruta_archivo);
         }
         
-        // Eliminar registro de la base de datos
+        // Eliminar de la base de datos
         $delete_query = "DELETE FROM invitacion_galeria WHERE id = ?";
         $delete_stmt = $db->prepare($delete_query);
         $delete_stmt->execute([$id]);
         
-        echo json_encode(['success' => true]);
+        $response['success'] = true;
+        $response['message'] = 'Imagen eliminada correctamente';
     } else {
-        echo json_encode(['success' => false, 'message' => 'Imagen no encontrada']);
+        throw new Exception('Imagen no encontrada');
     }
     
 } catch (Exception $e) {
-    echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+    $response['message'] = $e->getMessage();
 }
+
+echo json_encode($response);
 ?>
