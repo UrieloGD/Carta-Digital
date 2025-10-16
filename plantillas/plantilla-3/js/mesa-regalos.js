@@ -1,4 +1,4 @@
-// mesa-regalos.js - Plantilla 4
+// mesa-regalos.js - Plantilla 3
 
 document.addEventListener('DOMContentLoaded', function() {
     inicializarMesaRegalos();
@@ -45,7 +45,7 @@ function registrarClickMesaRegalos(urlTienda) {
             }
         };
         
-        fetch('./plantillas/plantilla-4.1/api/estadisticas.php', {
+        fetch('./plantillas/plantilla-3/api/estadisticas.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
