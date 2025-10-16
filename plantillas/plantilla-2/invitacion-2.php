@@ -236,7 +236,7 @@ try {
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Lato:wght@300;400;500&display=swap" rel="stylesheet">
     
     <!-- Icon page -->
-    <link rel="shortcut icon" href="./../../images/logo.webp" />
+    <link rel="shortcut icon" href="./images/logo.webp" />
 
 </head>
 <body>

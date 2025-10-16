@@ -233,6 +233,7 @@ try {
     <link rel="stylesheet" href="./plantillas/plantilla-4.1/css/galeria.css?v=<?php echo filemtime('./plantillas/plantilla-4.1/css/galeria.css'); ?>" />
     <link rel="stylesheet" href="./plantillas/plantilla-4.1/css/dresscode.css?v=<?php echo filemtime('./plantillas/plantilla-4.1/css/dresscode.css'); ?>" />
     <link rel="stylesheet" href="./plantillas/plantilla-4.1/css/rsvp.css?v=<?php echo filemtime('./plantillas/plantilla-4.1/css/rsvp.css'); ?>" />
+    <link rel="stylesheet" href="./plantillas/plantilla-4.1/css/mesa-regalos.css?v=<?php echo filemtime('./plantillas/plantilla-4.1/css/mesa-regalos.css'); ?>" />
     <link rel="stylesheet" href="./plantillas/plantilla-4.1/css/footer.css?v=<?php echo filemtime('./plantillas/plantilla-4.1/css/footer.css'); ?>" />
     <link rel="stylesheet" href="./plantillas/plantilla-4.1/css/music-player.css?v=<?php echo filemtime('./plantillas/plantilla-4.1/css/music-player.css'); ?>">
     
@@ -862,70 +863,52 @@ try {
 </section>
 
 
-<!-- Sección Mesa de Regalos Elegante Minimalista 
+<!-- Sección Mesa de Regalos -->
 <?php if (!empty($mesa_regalos)): ?>
 <section class="mesa-regalos" id="mesa-regalos">
     <div class="container">
         <div class="mesa-regalos-content">
             <div class="mesa-regalos-header">
                 <h2 class="section-title">Mesa de Regalos</h2>
-                <div class="decorative-line"></div>
+                <div class="decorative-line">
+                    <span class="line-accent"></span>
+                </div>
                 <p class="section-subtitle">Tu presencia es nuestro mejor regalo</p>
                 <p class="section-description">Si deseas obsequiarnos algo especial, hemos preparado estas opciones con mucho cariño</p>
             </div>
             
-            <div class="regalos-grid">
-                <?php foreach($mesa_regalos as $index => $regalo): ?>
-                <div class="regalo-card" data-animate="fadeInUp" data-delay="<?php echo ($index * 0.2); ?>s">
-                    <div class="regalo-card-inner">
-                        <?php if ($regalo['icono']): ?>
-                        <div class="regalo-icon">
-                            <img src="<?php echo htmlspecialchars($regalo['icono']); ?>" alt="<?php echo htmlspecialchars($regalo['nombre_tienda'] ?: $regalo['tienda']); ?>" />
-                        </div>
-                        <?php endif; ?>
-                        
+            <div class="regalos-wrapper">
+                <div class="regalos-grid">
+                    <?php foreach($mesa_regalos as $regalo): ?>
+                    <a href="<?php echo htmlspecialchars($regalo['url']); ?>" 
+                       target="_blank" 
+                       rel="noopener noreferrer"
+                       class="regalo-card">
                         <div class="regalo-content">
-                            <h3 class="regalo-title"><?php echo htmlspecialchars($regalo['nombre_tienda'] ?: ucfirst(str_replace('_', ' ', $regalo['tienda']))); ?></h3>
-                            
-                            <div class="regalo-details">
-                                <?php if ($regalo['numero_evento']): ?>
-                                <div class="regalo-detail">
-                                    <span class="detail-label">Número de evento</span>
-                                    <span class="detail-value"><?php echo htmlspecialchars($regalo['numero_evento']); ?></span>
+                            <?php if ($regalo['icono']): ?>
+                                <div class="regalo-icon">
+                                    <img src="<?php echo htmlspecialchars($regalo['icono']); ?>" 
+                                         alt="<?php echo htmlspecialchars($regalo['nombre_tienda'] ?: $regalo['tienda']); ?>" />
                                 </div>
-                                <?php endif; ?>
-                                
-                                <?php if ($regalo['codigo_evento']): ?>
-                                <div class="regalo-detail">
-                                    <span class="detail-label">Código</span>
-                                    <span class="detail-value"><?php echo htmlspecialchars($regalo['codigo_evento']); ?></span>
+                            <?php else: ?>
+                                <div class="regalo-text">
+                                    <span><?php echo htmlspecialchars($regalo['nombre_tienda'] ?: ucfirst(str_replace('_', ' ', $regalo['tienda']))); ?></span>
                                 </div>
-                                <?php endif; ?>
-                            </div>
-                            
-                            <?php if ($regalo['descripcion']): ?>
-                            <p class="regalo-descripcion"><?php echo htmlspecialchars($regalo['descripcion']); ?></p>
-                            <?php endif; ?>
-                            
-                            <?php if ($regalo['url']): ?>
-                            <a href="<?php echo htmlspecialchars($regalo['url']); ?>" target="_blank" class="regalo-button">
-                                <span class="button-text">Visitar tienda</span>
-                                <span class="button-arrow">→</span>
-                            </a>
                             <?php endif; ?>
                         </div>
-                    </div>
+                        <div class="card-shine"></div>
+                    </a>
+                    <?php endforeach; ?>
                 </div>
-                <?php endforeach; ?>
             </div>
             
-            <div class="mesa-regalos-footer" data-animate="fadeInUp" data-delay="0.8s">
+            <div class="mesa-regalos-footer">
                 <p class="footer-note">Con amor y gratitud por acompañarnos en este momento tan especial</p>
             </div>
         </div>
     </div>
 </section>
-<?php endif; ?> -->
+<?php endif; ?>
 
 <!-- Sección RSVP -->
 <?php
@@ -1256,6 +1239,7 @@ const galeriaImagenes = <?php echo json_encode($galeria); ?>;
 <script src="./plantillas/plantilla-4.1/js/contador.js?v=<?php echo filemtime('./plantillas/plantilla-4.1/js/contador.js'); ?>"></script>
 <script src="./plantillas/plantilla-4.1/js/compartir.js?v=<?php echo filemtime('./plantillas/plantilla-4.1/js/compartir.js'); ?>"></script>
 <script src="./plantillas/plantilla-4.1/js/rsvp.js?v=<?php echo filemtime('./plantillas/plantilla-4.1/js/rsvp.js'); ?>"></script>
+<script src="./plantillas/plantilla-4.1/js/mesa-regalos.js?v=<?php echo filemtime('./plantillas/plantilla-4.1/js/mesa-regalos.js'); ?>"></script>
 <script src="./plantillas/plantilla-4.1/js/whatsapp.js?v=<?php echo filemtime('./plantillas/plantilla-4.1/js/whatsapp.js'); ?>"></script>
 <script src="./plantillas/plantilla-4.1/js/estadisticas.js?v=<?php echo filemtime('./plantillas/plantilla-4.1/js/estadisticas.js'); ?>"></script>
 <script src="./plantillas/plantilla-4.1/js/invitacion.js?v=<?php echo filemtime('./plantillas/plantilla-4.1/js/invitacion.js'); ?>"></script>
