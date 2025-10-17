@@ -1,0 +1,550 @@
+/* Plantilla Ocean Twilight Dark - Elegancia Marina Nocturna */
+:root {
+    /* Paleta marina elegante oscura */
+    --bg-primary: #0d1b2a;           /* Azul marino profundo */
+    --bg-secondary: #1b263b;         /* Azul noche */
+    --bg-card: #253649;              /* Azul pizarra */
+    --accent-teal: #73bfb8;          /* Turquesa suave */
+    --accent-aqua: #a8dadc;          /* Aguamarina */
+    --accent-sand: #f1d4af;          /* Arena dorada */
+    --text-primary: #e6f4f1;         /* Blanco azulado */
+    --text-secondary: #cde7e3;       /* Menta claro */
+    --text-muted: #6d9197;           /* Gris azulado */
+    --highlight: #5fa8d3;            /* Azul cielo */
+    --border-subtle: rgba(115, 191, 184, 0.15);
+    
+    /* Tipografías fluidas elegantes */
+    --font-serif: 'Crimson Text', serif;      /* Serif elegante para títulos */
+    --font-script: 'Alex Brush', cursive;     /* Script fluido principal */
+    --font-elegant: 'Sacramento', cursive;     /* Script alternativo delicado */
+    --font-sans: 'Open Sans', sans-serif;      /* Sans-serif limpia */
+    
+    /* Espaciado y tamaños */
+    --container-max: 1200px;
+    --border-radius: 8px;
+    --section-padding: 120px 0;
+    
+    /* Sombras suaves marinas */
+    --shadow-soft: 0 10px 40px rgba(0, 0, 0, 0.5);
+    --shadow-card: 0 5px 25px rgba(0, 0, 0, 0.6);
+    --shadow-glow: 0 0 20px rgba(115, 191, 184, 0.2);
+    
+    /* Overlays */
+    --overlay-dark: rgba(13, 27, 42, 0.85);
+    --overlay-gradient: linear-gradient(135deg, rgba(13, 27, 42, 0.9) 0%, rgba(27, 38, 59, 0.8) 100%);
+    
+    /* Transiciones elegantes */
+    --transition-smooth: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --transition-wave: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Reset y base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+}
+
+body {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--text-primary);
+    background-color: var(--bg-primary);
+    background-image: 
+        radial-gradient(circle at 20% 30%, rgba(115, 191, 184, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(95, 168, 211, 0.05) 0%, transparent 50%);
+    overflow-x: hidden;
+    font-weight: 300;
+}
+
+/* Container responsive */
+.container {
+    max-width: var(--container-max);
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* Tipografías jerarquizadas marinas */
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-script);
+    font-weight: 400;
+    line-height: 1.3;
+    margin-bottom: 0.5em;
+    color: var(--text-primary);
+}
+
+h1 {
+    font-family: var(--font-script);
+    font-size: clamp(3.5rem, 8vw, 7rem);
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    text-shadow: 0 2px 20px rgba(115, 191, 184, 0.4);
+    color: var(--accent-aqua);
+}
+
+h2 {
+    font-family: var(--font-script);
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    color: var(--accent-teal);
+    margin-bottom: 2rem;
+    text-align: center;
+    font-weight: 400;
+    text-shadow: 0 2px 15px rgba(115, 191, 184, 0.3);
+}
+
+h3 {
+    font-family: var(--font-elegant);
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    color: var(--accent-aqua);
+    font-weight: 400;
+}
+
+h4 {
+    font-family: var(--font-serif);
+    font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+    color: var(--text-secondary);
+    font-weight: 500;
+    font-style: italic;
+}
+
+/* Clases específicas para diferentes elementos */
+.hero-names {
+    font-family: var(--font-script);
+    font-size: clamp(4rem, 10vw, 8rem);
+    font-weight: 400;
+    color: var(--accent-aqua);
+    text-shadow: 0 3px 25px rgba(168, 218, 220, 0.5),
+                 0 0 60px rgba(115, 191, 184, 0.3);
+    letter-spacing: 0.03em;
+}
+
+.section-title {
+    font-family: var(--font-script);
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    color: var(--accent-teal);
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-weight: 400;
+    position: relative;
+}
+
+.event-title, .ubicacion-nombre {
+    font-family: var(--font-elegant);
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    color: var(--accent-aqua);
+    font-weight: 400;
+}
+
+/* Párrafos elegantes */
+p {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.8;
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+    font-weight: 300;
+}
+
+.lead {
+    font-family: var(--font-serif);
+    font-size: 1.125rem;
+    color: var(--text-primary);
+    font-weight: 400;
+    font-style: italic;
+}
+
+/* Líneas decorativas marinas */
+.decorative-line {
+    width: 80px;
+    height: 2px;
+    background: linear-gradient(90deg, 
+        transparent, 
+        var(--accent-teal), 
+        var(--accent-aqua),
+        var(--accent-teal), 
+        transparent
+    );
+    margin: 2rem auto;
+    position: relative;
+    box-shadow: 0 0 10px rgba(115, 191, 184, 0.4);
+}
+
+.decorative-line::before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 8px;
+    height: 8px;
+    background: var(--accent-teal);
+    border-radius: 50%;
+    box-shadow: 0 0 15px rgba(115, 191, 184, 0.6);
+}
+
+/* Decoración de onda */
+.wave-decoration {
+    position: relative;
+}
+
+.wave-decoration::after {
+    content: '';
+    position: absolute;
+    bottom: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 20px;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 20"><path d="M0 10 Q 25 0, 50 10 T 100 10" fill="none" stroke="%2373bfb8" stroke-width="2"/></svg>');
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 0.6;
+}
+
+/* Botones elegantes marinos */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px 32px;
+    background: transparent;
+    color: var(--accent-teal);
+    text-decoration: none;
+    border: 2px solid var(--accent-teal);
+    border-radius: var(--border-radius);
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    min-width: 180px;
+    font-style: italic;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(115, 191, 184, 0.3), 
+        transparent
+    );
+    transition: left 0.5s;
+}
+
+.btn:hover::before {
+    left: 100%;
+}
+
+.btn:hover {
+    background: var(--accent-teal);
+    color: var(--bg-primary);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-glow);
+    border-color: var(--accent-aqua);
+}
+
+/* Secciones */
+section {
+    padding: var(--section-padding);
+    position: relative;
+}
+
+.section-alternate {
+    background: var(--bg-secondary);
+    position: relative;
+}
+
+.section-alternate::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, 
+        transparent, 
+        var(--accent-teal), 
+        transparent
+    );
+    opacity: 0.3;
+}
+
+/* Headers de sección */
+.section-header {
+    text-align: center;
+    margin-bottom: 4rem;
+    position: relative;
+}
+
+.section-header h2 {
+    margin-bottom: 1rem;
+}
+
+.section-header p {
+    font-size: 1rem;
+    color: var(--text-muted);
+    max-width: 600px;
+    margin: 0 auto;
+    font-style: italic;
+}
+
+/* Cards elegantes marinas */
+.card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--border-radius);
+    padding: 2.5rem;
+    transition: var(--transition-smooth);
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, 
+        var(--accent-teal), 
+        var(--accent-aqua)
+    );
+    opacity: 0;
+    transition: var(--transition-smooth);
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-card), var(--shadow-glow);
+    border-color: var(--accent-teal);
+}
+
+.card:hover::before {
+    opacity: 1;
+}
+
+/* Texto cursivo destacado marino */
+.script-text {
+    font-family: var(--font-script);
+    font-size: 1.8rem;
+    color: var(--accent-sand);
+    text-align: center;
+    margin: 2rem 0;
+    font-weight: 400;
+    text-shadow: 0 2px 10px rgba(241, 212, 175, 0.3);
+}
+
+/* Citas y frases especiales */
+.quote-text {
+    font-family: var(--font-script);
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
+    color: var(--accent-aqua);
+    font-style: italic;
+    text-align: center;
+    line-height: 1.4;
+    text-shadow: 0 2px 15px rgba(168, 218, 220, 0.3);
+}
+
+.quote-author {
+    font-family: var(--font-elegant);
+    font-size: 1.2rem;
+    color: var(--accent-sand);
+    text-align: center;
+    margin-top: 1rem;
+}
+
+/* Subtítulos elegantes */
+.section-subtitle {
+    font-family: var(--font-serif);
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    text-align: center;
+    font-style: italic;
+    font-weight: 300;
+}
+
+/* Animaciones marinas */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes waveFloat {
+    0%, 100% {
+        transform: translateY(0) translateX(0);
+    }
+    25% {
+        transform: translateY(-10px) translateX(5px);
+    }
+    50% {
+        transform: translateY(0) translateX(10px);
+    }
+    75% {
+        transform: translateY(10px) translateX(5px);
+    }
+}
+
+@keyframes ripple {
+    0% {
+        box-shadow: 0 0 0 0 rgba(115, 191, 184, 0.4);
+    }
+    100% {
+        box-shadow: 0 0 0 20px rgba(115, 191, 184, 0);
+    }
+}
+
+.fade-in-up {
+    animation: fadeInUp 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.wave-float {
+    animation: waveFloat 6s ease-in-out infinite;
+}
+
+/* Estados de hover elegantes */
+.hover-elegant {
+    transition: var(--transition-smooth);
+}
+
+.hover-elegant:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-soft);
+}
+
+/* Efecto de brillo marino */
+.shimmer {
+    position: relative;
+    overflow: hidden;
+}
+
+.shimmer::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg,
+        transparent,
+        rgba(168, 218, 220, 0.2),
+        transparent
+    );
+    animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        left: -100%;
+    }
+    100% {
+        left: 100%;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .container {
+        padding: 0 20px;
+    }
+    
+    section {
+        padding: 100px 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 0 16px;
+    }
+    
+    section {
+        padding: 80px 0;
+    }
+    
+    .btn {
+        padding: 14px 24px;
+        font-size: 0.85rem;
+        min-width: 160px;
+    }
+    
+    .card {
+        padding: 2rem;
+    }
+    
+    .hero-names {
+        font-size: clamp(3rem, 8vw, 6rem);
+    }
+    
+    .script-text {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    section {
+        padding: 60px 0;
+    }
+    
+    p {
+        font-size: 0.95rem;
+    }
+    
+    .quote-text {
+        font-size: clamp(1.25rem, 4vw, 1.8rem);
+    }
+}
+
+/* Utilidades */
+.text-center {
+    text-align: center;
+}
+
+.mb-0 { margin-bottom: 0; }
+.mb-1 { margin-bottom: 1rem; }
+.mb-2 { margin-bottom: 2rem; }
+.mb-3 { margin-bottom: 3rem; }
+
+.mt-0 { margin-top: 0; }
+.mt-1 { margin-top: 1rem; }
+.mt-2 { margin-top: 2rem; }
+.mt-3 { margin-top: 3rem; }
+
+/* Elementos decorativos marinos */
+.ocean-accent {
+    color: var(--accent-teal);
+}
+
+.aqua-accent {
+    color: var(--accent-aqua);
+}
+
+.sand-accent {
+    color: var(--accent-sand);
+}
+
+.text-glow {
+    text-shadow: 0 0 20px currentColor;
+}

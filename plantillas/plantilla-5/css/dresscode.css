@@ -1,0 +1,179 @@
+/* Sección Dress Code */
+.dresscode {
+    padding: 6rem 0;
+    background: var(--color-primary);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+}
+
+.dresscode-content {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.dresscode h2 {
+    font-family: var(--font-serif);
+    font-size: 3rem;
+    color: var(--color-secondary);
+    margin-bottom: 2rem;
+    font-weight: 400;
+}
+
+.dresscode p {
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+    color: var(--color-text-light);
+    margin-bottom: 3rem;
+    line-height: 1.6;
+    letter-spacing: 1px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 3rem;
+}
+
+/* Sección de géneros - Solo texto */
+.dresscode-gender-section {
+    display: flex;
+    justify-content: center;
+    gap: 6rem;
+    margin-bottom: 4rem;
+}
+
+/* Cuando no hay imágenes, reducimos el margen inferior */
+.dresscode-content:not(:has(.dresscode-examples)) .dresscode-gender-section,
+.dresscode-content:has(.dresscode-examples:empty) .dresscode-gender-section {
+    margin-bottom: 2rem;
+}
+
+.gender-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.gender-section h3 {
+    font-family: var(--font-serif);
+    font-size: 1.4rem;
+    color: var(--color-secondary);
+    font-weight: 500;
+    letter-spacing: 2px;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+.gender-section p {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    color: var(--color-text-light);
+    margin: 0;
+    line-height: 1.5;
+    max-width: 250px;
+    letter-spacing: 0.5px;
+}
+
+/* Cuando no hay descripción específica por género, ocultamos las secciones */
+.gender-section:has(p:empty) {
+    display: none;
+}
+
+/* Si ambos géneros están vacíos, ocultamos toda la sección de géneros */
+.dresscode-gender-section:has(.gender-section:first-child:empty) + .gender-section:last-child:empty {
+    display: none;
+}
+
+/* Ejemplos de imágenes con marco estilo photocard */
+.dresscode-examples {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    align-items: center;
+}
+
+/* Cuando solo hay una imagen, centrarla */
+.dresscode-examples:has(.dresscode-example-image:only-child) {
+    justify-content: center;
+}
+
+.dresscode-example-image {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+}
+
+/* Hombre - rotación a la izquierda */
+.dresscode-example-image.women {
+    transform: rotate(-8deg);
+}
+
+.dresscode-example-image.women:hover {
+    transform: rotate(-2deg) scale(1.05);
+}
+
+/* Mujer - rotación a la derecha */
+.dresscode-example-image.men {
+    transform: rotate(8deg);
+}
+
+.dresscode-example-image.men:hover {
+    transform: rotate(2deg) scale(1.05);
+}
+
+.dresscode-example-image img {
+    width: 320px;
+    height: 400px;
+    object-fit: cover;
+    display: block;
+    border-radius: 4px;
+}
+
+/* Estados cuando no hay imágenes */
+.dresscode-examples:empty {
+    display: none;
+}
+
+/* Mejora el diseño cuando solo hay texto (sin imágenes) */
+.dresscode.sin-imagenes {
+    min-height: 60vh;
+}
+
+.dresscode.sin-imagenes .dresscode-content {
+    padding: 2rem 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .dresscode-gender-section {
+        flex-direction: column;
+        gap: 2rem;
+    }
+    
+    .dresscode-examples {
+        flex-direction: column;
+        gap: 3rem;
+    }
+    
+    .dresscode-example-image.women,
+    .dresscode-example-image.men {
+        transform: none;
+    }
+    
+    .dresscode-example-image.women:hover,
+    .dresscode-example-image.men:hover {
+        transform: scale(1.05);
+    }
+    
+    .dresscode h2 {
+        font-size: 2.2rem;
+    }
+    
+    .dresscode p {
+        font-size: 0.85rem;
+        padding: 0 1rem;
+    }
+}

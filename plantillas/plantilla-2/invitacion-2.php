@@ -107,6 +107,11 @@ if (empty($galeria)) {
     ];
 }
 
+// Obtener musica
+$musica_youtube_url = $invitacion['musica_youtube_url'] ?? '';
+$musica_autoplay = (bool)($invitacion['musica_autoplay'] ?? false);
+$musica_volumen = $invitacion['musica_volumen'] ?? 0.5;
+
 // Obtener información completa de dresscode
 $dresscode_query = "SELECT * FROM invitacion_dresscode WHERE invitacion_id = ?";
 $dresscode_stmt = $db->prepare($dresscode_query);
@@ -768,14 +773,14 @@ $tipo_rsvp = $invitacion['tipo_rsvp'] ?? 'whatsapp';
            <p class="footer-message">
                <?php echo htmlspecialchars($mensaje_footer); ?>
            </p>
-           <!-- <div class="footer-actions">
+           <div class="footer-actions">
                <button class="share-button" onclick="shareWhatsApp()">
                    <span>📱</span> Compartir por WhatsApp
                </button>
                <button class="copy-button" onclick="copyLink()">
                    <span>🔗</span> Copiar enlace
                </button>
-           </div> -->
+           </div>
            <p class="footer-thanks">
                Gracias por ser parte de nuestro día especial
            </p>
@@ -786,6 +791,30 @@ $tipo_rsvp = $invitacion['tipo_rsvp'] ?? 'whatsapp';
        </div>
    </div>
 </footer>
+
+<?php if (!empty($musica_youtube_url)): ?>
+<script>
+(function() {
+    const musicConfig = {
+        youtubeUrl: '<?php echo addslashes($musica_youtube_url); ?>',
+        autoplay: true, // Siempre true para auto-reproducir
+        volume: <?php echo $musica_volumen; ?>
+    };
+    
+    console.log('Configuración de música:', musicConfig);
+    
+    if (window.initMusicPlayer) {
+        initMusicPlayer(musicConfig.youtubeUrl, musicConfig.autoplay, musicConfig.volume);
+    } else {
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.initMusicPlayer) {
+                initMusicPlayer(musicConfig.youtubeUrl, musicConfig.autoplay, musicConfig.volume);
+            }
+        });
+    }
+})();
+</script>
+<?php endif; ?>
 
 <script>
 // Variables globales para JavaScript

@@ -136,6 +136,11 @@ if (empty($galeria)) {
     ];
 }
 
+// Obtener musica
+$musica_youtube_url = $invitacion['musica_youtube_url'] ?? '';
+$musica_autoplay = (bool)($invitacion['musica_autoplay'] ?? false);
+$musica_volumen = $invitacion['musica_volumen'] ?? 0.5;
+
 // Obtener información completa de dresscode
 $dresscode_query = "SELECT * FROM invitacion_dresscode WHERE invitacion_id = ?";
 $dresscode_stmt = $db->prepare($dresscode_query);
@@ -808,8 +813,6 @@ $tipo_rsvp = $invitacion['tipo_rsvp'] ?? 'whatsapp';
 </div>
 
 <?php if (!empty($musica_youtube_url)): ?>
-<link rel="stylesheet" href="./plantillas/plantilla-1/css/music-player.css">
-<script src="./plantillas/plantilla-1/js/music-player.js"></script>
 <script>
 (function() {
     const musicConfig = {
@@ -833,6 +836,7 @@ $tipo_rsvp = $invitacion['tipo_rsvp'] ?? 'whatsapp';
 </script>
 <?php endif; ?>
 
+
 <script>
 // Variables globales para JavaScript
 const invitacionData = {
@@ -853,5 +857,6 @@ const invitacionData = {
 <script src="./plantillas/plantilla-1/js/invitacion.js?v=<?php echo filemtime('./plantillas/plantilla-1/js/invitacion.js'); ?>"></script>
 <script src="./plantillas/plantilla-1/js/music-player.js?v=<?php echo filemtime('./plantillas/plantilla-1/js/music-player.js'); ?>"></script>
 <script src="./plantillas/plantilla-1/js/whatsapp.js?v=<?php echo filemtime('./plantillas/plantilla-1/js/whatsapp.js'); ?>"></script>
+
 </body>
 </html>
