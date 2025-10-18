@@ -412,6 +412,33 @@ function eliminarMesaRegalos(button) {
     });
 }
 
+// Función para mostrar/ocultar botones de compartir
+function toggleShareButtons() {
+    const mostrarCompartir = document.getElementById('mostrar_compartir');
+    const shareSection = document.getElementById('share-section');
+    
+    if (mostrarCompartir && shareSection) {
+        if (mostrarCompartir.checked) {
+            shareSection.style.display = 'block';
+        } else {
+            shareSection.style.display = 'none';
+        }
+    }
+}
+
+// Inicializar cuando el DOM esté listo
+document.addEventListener('DOMContentLoaded', function() {
+    const mostrarCompartir = document.getElementById('mostrar_compartir');
+    
+    // Inicializar estado
+    toggleShareButtons();
+    
+    // Agregar event listener
+    if (mostrarCompartir) {
+        mostrarCompartir.addEventListener('change', toggleShareButtons);
+    }
+});
+
 // Inicialización cuando el DOM está listo
 document.addEventListener('DOMContentLoaded', function() {    
     // Inicializar todas las funciones

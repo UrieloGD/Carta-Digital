@@ -54,6 +54,7 @@ CREATE TABLE IF NOT EXISTS invitaciones (
     mostrar_contador TINYINT(1) DEFAULT 1,
     tipo_contador ENUM('completo', 'simple') DEFAULT 'completo', 
     mostrar_cronograma TINYINT(1) DEFAULT 1,
+    mostrar_compartir TINYINT(1) DEFAULT 1,
 
     -- Musica
     musica_youtube_url VARCHAR(255),

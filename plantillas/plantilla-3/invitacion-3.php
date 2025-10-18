@@ -1128,7 +1128,8 @@ $tipo_rsvp = $invitacion['tipo_rsvp'] ?? 'whatsapp';
                     </div>
                 </div>
                 
-                <!-- <div class="footer-actions">
+                <?php if ($invitacion['mostrar_compartir'] ?? true): ?>
+                <div class="footer-actions">
                     <button class="footer-button" onclick="shareWhatsApp()" type="button">
                         <span class="button-icon" style="font-size: 1.1em;">📱</span>
                         <span class="button-text">Compartir invitación</span>
@@ -1137,7 +1138,9 @@ $tipo_rsvp = $invitacion['tipo_rsvp'] ?? 'whatsapp';
                         <span class="button-icon" style="font-size: 1.1em;">🔗</span>
                         <span class="button-text">Copiar enlace</span>
                     </button>
-                </div> -->
+                </div>
+                <?php endif; ?>
+
                 
                 <div class="footer-thanks">
                     <p class="thanks-text">Gracias por ser parte de nuestro día especial</p>

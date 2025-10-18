@@ -102,12 +102,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             padres_novia, padres_novio, padrinos_novia, padrinos_novio,
             musica_youtube_url, musica_autoplay, musica_volumen,
             imagen_hero, imagen_dedicatoria, imagen_destacada, whatsapp_confirmacion, 
-            tipo_rsvp, fecha_limite_rsvp, mostrar_contador, tipo_contador, mostrar_cronograma
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            tipo_rsvp, fecha_limite_rsvp, mostrar_contador, tipo_contador, mostrar_cronograma,
+            mostrar_compartir
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         
         $mostrar_contador = isset($_POST['mostrar_contador']) ? 1 : 0;
         $tipo_contador = $_POST['tipo_contador'] ?? 'completo';
         $mostrar_cronograma = isset($_POST['mostrar_cronograma']) ? 1 : 0;
+        $mostrar_compartir = isset($_POST['mostrar_compartir']) ? 1 : 0;
 
         $stmt = $db->prepare($insert_query);
         $stmt->execute([
@@ -136,7 +138,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             !empty($_POST['fecha_limite_rsvp']) ? $_POST['fecha_limite_rsvp'] : NULL,
             $mostrar_contador,
             $tipo_contador,
-            $mostrar_cronograma
+            $mostrar_cronograma,
+            $mostrar_compartir 
         ]);
         
         $invitacion_id = $db->lastInsertId();
@@ -933,6 +936,24 @@ $plantillas = $plantilla_stmt->fetchAll(PDO::FETCH_ASSOC);
                     <input type="text" id="firma_footer" name="firma_footer" class="form-control" 
                         placeholder="Con amor, Victoria & Matthew"
                         value="<?php echo htmlspecialchars($_POST['firma_footer'] ?? ''); ?>">
+                </div>
+
+                <!-- Botones de Compartir -->
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <i class="bi bi-share me-2"></i>
+                        Botones de Compartir
+                    </h3>
+                    
+                    <div class="form-group">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="mostrar_compartir" name="mostrar_compartir" value="1" checked>
+                            <label class="form-check-label" for="mostrar_compartir">
+                                Mostrar botones de compartir en el footer
+                            </label>
+                        </div>
+                        <div class="form-text">Activa o desactiva los botones para compartir la invitación por WhatsApp y copiar enlace</div>
+                    </div>
                 </div>
             </div>
 

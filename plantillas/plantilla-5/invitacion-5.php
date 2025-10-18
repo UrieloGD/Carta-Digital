@@ -780,27 +780,31 @@ $tipo_rsvp = $invitacion['tipo_rsvp'] ?? 'whatsapp';
 
 <!-- Footer -->
 <footer class="footer">
-  <div class="container">
-      <div class="footer-content">
-          <p class="footer-message">
-              <?php echo htmlspecialchars($mensaje_footer); ?>
-          </p>
-          <!-- <div class="footer-actions">
-              <button class="share-button" onclick="shareWhatsApp()">
-                  <span>📱</span> Compartir por WhatsApp
-              </button>
-              <button class="copy-button" onclick="copyLink()">
-                  <span>🔗</span> Copiar enlace
-              </button>
-          </div> -->
-          <p class="footer-thanks">
-              Gracias por ser parte de nuestro día especial
-          </p>
-          <p class="footer-signature">
-              Con amor, <?php echo htmlspecialchars($firma_footer); ?>
-          </p>
-      </div>
-  </div>
+    <div class="container">
+        <div class="footer-content">
+            <p class="footer-message">
+                <?php echo htmlspecialchars($mensaje_footer); ?>
+            </p>
+          
+            <?php if ($invitacion['mostrar_compartir'] ?? true): ?>
+            <div class="footer-actions">
+                <button class="share-button" onclick="shareWhatsApp()">
+                    <span>📱</span> Compartir por WhatsApp
+                </button>
+                <button class="copy-button" onclick="copyLink()">
+                    <span>🔗</span> Copiar enlace
+                </button>
+            </div>
+            <?php endif; ?>
+
+            <p class="footer-thanks">
+                  Gracias por ser parte de nuestro día especial
+            </p>
+            <p class="footer-signature">
+                Con amor, <?php echo htmlspecialchars($firma_footer); ?>
+            </p>
+        </div>
+    </div>
 </footer>
 
 <!-- Mensaje de éxito RSVP -->

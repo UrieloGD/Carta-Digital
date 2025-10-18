@@ -445,6 +445,42 @@ function eliminarMesaRegalos(button) {
     });
 }
 
+// Función para mostrar/ocultar botones de compartir
+function toggleShareButtons() {
+    const mostrarCompartir = document.getElementById('mostrar_compartir');
+    const shareSection = document.getElementById('share-section');
+    const previewButtons = document.querySelectorAll('.preview-share-button');
+    
+    if (mostrarCompartir && shareSection) {
+        if (mostrarCompartir.checked) {
+            shareSection.classList.remove('disabled');
+            previewButtons.forEach(button => {
+                button.style.opacity = '1';
+                button.style.cursor = 'default';
+            });
+        } else {
+            shareSection.classList.add('disabled');
+            previewButtons.forEach(button => {
+                button.style.opacity = '0.5';
+                button.style.cursor = 'not-allowed';
+            });
+        }
+    }
+}
+
+// Inicializar cuando el DOM esté listo
+document.addEventListener('DOMContentLoaded', function() {
+    const mostrarCompartir = document.getElementById('mostrar_compartir');
+    
+    // Inicializar estado
+    toggleShareButtons();
+    
+    // Agregar event listener
+    if (mostrarCompartir) {
+        mostrarCompartir.addEventListener('change', toggleShareButtons);
+    }
+});
+
 // Mostrar alerta de éxito si hay parámetro en la URL
 function showSuccessAlert() {
     const urlParams = new URLSearchParams(window.location.search);
