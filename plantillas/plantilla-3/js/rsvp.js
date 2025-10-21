@@ -364,6 +364,48 @@ function editarRespuesta() {
     });
 }
 
+// Función para mostrar modal de fecha límite excedida
+function mostrarModalFechaLimite() {
+    document.getElementById('modalFechaLimite').style.display = 'flex';
+}
+
+// Función para cerrar modal de fecha límite
+function closeModalFechaLimite() {
+    document.getElementById('modalFechaLimite').style.display = 'none';
+}
+
+// Función para validar RSVP al cargar (para sistema digital)
+function validarRSVPAlCargar() {
+    if (typeof RSVP_HABILITADO !== 'undefined' && !RSVP_HABILITADO) {
+        // Deshabilitar funcionalidad del modal RSVP
+        const originalOpenRSVPModal = window.openRSVPModal;
+        window.openRSVPModal = function() {
+            mostrarModalFechaLimite();
+        };
+        
+        // También deshabilitar cualquier otro intento de abrir el modal
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('[onclick*="openRSVPModal"]') || 
+                e.target.closest('[href*="rsvp"]')) {
+                e.preventDefault();
+                mostrarModalFechaLimite();
+            }
+        });
+    }
+}
+
+// Ejecutar validación al cargar la página
+document.addEventListener('DOMContentLoaded', function() {
+    validarRSVPAlCargar();
+});
+
+// Cerrar modal al hacer clic fuera
+document.getElementById('modalFechaLimite')?.addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeModalFechaLimite();
+    }
+});
+
 // Event listener para validar código
 document.getElementById('codigoForm').addEventListener('submit', function(e) {
     e.preventDefault();

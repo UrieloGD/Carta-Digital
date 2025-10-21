@@ -1134,3 +1134,259 @@
     overflow-y: auto;
     position: relative;
 }
+
+/* ============================================
+   MODAL FECHA LÍMITE - ESTILO ELEGANTE MINIMALISTA NEGRO (Plantilla 4)
+   ============================================ */
+
+/* Estilos para modal de fecha límite excedida */
+.fechaLimite-content {
+    text-align: center;
+    padding: 2.5rem 2rem;
+}
+
+.fechaLimite-icon {
+    font-size: 4.5rem;
+    margin-bottom: 2rem;
+    animation: gentlePulse 3s ease-in-out infinite;
+    color: var(--accent-beige);
+    filter: grayscale(0.3) brightness(0.9);
+}
+
+.fechaLimite-content h4 {
+    color: var(--text-primary);
+    font-family: var(--font-script);
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    font-weight: 400;
+    line-height: 1.3;
+}
+
+.fechaLimite-content > p {
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+    font-family: var(--font-sans);
+    font-weight: 300;
+}
+
+.fechaLimite-contacto {
+    background: linear-gradient(135deg, rgba(212, 196, 168, 0.05), rgba(212, 196, 168, 0.02));
+    padding: 2rem;
+    border-radius: 12px;
+    border: 1px solid rgba(212, 196, 168, 0.15);
+    margin-top: 2.5rem;
+    text-align: left;
+    position: relative;
+    overflow: hidden;
+}
+
+.fechaLimite-contacto::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(180deg, var(--accent-beige), var(--gold-accent));
+}
+
+.fechaLimite-contacto p {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    font-size: 1rem;
+    font-family: var(--font-sans);
+}
+
+.contacto-info {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(212, 196, 168, 0.1);
+}
+
+.contacto-info strong {
+    color: var(--accent-beige);
+    display: block;
+    margin-bottom: 0.8rem;
+    font-family: var(--font-sans);
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.contacto-info p {
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin-bottom: 0;
+    font-style: italic;
+}
+
+/* Footer del modal para fecha límite */
+.modal-footer {
+    padding: 1.5rem 2rem 2rem;
+    display: flex;
+    justify-content: center;
+    border-top: 1px solid rgba(212, 196, 168, 0.1);
+    background: rgba(30, 30, 30, 0.8);
+}
+
+.modal-footer .btn-primary {
+    min-width: 160px;
+    margin: 0;
+    background: linear-gradient(135deg, var(--accent-beige), var(--gold-accent));
+    color: var(--bg-dark);
+    border: none;
+    border-radius: 50px;
+    padding: 1rem 2rem;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(212, 196, 168, 0.2);
+}
+
+.modal-footer .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 35px rgba(212, 196, 168, 0.35);
+    background: linear-gradient(135deg, var(--gold-accent), var(--accent-beige));
+}
+
+.modal-body {
+    padding: 0;
+}
+
+/* Animación específica para el icono de fecha límite */
+@keyframes gentlePulse {
+    0% { 
+        transform: scale(1) rotate(0deg);
+        opacity: 0.9;
+    }
+    50% { 
+        transform: scale(1.05) rotate(5deg);
+        opacity: 1;
+    }
+    100% { 
+        transform: scale(1) rotate(0deg);
+        opacity: 0.9;
+    }
+}
+
+/* Efectos hover para el modal de fecha límite */
+.fechaLimite-contacto {
+    transition: all 0.3s ease;
+}
+
+.fechaLimite-contacto:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(212, 196, 168, 0.1);
+    border-color: rgba(212, 196, 168, 0.25);
+}
+
+/* Responsive para el modal de fecha límite */
+@media (max-width: 768px) {
+    .fechaLimite-content {
+        padding: 2rem 1.5rem;
+    }
+    
+    .fechaLimite-icon {
+        font-size: 3.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .fechaLimite-content h4 {
+        font-size: 1.5rem;
+        margin-bottom: 1.2rem;
+    }
+    
+    .fechaLimite-content > p {
+        font-size: 1rem;
+        margin-bottom: 1.8rem;
+    }
+    
+    .fechaLimite-contacto {
+        padding: 1.5rem;
+        margin-top: 2rem;
+    }
+    
+    .modal-footer {
+        padding: 1.5rem;
+    }
+    
+    .modal-footer .btn-primary {
+        width: 100%;
+        min-width: auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .fechaLimite-content {
+        padding: 1.5rem 1rem;
+    }
+    
+    .fechaLimite-icon {
+        font-size: 3rem;
+        margin-bottom: 1.2rem;
+    }
+    
+    .fechaLimite-content h4 {
+        font-size: 1.3rem;
+    }
+    
+    .fechaLimite-contacto {
+        padding: 1.2rem;
+    }
+    
+    .contacto-info strong {
+        font-size: 1rem;
+    }
+}
+
+/* Mejora de accesibilidad para el modal */
+@media (prefers-reduced-motion: reduce) {
+    .fechaLimite-icon {
+        animation: none;
+    }
+    
+    .fechaLimite-contacto:hover {
+        transform: none;
+    }
+}
+
+/* Estilos para el backdrop del modal específico */
+#modalFechaLimite .modal-content {
+    border: 1px solid rgba(212, 196, 168, 0.2);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+    background: var(--bg-card);
+}
+
+#modalFechaLimite .modal-header {
+    background: var(--bg-card);
+    border-bottom: 1px solid rgba(212, 196, 168, 0.1);
+    border-radius: 15px 15px 0 0;
+}
+
+#modalFechaLimite .modal-header h3 {
+    color: var(--text-primary);
+    font-family: var(--font-script);
+}
+
+#modalFechaLimite .modal-close {
+    color: var(--text-secondary);
+}
+
+#modalFechaLimite .modal-close:hover {
+    color: var(--accent-beige);
+    background: rgba(212, 196, 168, 0.1);
+}
+
+/* Asegurar que el modal se vea bien en todos los dispositivos */
+#modalFechaLimite {
+    backdrop-filter: blur(8px);
+    background: rgba(0, 0, 0, 0.8);
+}
+
+#modalFechaLimite .modal-content {
+    max-width: 520px;
+}

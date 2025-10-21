@@ -11,18 +11,11 @@ function confirmarAsistenciaWhatsApp() {
     const urlWhatsApp = `https://wa.me/${numeroWhatsApp}?text=${mensajeCodificado}`;
     window.open(urlWhatsApp, '_blank');
     
-    // Registrar estadística
-    fetch('./api/estadisticas.php', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-            invitacion_id: invitacionData.id,
-            tipo_evento: 'rsvp_whatsapp',
-            datos_adicionales: {tipo: 'whatsapp_confirmation'}
-        })
-    }).catch(error => {
-        console.log('Error al registrar estadística:', error);
-    });
+    // Verificar si el RSVP está habilitado
+    if (typeof RSVP_HABILITADO !== 'undefined' && !RSVP_HABILITADO) {
+        mostrarModalFechaLimite();
+        return;
+    }
 }
 
 // Inicializar RSVP (función simplificada)

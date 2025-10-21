@@ -176,6 +176,24 @@ $fecha_limite_rsvp = $invitacion['fecha_limite_rsvp'] ?? null;
 $mostrar_solo_adultos = (bool)($invitacion['mostrar_solo_adultos'] ?? true); // true por defecto para compatibilidad
 $texto_solo_adultos = $invitacion['texto_solo_adultos'] ?? 'Celebración exclusiva para adultos (No niños).';
 
+// Verificar si el RSVP está habilitado (antes de la fecha límite)
+$rsvp_habilitado = true;
+$fecha_limite_rsvp = $invitacion['fecha_limite_rsvp'] ?? null;
+
+if ($fecha_limite_rsvp && $mostrar_fecha_limite_rsvp) {
+    $fecha_limite = new DateTime($fecha_limite_rsvp);
+    $fecha_actual = new DateTime();
+    // Agregar un día completo a la fecha límite (hasta fin del día)
+    $fecha_limite->setTime(23, 59, 59);
+    
+    if ($fecha_actual > $fecha_limite) {
+        $rsvp_habilitado = false;
+    }
+}
+
+// Pasar esta variable al JavaScript
+echo "<script>const RSVP_HABILITADO = " . ($rsvp_habilitado ? 'true' : 'false') . ";</script>";
+
 $frases = [
     "Días que nos separan del gran día",
     "Cada día más cerca de nuestro gran día",
@@ -636,14 +654,14 @@ $tipo_rsvp = $invitacion['tipo_rsvp'] ?? 'whatsapp';
                 <div class="rsvp-action">
                     <?php if ($tipo_rsvp === 'whatsapp'): ?>
                         <!-- Botón para confirmación por WhatsApp -->
-                        <button class="rsvp-button whatsapp-button" onclick="confirmarAsistenciaWhatsApp()">
+                        <button class="rsvp-button" onclick="<?php echo $rsvp_habilitado ? 'confirmarAsistenciaWhatsApp()' : 'mostrarModalFechaLimite()'; ?>">
                             <span class="button-text">Confirmar por WhatsApp</span>
                             <div class="button-shimmer"></div>
                         </button>
                         
                     <?php else: ?>
-                        <!-- Botón para sistema digital (original) -->
-                        <button class="rsvp-button" onclick="openRSVPModal()">
+                        <!-- Botón para sistema digital -->
+                        <button class="rsvp-button" onclick="<?php echo $rsvp_habilitado ? 'openRSVPModal()' : 'mostrarModalFechaLimite()'; ?>">
                             <span class="button-text">Confirmar Asistencia</span>
                             <div class="button-shimmer"></div>
                         </button>
@@ -815,6 +833,33 @@ $tipo_rsvp = $invitacion['tipo_rsvp'] ?? 'whatsapp';
         </div>
     </div>
 <?php endif; ?>
+
+<!-- Modal para fecha límite excedida -->
+<div class="rsvp-modal" id="modalFechaLimite">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Confirmación no disponible</h3>
+            <button class="modal-close" onclick="closeModalFechaLimite()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="fechaLimite-content">
+                <div class="fechaLimite-icon">⏰</div>
+                <h4>Fecha límite excedida</h4>
+                <p>La fecha límite para confirmar asistencia ha pasado. Ya no es posible realizar confirmaciones a través de este sistema.</p>
+                <div class="fechaLimite-contacto">
+                    <p>Si necesitas realizar algún cambio o tienes alguna duda, por favor contacta directamente al organizador del evento.</p>
+                    <div class="contacto-info">
+                        <strong>Información de contacto:</strong>
+                        <p>Comunícate con <?php echo htmlspecialchars($nombres); ?> o los organizadores del evento.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" onclick="closeModalFechaLimite()">Entendido</button>
+        </div>
+    </div>
+</div>
 
 <!-- Footer -->
 <footer class="footer">
