@@ -170,6 +170,12 @@ $mostrar_contador = (bool)($invitacion['mostrar_contador'] ?? true);
 $tipo_contador = $invitacion['tipo_contador'] ?? 'completo';
 $mostrar_cronograma = (bool)($invitacion['mostrar_cronograma'] ?? true);
 
+// Informacion RSVP 
+$mostrar_fecha_limite_rsvp = (bool)($invitacion['mostrar_fecha_limite_rsvp'] ?? false);
+$fecha_limite_rsvp = $invitacion['fecha_limite_rsvp'] ?? null;
+$mostrar_solo_adultos = (bool)($invitacion['mostrar_solo_adultos'] ?? true); // true por defecto para compatibilidad
+$texto_solo_adultos = $invitacion['texto_solo_adultos'] ?? 'Celebración exclusiva para adultos (No niños).';
+
 $frases = [
     "Días que nos separan del gran día",
     "Cada día más cerca de nuestro gran día",
@@ -612,25 +618,70 @@ try {
 $tipo_rsvp = $invitacion['tipo_rsvp'] ?? 'whatsapp';
 ?>
 
+<!-- Sección RSVP Elegante Mejorada - Estilo Natural -->
 <section class="rsvp" id="rsvp">
     <div class="container">
-        <h2>Confirma tu Asistencia</h2>
-        <p><?php echo htmlspecialchars($texto_rsvp); ?></p>
-        
-        <?php if ($tipo_rsvp === 'whatsapp'): ?>
-            <!-- Botón para confirmación por WhatsApp -->
-            <button class="rsvp-button whatsapp-button" onclick="confirmarAsistenciaWhatsApp()">
-                <i class="bi bi-whatsapp me-2"></i>
-                Confirmar por WhatsApp
-            </button>
+        <div class="rsvp-content">
+            <div class="rsvp-header">
+                <h2 class="section-title">Confirma tu Asistencia</h2>
+                <div class="decorative-line"></div>
+                <p class="section-subtitle">Tu presencia hace que este día sea perfecto</p>
+            </div>
             
-        <?php else: ?>
-            <!-- Botón para sistema digital (original) -->
-            <button class="rsvp-button" onclick="openRSVPModal()">
-                <i class="bi bi-calendar-check me-2"></i>
-                Confirmar Asistencia
-            </button>
-        <?php endif; ?>
+            <div class="rsvp-main" data-animate="fadeInUp" data-delay="0.2s">
+                <div class="rsvp-message">
+                    <p class="rsvp-text"><?php echo htmlspecialchars($texto_rsvp); ?></p>
+                </div>
+                
+                <div class="rsvp-action">
+                    <?php if ($tipo_rsvp === 'whatsapp'): ?>
+                        <!-- Botón para confirmación por WhatsApp -->
+                        <button class="rsvp-button whatsapp-button" onclick="confirmarAsistenciaWhatsApp()">
+                            <span class="button-text">Confirmar por WhatsApp</span>
+                            <div class="button-shimmer"></div>
+                        </button>
+                        
+                    <?php else: ?>
+                        <!-- Botón para sistema digital (original) -->
+                        <button class="rsvp-button" onclick="openRSVPModal()">
+                            <span class="button-text">Confirmar Asistencia</span>
+                            <div class="button-shimmer"></div>
+                        </button>
+                    <?php endif; ?>
+                </div>
+                
+                <?php if ($invitacion['mostrar_fecha_limite_rsvp'] || $invitacion['mostrar_solo_adultos']): ?>
+                <div class="rsvp-details">
+                    <div class="detail-grid">
+                        <?php if ($invitacion['mostrar_fecha_limite_rsvp'] && !empty($invitacion['fecha_limite_rsvp'])): ?>
+                        <div class="detail-item">
+                            <div class="detail-icon">📅</div>
+                            <div class="detail-content">
+                                <span class="detail-label">Fecha límite</span>
+                                <span class="detail-value"><?php echo fechaEnEspanol($invitacion['fecha_limite_rsvp']); ?></span>
+                                <span class="detail-value">Queremos asegurarnos que tu lugar esté reservado.</span>
+                            </div>
+                        </div>
+                        <?php endif; ?>
+                        
+                        <?php if ($invitacion['mostrar_solo_adultos']): ?>
+                        <div class="detail-item">
+                            <div class="detail-icon">👨‍👩‍👧‍👦</div>
+                            <div class="detail-content">
+                                <span class="detail-label">Solo adultos</span>
+                                <span class="detail-value"><?php echo htmlspecialchars($invitacion['texto_solo_adultos'] ?? 'Celebración exclusiva para adultos (No niños).'); ?></span>
+                            </div>
+                        </div>
+                        <?php endif; ?>
+                    </div>
+                </div>
+                <?php endif; ?>
+            </div>
+            
+            <div class="rsvp-ornament">
+                <div class="ornament-line"></div>
+            </div>
+        </div>
     </div>
 </section>
 

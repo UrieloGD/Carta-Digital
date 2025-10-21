@@ -170,6 +170,12 @@ $mostrar_contador = (bool)($invitacion['mostrar_contador'] ?? true);
 $tipo_contador = $invitacion['tipo_contador'] ?? 'completo';
 $mostrar_cronograma = (bool)($invitacion['mostrar_cronograma'] ?? true);
 
+// Informacion RSVP 
+$mostrar_fecha_limite_rsvp = (bool)($invitacion['mostrar_fecha_limite_rsvp'] ?? false);
+$fecha_limite_rsvp = $invitacion['fecha_limite_rsvp'] ?? null;
+$mostrar_solo_adultos = (bool)($invitacion['mostrar_solo_adultos'] ?? true); // true por defecto para compatibilidad
+$texto_solo_adultos = $invitacion['texto_solo_adultos'] ?? 'Celebración exclusiva para adultos (No niños).';
+
 // Frases aleatorias para contador simple (de plantilla 2)
 $frases = [
     "Días que nos separan del gran día",
@@ -949,26 +955,32 @@ $tipo_rsvp = $invitacion['tipo_rsvp'] ?? 'whatsapp';
                     <?php endif; ?>
                 </div>
                 
+                <?php if ($invitacion['mostrar_fecha_limite_rsvp'] || $invitacion['mostrar_solo_adultos']): ?>
                 <div class="rsvp-details">
                     <div class="detail-grid">
-                        <!--<div class="detail-item">
+                        <?php if ($invitacion['mostrar_fecha_limite_rsvp'] && !empty($invitacion['fecha_limite_rsvp'])): ?>
+                        <div class="detail-item">
                             <div class="detail-icon">📅</div>
                             <div class="detail-content">
                                 <span class="detail-label">Fecha límite</span>
-                                <span class="detail-value"><?php echo fechaEnEspanol(date('Y-m-d', strtotime($invitacion['fecha_evento'] . ' -15 days'))); ?></span>
+                                <span class="detail-value"><?php echo fechaEnEspanol($invitacion['fecha_limite_rsvp']); ?></span>
                                 <span class="detail-value">Queremos asegurarnos que tu lugar esté reservado.</span>
                             </div>
-                        </div> -->
+                        </div>
+                        <?php endif; ?>
                         
+                        <?php if ($invitacion['mostrar_solo_adultos']): ?>
                         <div class="detail-item">
                             <div class="detail-icon">👨‍👩‍👧‍👦</div>
                             <div class="detail-content">
                                 <span class="detail-label">Solo adultos</span>
-                                <span class="detail-value">Celebración exclusiva para adultos (No niños).</span>
+                                <span class="detail-value"><?php echo htmlspecialchars($invitacion['texto_solo_adultos'] ?? 'Celebración exclusiva para adultos (No niños).'); ?></span>
                             </div>
                         </div>
+                        <?php endif; ?>
                     </div>
                 </div>
+                <?php endif; ?>
             </div>
             
             <div class="rsvp-ornament">

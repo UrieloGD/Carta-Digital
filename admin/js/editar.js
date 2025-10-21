@@ -309,6 +309,20 @@ function toggleRSVPFields() {
     }
 }
 
+// Función para mostrar/ocultar campo de texto de solo adultos
+function toggleSoloAdultosText() {
+    const mostrarSoloAdultos = document.getElementById('mostrar_solo_adultos');
+    const campoTextoAdultos = document.getElementById('campo-texto-adultos');
+    
+    if (mostrarSoloAdultos && campoTextoAdultos) {
+        if (mostrarSoloAdultos.checked) {
+            campoTextoAdultos.style.display = 'block';
+        } else {
+            campoTextoAdultos.style.display = 'none';
+        }
+    }
+}
+
 // Función para mostrar/ocultar campos del contador
 function toggleContadorFields() {
     const mostrarContador = document.getElementById('mostrar_contador');
@@ -521,15 +535,20 @@ document.addEventListener('DOMContentLoaded', function() {
     toggleRSVPFields();
     toggleContadorFields();
     toggleCronogramaFields();
+    toggleSoloAdultosText();
     
     // Mostrar alertas
     showSuccessAlert();
     showErrorAlert();
-    
-    // Agregar eventos
+
+    // Agregar event listener
     const tipoRsvp = document.getElementById('tipo_rsvp');
     const mostrarContador = document.getElementById('mostrar_contador');
     const mostrarCronograma = document.getElementById('mostrar_cronograma');
+    const mostrarSoloAdultos = document.getElementById('mostrar_solo_adultos');
+    if (mostrarSoloAdultos) {
+        mostrarSoloAdultos.addEventListener('change', toggleSoloAdultosText);
+    }
     
     if (tipoRsvp) tipoRsvp.addEventListener('change', toggleRSVPFields);
     if (mostrarContador) mostrarContador.addEventListener('change', toggleContadorFields);

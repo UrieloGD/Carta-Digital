@@ -1,4 +1,4 @@
-/* RSVP - Estilo Natural */
+/* RSVP - Estilo Natural Mejorado */
 .rsvp {
     background: var(--warm-white);
     position: relative;
@@ -23,150 +23,467 @@
     position: relative;
     z-index: 1;
     text-align: center;
-    max-width: 600px;
+    max-width: 800px;
     margin: 0 auto;
     padding: 0 20px;
 }
 
-.rsvp h2 {
+.rsvp-content {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.rsvp-header {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.rsvp-header .section-title {
     font-family: var(--font-serif);
     font-size: clamp(2.5rem, 5vw, 3.5rem);
     color: var(--primary-olive);
     font-weight: 400;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.02em;
 }
 
-.rsvp p {
+.rsvp-header .decorative-line {
+    width: 80px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--primary-olive), transparent);
+    margin: 0 auto 1.5rem;
+    position: relative;
+}
+
+.rsvp-header .decorative-line::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 4px;
+    background: var(--primary-olive);
+    border-radius: 50%;
+}
+
+.rsvp-header .section-subtitle {
+    font-family: var(--font-serif);
     font-size: 1.2rem;
     color: var(--soft-gray);
-    line-height: 1.7;
-    margin: 2rem auto 3rem;
-    max-width: 500px;
+    font-style: italic;
+    font-weight: 300;
 }
 
-/* Botones RSVP */
-.rsvp-button {
-    background: linear-gradient(135deg, var(--primary-olive), var(--dark-olive));
-    color: var(--warm-white);
-    padding: 1.2rem 3rem;
-    border: none;
-    border-radius: 30px;
+.rsvp-main {
+    text-align: center;
+    animation: fadeInUp 1s ease-out forwards;
+}
+
+.rsvp-message {
+    margin-bottom: 3rem;
+}
+
+.rsvp-text {
     font-family: var(--font-sans);
     font-size: 1.1rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: var(--transition-smooth);
-    position: relative;
-    overflow: hidden;
-    box-shadow: var(--shadow-soft);
-    text-transform: uppercase;
-    letter-spacing: 1px;
+    color: var(--soft-gray);
+    line-height: 1.8;
+    max-width: 600px;
+    margin: 0 auto;
+    font-weight: 300;
+}
+
+.rsvp-action {
+    margin-bottom: 4rem;
+}
+
+/* Botones RSVP Mejorados */
+.rsvp-button,
+.whatsapp-button {
     display: inline-flex;
     align-items: center;
-    gap: 0.8rem;
+    justify-content: center;
+    gap: 1rem;
+    padding: clamp(1rem, 2.5vw, 1.2rem) clamp(2rem, 4vw, 3rem);
+    background: linear-gradient(135deg, var(--primary-olive), var(--dark-olive));
+    color: var(--warm-white);
+    border: none;
+    border-radius: 50px;
+    font-family: var(--font-sans);
+    font-size: clamp(1rem, 2.5vw, 1.1rem);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(107, 123, 58, 0.2);
     text-decoration: none;
+    min-width: 200px;
+    animation: fadeInUp 1s ease-out 0.4s both;
+    position: relative;
+    overflow: hidden;
 }
 
 .rsvp-button.whatsapp-button {
     background: linear-gradient(135deg, #25d366, #128c7e);
 }
 
-.rsvp-button i {
-    font-size: 1.3rem;
-    transition: var(--transition-smooth);
-}
-
-.rsvp-button::before {
+.rsvp-button::before,
+.whatsapp-button::before {
     content: '';
     position: absolute;
     top: 0;
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-    transition: var(--transition-smooth);
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
 }
 
-.rsvp-button:hover::before {
+.rsvp-button:hover::before,
+.whatsapp-button:hover::before {
     left: 100%;
 }
 
-.rsvp-button:hover {
+.rsvp-button:hover,
+.whatsapp-button:hover {
     transform: translateY(-3px);
-    box-shadow: var(--shadow-medium);
-}
-
-.rsvp-button:hover i {
-    transform: scale(1.2) rotate(10deg);
+    box-shadow: 0 15px 35px rgba(107, 123, 58, 0.35);
+    background: linear-gradient(135deg, var(--dark-olive), var(--primary-olive));
 }
 
 .rsvp-button.whatsapp-button:hover {
     background: linear-gradient(135deg, #128c7e, #25d366);
+    box-shadow: 0 15px 35px rgba(37, 211, 102, 0.35);
 }
 
-/* Modal RSVP - Ajustable al contenido */
+.rsvp-button:active,
+.whatsapp-button:active {
+    transform: translateY(-1px);
+    transition: all 0.1s ease;
+}
+
+.button-text {
+    z-index: 2;
+    position: relative;
+}
+
+.button-shimmer {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.rsvp-button:hover .button-shimmer,
+.whatsapp-button:hover .button-shimmer {
+    left: 100%;
+}
+
+.rsvp-details {
+    background: rgba(107, 123, 58, 0.05);
+    border-radius: 15px;
+    padding: 2.5rem;
+    border: 1px solid rgba(107, 123, 58, 0.1);
+    margin-top: 2rem;
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+}
+
+.detail-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+    text-align: left;
+    position: relative;
+    padding-bottom: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.detail-item::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 20%;
+    right: 20%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--primary-olive), transparent);
+}
+
+.detail-item:last-child::after {
+    display: none;
+}
+
+.detail-icon {
+    width: 50px;
+    height: 50px;
+    background: rgba(107, 123, 58, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: var(--primary-olive);
+    flex-shrink: 0;
+    margin-top: 0.5rem;
+}
+
+.detail-content {
+    flex: 1;
+}
+
+.detail-label {
+    display: block;
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+    color: var(--soft-gray);
+    margin-bottom: 0.3rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.detail-value {
+    display: block;
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    color: var(--charcoal);
+    font-weight: 400;
+    line-height: 1.4;
+}
+
+.detail-value:not(:last-child) {
+    margin-bottom: 0.5rem;
+}
+
+.rsvp-ornament {
+    margin-top: 4rem;
+    text-align: center;
+}
+
+.ornament-line {
+    width: 120px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--primary-olive), transparent);
+    margin: 0 auto;
+    position: relative;
+}
+
+.ornament-line::before,
+.ornament-line::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    width: 4px;
+    height: 4px;
+    background: var(--primary-olive);
+    border-radius: 50%;
+}
+
+.ornament-line::before {
+    left: 20px;
+}
+
+.ornament-line::after {
+    right: 20px;
+}
+
+/* Estados de carga para el RSVP */
+.rsvp.fade-in-on-scroll {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s ease;
+}
+
+.rsvp.fade-in-on-scroll.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ESTILOS UNIFICADOS PARA TODOS LOS BOTONES PRINCIPALES - ESTILO NATURAL */
+.rsvp-button,
+.whatsapp-button,
+.btn-primary,
+.form-submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: clamp(1rem, 2.5vw, 1.2rem) clamp(2rem, 4vw, 3rem);
+    background: linear-gradient(135deg, var(--primary-olive), var(--dark-olive));
+    color: var(--warm-white);
+    border: none;
+    border-radius: 50px;
+    font-family: var(--font-sans);
+    font-size: clamp(1rem, 2.5vw, 1.1rem);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(107, 123, 58, 0.2);
+    text-decoration: none;
+    min-width: 200px;
+    animation: fadeInUp 1s ease-out 0.4s both;
+    position: relative;
+    overflow: hidden;
+}
+
+.rsvp-button::before,
+.whatsapp-button::before,
+.btn-primary::before,
+.form-submit::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.rsvp-button:hover::before,
+.whatsapp-button:hover::before,
+.btn-primary:hover::before,
+.form-submit:hover::before {
+    left: 100%;
+}
+
+.rsvp-button:hover,
+.whatsapp-button:hover,
+.btn-primary:hover,
+.form-submit:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 35px rgba(107, 123, 58, 0.35);
+    background: linear-gradient(135deg, var(--dark-olive), var(--primary-olive));
+}
+
+.rsvp-button:active,
+.whatsapp-button:active,
+.btn-primary:active,
+.form-submit:active {
+    transform: translateY(-1px);
+    transition: all 0.1s ease;
+}
+
+/* Botón secundario unificado - ESTILO NATURAL */
+.btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: clamp(1rem, 2.5vw, 1.2rem) clamp(2rem, 4vw, 3rem);
+    background: transparent;
+    color: var(--primary-olive);
+    border: 2px solid var(--primary-olive);
+    border-radius: 50px;
+    font-family: var(--font-sans);
+    font-size: clamp(1rem, 2.5vw, 1.1rem);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    min-width: 200px;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-secondary:hover {
+    background: var(--primary-olive);
+    color: var(--warm-white);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(107, 123, 58, 0.2);
+}
+
+/* Botón warning unificado - ESTILO NATURAL */
+.btn-warning {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: clamp(1rem, 2.5vw, 1.2rem) clamp(2rem, 4vw, 3rem);
+    background: linear-gradient(135deg, #e9b949, #d4a337);
+    color: var(--warm-white);
+    border: none;
+    border-radius: 50px;
+    font-family: var(--font-sans);
+    font-size: clamp(1rem, 2.5vw, 1.1rem);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(233, 185, 73, 0.2);
+    text-decoration: none;
+    min-width: 200px;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-warning:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 35px rgba(233, 185, 73, 0.3);
+    background: linear-gradient(135deg, #d4a337, #e9b949);
+}
+
+/* Modal RSVP - Siempre centrado - ESTILO NATURAL */
 .rsvp-modal {
+    display: none;
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    right: 0;
+    bottom: 0;
     background: rgba(44, 44, 44, 0.8);
-    z-index: 9999;
-    backdrop-filter: blur(5px);
-    padding: 20px;
-    box-sizing: border-box;
-    /* IMPORTANTE: Mantener oculto por defecto */
-    display: none !important;
-}
-
-/* Solo mostrar cuando tenga el estilo inline display: flex */
-.rsvp-modal[style*="display: flex"] {
-    display: flex !important;
+    z-index: 1000;
     align-items: center;
     justify-content: center;
+    padding: 2rem 1rem;
+    animation: fadeIn 0.3s ease-out;
+    overflow-y: auto;
+    backdrop-filter: blur(5px);
 }
 
-/* Regla para asegurar que esté oculto cuando tenga display: none */
-.rsvp-modal[style*="display: none"] {
-    display: none !important;
+.rsvp-modal.active {
+    display: flex;
 }
 
 .modal-content {
     background: var(--warm-white);
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow-medium);
+    border-radius: 15px;
     width: 100%;
-    max-width: 600px;
-    max-height: calc(100vh - 40px);
+    max-width: 500px;
+    max-height: calc(100vh - 4rem);
     overflow-y: auto;
+    animation: scaleIn 0.3s ease-out;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(107, 123, 58, 0.1);
     position: relative;
-    margin: 0;
-    transform: scale(0.95);
-    opacity: 0;
-    transition: var(--transition-smooth);
-}
-
-/* Cuando el modal está visible */
-.rsvp-modal[style*="display: flex"] .modal-content {
-    transform: scale(1);
-    opacity: 1;
 }
 
 .modal-header {
-    background: linear-gradient(135deg, var(--primary-olive), var(--light-olive));
-    color: var(--warm-white);
-    padding: 1.5rem 2rem;
-    border-radius: var(--border-radius) var(--border-radius) 0 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-shrink: 0;
+    padding: clamp(1rem, 3vw, 1.5rem);
+    border-bottom: 1px solid rgba(107, 123, 58, 0.1);
+    position: sticky;
+    top: 0;
+    background: var(--warm-white);
+    z-index: 10;
+    border-radius: 15px 15px 0 0;
+    background: linear-gradient(135deg, var(--primary-olive), var(--light-olive));
+    color: var(--warm-white);
 }
 
 .modal-header h3 {
     font-family: var(--font-serif);
-    font-size: 1.8rem;
+    color: var(--warm-white);
+    font-size: clamp(1.2rem, 3vw, 1.5rem);
     margin: 0;
     font-weight: 400;
 }
@@ -174,67 +491,81 @@
 .modal-close {
     background: none;
     border: none;
-    color: var(--warm-white);
-    font-size: 2rem;
+    font-size: clamp(1.2rem, 3vw, 1.5rem);
     cursor: pointer;
-    padding: 0;
-    width: 35px;
-    height: 35px;
+    color: var(--warm-white);
+    transition: all 0.3s ease;
+    width: 40px;
+    height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    transition: var(--transition-smooth);
-    flex-shrink: 0;
 }
 
 .modal-close:hover {
     background: rgba(255, 255, 255, 0.2);
 }
 
-/* Pasos del formulario - Ajustados al contenido */
-.rsvp-step {
-    padding: 2rem;
-    /* Asegurar que el contenido se ajuste */
-    min-height: auto;
-}
-
-/* Pasos específicos con menos contenido */
-.rsvp-step#step-codigo,
-.rsvp-step#step-ver-respuesta {
-    padding: 1.5rem 2rem;
-}
-
+/* Formulario RSVP - ESTILO NATURAL */
 .rsvp-form {
-    max-width: 100%;
+    padding: clamp(1rem, 3vw, 1.5rem);
 }
 
+.rsvp-step {
+    width: 100%;
+    animation: fadeInUp 0.5s ease-out;
+    padding: clamp(1rem, 3vw, 1.5rem);
+}
+
+/* Información del grupo - ESTILO NATURAL */
+.grupo-info {
+    margin-bottom: 1.5rem;
+    animation: slideInLeft 0.6s ease-out;
+}
+
+.grupo-info .alert {
+    margin-bottom: 1rem;
+    padding: clamp(1rem, 3vw, 1.2rem);
+    border-radius: 10px;
+    background: rgba(107, 123, 58, 0.1);
+    border-left: 4px solid var(--primary-olive);
+    font-size: clamp(0.9rem, 2vw, 1rem);
+    color: var(--charcoal);
+}
+
+/* Formularios - ESTILO NATURAL */
 .form-group {
     margin-bottom: 1.5rem;
-    text-align: left;
+    animation: fadeInUp 0.5s ease-out;
+}
+
+.form-group:nth-child(n+2) {
+    animation-delay: calc(0.1s * var(--i, 0));
 }
 
 .form-group label {
     display: block;
-    font-family: var(--font-sans);
+    margin-bottom: 0.5rem;
     font-weight: 600;
     color: var(--charcoal);
-    margin-bottom: 0.5rem;
-    font-size: 1rem;
+    font-size: clamp(0.9rem, 2vw, 1rem);
+    font-family: var(--font-sans);
 }
 
 .form-group input,
 .form-group select,
 .form-group textarea {
     width: 100%;
-    padding: 1rem;
-    border: 2px solid #E8E8E8;
+    padding: clamp(0.6rem, 2vw, 0.8rem);
+    border: 2px solid rgba(107, 123, 58, 0.2);
     border-radius: 8px;
+    font-size: clamp(0.9rem, 2vw, 1rem);
+    transition: all 0.3s ease;
     font-family: var(--font-sans);
-    font-size: 1rem;
-    transition: var(--transition-smooth);
     background: var(--warm-white);
     box-sizing: border-box;
+    color: var(--charcoal);
 }
 
 .form-group input:focus,
@@ -242,164 +573,86 @@
 .form-group textarea:focus {
     outline: none;
     border-color: var(--primary-olive);
-    box-shadow: 0 0 0 3px rgba(163, 177, 138, 0.1);
+    box-shadow: 0 0 0 3px rgba(107, 123, 58, 0.1);
+    transform: translateY(-1px);
 }
 
-.form-text {
-    font-size: 0.9rem;
-    color: var(--soft-gray);
-    margin-top: 0.5rem;
-}
-
-/* Información del grupo */
-.grupo-info {
-    margin-bottom: 1.5rem;
-}
-
-.alert {
-    padding: 1rem;
-    border-radius: 8px;
-    margin-bottom: 1rem;
-}
-
-.alert-info {
-    background: rgba(163, 177, 138, 0.1);
-    border: 1px solid rgba(163, 177, 138, 0.3);
-    color: var(--dark-olive);
-}
-
-.alert-success {
-    background: rgba(40, 167, 69, 0.1);
-    border: 1px solid rgba(40, 167, 69, 0.3);
-    color: #155724;
-}
-
-.alert-warning {
-    background: rgba(255, 193, 7, 0.1);
-    border: 1px solid rgba(255, 193, 7, 0.3);
-    color: #856404;
-}
-
-/* Campos de nombres */
-.nombres-container {
-    margin-top: 1rem;
-}
-
-.nombre-field {
-    margin-bottom: 1rem;
-}
-
-.nombre-field label {
-    font-size: 0.9rem;
-    color: var(--soft-gray);
-}
-
-/* Botones del formulario */
-.form-buttons {
-    display: flex;
-    gap: 1rem;
-    justify-content: flex-end;
-    margin-top: 2rem;
-    flex-wrap: wrap;
-}
-
-.form-submit,
-.btn {
-    padding: 0.8rem 2rem;
-    border: none;
-    border-radius: 8px;
-    font-family: var(--font-sans);
+#codigo_grupo {
+    text-transform: uppercase !important;
     font-weight: 600;
-    cursor: pointer;
-    transition: var(--transition-smooth);
-    text-decoration: none;
-    display: inline-block;
-    text-align: center;
-    font-size: 1rem;
+    letter-spacing: 1px;
 }
 
-.form-submit,
-.btn-primary {
-    background: var(--primary-olive);
-    color: var(--warm-white);
+/* Campos de asistencia - ESTILO NATURAL */
+.campos-asistencia {
+    border-left: 3px solid var(--primary-olive);
+    padding: clamp(1rem, 3vw, 1.2rem);
+    margin: 1.5rem 0;
+    background: rgba(107, 123, 58, 0.05);
+    border-radius: 0 10px 10px 0;
+    animation: slideInLeft 0.6s ease-out;
 }
 
-.form-submit:hover,
-.btn-primary:hover {
-    background: var(--dark-olive);
-    transform: translateY(-2px);
+.nombres-container .form-group {
+    margin-top: 1rem;
+    padding-left: clamp(0.8rem, 2vw, 1rem);
+    border-left: 2px solid rgba(107, 123, 58, 0.2);
+    animation: fadeInUp 0.4s ease-out;
 }
 
-.btn-secondary {
-    background: var(--soft-gray);
-    color: var(--warm-white);
-}
-
-.btn-secondary:hover {
-    background: var(--charcoal);
-}
-
-.btn-warning {
-    background: #ffc107;
-    color: #212529;
-}
-
-.btn-warning:hover {
-    background: #e0a800;
-}
-
-/* Confirmación */
+/* Confirmación de datos - ESTILO NATURAL */
 .confirmacion-header {
-    text-align: center;
     margin-bottom: 2rem;
+    text-align: center;
 }
 
 .confirmacion-header h4 {
     font-family: var(--font-serif);
-    font-size: 1.5rem;
     color: var(--primary-olive);
-    margin-bottom: 0.5rem;
+    font-size: clamp(1.2rem, 3vw, 1.4rem);
+    margin-bottom: 0.8rem;
+    font-weight: 400;
+}
+
+.confirmacion-header p {
+    color: var(--soft-gray);
+    margin-bottom: 0;
+    font-size: clamp(0.9rem, 2vw, 1rem);
 }
 
 .confirmacion-info {
-    background: var(--cream);
-    padding: 1.5rem;
-    border-radius: 8px;
-    margin-bottom: 2rem;
-}
-
-.confirmacion-item {
-    margin-bottom: 1rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid rgba(163, 177, 138, 0.2);
-}
-
-.confirmacion-item:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
-    padding-bottom: 0;
-}
-
-.confirmacion-label {
-    font-weight: 600;
-    color: var(--dark-olive);
-    display: block;
-    margin-bottom: 0.3rem;
-}
-
-.confirmacion-valor {
+    background: rgba(107, 123, 58, 0.08);
+    padding: clamp(1.2rem, 3vw, 1.8rem);
+    border-radius: 10px;
+    border-left: 4px solid var(--primary-olive);
+    margin: 1.5rem 0 2rem 0;
+    font-size: clamp(0.9rem, 2vw, 1rem);
+    line-height: 1.6;
     color: var(--charcoal);
 }
 
-/* Paso de éxito */
+/* Respuesta existente - ESTILO NATURAL */
+.respuesta-existente {
+    background: rgba(107, 123, 58, 0.08);
+    padding: clamp(1.2rem, 3vw, 1.8rem);
+    border-radius: 10px;
+    border-left: 4px solid var(--dark-olive);
+    margin: 1.5rem 0 2rem 0;
+    font-size: clamp(0.9rem, 2vw, 1rem);
+    line-height: 1.6;
+    color: var(--charcoal);
+}
+
+/* Éxito - ESTILO NATURAL */
 .exito-container {
     text-align: center;
+    padding: clamp(1.5rem, 4vw, 2.5rem);
 }
 
 .exito-icon {
     width: 80px;
     height: 80px;
-    background: var(--primary-olive);
+    background: linear-gradient(135deg, var(--primary-olive), var(--dark-olive));
     color: var(--warm-white);
     border-radius: 50%;
     display: flex;
@@ -407,253 +660,489 @@
     justify-content: center;
     font-size: 2.5rem;
     font-weight: bold;
-    margin: 0 auto 1.5rem;
+    margin: 0 auto 1.5rem auto;
+    animation: scaleIn 0.6s ease-out 0.2s both;
 }
 
 .exito-container h3 {
     font-family: var(--font-serif);
-    font-size: 2rem;
     color: var(--primary-olive);
+    font-size: clamp(1.4rem, 3vw, 1.8rem);
     margin-bottom: 1rem;
+    font-weight: 400;
+    animation: fadeInUp 0.6s ease-out 0.4s both;
+}
+
+.exito-container p {
+    color: var(--soft-gray);
+    font-size: clamp(1rem, 2.5vw, 1.1rem);
+    margin-bottom: 2rem;
+    animation: fadeInUp 0.6s ease-out 0.6s both;
 }
 
 .resumen-confirmacion,
-.respuesta-existente {
-    background: var(--cream);
-    padding: 1.5rem;
-    border-radius: 8px;
-    margin: 1.5rem 0;
+.resumen-final {
+    background: rgba(107, 123, 58, 0.08);
+    padding: clamp(1.2rem, 3vw, 1.8rem);
+    border-radius: 10px;
+    border-left: 4px solid var(--primary-olive);
+    margin-top: 1.5rem;
     text-align: left;
+    font-size: clamp(0.9rem, 2vw, 1rem);
+    line-height: 1.6;
+    color: var(--charcoal);
+    animation: fadeInUp 0.6s ease-out 0.8s both;
 }
 
-/* Alert containers */
+/* Botones - Contenedor unificado - ESTILO NATURAL */
+.form-buttons {
+    display: flex;
+    gap: clamp(0.8rem, 2vw, 1.2rem);
+    justify-content: space-between;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+    padding: 0 clamp(0.5rem, 2vw, 1rem);
+}
+
+.form-buttons .btn {
+    flex: 1;
+    min-width: 120px;
+}
+
+.form-submit {
+    width: calc(100% - clamp(1rem, 4vw, 2rem));
+    margin: 1.5rem clamp(0.5rem, 2vw, 1rem) 0;
+    background: linear-gradient(135deg, var(--primary-olive), var(--dark-olive));
+    color: var(--warm-white);
+    border: none;
+    padding: clamp(0.8rem, 2.5vw, 1rem);
+    font-size: clamp(1rem, 2.5vw, 1.1rem);
+    font-weight: 500;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(107, 123, 58, 0.2);
+    box-sizing: border-box;
+    font-family: var(--font-sans);
+}
+
+.form-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 35px rgba(107, 123, 58, 0.4);
+    background: linear-gradient(135deg, var(--dark-olive), var(--primary-olive));
+}
+
+/* Alertas y mensajes - ESTILO NATURAL */
 .alert-container {
-    margin: 1rem 0;
+    margin: 1.5rem clamp(0.5rem, 2vw, 1rem);
 }
 
-.alert-container .alert {
-    margin: 0;
+.alert {
+    padding: clamp(1rem, 3vw, 1.2rem);
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+    font-size: clamp(0.9rem, 2vw, 1rem);
+    animation: fadeInUp 0.4s ease-out;
 }
 
-/* Responsive Design - Ajustado para modales */
+.alert-info {
+    background: rgba(107, 123, 58, 0.1);
+    border-left: 4px solid var(--primary-olive);
+    color: var(--charcoal);
+}
+
+.alert-warning {
+    background: rgba(233, 185, 73, 0.1);
+    border-left: 4px solid #e9b949;
+    color: var(--charcoal);
+}
+
+.alert-success {
+    background: rgba(107, 123, 58, 0.1);
+    border-left: 4px solid var(--dark-olive);
+    color: var(--charcoal);
+    margin-bottom: 1.5rem;
+}
+
+.alert-danger {
+    background: rgba(220, 53, 69, 0.1);
+    border-left: 4px solid #dc3545;
+    color: #721c24;
+}
+
+/* Texto auxiliar - ESTILO NATURAL */
+.form-text {
+    font-size: clamp(0.8rem, 1.8vw, 0.9rem);
+    color: var(--soft-gray);
+    margin-top: 0.5rem;
+}
+
+.text-muted {
+    color: var(--soft-gray) !important;
+}
+
+/* Clases de utilidad */
+.mb-3 {
+    margin-bottom: 1.5rem !important;
+}
+
+/* Estados de carga - ESTILO NATURAL */
+.form-submit:disabled,
+.btn-primary:disabled,
+.btn-secondary:disabled,
+.btn-warning:disabled {
+    background: var(--soft-gray);
+    cursor: not-allowed;
+    transform: none;
+    border-color: var(--soft-gray);
+}
+
+.form-submit.loading,
+.btn-primary.loading,
+.btn-secondary.loading,
+.btn-warning.loading {
+    position: relative;
+    color: transparent;
+}
+
+.form-submit.loading::after,
+.btn-primary.loading::after,
+.btn-secondary.loading::after,
+.btn-warning.loading::after {
+    content: "";
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 50%;
+    left: 50%;
+    margin-left: -10px;
+    margin-top: -10px;
+    border: 2px solid transparent;
+    border-top-color: var(--warm-white);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+/* Media Queries */
 @media (max-width: 768px) {
+    .rsvp {
+        padding: 3rem 0;
+    }
+    
     .rsvp-modal {
-        padding: 15px;
+        padding: 1rem 0.5rem;
+        align-items: center;
     }
     
     .modal-content {
-        max-width: none;
-        width: 100%;
-        max-height: calc(100vh - 30px);
+        max-height: calc(100vh - 2rem);
     }
-    
-    .modal-header {
-        padding: 1rem 1.5rem;
-    }
-    
-    .modal-header h3 {
-        font-size: 1.5rem;
-    }
-    
+
     .rsvp-step {
-        padding: 1.5rem;
-    }
-    
-    .rsvp-step#step-codigo,
-    .rsvp-step#step-ver-respuesta {
-        padding: 1rem 1.5rem;
-    }
-    
-    .rsvp-button {
-        padding: 1rem 2.5rem;
-        font-size: 1rem;
+        padding: clamp(0.8rem, 2vw, 1rem);
     }
     
     .form-buttons {
-        justify-content: center;
-        flex-direction: column-reverse;
+        flex-direction: column;
+        padding: 0;
+        gap: 1rem;
     }
     
-    .form-submit,
-    .btn {
+    .form-buttons .btn {
+        flex: none;
         width: 100%;
-        margin-bottom: 0.5rem;
     }
     
-    .form-buttons .btn:last-child {
-        margin-bottom: 0;
+    .campos-asistencia {
+        padding: 1rem;
+        margin: 1rem 0;
+    }
+    
+    .nombres-container .form-group {
+        padding-left: 0.8rem;
+    }
+
+    .exito-container {
+        padding: 1.5rem 1rem;
+    }
+
+    .form-submit {
+        width: 100%;
+        margin: 1.5rem 0 0;
+    }
+
+    .alert-container {
+        margin: 1rem 0;
+    }
+
+    .confirmacion-info,
+    .respuesta-existente,
+    .resumen-confirmacion,
+    .resumen-final {
+        margin: 1rem 0;
+        padding: 1rem;
+    }
+
+    .rsvp-header {
+        margin-bottom: 2.5rem;
+    }
+
+    .rsvp-message {
+        margin-bottom: 2rem;
+    }
+
+    .rsvp-action {
+        margin-bottom: 2.5rem;
+    }
+
+    .rsvp-button,
+    .whatsapp-button,
+    .btn-primary,
+    .btn-secondary,
+    .btn-warning {
+        padding: 1rem 2rem;
+        font-size: 1rem;
+        gap: 0.8rem;
+        width: 100%;
+        min-width: auto;
+    }
+
+    .rsvp-details {
+        padding: 2rem;
+        margin-top: 1.5rem;
+    }
+
+    .detail-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .detail-item {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        text-align: left;
+        gap: 1rem;
+        padding-bottom: 1rem;
+    }
+
+    .detail-icon {
+        width: 45px;
+        height: 45px;
+        font-size: 1.4rem;
+        margin-top: 0;
+        flex-shrink: 0;
+    }
+
+    .detail-item:nth-child(2)::after {
+        bottom: 0;
+    }
+
+    .rsvp-ornament {
+        margin-top: 2.5rem;
     }
 }
 
 @media (max-width: 480px) {
     .rsvp {
-        padding: 60px 0;
-    }
-    
-    .rsvp .container {
-        padding: 0 15px;
-    }
-    
-    .rsvp p {
-        font-size: 1.1rem;
-    }
-    
-    .rsvp-button {
-        padding: 0.9rem 2rem;
-        font-size: 0.95rem;
-    }
-    
-    .rsvp-button i {
-        font-size: 1.1rem;
+        padding: 2.5rem 0;
     }
     
     .rsvp-modal {
-        padding: 10px;
+        padding: 0.5rem;
+        align-items: center;
     }
     
     .modal-content {
-        border-radius: 8px;
-        max-height: calc(100vh - 20px);
+        max-height: calc(100vh - 1rem);
     }
     
     .modal-header {
         padding: 1rem;
-        border-radius: 8px 8px 0 0;
     }
     
-    .modal-header h3 {
-        font-size: 1.3rem;
+    .rsvp-form {
+        padding: 0.8rem;
     }
-    
+
     .rsvp-step {
-        padding: 1rem;
-    }
-    
-    .rsvp-step#step-codigo,
-    .rsvp-step#step-ver-respuesta {
-        padding: 0.75rem 1rem;
-    }
-    
-    .form-group input,
-    .form-group select,
-    .form-group textarea {
         padding: 0.8rem;
     }
     
+    .form-group {
+        margin-bottom: 1.2rem;
+    }
+    
+    .rsvp-button,
+    .whatsapp-button,
+    .btn-primary,
+    .btn-secondary,
+    .btn-warning {
+        min-width: 180px;
+        padding: 1rem 2rem;
+        width: 100%;
+        justify-content: center;
+    }
+
     .exito-icon {
         width: 60px;
         height: 60px;
         font-size: 2rem;
     }
-    
-    .exito-container h3 {
-        font-size: 1.5rem;
-    }
-    
-    .confirmacion-info,
-    .resumen-confirmacion,
-    .respuesta-existente {
-        padding: 1rem;
-    }
-}
 
-/* Responsivo extra pequeño para modales compactos */
-@media (max-width: 360px) {
-    .rsvp-modal {
-        padding: 8px;
+    .confirmacion-header {
+        margin-bottom: 1.5rem;
     }
-    
-    .modal-header {
-        padding: 0.8rem;
+
+    .rsvp-content {
+        padding: 0 1rem;
     }
-    
-    .modal-header h3 {
+
+    .rsvp-header .section-title {
+        font-size: 2rem;
+    }
+
+    .rsvp-details {
+        padding: 1.5rem;
+    }
+
+    .detail-icon {
+        width: 40px;
+        height: 40px;
         font-size: 1.2rem;
     }
-    
-    .rsvp-step {
-        padding: 0.8rem;
-    }
-    
-    .rsvp-step#step-codigo,
-    .rsvp-step#step-ver-respuesta {
-        padding: 0.6rem 0.8rem;
+
+    .rsvp-text {
+        font-size: 1rem;
     }
 }
 
-/* Animaciones suaves */
-.rsvp-step {
-    animation: fadeIn 0.3s ease-in-out;
-}
-
+/* Animaciones */
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+    from { 
+        opacity: 0; 
+        transform: translateY(20px); 
     }
-    to {
-        opacity: 1;
-        transform: translateY(0);
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
     }
 }
 
-/* Estados de carga */
-.loading {
-    opacity: 0.6;
-    pointer-events: none;
+@keyframes scaleIn {
+    from { 
+        opacity: 0; 
+        transform: scale(0.9); 
+    }
+    to { 
+        opacity: 1; 
+        transform: scale(1); 
+    }
 }
 
-.loading::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 20px;
-    height: 20px;
-    border: 2px solid var(--primary-olive);
-    border-top: 2px solid transparent;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    transform: translate(-50%, -50%);
+@keyframes slideInLeft {
+    from { 
+        opacity: 0; 
+        transform: translateX(-20px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateX(0); 
+    }
 }
 
 @keyframes spin {
-    0% { transform: translate(-50%, -50%) rotate(0deg); }
-    100% { transform: translate(-50%, -50%) rotate(360deg); }
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 /* Mejoras de accesibilidad */
-.form-group input:invalid {
-    border-color: #dc3545;
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
 }
 
-.form-group input:valid {
-    border-color: #28a745;
+/* MANTENER TODAS LAS CLASES EXISTENTES DE LA PLANTILLA 2 - NO ELIMINAR NADA DEBAJO DE ESTA LÍNEA */
+
+/* Estilos existentes de la plantilla 2 para RSVP - Mantener compatibilidad */
+.rsvp .container.original {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 0 20px;
 }
 
-/* Estilos para campos requeridos */
-.form-group label[for*="required"]::after,
-.form-group label:has(+ input[required])::after,
-.form-group label:has(+ select[required])::after {
-    content: ' *';
-    color: #dc3545;
+.rsvp h2.original {
+    font-family: var(--font-serif);
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    color: var(--primary-olive);
+    font-weight: 400;
+    margin-bottom: 1rem;
 }
 
-/* Scroll personalizado para el modal en móviles */
-.modal-content::-webkit-scrollbar {
-    width: 6px;
+.rsvp p.original {
+    font-size: 1.2rem;
+    color: var(--soft-gray);
+    line-height: 1.7;
+    margin: 2rem auto 3rem;
+    max-width: 500px;
 }
 
-.modal-content::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 3px;
+/* Botón RSVP original de plantilla 2 (mantener compatibilidad) */
+.rsvp-button.original {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem 2rem;
+    background: linear-gradient(135deg, var(--primary-olive), var(--dark-olive));
+    color: var(--warm-white);
+    border: none;
+    border-radius: 25px;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    text-decoration: none;
 }
 
-.modal-content::-webkit-scrollbar-thumb {
-    background: var(--primary-olive);
-    border-radius: 3px;
+.rsvp-button.original:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(107, 123, 58, 0.3);
 }
 
-.modal-content::-webkit-scrollbar-thumb:hover {
-    background: var(--dark-olive);
+/* Modal RSVP original de plantilla 2 (mantener compatibilidad) */
+.rsvp-modal.original {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(44, 44, 44, 0.8);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+}
+
+.rsvp-modal.original.active {
+    display: flex;
+}
+
+.modal-content.original {
+    background: var(--warm-white);
+    border-radius: var(--border-radius);
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
 }
