@@ -103,13 +103,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             musica_youtube_url, musica_autoplay, musica_volumen,
             imagen_hero, imagen_dedicatoria, imagen_destacada, whatsapp_confirmacion, 
             tipo_rsvp, fecha_limite_rsvp, mostrar_contador, tipo_contador, mostrar_cronograma,
-            mostrar_compartir
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            mostrar_compartir, mostrar_fecha_limite_rsvp, mostrar_solo_adultos, texto_solo_adultos
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"; 
         
         $mostrar_contador = isset($_POST['mostrar_contador']) ? 1 : 0;
         $tipo_contador = $_POST['tipo_contador'] ?? 'completo';
         $mostrar_cronograma = isset($_POST['mostrar_cronograma']) ? 1 : 0;
         $mostrar_compartir = isset($_POST['mostrar_compartir']) ? 1 : 0;
+        $mostrar_fecha_limite_rsvp = isset($_POST['mostrar_fecha_limite_rsvp']) ? 1 : 0;
+        $mostrar_solo_adultos = isset($_POST['mostrar_solo_adultos']) ? 1 : 0;
 
         $stmt = $db->prepare($insert_query);
         $stmt->execute([
@@ -139,7 +141,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $mostrar_contador,
             $tipo_contador,
             $mostrar_cronograma,
-            $mostrar_compartir 
+            $mostrar_compartir,
+            $mostrar_fecha_limite_rsvp,
+            $mostrar_solo_adultos,
         ]);
         
         $invitacion_id = $db->lastInsertId();
@@ -887,6 +891,48 @@ $plantillas = $plantilla_stmt->fetchAll(PDO::FETCH_ASSOC);
                         </div>
                     </div>
                 </div>
+                
+                <!-- Mostrar Fecha Límite en la invitación -->
+                <div class="form-group">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="mostrar_fecha_limite_rsvp" 
+                            name="mostrar_fecha_limite_rsvp" value="1" checked>
+                        <label class="form-check-label" for="mostrar_fecha_limite_rsvp">
+                            Mostrar fecha límite en la invitación
+                        </label>
+                    </div>
+                    <div class="form-text">Muestra un mensaje con la fecha límite para confirmar asistencia</div>
+                </div>
+                
+                <hr class="my-4">
+                
+                <!-- Sección Solo Adultos -->
+                <h5 class="mb-3">
+                    <i class="bi bi-people me-2"></i>
+                    Restricción de Edad
+                </h5>
+                
+                <div class="form-group">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="mostrar_solo_adultos" 
+                            name="mostrar_solo_adultos" value="1" checked
+                            onchange="toggleSoloAdultosText()">
+                        <label class="form-check-label" for="mostrar_solo_adultos">
+                            Mostrar mensaje de "Solo Adultos"
+                        </label>
+                    </div>
+                    <div class="form-text">Activa o desactiva el mensaje sobre restricción de edad</div>
+                </div>
+                
+                <div class="form-group" id="campo-texto-adultos">
+                    <label for="texto_solo_adultos" class="form-label">Texto personalizado para sección "Solo Adultos"</label>
+                    <input type="text" id="texto_solo_adultos" name="texto_solo_adultos" class="form-control" 
+                        placeholder="Celebración exclusiva para adultos (No niños)."
+                        value="Celebración exclusiva para adultos (No niños).">
+                    <div class="form-text">Personaliza el mensaje sobre la restricción de edad</div>
+                </div>
+                
+                <hr class="my-4">
                 
                 <!-- Tipo de RSVP -->
                 <div class="form-group">
