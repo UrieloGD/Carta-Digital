@@ -1,4 +1,4 @@
-// mesa-regalos.js - Plantilla 1
+// mesa-regalos.js - Plantilla 4
 
 document.addEventListener('DOMContentLoaded', function() {
     inicializarMesaRegalos();
@@ -21,7 +21,7 @@ function inicializarMesaRegalos() {
 
 function abrirEnlaceMesaRegalos(url, cardElement) {
     // Efecto visual de click
-    cardElement.style.transform = 'translateY(-6px) scale(0.98)';
+    cardElement.style.transform = 'translateY(-8px) scale(0.98)';
     setTimeout(() => {
         cardElement.style.transform = '';
     }, 150);
@@ -45,7 +45,7 @@ function registrarClickMesaRegalos(urlTienda) {
             }
         };
         
-        fetch('./plantillas/plantilla-1/api/estadisticas.php', {
+        fetch('./plantillas/plantilla-4/api/estadisticas.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

@@ -1,89 +1,1407 @@
-/* Sección Bienvenida */
+/* Sección Bienvenida - Ocean Twilight Dark con elementos dinámicos */
 .bienvenida {
-    min-height: 105vh;
+    background: var(--bg-primary);
+    position: relative;
+    overflow: hidden;
+    min-height: 100vh;
     display: flex;
     align-items: center;
-    justify-content: center;
-    background: var(--color-primary);
-    padding: 2rem 0;
+    padding: 120px 0;
+}
+
+/* Decoración de fondo con círculos y formas geométricas dinámicas - MEJORADO */
+.bienvenida-bg-decoration {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    overflow: hidden;
+}
+
+/* Círculos grandes flotantes */
+.bienvenida-bg-decoration::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        /* Círculos grandes principales */
+        radial-gradient(circle at 10% 15%, rgba(115, 191, 184, 0.12) 0%, transparent 30%),
+        radial-gradient(circle at 90% 85%, rgba(95, 168, 211, 0.1) 0%, transparent 35%),
+        radial-gradient(circle at 75% 10%, rgba(168, 218, 220, 0.08) 0%, transparent 25%),
+        radial-gradient(circle at 25% 90%, rgba(115, 191, 184, 0.09) 0%, transparent 28%),
+        
+        /* Círculos medianos secundarios */
+        radial-gradient(circle at 50% 45%, rgba(95, 168, 211, 0.07) 0%, transparent 20%),
+        radial-gradient(circle at 15% 55%, rgba(168, 218, 220, 0.1) 0%, transparent 22%),
+        radial-gradient(circle at 85% 40%, rgba(115, 191, 184, 0.08) 0%, transparent 18%),
+        radial-gradient(circle at 40% 75%, rgba(95, 168, 211, 0.06) 0%, transparent 15%),
+        
+        /* Círculos pequeños de detalle */
+        radial-gradient(circle at 30% 25%, rgba(168, 218, 220, 0.11) 0%, transparent 12%),
+        radial-gradient(circle at 70% 65%, rgba(95, 168, 211, 0.09) 0%, transparent 14%),
+        radial-gradient(circle at 20% 70%, rgba(115, 191, 184, 0.07) 0%, transparent 10%),
+        radial-gradient(circle at 80% 30%, rgba(168, 218, 220, 0.08) 0%, transparent 11%);
+    animation: floatCircles 25s ease-in-out infinite alternate;
+}
+
+/* Anillos concéntricos decorativos */
+.bienvenida-bg-decoration::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        /* Anillos grandes */
+        radial-gradient(circle at 20% 20%, transparent 10%, rgba(115, 191, 184, 0.08) 10.5%, transparent 11.5%),
+        radial-gradient(circle at 80% 80%, transparent 12%, rgba(168, 218, 220, 0.07) 12.5%, transparent 13.5%),
+        radial-gradient(circle at 85% 15%, transparent 8%, rgba(95, 168, 211, 0.09) 8.5%, transparent 9.5%),
+        
+        /* Anillos medianos */
+        radial-gradient(circle at 35% 65%, transparent 5%, rgba(168, 218, 220, 0.1) 5.3%, transparent 5.9%),
+        radial-gradient(circle at 65% 35%, transparent 6%, rgba(115, 191, 184, 0.08) 6.3%, transparent 6.9%),
+        radial-gradient(circle at 45% 85%, transparent 7%, rgba(95, 168, 211, 0.07) 7.3%, transparent 7.9%),
+        
+        /* Anillos pequeños */
+        radial-gradient(circle at 92% 55%, transparent 3%, rgba(168, 218, 220, 0.12) 3.2%, transparent 3.6%),
+        radial-gradient(circle at 10% 75%, transparent 4%, rgba(115, 191, 184, 0.09) 4.2%, transparent 4.6%),
+        radial-gradient(circle at 55% 10%, transparent 3.5%, rgba(95, 168, 211, 0.1) 3.7%, transparent 4.1%);
+    animation: pulseRings 18s ease-in-out infinite alternate;
+    opacity: 0.8;
+}
+
+/* Patrón de ondas sutiles en el fondo */
+.bienvenida::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        repeating-linear-gradient(
+            45deg,
+            transparent,
+            transparent 100px,
+            rgba(115, 191, 184, 0.02) 100px,
+            rgba(115, 191, 184, 0.02) 101px
+        ),
+        repeating-linear-gradient(
+            -45deg,
+            transparent,
+            transparent 100px,
+            rgba(95, 168, 211, 0.02) 100px,
+            rgba(95, 168, 211, 0.02) 101px
+        );
+    opacity: 0.5;
+    z-index: 1;
+}
+
+/* Partículas flotantes adicionales */
+.bienvenida::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(2px 2px at 15% 25%, rgba(168, 218, 220, 0.4), transparent),
+        radial-gradient(3px 3px at 85% 75%, rgba(115, 191, 184, 0.3), transparent),
+        radial-gradient(2px 2px at 45% 55%, rgba(95, 168, 211, 0.35), transparent),
+        radial-gradient(3px 3px at 75% 20%, rgba(168, 218, 220, 0.3), transparent),
+        radial-gradient(2px 2px at 25% 80%, rgba(115, 191, 184, 0.4), transparent),
+        radial-gradient(3px 3px at 90% 45%, rgba(95, 168, 211, 0.3), transparent),
+        radial-gradient(2px 2px at 10% 60%, rgba(168, 218, 220, 0.35), transparent),
+        radial-gradient(3px 3px at 60% 90%, rgba(115, 191, 184, 0.3), transparent);
+    background-size: 300% 300%;
+    animation: floatingParticles 30s linear infinite;
+    opacity: 0.6;
+    z-index: 1;
 }
 
 .bienvenida-content {
-    max-width: 800px;
+    max-width: 1100px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+}
+
+/* Header con diseño marino mejorado */
+.bienvenida-header {
+    text-align: center;
+    margin-bottom: 5rem;
+    position: relative;
+}
+
+.header-ornament {
+    width: 140px;
+    height: 3px;
+    background: linear-gradient(90deg, transparent 0%, var(--accent-teal) 20%, var(--accent-aqua) 50%, var(--accent-teal) 80%, transparent 100%);
+    margin: 0 auto 2.5rem;
+    position: relative;
+    box-shadow: 0 0 20px rgba(115, 191, 184, 0.5);
+    border-radius: 2px;
+    animation: glowPulse 3s ease-in-out infinite;
+}
+
+/* Círculos en los extremos del ornamento */
+.header-ornament::before,
+.header-ornament::after {
+    content: '';
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: radial-gradient(circle, var(--accent-aqua) 0%, var(--accent-teal) 100%);
+    border-radius: 50%;
+    top: -3.5px;
+    box-shadow: 
+        0 0 15px rgba(168, 218, 220, 0.7),
+        inset 0 0 5px rgba(255, 255, 255, 0.3);
+    animation: orbPulse 2s ease-in-out infinite alternate;
+}
+
+.header-ornament::before {
+    left: -7px;
+    animation-delay: 0s;
+}
+
+.header-ornament::after {
+    right: -7px;
+    animation-delay: 1s;
+}
+
+.bienvenida-header h2 {
+    font-family: var(--font-script);
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    color: var(--accent-aqua);
+    font-weight: 400;
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.02em;
+    line-height: 1.3;
+    text-shadow: 
+        0 4px 15px rgba(115, 191, 184, 0.4),
+        0 0 30px rgba(168, 218, 220, 0.2);
+    position: relative;
+}
+
+/* Efecto de brillo en el título */
+.bienvenida-header h2::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(168, 218, 220, 0.3), transparent);
+    animation: shimmer 4s ease-in-out infinite;
+}
+
+.decorative-line {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 2.5rem 0;
+    gap: 25px;
+}
+
+.line-accent {
+    flex: 1;
+    max-width: 180px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, var(--accent-teal) 50%, transparent 100%);
+    position: relative;
+    box-shadow: 0 0 10px rgba(115, 191, 184, 0.3);
+}
+
+/* Rombo central decorativo */
+.line-accent::after {
+    content: '◆';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--accent-teal);
+    font-size: 12px;
+    background: var(--bg-primary);
+    padding: 0 12px;
+    text-shadow: 0 0 15px rgba(115, 191, 184, 0.6);
+    animation: rotateDiamond 4s ease-in-out infinite;
+}
+
+/* Puntos decorativos a los lados */
+.line-accent::before {
+    content: '';
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: var(--accent-aqua);
+    border-radius: 50%;
+    top: -1.5px;
+    left: 0;
+    box-shadow: 0 0 8px rgba(168, 218, 220, 0.6);
+}
+
+.header-subtitle {
+    font-family: var(--font-elegant);
+    font-size: 1.35rem;
+    color: var(--text-secondary);
+    font-style: italic;
+    font-weight: 300;
+    margin-top: 1rem;
+    opacity: 0.95;
+}
+
+/* Contenido principal mejorado */
+.bienvenida-main {
+    display: grid;
+    gap: 5rem;
+}
+
+.bienvenida-text {
+    margin-bottom: 3rem;
+}
+
+.text-content {
+    max-width: 850px;
     margin: 0 auto;
     text-align: center;
-    width: 100%;
+    position: relative;
 }
 
-.bienvenida h2 {
+.bienvenida-intro {
+    font-size: 1.15rem;
+    line-height: 1.95;
+    color: var(--text-primary);
+    font-weight: 300;
+    margin-bottom: 3rem;
+    text-align: center;
+}
+
+/* Quote con diseño de ola mejorado con decoraciones */
+.quote-decoration {
+    position: relative;
+    padding: 3.5rem 3rem;
+    background: linear-gradient(
+        135deg, 
+        rgba(37, 54, 73, 0.4) 0%, 
+        rgba(27, 38, 59, 0.3) 50%,
+        rgba(37, 54, 73, 0.35) 100%
+    );
+    border-left: 4px solid transparent;
+    border-image: linear-gradient(180deg, var(--accent-teal), var(--accent-aqua)) 1;
+    border-radius: 0 16px 16px 0;
+    margin: 3.5rem auto;
+    max-width: 750px;
+    box-shadow: 
+        0 15px 40px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(168, 218, 220, 0.15);
+    backdrop-filter: blur(15px);
+    overflow: hidden;
+}
+
+/* Círculos decorativos flotantes dentro del quote */
+.quote-decoration::before {
+    content: '';
+    position: absolute;
+    top: -20%;
+    right: -10%;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(115, 191, 184, 0.15) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: floatQuoteCircle 8s ease-in-out infinite alternate;
+}
+
+.quote-decoration::after {
+    content: '';
+    position: absolute;
+    bottom: -15%;
+    left: -8%;
+    width: 180px;
+    height: 180px;
+    background: radial-gradient(circle, rgba(95, 168, 211, 0.12) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: floatQuoteCircle 10s ease-in-out infinite alternate-reverse;
+}
+
+.quote-mark {
     font-family: var(--font-serif);
-    font-size: 2.5rem;
-    color: var(--color-secondary);
-    margin-bottom: 2rem;
-    font-weight: 500;
+    font-size: 4.5rem;
+    color: var(--accent-teal);
+    opacity: 0.3;
+    position: absolute;
+    line-height: 1;
+    text-shadow: 0 0 25px rgba(115, 191, 184, 0.6);
+    z-index: 1;
 }
 
-.bienvenida p {
-    font-size: 0.95rem;
-    margin-bottom: 2.5rem;
-    color: var(--color-text);
-    line-height: 1.6;
-    letter-spacing: 0.5px;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
+.quote-mark:first-child {
+    top: 1rem;
+    left: 1.5rem;
 }
 
+.quote-mark-end {
+    bottom: 1rem;
+    right: 1.5rem;
+    transform: rotate(180deg);
+}
+
+/* Contenedor de las comillas con efecto especial */
+.quote-marks-container {
+    position: relative;
+    z-index: 2;
+}
+
+.bienvenida-message {
+    font-size: 1.125rem;
+    line-height: 1.85;
+    color: var(--text-secondary);
+    font-weight: 300;
+    font-style: italic;
+    padding: 0 3.5rem;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+}
+
+/* Imagen con efecto marino mejorado y decoraciones */
 .bienvenida-image {
-    margin: 2.5rem 0;
-    display: flex;
-    justify-content: center;
-    perspective: 1000px;
+    margin: 5rem 0;
+    position: relative;
 }
 
-.bienvenida-image img {
-    width: 380px;
-    height: 380px;
+.image-container {
+    position: relative;
+    max-width: 550px;
+    margin: 0 auto;
+}
+
+/* Círculos decorativos alrededor de la imagen */
+.image-container::before {
+    content: '';
+    position: absolute;
+    top: -40px;
+    right: -40px;
+    width: 100px;
+    height: 100px;
+    background: radial-gradient(circle, rgba(168, 218, 220, 0.15) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: floatImageCircle1 6s ease-in-out infinite alternate;
+    z-index: -1;
+}
+
+.image-container::after {
+    content: '';
+    position: absolute;
+    bottom: -50px;
+    left: -50px;
+    width: 120px;
+    height: 120px;
+    background: radial-gradient(circle, rgba(115, 191, 184, 0.12) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: floatImageCircle2 8s ease-in-out infinite alternate-reverse;
+    z-index: -1;
+}
+
+.image-frame {
+    position: relative;
+    overflow: hidden;
+    border-radius: 20px;
+    box-shadow: 
+        0 25px 70px rgba(0, 0, 0, 0.6),
+        0 0 0 1px rgba(115, 191, 184, 0.25);
+    transition: var(--transition-wave);
+}
+
+/* Borde brillante animado */
+.image-frame::before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
+    background: linear-gradient(135deg, var(--accent-teal), var(--accent-aqua), var(--accent-sand), var(--accent-aqua), var(--accent-teal));
+    background-size: 200% 200%;
+    border-radius: 20px;
+    opacity: 0;
+    transition: var(--transition-wave);
+    z-index: -1;
+    filter: blur(10px);
+    animation: gradientShift 8s ease-in-out infinite;
+}
+
+.image-container:hover .image-frame::before {
+    opacity: 0.7;
+}
+
+/* Anillos concéntricos decorativos */
+.image-frame::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    height: 90%;
+    border: 2px solid rgba(115, 191, 184, 0.2);
+    border-radius: 16px;
+    opacity: 0;
+    transition: var(--transition-wave);
+}
+
+.image-container:hover .image-frame::after {
+    opacity: 1;
+    width: 95%;
+    height: 95%;
+}
+
+.image-container img {
+    width: 100%;
+    height: 500px;
     object-fit: cover;
     object-position: center;
-    border-radius: 8px;
-    
-    /* Efecto photocard con borde blanco */
-    padding: 15px;
-    background: white;
+    filter: brightness(0.85) contrast(1.12) saturate(1.15);
+    transition: var(--transition-wave);
+    display: block;
+}
+
+.image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        135deg,
+        rgba(13, 27, 42, 0.85) 0%,
+        rgba(115, 191, 184, 0.25) 100%
+    );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: var(--transition-wave);
+    z-index: 2;
+}
+
+.overlay-content {
+    text-align: center;
+    transform: translateY(40px);
+    transition: var(--transition-wave);
+}
+
+.overlay-text {
+    font-family: var(--font-script);
+    font-size: 2.2rem;
+    color: var(--accent-aqua);
+    font-weight: 400;
+    letter-spacing: 1px;
+    text-shadow: 
+        0 4px 20px rgba(115, 191, 184, 0.7),
+        0 0 40px rgba(168, 218, 220, 0.5);
+}
+
+.image-container:hover .image-overlay {
+    opacity: 1;
+}
+
+.image-container:hover .overlay-content {
+    transform: translateY(0);
+}
+
+.image-container:hover img {
+    filter: brightness(0.7) contrast(1.18) saturate(1.25);
+    transform: scale(1.08);
+}
+
+/* Decoración exterior de la imagen mejorada */
+.image-decoration {
+    position: absolute;
+    top: -30px;
+    left: -30px;
+    right: -30px;
+    bottom: -30px;
+    border: 1px solid rgba(115, 191, 184, 0.35);
+    border-radius: 24px;
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* Orbes brillantes en las esquinas */
+.image-decoration::before,
+.image-decoration::after {
+    content: '';
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--accent-aqua) 0%, var(--accent-teal) 100%);
+    box-shadow: 0 0 20px rgba(168, 218, 220, 0.8);
+    animation: orbGlow 3s ease-in-out infinite alternate;
+}
+
+.image-decoration::before {
+    top: -7px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.image-decoration::after {
+    bottom: -7px;
+    left: 50%;
+    transform: translateX(-50%);
+    animation-delay: 1.5s;
+}
+
+/* Ceremonia con diseño de carta elegante mejorada */
+.bienvenida-ceremony {
+    text-align: center;
+    padding: 4.5rem 3.5rem;
+    background: linear-gradient(
+        135deg, 
+        rgba(37, 54, 73, 0.6) 0%, 
+        rgba(27, 38, 59, 0.45) 50%,
+        rgba(37, 54, 73, 0.55) 100%
+    );
+    border-radius: 20px;
+    margin: 6rem 0;
+    position: relative;
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(115, 191, 184, 0.25);
     box-shadow: 
-        0 8px 32px rgba(0, 0, 0, 0.15),
-        0 2px 8px rgba(0, 0, 0, 0.1);
-    
-    /* Rotación hacia la derecha */
-    transform: rotate(8deg);
-    transition: transform 0.3s ease;
+        0 20px 50px rgba(0, 0, 0, 0.5),
+        inset 0 1px 0 rgba(168, 218, 220, 0.15);
+    overflow: hidden;
 }
 
-.bienvenida-image img:hover {
-    transform: rotate(0deg) scale(1.05);
+/* Círculos flotantes de fondo en la ceremonia */
+.bienvenida-ceremony::before {
+    content: '';
+    position: absolute;
+    top: -30%;
+    left: -20%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(115, 191, 184, 0.12) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: floatCeremonyCircle1 12s ease-in-out infinite alternate;
 }
 
-.bienvenida-date-section {
-    margin-top: 2.5rem;
+.bienvenida-ceremony::after {
+    content: '';
+    position: absolute;
+    bottom: -30%;
+    right: -20%;
+    width: 350px;
+    height: 350px;
+    background: radial-gradient(circle, rgba(95, 168, 211, 0.1) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: floatCeremonyCircle2 15s ease-in-out infinite alternate-reverse;
 }
 
-.bienvenida-date {
-    font-family: var(--font-serif);
+.ceremony-ornament {
+    width: 100px;
+    height: 100px;
+    border: 3px solid var(--accent-teal);
+    border-radius: 50%;
+    margin: 0 auto 3rem;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(115, 191, 184, 0.15), rgba(95, 168, 211, 0.08));
+    box-shadow: 
+        0 0 30px rgba(115, 191, 184, 0.4),
+        inset 0 3px 15px rgba(168, 218, 220, 0.15);
+    z-index: 1;
+}
+
+.ceremony-ornament::after {
+    content: '💍';
     font-size: 2.8rem;
-    color: var(--color-secondary);
-    margin-bottom: 1.5rem;
-    font-weight: 500;
+    filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.4));
+    animation: ringFloat 3s ease-in-out infinite;
 }
 
-.bienvenida-venue p {
-    font-size: 1.2rem;
-    color: var(--color-secondary);
+/* Anillo exterior pulsante */
+.ceremony-ornament::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    right: -8px;
+    bottom: -8px;
+    border: 1px solid rgba(168, 218, 220, 0.4);
+    border-radius: 50%;
+    animation: ringPulse 3s ease-in-out infinite;
+}
+
+.ceremony-main {
+    position: relative;
+    z-index: 1;
+}
+
+.ceremony-date-container {
+    margin-bottom: 3rem;
+}
+
+.ceremony-label {
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 1.25rem;
+    display: block;
+    font-weight: 400;
+}
+
+.ceremony-date {
+    font-family: var(--font-elegant);
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    color: var(--accent-sand);
+    font-weight: 400;
     margin-bottom: 0.5rem;
-    letter-spacing: 0.5px;
+    font-style: italic;
+    text-shadow: 
+        0 2px 10px rgba(241, 212, 175, 0.4),
+        0 0 30px rgba(241, 212, 175, 0.2);
 }
 
-.venue-address {
-    font-size: 1rem !important;
-    color: var(--color-text-light) !important;
+.ceremony-details {
+    display: grid;
+    gap: 2rem;
+    margin-bottom: 2.5rem;
+}
+
+.ceremony-time,
+.ceremony-venue {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    font-size: 1.15rem;
+}
+
+.ceremony-time {
+    color: var(--text-primary);
+    font-weight: 300;
+}
+
+.ceremony-time i,
+.icon-clock {
+    color: var(--accent-teal);
+    font-size: 1.4rem;
+    filter: drop-shadow(0 0 8px rgba(115, 191, 184, 0.5));
+}
+
+.ceremony-venue {
+    font-family: var(--font-elegant);
+    color: var(--accent-aqua);
+    font-weight: 400;
+    font-style: italic;
+    font-size: 1.3rem;
+}
+
+.ceremony-venue i,
+.icon-location {
+    color: var(--accent-sand);
+    font-size: 1.5rem;
+    filter: drop-shadow(0 0 8px rgba(241, 212, 175, 0.5));
+}
+
+.ceremony-address {
+    font-size: 1rem;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+    opacity: 0.95;
+    margin-top: 0.75rem;
+}
+
+/* Sección de familia con diseño de tarjetas mejorado */
+.familia-section {
+    margin-top: 7rem;
+    position: relative;
+}
+
+/* Círculos decorativos de fondo para familia */
+.familia-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 5%;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(115, 191, 184, 0.08) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: floatFamilyCircle1 10s ease-in-out infinite alternate;
+    z-index: 0;
+}
+
+.familia-section::after {
+    content: '';
+    position: absolute;
+    bottom: 10%;
+    right: 8%;
+    width: 180px;
+    height: 180px;
+    background: radial-gradient(circle, rgba(95, 168, 211, 0.07) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: floatFamilyCircle2 12s ease-in-out infinite alternate-reverse;
+    z-index: 0;
+}
+
+.familia-header {
+    text-align: center;
+    margin-bottom: 4.5rem;
+    position: relative;
+    z-index: 1;
+}
+
+.familia-header h3 {
+    font-family: var(--font-script);
+    font-size: clamp(2rem, 4vw, 3rem);
+    color: var(--accent-teal);
+    font-weight: 400;
+    margin-bottom: 1.5rem;
+    text-shadow: 
+        0 2px 10px rgba(115, 191, 184, 0.4),
+        0 0 30px rgba(115, 191, 184, 0.2);
+}
+
+.familia-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 3.5rem;
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
+.familia-column {
+    background: linear-gradient(
+        135deg, 
+        rgba(37, 54, 73, 0.55) 0%, 
+        rgba(27, 38, 59, 0.35) 50%,
+        rgba(37, 54, 73, 0.5) 100%
+    );
+    border: 1px solid rgba(115, 191, 184, 0.25);
+    border-radius: 20px;
+    padding: 3.5rem 2.5rem;
+    text-align: center;
+    transition: var(--transition-wave);
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(15px);
+    box-shadow: 
+        0 15px 40px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(168, 218, 220, 0.1);
+}
+
+/* Círculo decorativo interno flotante */
+.familia-column::before {
+    content: '';
+    position: absolute;
+    top: -30%;
+    right: -20%;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(115, 191, 184, 0.15) 0%, transparent 70%);
+    border-radius: 50%;
+    transition: var(--transition-wave);
+    animation: floatColumnCircle 8s ease-in-out infinite alternate;
+}
+
+/* Borde superior animado con gradiente */
+.familia-column::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: linear-gradient(90deg, var(--accent-teal), var(--accent-aqua), var(--accent-sand), var(--accent-aqua), var(--accent-teal));
+    background-size: 200% 100%;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: var(--transition-wave);
+    border-radius: 20px 20px 0 0;
+    animation: gradientFlow 4s ease-in-out infinite;
+}
+
+.familia-column:hover::before {
+    width: 250px;
+    height: 250px;
+    opacity: 0.8;
+}
+
+.familia-column:hover::after {
+    transform: scaleX(1);
+}
+
+.familia-column:hover {
+    transform: translateY(-10px);
+    box-shadow: 
+        0 25px 60px rgba(0, 0, 0, 0.5),
+        0 0 40px rgba(115, 191, 184, 0.3),
+        inset 0 1px 0 rgba(168, 218, 220, 0.2);
+    border-color: rgba(115, 191, 184, 0.5);
+}
+
+.familia-icon {
+    font-size: 3.5rem;
+    margin-bottom: 2rem;
+    opacity: 0.95;
+    filter: drop-shadow(0 3px 10px rgba(115, 191, 184, 0.4));
+    animation: iconFloat 3s ease-in-out infinite;
+}
+
+.familia-column h4 {
+    font-family: var(--font-elegant);
+    font-size: 1.85rem;
+    color: var(--accent-aqua);
+    font-weight: 400;
+    margin-bottom: 3rem;
+    letter-spacing: 0.5px;
+    font-style: italic;
+    text-shadow: 0 2px 8px rgba(168, 218, 220, 0.3);
+}
+
+.familia-item {
+    margin-bottom: 2.5rem;
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid rgba(115, 191, 184, 0.2);
+    position: relative;
+}
+
+.familia-item:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+/* Puntos decorativos en el separador */
+.familia-item::after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6px;
+    height: 6px;
+    background: var(--accent-teal);
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(115, 191, 184, 0.6);
+    opacity: 0;
+    transition: var(--transition-wave);
+}
+
+.familia-column:hover .familia-item::after {
+    opacity: 1;
+}
+
+.familia-item:last-child::after {
+    display: none;
+}
+
+.familia-label {
+    display: block;
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    font-weight: 400;
+    position: relative;
+}
+
+/* Líneas decorativas a los lados del label */
+.familia-label::before,
+.familia-label::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 30px;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(115, 191, 184, 0.3), transparent);
+}
+
+.familia-label::before {
+    right: calc(100% + 10px);
+}
+
+.familia-label::after {
+    left: calc(100% + 10px);
+    background: linear-gradient(90deg, transparent, rgba(115, 191, 184, 0.3));
+}
+
+.familia-names {
+    display: block;
+    font-family: var(--font-serif);
+    font-size: 1.15rem;
+    color: var(--text-primary);
+    font-weight: 300;
+    line-height: 1.7;
+}
+
+/* Animaciones personalizadas */
+@keyframes floatCircles {
+    0% {
+        transform: translate(0, 0) scale(1);
+        opacity: 0.6;
+    }
+    100% {
+        transform: translate(-2%, 3%) scale(1.05);
+        opacity: 0.85;
+    }
+}
+
+@keyframes pulseRings {
+    0% {
+        transform: scale(1);
+        opacity: 0.6;
+    }
+    100% {
+        transform: scale(1.08);
+        opacity: 0.9;
+    }
+}
+
+@keyframes floatingParticles {
+    0% {
+        background-position: 0% 0%;
+    }
+    100% {
+        background-position: 100% 100%;
+    }
+}
+
+@keyframes glowPulse {
+    0%, 100% {
+        box-shadow: 0 0 20px rgba(115, 191, 184, 0.5);
+    }
+    50% {
+        box-shadow: 0 0 30px rgba(115, 191, 184, 0.8);
+    }
+}
+
+@keyframes orbPulse {
+    0% {
+        box-shadow: 
+            0 0 15px rgba(168, 218, 220, 0.7),
+            inset 0 0 5px rgba(255, 255, 255, 0.3);
+    }
+    100% {
+        box-shadow: 
+            0 0 25px rgba(168, 218, 220, 1),
+            inset 0 0 8px rgba(255, 255, 255, 0.5);
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        left: -100%;
+    }
+    100% {
+        left: 200%;
+    }
+}
+
+@keyframes rotateDiamond {
+    0%, 100% {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+    50% {
+        transform: translate(-50%, -50%) rotate(180deg);
+    }
+}
+
+@keyframes floatQuoteCircle {
+    0% {
+        transform: translate(0, 0);
+        opacity: 0.4;
+    }
+    100% {
+        transform: translate(-10px, -10px);
+        opacity: 0.7;
+    }
+}
+
+@keyframes floatImageCircle1 {
+    0% {
+        transform: translate(0, 0) scale(1);
+        opacity: 0.5;
+    }
+    100% {
+        transform: translate(-15px, -15px) scale(1.1);
+        opacity: 0.8;
+    }
+}
+
+@keyframes floatImageCircle2 {
+    0% {
+        transform: translate(0, 0) scale(1);
+        opacity: 0.4;
+    }
+    100% {
+        transform: translate(15px, 15px) scale(1.15);
+        opacity: 0.7;
+    }
+}
+
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@keyframes orbGlow {
+    0% {
+        box-shadow: 0 0 20px rgba(168, 218, 220, 0.8);
+    }
+    100% {
+        box-shadow: 0 0 35px rgba(168, 218, 220, 1);
+    }
+}
+
+@keyframes floatCeremonyCircle1 {
+    0% {
+        transform: translate(0, 0) scale(1);
+    }
+    100% {
+        transform: translate(15px, 15px) scale(1.1);
+    }
+}
+
+@keyframes floatCeremonyCircle2 {
+    0% {
+        transform: translate(0, 0) scale(1);
+    }
+    100% {
+        transform: translate(-20px, -20px) scale(1.15);
+    }
+}
+
+@keyframes ringFloat {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+@keyframes ringPulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.5;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 0.8;
+    }
+}
+
+@keyframes floatFamilyCircle1 {
+    0% {
+        transform: translate(0, 0);
+        opacity: 0.5;
+    }
+    100% {
+        transform: translate(20px, -20px);
+        opacity: 0.8;
+    }
+}
+
+@keyframes floatFamilyCircle2 {
+    0% {
+        transform: translate(0, 0);
+        opacity: 0.4;
+    }
+    100% {
+        transform: translate(-25px, 25px);
+        opacity: 0.7;
+    }
+}
+
+@keyframes floatColumnCircle {
+    0% {
+        transform: translate(0, 0);
+        opacity: 0.3;
+    }
+    100% {
+        transform: translate(-20px, 20px);
+        opacity: 0.6;
+    }
+}
+
+@keyframes gradientFlow {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@keyframes iconFloat {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .bienvenida {
+        padding: 100px 0;
+    }
+    
+    .familia-grid {
+        gap: 3rem;
+    }
+    
+    .image-container::before {
+        width: 80px;
+        height: 80px;
+        top: -30px;
+        right: -30px;
+    }
+    
+    .image-container::after {
+        width: 100px;
+        height: 100px;
+        bottom: -40px;
+        left: -40px;
+    }
+}
+
+@media (max-width: 768px) {
+    .bienvenida {
+        padding: 80px 0;
+    }
+    
+    .bienvenida-content {
+        padding: 2rem 0;
+    }
+    
+    .bienvenida-header {
+        margin-bottom: 4rem;
+    }
+    
+    .header-ornament {
+        width: 100px;
+    }
+    
+    .bienvenida-ceremony {
+        padding: 3.5rem 2.5rem;
+        margin: 5rem 0;
+    }
+    
+    .ceremony-ornament {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .ceremony-ornament::after {
+        font-size: 2.2rem;
+    }
+    
+    .familia-grid {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+    }
+    
+    .familia-column {
+        padding: 3rem 2rem;
+    }
+    
+    .familia-icon {
+        font-size: 3rem;
+    }
+    
+    .quote-decoration {
+        padding: 2.5rem 2rem;
+        margin: 3rem auto;
+    }
+    
+    .bienvenida-message {
+        padding: 0 2rem;
+        font-size: 1.05rem;
+    }
+    
+    .quote-mark {
+        font-size: 3.5rem;
+    }
+    
+    .image-container {
+        max-width: 100%;
+    }
+    
+    .image-container img {
+        height: 400px;
+    }
+    
+    .image-decoration {
+        top: -20px;
+        left: -20px;
+        right: -20px;
+        bottom: -20px;
+    }
+    
+    .image-container::before,
+    .image-container::after {
+        display: none;
+    }
+    
+    .bienvenida-bg-decoration::before,
+    .bienvenida-bg-decoration::after {
+        opacity: 0.6;
+    }
+}
+
+@media (max-width: 480px) {
+    .bienvenida {
+        padding: 60px 0;
+    }
+    
+    .header-ornament {
+        width: 80px;
+        height: 2px;
+    }
+    
+    .header-ornament::before,
+    .header-ornament::after {
+        width: 8px;
+        height: 8px;
+    }
+    
+    .bienvenida-intro {
+        font-size: 1rem;
+    }
+    
+    .quote-decoration {
+        padding: 2rem 1.5rem;
+        margin: 2.5rem auto;
+    }
+    
+    .quote-mark {
+        font-size: 3rem;
+    }
+    
+    .quote-mark:first-child {
+        top: 0.75rem;
+        left: 1rem;
+    }
+    
+    .quote-mark-end {
+        bottom: 0.75rem;
+        right: 1rem;
+    }
+    
+    .bienvenida-message {
+        padding: 0 1rem;
+        font-size: 1rem;
+    }
+    
+    .bienvenida-ceremony {
+        padding: 2.5rem 1.5rem;
+        margin: 4rem 0;
+    }
+    
+    .ceremony-ornament {
+        width: 70px;
+        height: 70px;
+        margin-bottom: 2rem;
+    }
+    
+    .ceremony-ornament::after {
+        font-size: 2rem;
+    }
+    
+    .ceremony-details {
+        gap: 1.5rem;
+    }
+    
+    .image-container img {
+        height: 350px;
+    }
+    
+    .image-decoration {
+        top: -15px;
+        left: -15px;
+        right: -15px;
+        bottom: -15px;
+    }
+    
+    .image-decoration::before,
+    .image-decoration::after {
+        width: 10px;
+        height: 10px;
+    }
+    
+    .familia-section {
+        margin-top: 5rem;
+    }
+    
+    .familia-column {
+        padding: 2.5rem 1.5rem;
+    }
+    
+    .familia-icon {
+        font-size: 2.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .familia-label::before,
+    .familia-label::after {
+        width: 20px;
+    }
+    
+    .familia-item {
+        margin-bottom: 2rem;
+        padding-bottom: 2rem;
+    }
+}
+
+/* Optimización de rendimiento */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Mejora de contraste para accesibilidad */
+@media (prefers-contrast: high) {
+    .bienvenida-ceremony,
+    .familia-column,
+    .quote-decoration {
+        background: rgba(13, 27, 42, 0.95);
+        border-color: var(--accent-teal);
+    }
+    
+    .bienvenida-header h2,
+    .familia-header h3 {
+        text-shadow: none;
+        color: var(--accent-aqua);
+    }
 }

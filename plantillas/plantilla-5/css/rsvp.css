@@ -1,51 +1,479 @@
-/* Sección RSVP */
+/* ================================================
+   RSVP - OCEAN TWILIGHT DARK ELEGANTE
+   ================================================ */
+
 .rsvp {
     padding: 5rem 0;
-    background: var(--color-primary);
+    background: var(--bg-secondary);
+    position: relative;
+    overflow: hidden;
     text-align: center;
 }
 
-.rsvp h2 {
-    font-family: var(--font-serif);
-    font-size: clamp(2rem, 4vw, 2.5rem);
-    color: var(--color-secondary);
-    margin-bottom: 1rem;
-    animation: fadeInUp 1s ease-out;
+/* Efectos de fondo marino */
+.rsvp::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(
+        circle at center,
+        rgba(115, 191, 184, 0.06) 0%,
+        rgba(95, 168, 211, 0.03) 50%,
+        transparent 70%
+    );
+    animation: waveRotate 35s linear infinite;
+    pointer-events: none;
+    z-index: 1;
 }
 
-.rsvp p {
-    font-size: clamp(1rem, 2.5vw, 1.1rem);
-    color: var(--color-text-light);
-    margin-bottom: 2rem;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
-    animation: fadeInUp 1s ease-out 0.2s both;
+.rsvp::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(ellipse at 20% 30%, rgba(115, 191, 184, 0.05) 0%, transparent 40%),
+        radial-gradient(ellipse at 80% 70%, rgba(168, 218, 220, 0.04) 0%, transparent 40%);
+    pointer-events: none;
+    z-index: 1;
 }
 
-.rsvp-button {
-    background: var(--color-secondary);
-    color: var(--color-white);
+@keyframes waveRotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Círculos flotantes decorativos */
+.rsvp .floating-circle {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, 
+        rgba(115, 191, 184, 0.08), 
+        rgba(95, 168, 211, 0.04));
+    pointer-events: none;
+    z-index: 1;
+    animation: floatCircle 25s ease-in-out infinite;
+    border: 1px solid rgba(115, 191, 184, 0.08);
+}
+
+.rsvp .floating-circle:nth-child(1) {
+    width: 180px;
+    height: 180px;
+    top: 15%;
+    left: -90px;
+    animation-duration: 28s;
+}
+
+.rsvp .floating-circle:nth-child(2) {
+    width: 140px;
+    height: 140px;
+    bottom: 25%;
+    right: -70px;
+    animation-duration: 32s;
+    animation-delay: 10s;
+}
+
+.rsvp .floating-circle:nth-child(3) {
+    width: 100px;
+    height: 100px;
+    top: 60%;
+    right: 10%;
+    animation-duration: 30s;
+    animation-delay: 5s;
+}
+
+@keyframes floatCircle {
+    0%, 100% {
+        transform: translate(0, 0) scale(1);
+        opacity: 0.3;
+    }
+    25% {
+        transform: translate(30px, -30px) scale(1.1);
+        opacity: 0.5;
+    }
+    50% {
+        transform: translate(-20px, -50px) scale(0.95);
+        opacity: 0.4;
+    }
+    75% {
+        transform: translate(40px, -20px) scale(1.05);
+        opacity: 0.45;
+    }
+}
+
+.rsvp .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    position: relative;
+    z-index: 2;
+}
+
+.rsvp-content {
+    position: relative;
+    z-index: 2;
+    max-width: 850px;
+    margin: 0 auto;
+}
+
+/* Header */
+.rsvp-header {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.rsvp-header .section-title {
+    font-family: var(--font-script);
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    font-weight: 400;
+    color: var(--accent-teal);
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.02em;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* Línea decorativa */
+.rsvp-header .decorative-line {
+    width: 120px;
+    height: 2px;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        var(--accent-teal) 20%, 
+        var(--accent-aqua) 50%, 
+        var(--accent-teal) 80%, 
+        transparent 100%);
+    margin: 24px auto;
+    display: block;
+    position: relative;
+    box-shadow: 0 0 15px rgba(115, 191, 184, 0.3);
+}
+
+.rsvp-header .decorative-line::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    background: var(--accent-teal);
+    border-radius: 50%;
+    box-shadow: 0 0 12px rgba(115, 191, 184, 0.5);
+}
+
+.rsvp-header .section-subtitle {
+    font-family: var(--font-elegant);
+    font-size: 1.3rem;
+    color: var(--accent-aqua);
+    font-style: italic;
+    font-weight: 300;
+}
+
+.rsvp-main {
+    text-align: center;
+    animation: fadeInUp 1s ease-out forwards;
+}
+
+.rsvp-message {
+    margin-bottom: 3rem;
+}
+
+.rsvp-text {
+    font-family: var(--font-sans);
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    line-height: 1.8;
+    max-width: 650px;
+    margin: 0 auto;
+    font-weight: 300;
+}
+
+.rsvp-action {
+    margin-bottom: 4rem;
+}
+
+/* Botones principales con estilo marino */
+.rsvp-button,
+.whatsapp-button,
+.btn-primary,
+.form-submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: clamp(1rem, 2.5vw, 1.2rem) clamp(2rem, 4vw, 3rem);
+    background: linear-gradient(135deg, 
+        var(--accent-teal) 0%, 
+        var(--accent-aqua) 100%);
+    color: var(--bg-primary);
     border: none;
-    padding: clamp(0.8rem, 2vw, 1rem) clamp(1.5rem, 4vw, 2rem);
+    border-radius: 50px;
+    font-family: var(--font-sans);
     font-size: clamp(1rem, 2.5vw, 1.1rem);
     font-weight: 500;
-    border-radius: var(--border-radius);
     cursor: pointer;
-    transition: var(--transition);
-    box-shadow: var(--shadow-soft);
-    animation: fadeInUp 1s ease-out 0.4s both;
-    min-width: 200px;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(115, 191, 184, 0.3);
+    text-decoration: none;
+    min-width: 220px;
+    position: relative;
+    overflow: hidden;
 }
 
-.rsvp-button:hover {
-    background: #6b0a1c;
+.rsvp-button::before,
+.whatsapp-button::before,
+.btn-primary::before,
+.form-submit::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.rsvp-button:hover::before,
+.whatsapp-button:hover::before,
+.btn-primary:hover::before,
+.form-submit:hover::before {
+    left: 100%;
+}
+
+.rsvp-button:hover,
+.whatsapp-button:hover,
+.btn-primary:hover,
+.form-submit:hover {
+    transform: translateY(-3px);
+    box-shadow: 
+        0 15px 35px rgba(115, 191, 184, 0.4),
+        0 0 30px rgba(115, 191, 184, 0.2);
+    background: linear-gradient(135deg, var(--accent-aqua) 0%, var(--accent-sand) 100%);
+}
+
+.rsvp-button:active,
+.whatsapp-button:active,
+.btn-primary:active,
+.form-submit:active {
+    transform: translateY(-1px);
+    transition: all 0.1s ease;
+}
+
+.button-text {
+    z-index: 2;
+    position: relative;
+}
+
+.button-shimmer {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.rsvp-button:hover .button-shimmer,
+.whatsapp-button:hover .button-shimmer {
+    left: 100%;
+}
+
+/* Botón secundario */
+.btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: clamp(1rem, 2.5vw, 1.2rem) clamp(2rem, 4vw, 3rem);
+    background: transparent;
+    color: var(--accent-teal);
+    border: 2px solid var(--accent-teal);
+    border-radius: 50px;
+    font-family: var(--font-sans);
+    font-size: clamp(1rem, 2.5vw, 1.1rem);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    min-width: 220px;
+}
+
+.btn-secondary:hover {
+    background: var(--accent-teal);
+    color: var(--bg-primary);
     transform: translateY(-2px);
-    box-shadow: var(--shadow-medium);
-    animation: pulse 0.6s ease-in-out;
+    box-shadow: 0 8px 25px rgba(115, 191, 184, 0.3);
 }
 
-/* Modal RSVP - Siempre centrado */
+/* Botón warning */
+.btn-warning {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: clamp(1rem, 2.5vw, 1.2rem) clamp(2rem, 4vw, 3rem);
+    background: linear-gradient(135deg, var(--accent-sand) 0%, rgba(241, 212, 175, 0.8) 100%);
+    color: var(--bg-primary);
+    border: none;
+    border-radius: 50px;
+    font-family: var(--font-sans);
+    font-size: clamp(1rem, 2.5vw, 1.1rem);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(241, 212, 175, 0.3);
+    text-decoration: none;
+    min-width: 220px;
+}
+
+.btn-warning:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 35px rgba(241, 212, 175, 0.4);
+}
+
+/* Detalles del RSVP */
+.rsvp-details {
+    background: linear-gradient(135deg, 
+        rgba(27, 38, 59, 0.4) 0%, 
+        rgba(37, 54, 73, 0.3) 100%);
+    border-radius: 15px;
+    padding: 2.5rem;
+    border: 1px solid var(--border-subtle);
+    margin-top: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+}
+
+.detail-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+    text-align: left;
+    position: relative;
+    padding-bottom: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.detail-item::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 20%;
+    right: 20%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(115, 191, 184, 0.3), transparent);
+}
+
+.detail-item:last-child::after {
+    display: none;
+}
+
+.detail-icon {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, 
+        rgba(27, 38, 59, 0.9) 0%, 
+        rgba(37, 54, 73, 0.8) 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: var(--accent-aqua);
+    flex-shrink: 0;
+    margin-top: 0.5rem;
+    border: 2px solid var(--accent-teal);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.detail-content {
+    flex: 1;
+}
+
+.detail-label {
+    display: block;
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 0.3rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.detail-value {
+    display: block;
+    font-family: var(--font-elegant);
+    font-size: 1rem;
+    color: var(--accent-aqua);
+    font-weight: 400;
+    line-height: 1.4;
+}
+
+.detail-value:not(:last-child) {
+    margin-bottom: 0.5rem;
+}
+
+.rsvp-ornament {
+    margin-top: 4rem;
+    text-align: center;
+}
+
+.ornament-line {
+    width: 120px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent-teal), transparent);
+    margin: 0 auto;
+    position: relative;
+}
+
+.ornament-line::before,
+.ornament-line::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    width: 4px;
+    height: 4px;
+    background: var(--accent-teal);
+    border-radius: 50%;
+    box-shadow: 0 0 8px rgba(115, 191, 184, 0.5);
+}
+
+.ornament-line::before {
+    left: 20px;
+}
+
+.ornament-line::after {
+    right: 20px;
+}
+
+/* Estados de carga */
+.rsvp.fade-in-on-scroll {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s ease;
+}
+
+.rsvp.fade-in-on-scroll.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ================================================
+   MODAL RSVP - SIN BLUR INTERNO
+   ================================================ */
+
 .rsvp-modal {
     display: none;
     position: fixed;
@@ -53,8 +481,10 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.8);
-    z-index: 1000;
+    background: rgba(13, 27, 42, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 999999;
     align-items: center;
     justify-content: center;
     padding: 2rem 1rem;
@@ -67,14 +497,17 @@
 }
 
 .modal-content {
-    background: var(--color-white);
-    border-radius: var(--border-radius);
+    background: linear-gradient(135deg, 
+        rgba(27, 38, 59, 0.95) 0%, 
+        rgba(37, 54, 73, 0.9) 100%);
+    border-radius: 15px;
     width: 100%;
-    max-width: 500px;
+    max-width: 550px;
     max-height: calc(100vh - 4rem);
     overflow-y: auto;
     animation: scaleIn 0.3s ease-out;
-    box-shadow: var(--shadow-medium);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--border-subtle);
     position: relative;
 }
 
@@ -83,27 +516,33 @@
     justify-content: space-between;
     align-items: center;
     padding: clamp(1rem, 3vw, 1.5rem);
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid rgba(115, 191, 184, 0.2);
     position: sticky;
     top: 0;
-    background: var(--color-white);
+    background: linear-gradient(135deg, 
+        rgba(27, 38, 59, 0.98) 0%, 
+        rgba(37, 54, 73, 0.95) 100%);
     z-index: 10;
 }
 
 .modal-header h3 {
-    font-family: var(--font-serif);
-    color: var(--color-secondary);
-    font-size: clamp(1.2rem, 3vw, 1.5rem);
+    font-family: var(--font-script);
+    color: var(--accent-teal);
+    font-size: clamp(1.3rem, 3vw, 1.6rem);
     margin: 0;
+    font-weight: 400;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
 .modal-close {
-    background: none;
-    border: none;
+    background: linear-gradient(135deg, 
+        rgba(27, 38, 59, 0.9) 0%, 
+        rgba(37, 54, 73, 0.8) 100%);
+    border: 2px solid var(--accent-teal);
     font-size: clamp(1.2rem, 3vw, 1.5rem);
     cursor: pointer;
-    color: var(--color-text-light);
-    transition: var(--transition);
+    color: var(--accent-aqua);
+    transition: all 0.3s ease;
     width: 40px;
     height: 40px;
     display: flex;
@@ -113,8 +552,13 @@
 }
 
 .modal-close:hover {
-    color: var(--color-secondary);
-    background: rgba(133, 13, 35, 0.1);
+    color: var(--bg-primary);
+    background: linear-gradient(135deg, var(--accent-teal) 0%, var(--accent-aqua) 100%);
+    transform: rotate(90deg);
+}
+
+.modal-body {
+    padding: 0;
 }
 
 /* Formulario RSVP */
@@ -137,10 +581,11 @@
 .grupo-info .alert {
     margin-bottom: 1rem;
     padding: clamp(1rem, 3vw, 1.2rem);
-    border-radius: var(--border-radius);
-    background: rgba(0, 123, 255, 0.1);
-    border-left: 4px solid #007bff;
+    border-radius: 10px;
+    background: rgba(115, 191, 184, 0.1);
+    border-left: 4px solid var(--accent-teal);
     font-size: clamp(0.9rem, 2vw, 1rem);
+    color: var(--text-secondary);
 }
 
 /* Formularios */
@@ -156,32 +601,35 @@
 .form-group label {
     display: block;
     margin-bottom: 0.5rem;
-    font-weight: 500;
-    color: var(--color-text);
+    font-weight: 400;
+    color: var(--accent-aqua);
     font-size: clamp(0.9rem, 2vw, 1rem);
+    font-family: var(--font-sans);
 }
 
 .form-group input,
 .form-group select,
 .form-group textarea {
     width: 100%;
-    padding: clamp(0.6rem, 2vw, 0.8rem);
-    border: 2px solid #e0e0e0;
-    border-radius: var(--border-radius);
+    padding: clamp(0.7rem, 2vw, 0.9rem);
+    border: 2px solid rgba(115, 191, 184, 0.2);
+    border-radius: 8px;
     font-size: clamp(0.9rem, 2vw, 1rem);
-    transition: var(--transition);
+    transition: all 0.3s ease;
     font-family: var(--font-sans);
-    background: var(--color-white);
+    background: rgba(27, 38, 59, 0.5);
     box-sizing: border-box;
+    color: var(--text-primary);
 }
 
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
     outline: none;
-    border-color: var(--color-secondary);
-    box-shadow: 0 0 0 3px rgba(133, 13, 35, 0.1);
+    border-color: var(--accent-teal);
+    box-shadow: 0 0 0 3px rgba(115, 191, 184, 0.1);
     transform: translateY(-1px);
+    background: rgba(27, 38, 59, 0.7);
 }
 
 #codigo_grupo {
@@ -192,18 +640,18 @@
 
 /* Campos de asistencia */
 .campos-asistencia {
-    border-left: 3px solid var(--color-secondary);
+    border-left: 3px solid var(--accent-teal);
     padding: clamp(1rem, 3vw, 1.2rem);
     margin: 1.5rem 0;
-    background: rgba(133, 13, 35, 0.02);
-    border-radius: 0 var(--border-radius) var(--border-radius) 0;
+    background: rgba(115, 191, 184, 0.05);
+    border-radius: 0 10px 10px 0;
     animation: slideInLeft 0.6s ease-out;
 }
 
 .nombres-container .form-group {
     margin-top: 1rem;
     padding-left: clamp(0.8rem, 2vw, 1rem);
-    border-left: 2px solid #e0e0e0;
+    border-left: 2px solid rgba(115, 191, 184, 0.2);
     animation: fadeInUp 0.4s ease-out;
 }
 
@@ -214,37 +662,32 @@
 }
 
 .confirmacion-header h4 {
-    font-family: var(--font-serif);
-    color: var(--color-secondary);
-    font-size: clamp(1.2rem, 3vw, 1.4rem);
+    font-family: var(--font-script);
+    color: var(--accent-teal);
+    font-size: clamp(1.3rem, 3vw, 1.5rem);
     margin-bottom: 0.8rem;
+    font-weight: 400;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
 .confirmacion-header p {
-    color: var(--color-text-light);
+    color: var(--text-secondary);
     margin-bottom: 0;
     font-size: clamp(0.9rem, 2vw, 1rem);
 }
 
-.confirmacion-info {
-    background: rgba(133, 13, 35, 0.05);
+.confirmacion-info,
+.respuesta-existente,
+.resumen-confirmacion,
+.resumen-final {
+    background: rgba(115, 191, 184, 0.08);
     padding: clamp(1.2rem, 3vw, 1.8rem);
-    border-radius: var(--border-radius);
-    border-left: 4px solid var(--color-secondary);
+    border-radius: 10px;
+    border-left: 4px solid var(--accent-teal);
     margin: 1.5rem 0 2rem 0;
     font-size: clamp(0.9rem, 2vw, 1rem);
     line-height: 1.6;
-}
-
-/* Respuesta existente */
-.respuesta-existente {
-    background: rgba(40, 167, 69, 0.05);
-    padding: clamp(1.2rem, 3vw, 1.8rem);
-    border-radius: var(--border-radius);
-    border-left: 4px solid #28a745;
-    margin: 1.5rem 0 2rem 0;
-    font-size: clamp(0.9rem, 2vw, 1rem);
-    line-height: 1.6;
+    color: var(--text-secondary);
 }
 
 /* Éxito */
@@ -256,8 +699,8 @@
 .exito-icon {
     width: 80px;
     height: 80px;
-    background: #28a745;
-    color: white;
+    background: linear-gradient(135deg, var(--accent-teal) 0%, var(--accent-aqua) 100%);
+    color: var(--bg-primary);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -266,37 +709,27 @@
     font-weight: bold;
     margin: 0 auto 1.5rem auto;
     animation: scaleIn 0.6s ease-out 0.2s both;
+    box-shadow: 0 8px 25px rgba(115, 191, 184, 0.4);
 }
 
 .exito-container h3 {
-    font-family: var(--font-serif);
-    color: var(--color-secondary);
+    font-family: var(--font-script);
+    color: var(--accent-teal);
     font-size: clamp(1.4rem, 3vw, 1.8rem);
     margin-bottom: 1rem;
+    font-weight: 400;
     animation: fadeInUp 0.6s ease-out 0.4s both;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
 .exito-container p {
-    color: var(--color-text);
+    color: var(--text-secondary);
     font-size: clamp(1rem, 2.5vw, 1.1rem);
     margin-bottom: 2rem;
     animation: fadeInUp 0.6s ease-out 0.6s both;
 }
 
-.resumen-confirmacion,
-.resumen-final {
-    background: rgba(133, 13, 35, 0.05);
-    padding: clamp(1.2rem, 3vw, 1.8rem);
-    border-radius: var(--border-radius);
-    border-left: 4px solid var(--color-secondary);
-    margin-top: 1.5rem;
-    text-align: left;
-    font-size: clamp(0.9rem, 2vw, 1rem);
-    line-height: 1.6;
-    animation: fadeInUp 0.6s ease-out 0.8s both;
-}
-
-/* Botones */
+/* Botones - Contenedor unificado */
 .form-buttons {
     display: flex;
     gap: clamp(0.8rem, 2vw, 1.2rem);
@@ -311,81 +744,27 @@
     min-width: 120px;
 }
 
-.btn {
-    padding: clamp(0.8rem, 2.5vw, 1rem) clamp(1.2rem, 3vw, 1.5rem);
-    border-radius: var(--border-radius);
-    font-size: clamp(0.9rem, 2vw, 1rem);
-    font-weight: 500;
-    cursor: pointer;
-    transition: var(--transition);
-    border: 2px solid transparent;
-    text-align: center;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    box-sizing: border-box;
-}
-
-.btn-primary {
-    background: var(--color-secondary);
-    color: var(--color-white);
-    border-color: var(--color-secondary);
-}
-
-.btn-primary:hover {
-    background: #6b0a1c;
-    border-color: #6b0a1c;
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-soft);
-}
-
-.btn-secondary {
-    background: var(--color-white);
-    color: var(--color-secondary);
-    border-color: var(--color-secondary);
-}
-
-.btn-secondary:hover {
-    background: var(--color-secondary);
-    color: var(--color-white);
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-soft);
-}
-
-.btn-warning {
-    background: #ffc107;
-    color: #856404;
-    border-color: #ffc107;
-}
-
-.btn-warning:hover {
-    background: #e0a800;
-    border-color: #e0a800;
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-soft);
-}
-
 .form-submit {
     width: calc(100% - clamp(1rem, 4vw, 2rem));
     margin: 1.5rem clamp(0.5rem, 2vw, 1rem) 0;
-    background: var(--color-secondary);
-    color: var(--color-white);
+    background: linear-gradient(135deg, var(--accent-teal) 0%, var(--accent-aqua) 100%);
+    color: var(--bg-primary);
     border: none;
     padding: clamp(0.8rem, 2.5vw, 1rem);
     font-size: clamp(1rem, 2.5vw, 1.1rem);
     font-weight: 500;
-    border-radius: var(--border-radius);
+    border-radius: 25px;
     cursor: pointer;
-    transition: var(--transition);
-    box-shadow: var(--shadow-soft);
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(115, 191, 184, 0.3);
     box-sizing: border-box;
+    font-family: var(--font-sans);
 }
 
 .form-submit:hover {
-    background: #6b0a1c;
     transform: translateY(-2px);
-    box-shadow: var(--shadow-medium);
+    box-shadow: 0 15px 35px rgba(115, 191, 184, 0.4);
+    background: linear-gradient(135deg, var(--accent-aqua) 0%, var(--accent-sand) 100%);
 }
 
 /* Alertas y mensajes */
@@ -395,66 +774,75 @@
 
 .alert {
     padding: clamp(1rem, 3vw, 1.2rem);
-    border-radius: var(--border-radius);
+    border-radius: 10px;
     margin-bottom: 1.5rem;
     font-size: clamp(0.9rem, 2vw, 1rem);
     animation: fadeInUp 0.4s ease-out;
 }
 
 .alert-info {
-    background: rgba(0, 123, 255, 0.1);
-    border-left: 4px solid #007bff;
-    color: #004085;
+    background: rgba(115, 191, 184, 0.1);
+    border-left: 4px solid var(--accent-teal);
+    color: var(--text-secondary);
 }
 
 .alert-warning {
-    background: rgba(255, 193, 7, 0.1);
-    border-left: 4px solid #ffc107;
-    color: #856404;
+    background: rgba(241, 212, 175, 0.1);
+    border-left: 4px solid var(--accent-sand);
+    color: var(--text-secondary);
 }
 
 .alert-success {
-    background: rgba(40, 167, 69, 0.1);
-    border-left: 4px solid #28a745;
-    color: #155724;
-    margin-bottom: 1.5rem;
+    background: rgba(115, 191, 184, 0.1);
+    border-left: 4px solid var(--accent-aqua);
+    color: var(--text-secondary);
 }
 
 .alert-danger {
     background: rgba(220, 53, 69, 0.1);
     border-left: 4px solid #dc3545;
-    color: #721c24;
+    color: #ff6b6b;
 }
 
 /* Texto auxiliar */
 .form-text {
     font-size: clamp(0.8rem, 1.8vw, 0.9rem);
-    color: var(--color-text-light);
+    color: var(--text-muted);
     margin-top: 0.5rem;
 }
 
 .text-muted {
-    color: var(--color-text-light) !important;
+    color: var(--text-muted) !important;
 }
 
-/* Clases de utilidad */
 .mb-3 {
     margin-bottom: 1.5rem !important;
 }
 
 /* Estados de carga */
-.form-submit:disabled {
-    background: var(--color-text-light);
+.form-submit:disabled,
+.btn-primary:disabled,
+.btn-secondary:disabled,
+.btn-warning:disabled {
+    background: var(--text-muted);
     cursor: not-allowed;
     transform: none;
+    border-color: var(--text-muted);
+    opacity: 0.6;
 }
 
-.form-submit.loading {
+.form-submit.loading,
+.btn-primary.loading,
+.btn-secondary.loading,
+.btn-warning.loading {
     position: relative;
     color: transparent;
 }
 
-.form-submit.loading::after {
+.form-submit.loading::after,
+.btn-primary.loading::after,
+.btn-secondary.loading::after,
+.btn-warning.loading::after {
     content: "";
     position: absolute;
     width: 20px;
@@ -464,118 +852,151 @@
     margin-left: -10px;
     margin-top: -10px;
     border: 2px solid transparent;
-    border-top-color: var(--color-white);
+    border-top-color: var(--bg-primary);
     border-radius: 50%;
     animation: spin 1s linear infinite;
 }
 
-/* Media Queries */
-@media (max-width: 768px) {
-    .rsvp {
-        padding: 3rem 0;
-    }
-    
-    .rsvp-modal {
-        padding: 1rem 0.5rem;
-        align-items: center;
-    }
-    
-    .modal-content {
-        max-height: calc(100vh - 2rem);
-    }
+/* ================================================
+   MODAL FECHA LÍMITE
+   ================================================ */
 
-    .rsvp-step {
-        padding: clamp(0.8rem, 2vw, 1rem);
-    }
-    
-    .form-buttons {
-        flex-direction: column;
-        padding: 0;
-        gap: 1rem;
-    }
-    
-    .form-buttons .btn {
-        flex: none;
-        width: 100%;
-    }
-    
-    .campos-asistencia {
-        padding: 1rem;
-        margin: 1rem 0;
-    }
-    
-    .nombres-container .form-group {
-        padding-left: 0.8rem;
-    }
+.fechaLimite-content {
+    text-align: center;
+    padding: 2.5rem 2rem;
+}
 
-    .exito-container {
-        padding: 1.5rem 1rem;
-    }
+.fechaLimite-icon {
+    font-size: 4.5rem;
+    margin-bottom: 2rem;
+    animation: gentlePulse 3s ease-in-out infinite;
+    color: var(--accent-teal);
+    filter: drop-shadow(0 4px 10px rgba(115, 191, 184, 0.3));
+}
 
-    .form-submit {
-        width: 100%;
-        margin: 1.5rem 0 0;
-    }
+.fechaLimite-content h4 {
+    color: var(--accent-teal);
+    font-family: var(--font-script);
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    font-weight: 400;
+    line-height: 1.3;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
 
-    .alert-container {
-        margin: 1rem 0;
-    }
+.fechaLimite-content > p {
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+    font-family: var(--font-sans);
+    font-weight: 300;
+}
 
-    .confirmacion-info,
-    .respuesta-existente,
-    .resumen-confirmacion,
-    .resumen-final {
-        margin: 1rem 0;
-        padding: 1rem;
+.fechaLimite-contacto {
+    background: linear-gradient(135deg, rgba(115, 191, 184, 0.05), rgba(115, 191, 184, 0.02));
+    padding: 2rem;
+    border-radius: 12px;
+    border: 1px solid rgba(115, 191, 184, 0.2);
+    margin-top: 2.5rem;
+    text-align: left;
+    position: relative;
+    overflow: hidden;
+}
+
+.fechaLimite-contacto::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(180deg, var(--accent-teal), var(--accent-aqua));
+}
+
+.fechaLimite-contacto p {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    font-size: 1rem;
+    font-family: var(--font-sans);
+}
+
+.contacto-info {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(115, 191, 184, 0.2);
+}
+
+.contacto-info strong {
+    color: var(--accent-teal);
+    display: block;
+    margin-bottom: 0.8rem;
+    font-family: var(--font-sans);
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.contacto-info p {
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin-bottom: 0;
+    font-style: italic;
+}
+
+.modal-footer {
+    padding: 1.5rem 2rem 2rem;
+    display: flex;
+    justify-content: center;
+    border-top: 1px solid rgba(115, 191, 184, 0.2);
+    background: rgba(27, 38, 59, 0.8);
+}
+
+.modal-footer .btn-primary {
+    min-width: 160px;
+    margin: 0;
+}
+
+@keyframes gentlePulse {
+    0% { 
+        transform: scale(1) rotate(0deg);
+        opacity: 0.9;
+    }
+    50% { 
+        transform: scale(1.05) rotate(5deg);
+        opacity: 1;
+    }
+    100% { 
+        transform: scale(1) rotate(0deg);
+        opacity: 0.9;
     }
 }
 
-@media (max-width: 480px) {
-    .rsvp {
-        padding: 2.5rem 0;
-    }
-    
-    .rsvp-modal {
-        padding: 0.5rem;
-        align-items: center;
-    }
-    
-    .modal-content {
-        max-height: calc(100vh - 1rem);
-    }
-    
-    .modal-header {
-        padding: 1rem;
-    }
-    
-    .rsvp-form {
-        padding: 0.8rem;
-    }
-
-    .rsvp-step {
-        padding: 0.8rem;
-    }
-    
-    .form-group {
-        margin-bottom: 1.2rem;
-    }
-    
-    .rsvp-button {
-        min-width: 180px;
-    }
-
-    .exito-icon {
-        width: 60px;
-        height: 60px;
-        font-size: 2rem;
-    }
-
-    .confirmacion-header {
-        margin-bottom: 1.5rem;
-    }
+.fechaLimite-contacto:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(115, 191, 184, 0.15);
+    border-color: rgba(115, 191, 184, 0.3);
 }
 
-/* Animaciones */
+#modalFechaLimite .modal-content {
+    border: 1px solid rgba(115, 191, 184, 0.2);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+    max-width: 520px;
+}
+
+#modalFechaLimite .modal-header {
+    border-bottom: 1px solid rgba(115, 191, 184, 0.2);
+}
+
+#modalFechaLimite {
+    backdrop-filter: blur(10px);
+    background: rgba(13, 27, 42, 0.95);
+}
+
+/* ================================================
+   ANIMACIONES
+   ================================================ */
+
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
@@ -614,33 +1035,165 @@
     }
 }
 
-@keyframes pulse {
-    0%, 100% { transform: translateY(-2px) scale(1); }
-    50% { transform: translateY(-2px) scale(1.05); }
-}
-
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
 
-/* Mejoras de accesibilidad */
-@media (prefers-reduced-motion: reduce) {
-    * {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
+/* ================================================
+   RESPONSIVE DESIGN
+   ================================================ */
+
+@media (max-width: 768px) {
+    .rsvp {
+        padding: 3rem 0;
+    }
+    
+    .rsvp-modal {
+        padding: 1rem 0.5rem;
+    }
+    
+    .modal-content {
+        max-height: calc(100vh - 2rem);
+    }
+
+    .rsvp-step {
+        padding: clamp(0.8rem, 2vw, 1rem);
+    }
+    
+    .form-buttons {
+        flex-direction: column;
+        padding: 0;
+        gap: 1rem;
+    }
+    
+    .form-buttons .btn {
+        flex: none;
+        width: 100%;
+    }
+    
+    .campos-asistencia {
+        padding: 1rem;
+    }
+
+    .form-submit {
+        width: 100%;
+        margin: 1.5rem 0 0;
+    }
+
+    .rsvp-details {
+        padding: 2rem;
+    }
+
+    .detail-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .detail-item {
+        gap: 1rem;
+        padding-bottom: 1rem;
+    }
+
+    .detail-icon {
+        width: 45px;
+        height: 45px;
+        font-size: 1.4rem;
+    }
+    
+    .fechaLimite-content {
+        padding: 2rem 1.5rem;
+    }
+    
+    .fechaLimite-icon {
+        font-size: 3.5rem;
+    }
+    
+    .modal-footer .btn-primary {
+        width: 100%;
+        min-width: auto;
+    }
+    
+    .rsvp .floating-circle:nth-child(3) {
+        display: none;
     }
 }
 
-/* Estados de carga para el RSVP */
-.rsvp.fade-in-on-scroll {
-    opacity: 0;
-    transform: translateY(30px);
-    transition: all 0.8s ease;
+@media (max-width: 480px) {
+    .rsvp {
+        padding: 2.5rem 0;
+    }
+    
+    .rsvp-header .section-title {
+        font-size: 2rem;
+    }
+
+    .rsvp-details {
+        padding: 1.5rem;
+    }
+
+    .detail-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+    }
+    
+    .fechaLimite-icon {
+        font-size: 3rem;
+    }
+    
+    .rsvp-header .decorative-line {
+        width: 100px;
+    }
+    
+    .rsvp .floating-circle {
+        display: none;
+    }
 }
 
-.rsvp.fade-in-on-scroll.visible {
-    opacity: 1;
-    transform: translateY(0);
+/* ================================================
+   ACCESIBILIDAD
+   ================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+    .rsvp::before,
+    .rsvp .floating-circle,
+    .fechaLimite-icon,
+    * {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+.rsvp-button:focus,
+.btn-primary:focus,
+.btn-secondary:focus,
+.btn-warning:focus,
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: 2px solid var(--accent-teal);
+    outline-offset: 3px;
+}
+
+/* Compatibilidad con código original */
+.rsvp h2 {
+    font-family: var(--font-script);
+    font-size: clamp(2.5rem, 4vw, 3.5rem);
+    font-weight: 400;
+    color: var(--accent-teal);
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.02em;
+}
+
+.rsvp p {
+    font-family: var(--font-sans);
+    font-size: clamp(1rem, 2.5vw, 1.1rem);
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.8;
+    font-weight: 300;
 }

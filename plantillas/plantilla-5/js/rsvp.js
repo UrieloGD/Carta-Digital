@@ -160,7 +160,7 @@ function enviarConfirmacion() {
     btnEnviar.textContent = 'Enviando...';
     btnEnviar.disabled = true;
     
-    fetch('./plantillas/plantilla-5/api/rsvp.php', {
+    fetch('./plantillas/plantilla-4/api/rsvp.php', {
         method: 'POST',
         body: formData
     })
@@ -225,7 +225,7 @@ function mostrarExito(mensaje, datos) {
 // Función para mostrar respuesta existente
 function mostrarRespuestaExistente(grupo, respuestaExistente) {
     // Cargar detalles completos de la respuesta
-    fetch(`./plantillas/plantilla-5/api/rsvp.php?action=cargar_respuesta&id_grupo=${grupoActual.id_grupo}`)
+    fetch(`./plantillas/plantilla-4/api/rsvp.php?action=cargar_respuesta&id_grupo=${grupoActual.id_grupo}`)
     .then(response => response.json())
     .then(data => {
         if (data.success) {
@@ -310,7 +310,7 @@ function editarRespuesta() {
     }
     
     // Cargar datos existentes en el formulario
-    fetch(`./plantillas/plantilla-5/api/rsvp.php?action=cargar_respuesta&id_grupo=${grupoActual.id_grupo}`)
+    fetch(`./plantillas/plantilla-4/api/rsvp.php?action=cargar_respuesta&id_grupo=${grupoActual.id_grupo}`)
     .then(response => response.json())
     .then(data => {
         if (data.success) {
@@ -364,6 +364,48 @@ function editarRespuesta() {
     });
 }
 
+// Función para mostrar modal de fecha límite excedida
+function mostrarModalFechaLimite() {
+    document.getElementById('modalFechaLimite').style.display = 'flex';
+}
+
+// Función para cerrar modal de fecha límite
+function closeModalFechaLimite() {
+    document.getElementById('modalFechaLimite').style.display = 'none';
+}
+
+// Función para validar RSVP al cargar (para sistema digital)
+function validarRSVPAlCargar() {
+    if (typeof RSVP_HABILITADO !== 'undefined' && !RSVP_HABILITADO) {
+        // Deshabilitar funcionalidad del modal RSVP
+        const originalOpenRSVPModal = window.openRSVPModal;
+        window.openRSVPModal = function() {
+            mostrarModalFechaLimite();
+        };
+        
+        // También deshabilitar cualquier otro intento de abrir el modal
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('[onclick*="openRSVPModal"]') || 
+                e.target.closest('[href*="rsvp"]')) {
+                e.preventDefault();
+                mostrarModalFechaLimite();
+            }
+        });
+    }
+}
+
+// Ejecutar validación al cargar la página
+document.addEventListener('DOMContentLoaded', function() {
+    validarRSVPAlCargar();
+});
+
+// Cerrar modal al hacer clic fuera
+document.getElementById('modalFechaLimite')?.addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeModalFechaLimite();
+    }
+});
+
 // Event listener para validar código
 document.getElementById('codigoForm').addEventListener('submit', function(e) {
     e.preventDefault();
@@ -380,7 +422,7 @@ document.getElementById('codigoForm').addEventListener('submit', function(e) {
     btnValidar.textContent = 'Validando...';
     btnValidar.disabled = true;
     
-    fetch('./plantillas/plantilla-5/api/rsvp.php', {
+    fetch('./plantillas/plantilla-4/api/rsvp.php', {
         method: 'POST',
         body: formData
     })

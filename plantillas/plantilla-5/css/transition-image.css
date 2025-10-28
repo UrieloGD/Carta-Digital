@@ -1,0 +1,542 @@
+/* Transition Image - Ocean Twilight Dark con elementos dinámicos */
+.transition-image {
+    height: 80vh;
+    min-height: 500px;
+    max-height: 800px;
+    position: relative;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+.transition-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.transition-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    filter: brightness(0.6) contrast(1.3) saturate(1.2);
+    transition: var(--transition-wave);
+    z-index: 1;
+    animation: subtleZoom 30s ease-in-out infinite alternate;
+}
+
+/* Overlay con gradiente marino y elementos decorativos */
+.transition-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        135deg,
+        rgba(13, 27, 42, 0.75) 0%,
+        rgba(27, 38, 59, 0.65) 50%,
+        rgba(37, 54, 73, 0.7) 100%
+    );
+    z-index: 2;
+}
+
+/* Círculos flotantes decorativos - NUEVO */
+.transition-overlay::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        /* Círculos grandes */
+        radial-gradient(circle at 15% 20%, rgba(115, 191, 184, 0.15) 0%, transparent 25%),
+        radial-gradient(circle at 85% 80%, rgba(95, 168, 211, 0.12) 0%, transparent 30%),
+        radial-gradient(circle at 70% 15%, rgba(168, 218, 220, 0.1) 0%, transparent 20%),
+        radial-gradient(circle at 30% 85%, rgba(115, 191, 184, 0.08) 0%, transparent 25%),
+        
+        /* Círculos medianos */
+        radial-gradient(circle at 50% 50%, rgba(95, 168, 211, 0.08) 0%, transparent 15%),
+        radial-gradient(circle at 20% 60%, rgba(168, 218, 220, 0.1) 0%, transparent 18%),
+        radial-gradient(circle at 80% 40%, rgba(115, 191, 184, 0.07) 0%, transparent 12%),
+        
+        /* Círculos pequeños */
+        radial-gradient(circle at 40% 30%, rgba(168, 218, 220, 0.12) 0%, transparent 8%),
+        radial-gradient(circle at 65% 70%, rgba(95, 168, 211, 0.1) 0%, transparent 10%),
+        radial-gradient(circle at 10% 45%, rgba(115, 191, 184, 0.09) 0%, transparent 7%);
+    animation: floatCircles 20s ease-in-out infinite alternate;
+}
+
+/* Anillos decorativos - NUEVO */
+.transition-overlay::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        /* Anillos grandes */
+        radial-gradient(circle at 25% 25%, transparent 8%, rgba(115, 191, 184, 0.1) 8.5%, transparent 9%),
+        radial-gradient(circle at 75% 75%, transparent 10%, rgba(168, 218, 220, 0.08) 10.5%, transparent 11%),
+        radial-gradient(circle at 80% 20%, transparent 6%, rgba(95, 168, 211, 0.09) 6.5%, transparent 7%),
+        
+        /* Anillos medianos */
+        radial-gradient(circle at 40% 70%, transparent 4%, rgba(168, 218, 220, 0.12) 4.3%, transparent 4.6%),
+        radial-gradient(circle at 60% 30%, transparent 5%, rgba(115, 191, 184, 0.1) 5.3%, transparent 5.6%),
+        
+        /* Anillos pequeños */
+        radial-gradient(circle at 90% 50%, transparent 2%, rgba(95, 168, 211, 0.15) 2.2%, transparent 2.4%),
+        radial-gradient(circle at 15% 80%, transparent 3%, rgba(168, 218, 220, 0.11) 3.2%, transparent 3.4%);
+    animation: pulseRings 15s ease-in-out infinite alternate;
+    opacity: 0.8;
+}
+
+.transition-content {
+    position: relative;
+    z-index: 3;
+    width: 100%;
+    text-align: center;
+    opacity: 0;
+    animation: fadeInUp 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.5s both;
+}
+
+/* Tarjeta de texto con glassmorphism mejorado */
+.transition-text {
+    max-width: 650px;
+    margin: 0 auto;
+    padding: 3rem 2.5rem;
+    background: linear-gradient(
+        135deg,
+        rgba(37, 54, 73, 0.7) 0%,
+        rgba(27, 38, 59, 0.6) 100%
+    );
+    border: 1px solid rgba(115, 191, 184, 0.3);
+    border-radius: 16px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 
+        0 15px 50px rgba(0, 0, 0, 0.5),
+        inset 0 1px 0 rgba(168, 218, 220, 0.15);
+    transition: var(--transition-wave);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Brillo interno en hover */
+.transition-text::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(115, 191, 184, 0.15) 0%, transparent 60%);
+    opacity: 0;
+    transition: var(--transition-wave);
+    pointer-events: none;
+}
+
+.transition-text:hover::before {
+    opacity: 1;
+    animation: rotateGlow 8s linear infinite;
+}
+
+.transition-text:hover {
+    background: linear-gradient(
+        135deg,
+        rgba(37, 54, 73, 0.85) 0%,
+        rgba(27, 38, 59, 0.75) 100%
+    );
+    border-color: rgba(115, 191, 184, 0.5);
+    transform: translateY(-8px);
+    box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.6),
+        0 0 40px rgba(115, 191, 184, 0.2),
+        inset 0 1px 0 rgba(168, 218, 220, 0.2);
+}
+
+.transition-title {
+    font-family: var(--font-script);
+    font-size: clamp(2rem, 4vw, 3rem);
+    color: var(--accent-aqua);
+    font-weight: 400;
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.02em;
+    text-shadow: 
+        0 0 20px rgba(168, 218, 220, 0.4),
+        0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.transition-subtitle {
+    font-family: var(--font-elegant);
+    font-size: clamp(1.125rem, 2.5vw, 1.5rem);
+    color: var(--text-secondary);
+    font-weight: 400;
+    line-height: 1.6;
+    margin: 0;
+    font-style: italic;
+}
+
+/* Ornamentos flotantes mejorados con más variedad */
+.transition-ornaments {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.ornament {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.7;
+}
+
+/* Burbujas brillantes grandes */
+.ornament-1 {
+    top: 15%;
+    left: 10%;
+    width: 8px;
+    height: 8px;
+    background: radial-gradient(circle, var(--accent-aqua) 0%, transparent 70%);
+    box-shadow: 0 0 20px rgba(168, 218, 220, 0.6);
+    animation: floatBubble1 8s infinite ease-in-out;
+}
+
+/* Burbujas medianas */
+.ornament-2 {
+    top: 25%;
+    right: 15%;
+    width: 6px;
+    height: 6px;
+    background: radial-gradient(circle, var(--accent-teal) 0%, transparent 70%);
+    box-shadow: 0 0 15px rgba(115, 191, 184, 0.5);
+    animation: floatBubble2 10s infinite ease-in-out 2s;
+}
+
+/* Burbujas pequeñas */
+.ornament-3 {
+    bottom: 20%;
+    left: 20%;
+    width: 4px;
+    height: 4px;
+    background: radial-gradient(circle, var(--highlight) 0%, transparent 70%);
+    box-shadow: 0 0 12px rgba(95, 168, 211, 0.5);
+    animation: floatBubble3 7s infinite ease-in-out 4s;
+}
+
+/* Ornamentos adicionales - NUEVO */
+.transition-ornaments::before,
+.transition-ornaments::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+}
+
+.transition-ornaments::before {
+    top: 60%;
+    right: 25%;
+    width: 5px;
+    height: 5px;
+    background: radial-gradient(circle, var(--accent-sand) 0%, transparent 70%);
+    box-shadow: 0 0 15px rgba(241, 212, 175, 0.4);
+    animation: floatBubble1 9s infinite ease-in-out 1s;
+}
+
+.transition-ornaments::after {
+    top: 40%;
+    left: 30%;
+    width: 7px;
+    height: 7px;
+    background: radial-gradient(circle, var(--accent-aqua) 0%, transparent 70%);
+    box-shadow: 0 0 18px rgba(168, 218, 220, 0.5);
+    animation: floatBubble2 11s infinite ease-in-out 3s;
+}
+
+/* Animaciones de burbujas con movimiento más orgánico */
+@keyframes floatBubble1 {
+    0%, 100% {
+        transform: translate(0, 0) scale(1);
+        opacity: 0.5;
+    }
+    25% {
+        transform: translate(15px, -20px) scale(1.2);
+        opacity: 0.8;
+    }
+    50% {
+        transform: translate(-10px, -40px) scale(0.9);
+        opacity: 1;
+    }
+    75% {
+        transform: translate(20px, -25px) scale(1.1);
+        opacity: 0.7;
+    }
+}
+
+@keyframes floatBubble2 {
+    0%, 100% {
+        transform: translate(0, 0) scale(1) rotate(0deg);
+        opacity: 0.6;
+    }
+    33% {
+        transform: translate(-20px, -15px) scale(1.3) rotate(120deg);
+        opacity: 0.9;
+    }
+    66% {
+        transform: translate(10px, -35px) scale(0.8) rotate(240deg);
+        opacity: 1;
+    }
+}
+
+@keyframes floatBubble3 {
+    0%, 100% {
+        transform: translate(0, 0) scale(1);
+        opacity: 0.4;
+    }
+    50% {
+        transform: translate(-15px, -30px) scale(1.4);
+        opacity: 0.9;
+    }
+}
+
+@keyframes floatCircles {
+    0% {
+        transform: translateY(0) scale(1);
+        opacity: 0.6;
+    }
+    100% {
+        transform: translateY(-3%) scale(1.05);
+        opacity: 0.8;
+    }
+}
+
+@keyframes pulseRings {
+    0% {
+        transform: scale(1);
+        opacity: 0.6;
+    }
+    100% {
+        transform: scale(1.1);
+        opacity: 0.9;
+    }
+}
+
+@keyframes rotateGlow {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes subtleZoom {
+    0% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(1.08);
+    }
+}
+
+/* Efecto parallax mejorado */
+.transition-image:hover .transition-background {
+    transform: scale(1.05);
+    filter: brightness(0.7) contrast(1.4) saturate(1.3);
+}
+
+/* Líneas decorativas en los bordes con estilo marino */
+.transition-image::before,
+.transition-image::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 150px;
+    height: 2px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        var(--accent-teal),
+        var(--accent-aqua),
+        transparent
+    );
+    box-shadow: 0 0 15px rgba(115, 191, 184, 0.5);
+    z-index: 4;
+}
+
+.transition-image::before {
+    top: 60px;
+    animation: expandLine 2s cubic-bezier(0.25, 0.46, 0.45, 0.94) 1s both;
+}
+
+.transition-image::after {
+    bottom: 60px;
+    animation: expandLine 2s cubic-bezier(0.25, 0.46, 0.45, 0.94) 1.2s both;
+}
+
+@keyframes expandLine {
+    from {
+        width: 0;
+        opacity: 0;
+    }
+    to {
+        width: 150px;
+        opacity: 1;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .transition-background {
+        background-attachment: scroll;
+    }
+    
+    .transition-text {
+        max-width: 550px;
+    }
+}
+
+@media (max-width: 768px) {
+    .transition-image {
+        height: 60vh;
+        min-height: 400px;
+    }
+    
+    .transition-text {
+        padding: 2.5rem 2rem;
+        margin: 0 1.5rem;
+    }
+    
+    .transition-image::before,
+    .transition-image::after {
+        width: 100px;
+    }
+    
+    .ornament-1 {
+        top: 12%;
+        left: 8%;
+        width: 6px;
+        height: 6px;
+    }
+    
+    .ornament-2 {
+        top: 20%;
+        right: 12%;
+        width: 5px;
+        height: 5px;
+    }
+    
+    .ornament-3 {
+        bottom: 18%;
+        left: 15%;
+        width: 4px;
+        height: 4px;
+    }
+}
+
+@media (max-width: 480px) {
+    .transition-image {
+        height: 50vh;
+        min-height: 350px;
+    }
+    
+    .transition-text {
+        padding: 2rem 1.5rem;
+        margin: 0 1rem;
+    }
+    
+    .transition-title {
+        margin-bottom: 1rem;
+    }
+    
+    .transition-image::before,
+    .transition-image::after {
+        width: 80px;
+        height: 1px;
+    }
+    
+    .transition-image::before {
+        top: 40px;
+    }
+    
+    .transition-image::after {
+        bottom: 40px;
+    }
+    
+    .ornament-1,
+    .ornament-2,
+    .ornament-3 {
+        width: 4px;
+        height: 4px;
+    }
+}
+
+/* Optimización de rendimiento */
+@media (prefers-reduced-motion: reduce) {
+    .ornament,
+    .transition-ornaments::before,
+    .transition-ornaments::after {
+        animation: none;
+    }
+    
+    .transition-overlay::before,
+    .transition-overlay::after {
+        animation: none;
+    }
+    
+    .transition-image::before,
+    .transition-image::after {
+        animation: none;
+        opacity: 1;
+        width: 150px;
+    }
+    
+    .transition-background {
+        background-attachment: scroll;
+        animation: none;
+    }
+}
+
+/* Estados de carga */
+.loading .transition-content {
+    opacity: 0;
+    transform: translateY(50px);
+}
+
+.loaded .transition-content {
+    opacity: 1;
+    transform: translateY(0);
+    transition: var(--transition-wave);
+}
+
+/* Mejora de accesibilidad */
+@media (prefers-contrast: high) {
+    .transition-overlay {
+        background: linear-gradient(
+            135deg,
+            rgba(13, 27, 42, 0.9) 0%,
+            rgba(27, 38, 59, 0.85) 50%,
+            rgba(37, 54, 73, 0.9) 100%
+        );
+    }
+    
+    .transition-text {
+        background: rgba(13, 27, 42, 0.95);
+        border-color: var(--accent-teal);
+    }
+    
+    .transition-overlay::before,
+    .transition-overlay::after {
+        opacity: 1;
+    }
+}

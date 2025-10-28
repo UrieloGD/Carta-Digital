@@ -1,67 +1,484 @@
-/* Sección Hero */
+/* Hero Section - Ocean Twilight Dark */
 .hero {
-   min-height: 100vh;
-   display: flex;
-   align-items: center;
-   justify-content: center;
-   position: relative;
-   background: var(--color-primary);
-   text-align: center;
-   padding: 2rem 0;
+    height: 100vh;
+    min-height: 700px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.hero-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.hero-image {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: brightness(0.5) saturate(1.2) hue-rotate(-10deg);
+    transition: var(--transition-wave);
+    animation: subtleZoom 30s ease-in-out infinite alternate;
+}
+
+/* Overlay con gradiente marino profundo */
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        135deg,
+        rgba(13, 27, 42, 0.85) 0%,
+        rgba(27, 38, 59, 0.75) 30%,
+        rgba(37, 54, 73, 0.7) 60%,
+        rgba(13, 27, 42, 0.9) 100%
+    );
+    z-index: 2;
+}
+
+/* Efecto de ondas animadas en el overlay */
+.hero-overlay::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(ellipse at 30% 20%, rgba(115, 191, 184, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 80%, rgba(95, 168, 211, 0.12) 0%, transparent 50%);
+    animation: waveGlow 8s ease-in-out infinite alternate;
+}
+
+/* Partículas flotantes simulando burbujas */
+.hero-overlay::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(2px 2px at 20% 30%, rgba(168, 218, 220, 0.3), transparent),
+        radial-gradient(2px 2px at 60% 70%, rgba(115, 191, 184, 0.3), transparent),
+        radial-gradient(1px 1px at 50% 50%, rgba(168, 218, 220, 0.2), transparent),
+        radial-gradient(1px 1px at 80% 10%, rgba(95, 168, 211, 0.3), transparent),
+        radial-gradient(2px 2px at 90% 60%, rgba(115, 191, 184, 0.2), transparent),
+        radial-gradient(1px 1px at 33% 80%, rgba(168, 218, 220, 0.3), transparent);
+    background-size: 200% 200%;
+    animation: floatingBubbles 20s linear infinite;
+    opacity: 0.6;
 }
 
 .hero-content {
-   position: relative;
-   z-index: 2;
-   max-width: 800px;
-   margin: 0 auto;
-   padding: 0 2rem;
+    position: relative;
+    z-index: 3;
+    width: 100%;
+    text-align: center;
+    animation: fadeInUp 1.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.3s both;
 }
 
-.hero-header {
-   font-size: 0.9rem;
-   letter-spacing: 2px;
-   color: var(--color-secondary);
-   margin-bottom: 1rem;
-   font-weight: 400;
+.hero-text {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 20px;
 }
 
+/* Texto superior con efecto de luz */
+.hero-invitation {
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    font-weight: 300;
+    color: var(--accent-aqua);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeInUp 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.6s both;
+    text-shadow: 0 0 20px rgba(168, 218, 220, 0.4);
+    position: relative;
+}
+
+.hero-invitation::before,
+.hero-invitation::after {
+    content: '~';
+    display: inline-block;
+    margin: 0 15px;
+    color: var(--accent-teal);
+    animation: wavePulse 3s ease-in-out infinite;
+}
+
+/* Nombres principales con efecto de brillo marino */
 .hero-names {
-   font-family: var(--font-serif);
-   font-size: clamp(3rem, 12vw, 8rem);
-   font-weight: 400;
-   color: var(--color-secondary);
-   margin-bottom: 2rem;
-   line-height: 1.1;
-   letter-spacing: -2px;
+    font-family: var(--font-script);
+    font-size: clamp(3.5rem, 10vw, 7rem);
+    font-weight: 400;
+    color: var(--text-primary);
+    line-height: 1.15;
+    margin-bottom: 3rem;
+    letter-spacing: 0.02em;
+    opacity: 0;
+    animation: fadeInUp 1.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.9s both;
+    text-shadow: 
+        0 0 30px rgba(115, 191, 184, 0.5),
+        0 4px 12px rgba(0, 0, 0, 0.6);
+    position: relative;
+}
+
+/* Línea decorativa bajo los nombres */
+.hero-names::after {
+    content: '';
+    display: block;
+    width: 150px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent-teal), var(--accent-aqua), transparent);
+    margin: 1.5rem auto 0;
+    box-shadow: 0 0 10px rgba(115, 191, 184, 0.5);
+    animation: lineGlow 3s ease-in-out infinite alternate;
 }
 
 .hero-details {
-   display: flex;
-   flex-direction: column;
-   gap: 0.5rem;
-   align-items: center;
+    margin-top: 3rem;
+    opacity: 0;
+    animation: fadeInUp 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) 1.2s both;
 }
 
-.hero-date, .hero-location {
-   font-size: 0.9rem;
-   letter-spacing: 1px;
-   color: var(--color-secondary);
-   font-weight: 400;
+/* Fecha con estilo elegante */
+.hero-date {
+    font-family: var(--font-elegant);
+    font-size: clamp(1.5rem, 3.5vw, 2rem);
+    color: var(--accent-sand);
+    margin-bottom: 1.5rem;
+    font-weight: 400;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    position: relative;
 }
 
-/* Imagen de transición */
-.transition-image {
-   width: 100%;
-   height: 105vh;
-   overflow: hidden;
-   position: relative;
+/* Iconos decorativos alrededor de la fecha */
+.hero-date::before,
+.hero-date::after {
+    content: '◆';
+    display: inline-block;
+    margin: 0 20px;
+    color: var(--accent-teal);
+    font-size: 0.6em;
+    vertical-align: middle;
+    animation: diamondPulse 2s ease-in-out infinite;
 }
 
-.transition-image img {
-   width: 100%;
-   height: 100%;
-   object-fit: cover;
-   object-position: center 20%; /* Enfoca en la parte superior */
-   filter: grayscale(0%);
+.hero-location {
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    color: var(--text-secondary);
+    font-weight: 300;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Icono de ubicación */
+.hero-location::before {
+    content: '📍';
+    font-size: 1.2em;
+    filter: grayscale(20%);
+}
+
+/* Indicador de scroll mejorado con estilo marino */
+.hero-scroll-indicator {
+    position: absolute;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+    opacity: 0;
+    animation: fadeInUp 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) 1.8s both;
+    cursor: pointer;
+}
+
+.scroll-line {
+    width: 2px;
+    height: 70px;
+    background: linear-gradient(
+        to bottom, 
+        transparent, 
+        var(--accent-teal) 20%, 
+        var(--accent-aqua) 80%, 
+        transparent
+    );
+    position: relative;
+    animation: scrollPulse 2.5s infinite ease-in-out;
+    box-shadow: 0 0 10px rgba(115, 191, 184, 0.4);
+}
+
+/* Burbujas flotantes en el indicador */
+.scroll-line::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6px;
+    height: 6px;
+    background: var(--accent-aqua);
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(168, 218, 220, 0.6);
+    animation: bubbleRise 2.5s infinite ease-in-out;
+}
+
+.scroll-line::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 8px solid var(--accent-teal);
+    animation: scrollArrow 2.5s infinite ease-in-out;
+    filter: drop-shadow(0 0 5px rgba(115, 191, 184, 0.5));
+}
+
+/* Animaciones personalizadas */
+@keyframes subtleZoom {
+    0% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(1.05);
+    }
+}
+
+@keyframes waveGlow {
+    0% {
+        opacity: 0.5;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes floatingBubbles {
+    0% {
+        background-position: 0% 0%;
+    }
+    100% {
+        background-position: 100% 100%;
+    }
+}
+
+@keyframes wavePulse {
+    0%, 100% {
+        opacity: 0.6;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+}
+
+@keyframes lineGlow {
+    0% {
+        box-shadow: 0 0 10px rgba(115, 191, 184, 0.5);
+    }
+    100% {
+        box-shadow: 0 0 20px rgba(115, 191, 184, 0.8);
+    }
+}
+
+@keyframes diamondPulse {
+    0%, 100% {
+        opacity: 0.5;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.2);
+    }
+}
+
+@keyframes scrollPulse {
+    0%, 100% {
+        opacity: 0.5;
+        transform: scaleY(0.9);
+    }
+    50% {
+        opacity: 1;
+        transform: scaleY(1);
+    }
+}
+
+@keyframes bubbleRise {
+    0% {
+        top: 100%;
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        top: 0%;
+        opacity: 0;
+    }
+}
+
+@keyframes scrollArrow {
+    0%, 100% {
+        opacity: 0.5;
+        transform: translateX(-50%) translateY(0);
+    }
+    50% {
+        opacity: 1;
+        transform: translateX(-50%) translateY(8px);
+    }
+}
+
+/* Efectos hover sutiles */
+.hero:hover .hero-image {
+    filter: brightness(0.55) saturate(1.3) hue-rotate(-5deg);
+    transform: scale(1.02);
+}
+
+.hero-scroll-indicator:hover .scroll-line {
+    background: linear-gradient(
+        to bottom, 
+        transparent, 
+        var(--accent-aqua) 20%, 
+        var(--accent-teal) 80%, 
+        transparent
+    );
+    box-shadow: 0 0 15px rgba(168, 218, 220, 0.6);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .hero {
+        min-height: 650px;
+    }
+    
+    .hero-names {
+        margin-bottom: 2.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero {
+        min-height: 600px;
+    }
+    
+    .hero-names {
+        margin-bottom: 2rem;
+    }
+    
+    .hero-names::after {
+        width: 100px;
+        margin-top: 1rem;
+    }
+    
+    .hero-details {
+        margin-top: 2rem;
+    }
+    
+    .hero-invitation {
+        font-size: 0.85rem;
+        letter-spacing: 2px;
+        margin-bottom: 1.5rem;
+    }
+    
+    .hero-invitation::before,
+    .hero-invitation::after {
+        margin: 0 10px;
+    }
+    
+    .hero-date::before,
+    .hero-date::after {
+        margin: 0 15px;
+    }
+    
+    .hero-scroll-indicator {
+        bottom: 40px;
+    }
+    
+    .scroll-line {
+        height: 50px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero {
+        min-height: 550px;
+    }
+    
+    .hero-text {
+        padding: 0 16px;
+    }
+    
+    .hero-invitation {
+        font-size: 0.75rem;
+        letter-spacing: 1.5px;
+        margin-bottom: 1rem;
+    }
+    
+    .hero-invitation::before,
+    .hero-invitation::after {
+        display: none;
+    }
+    
+    .hero-names::after {
+        width: 80px;
+    }
+    
+    .hero-date {
+        margin-bottom: 1rem;
+    }
+    
+    .hero-date::before,
+    .hero-date::after {
+        margin: 0 10px;
+        font-size: 0.5em;
+    }
+    
+    .hero-location {
+        font-size: 0.9rem;
+        letter-spacing: 1.5px;
+    }
+    
+    .hero-scroll-indicator {
+        bottom: 30px;
+    }
+}
+
+/* Animación de entrada personalizada */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Preload suave */
+.hero-image.loading {
+    filter: brightness(0.3) blur(10px);
+}
+
+.hero-image.loaded {
+    filter: brightness(0.5) saturate(1.2) hue-rotate(-10deg);
 }
