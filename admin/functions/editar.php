@@ -1258,64 +1258,71 @@ foreach($ubicaciones as $ub) {
                 
                 <hr class="my-4">
                 
-                <!-- Tipo de RSVP -->
-                <div class="form-group">
-                    <label for="tipo_rsvp" class="form-label">Tipo de Confirmación RSVP</label>
-                    <select id="tipo_rsvp" name="tipo_rsvp" class="form-select" onchange="toggleRSVPFields()">
-                        <option value="digital" <?php echo ($invitacion['tipo_rsvp'] ?? 'digital') == 'digital' ? 'selected' : ''; ?>>
-                            Sistema de Boletaje Digital
-                        </option>
-                        <option value="whatsapp" <?php echo ($invitacion['tipo_rsvp'] ?? 'digital') == 'whatsapp' ? 'selected' : ''; ?>>
-                            Confirmación por WhatsApp
-                        </option>
-                    </select>
-                    <div class="form-text">
-                        <i class="bi bi-info-circle me-1"></i>
-                        Elige cómo prefieres que tus invitados confirmen su asistencia
-                    </div>
-                </div>
+                <!-- Nueva estructura en dos columnas -->
+                <div class="two-columns">
+                    <!-- Columna izquierda: Tipo de RSVP -->
+                    <div>
+                        <!-- Tipo de RSVP -->
+                        <div class="form-group">
+                            <label for="tipo_rsvp" class="form-label">Tipo de Confirmación RSVP</label>
+                            <select id="tipo_rsvp" name="tipo_rsvp" class="form-select" onchange="toggleRSVPFields()">
+                                <option value="digital" <?php echo ($invitacion['tipo_rsvp'] ?? 'digital') == 'digital' ? 'selected' : ''; ?>>
+                                    Sistema de Boletaje Digital
+                                </option>
+                                <option value="whatsapp" <?php echo ($invitacion['tipo_rsvp'] ?? 'digital') == 'whatsapp' ? 'selected' : ''; ?>>
+                                    Confirmación por WhatsApp
+                                </option>
+                            </select>
+                            <div class="form-text">
+                                <i class="bi bi-info-circle me-1"></i>
+                                Elige cómo prefieres que tus invitados confirmen su asistencia
+                            </div>
+                        </div>
 
-                <!-- Campo WhatsApp -->
-                <div class="form-group" id="campo-whatsapp" style="<?php echo ($invitacion['tipo_rsvp'] ?? 'digital') == 'whatsapp' ? '' : 'display: none;'; ?>">
-                    <label for="whatsapp_confirmacion" class="form-label">Número de WhatsApp para Confirmaciones *</label>
-                    <input type="tel" id="whatsapp_confirmacion" name="whatsapp_confirmacion" class="form-control" 
-                        placeholder="3339047672" pattern="[0-9]{10,15}"
-                        value="<?php echo htmlspecialchars($invitacion['whatsapp_confirmacion'] ?? ''); ?>"
-                        <?php echo ($invitacion['tipo_rsvp'] ?? 'digital') == 'whatsapp' ? 'required' : ''; ?>>
-                    <div class="form-text">
-                        <i class="bi bi-info-circle me-1"></i>
-                        Número de WhatsApp donde recibirás las confirmaciones de asistencia (solo números, sin espacios ni guiones)
+                        <!-- Campo WhatsApp -->
+                        <div class="form-group" id="campo-whatsapp" style="<?php echo ($invitacion['tipo_rsvp'] ?? 'digital') == 'whatsapp' ? '' : 'display: none;'; ?>">
+                            <label for="whatsapp_confirmacion" class="form-label">Número de WhatsApp para Confirmaciones *</label>
+                            <input type="tel" id="whatsapp_confirmacion" name="whatsapp_confirmacion" class="form-control" 
+                                placeholder="3339047672" pattern="[0-9]{10,15}"
+                                value="<?php echo htmlspecialchars($invitacion['whatsapp_confirmacion'] ?? ''); ?>"
+                                <?php echo ($invitacion['tipo_rsvp'] ?? 'digital') == 'whatsapp' ? 'required' : ''; ?>>
+                            <div class="form-text">
+                                <i class="bi bi-info-circle me-1"></i>
+                                Número de WhatsApp donde recibirás las confirmaciones de asistencia (solo números, sin espacios ni guiones)
+                            </div>
+                        </div>
                     </div>
-                </div>
-                
-                <hr class="my-4">
-                
-                <!-- Sección Solo Adultos -->
-                <h5 class="mb-3">
-                    <i class="bi bi-people me-2"></i>
-                    Restricción de Edad
-                </h5>
-                
-                <div class="form-group">
-                    <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" id="mostrar_solo_adultos" 
-                            name="mostrar_solo_adultos" value="1"
-                            <?php echo (isset($invitacion['mostrar_solo_adultos']) ? $invitacion['mostrar_solo_adultos'] : 1) ? 'checked' : ''; ?>
-                            onchange="toggleSoloAdultosText()">
-                        <label class="form-check-label" for="mostrar_solo_adultos">
-                            Mostrar mensaje de "Solo Adultos"
-                        </label>
+                    
+                    <!-- Columna derecha: Restricción de Edad -->
+                    <div>
+                        <!-- Sección Solo Adultos -->
+                        <h5 class="mb-3">
+                            <i class="bi bi-people me-2"></i>
+                            Restricción de Edad
+                        </h5>
+                        
+                        <div class="form-group">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="mostrar_solo_adultos" 
+                                    name="mostrar_solo_adultos" value="1"
+                                    <?php echo (isset($invitacion['mostrar_solo_adultos']) ? $invitacion['mostrar_solo_adultos'] : 1) ? 'checked' : ''; ?>
+                                    onchange="toggleSoloAdultosText()">
+                                <label class="form-check-label" for="mostrar_solo_adultos">
+                                    Mostrar mensaje de "Solo Adultos"
+                                </label>
+                            </div>
+                            <div class="form-text">Activa o desactiva el mensaje sobre restricción de edad</div>
+                        </div>
+                        
+                        <div class="form-group" id="campo-texto-adultos" 
+                            style="<?php echo (isset($invitacion['mostrar_solo_adultos']) && $invitacion['mostrar_solo_adultos']) ? '' : 'display: none;'; ?>">
+                            <label for="texto_solo_adultos" class="form-label">Texto personalizado para seccion "Solo Adultos"</label>
+                            <input type="text" id="texto_solo_adultos" name="texto_solo_adultos" class="form-control" 
+                                placeholder="Solo adultos"
+                                value="<?php echo htmlspecialchars($invitacion['texto_solo_adultos'] ?? 'Celebración exclusiva para adultos (No niños).'); ?>">
+                            <div class="form-text">Personaliza el mensaje sobre la restricción de edad</div>
+                        </div>
                     </div>
-                    <div class="form-text">Activa o desactiva el mensaje sobre restricción de edad</div>
-                </div>
-                
-                <div class="form-group" id="campo-texto-adultos" 
-                    style="<?php echo (isset($invitacion['mostrar_solo_adultos']) && $invitacion['mostrar_solo_adultos']) ? '' : 'display: none;'; ?>">
-                    <label for="texto_solo_adultos" class="form-label">Texto personalizado para seccion "Solo Adultos"</label>
-                    <input type="text" id="texto_solo_adultos" name="texto_solo_adultos" class="form-control" 
-                        placeholder="Solo adultos"
-                        value="<?php echo htmlspecialchars($invitacion['texto_solo_adultos'] ?? 'Celebración exclusiva para adultos (No niños).'); ?>">
-                    <div class="form-text">Personaliza el mensaje sobre la restricción de edad</div>
                 </div>
             </div>
 

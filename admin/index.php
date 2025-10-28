@@ -65,6 +65,68 @@ $query = "SELECT i.*, p.nombre as plantilla_nombre
 $stmt = $db->prepare($query);
 $stmt->execute();
 $invitaciones = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Función para calcular el estado de una invitación
+function calcularEstado($fecha_evento) {
+    if (!$fecha_evento) {
+        return ['key' => 'activa', 'texto' => 'Activa', 'class' => 'bg-primary', 'orden' => 2];
+    }
+    
+    $hoy = new DateTime();
+    $fecha = new DateTime($fecha_evento);
+    $dias_restantes = $hoy->diff($fecha)->days;
+    $es_futuro = $fecha >= $hoy;
+    
+    if (!$es_futuro) {
+        return ['key' => 'finalizada', 'texto' => 'Finalizada', 'class' => 'bg-secondary', 'orden' => 3];
+    } elseif ($dias_restantes <= 7) {
+        return ['key' => 'proxima', 'texto' => 'Próxima', 'class' => 'bg-warning text-dark', 'orden' => 0];
+    } else {
+        return ['key' => 'activa', 'texto' => 'Activa', 'class' => 'bg-success', 'orden' => 1];
+    }
+}
+
+// Ordenar invitaciones: próximas primero, activas después, finalizadas al final
+usort($invitaciones, function($a, $b) {
+    $estadoA = calcularEstado($a['fecha_evento']);
+    $estadoB = calcularEstado($b['fecha_evento']);
+    
+    // Primero ordenar por estado (orden: proxima, activa, finalizada)
+    if ($estadoA['orden'] !== $estadoB['orden']) {
+        return $estadoA['orden'] - $estadoB['orden'];
+    }
+    
+    // Si son del mismo estado, ordenar por fecha de evento
+    if ($a['fecha_evento'] && $b['fecha_evento']) {
+        return strtotime($a['fecha_evento']) - strtotime($b['fecha_evento']);
+    }
+    
+    // Si no tienen fecha, ordenar por fecha de creación
+    return strtotime($b['fecha_creacion']) - strtotime($a['fecha_creacion']);
+});
+
+// Contar invitaciones por estado
+$contadores = [
+    'proximas' => 0,
+    'activas' => 0,
+    'finalizadas' => 0,
+    'total' => count($invitaciones)
+];
+
+foreach ($invitaciones as $inv) {
+    $estado = calcularEstado($inv['fecha_evento']);
+    switch ($estado['key']) {
+        case 'proxima':
+            $contadores['proximas']++;
+            break;
+        case 'activa':
+            $contadores['activas']++;
+            break;
+        case 'finalizada':
+            $contadores['finalizadas']++;
+            break;
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -135,9 +197,9 @@ $invitaciones = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <div class="col-sm-6">
                         <select class="form-select form-select-sm" id="estadoFilter">
                             <option value="">Todos los estados</option>
-                            <option value="proxima">Próximas (7 días)</option>
-                            <option value="activa">Activas</option>
-                            <option value="finalizada">Finalizadas</option>
+                            <option value="proxima">Próximas (<?php echo $contadores['proximas']; ?>)</option>
+                            <option value="activa">Activas (<?php echo $contadores['activas']; ?>)</option>
+                            <option value="finalizada">Finalizadas (<?php echo $contadores['finalizadas']; ?>)</option>
                         </select>
                     </div>
                     <div class="col-sm-6">
@@ -145,28 +207,31 @@ $invitaciones = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <option value="">Ordenar por fecha</option>
                             <option value="evento_asc">Evento (más próximo)</option>
                             <option value="evento_desc">Evento (más lejano)</option>
+                            <option value="creacion_desc" selected>Creación (más reciente)</option>
                         </select>
                     </div>
                 </div>
             </div>
-            
-            <!-- Estadísticas -->
+
+            <!-- Estadísticas mejoradas -->
             <div class="col-lg-2 col-12">
                 <div class="d-flex justify-content-between justify-content-lg-end gap-3">
                     <small class="text-muted d-flex align-items-center">
                         <i class="bi bi-calendar-check me-1 text-warning"></i>
-                        <span id="proximasCount">0</span> próximas
+                        <span id="proximasCount"><?php echo $contadores['proximas']; ?></span> próximas
                     </small>
                     <small class="text-muted d-flex align-items-center">
-                        <i class="bi bi-collection me-1 text-primary"></i>
-                        <span id="totalCount"><?php echo count($invitaciones); ?></span> total
+                        <i class="bi bi-check-circle me-1 text-success"></i>
+                        <span id="activasCount"><?php echo $contadores['activas']; ?></span> activas
+                    </small>
+                    <small class="text-muted d-flex align-items-center">
+                        <i class="bi bi-archive me-1 text-secondary"></i>
+                        <span id="finalizadasCount"><?php echo $contadores['finalizadas']; ?></span> finalizadas
                     </small>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <div class="container-fluid py-4">
+        <div class="container-fluid py-4">
         <!-- Alertas -->
         <?php if (isset($success_message)): ?>
             <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -258,29 +323,42 @@ $invitaciones = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             
                             <!-- Estado basado en fecha -->
                             <?php 
-                            $estado = 'activa';
-                            $estado_texto = 'Activa';
-                            $estado_class = 'bg-primary';
-                            if ($invitacion['fecha_evento']) {
-                                $hoy = new DateTime();
-                                $fecha_evento = new DateTime($invitacion['fecha_evento']);
-                                if ($fecha_evento < $hoy) {
-                                    $estado = 'finalizada';
-                                    $estado_texto = 'Finalizada';
-                                    $estado_class = 'bg-secondary';
-                                } elseif ($fecha_evento->diff($hoy)->days <= 7) {
-                                    $estado = 'proxima';
-                                    $estado_texto = 'Próxima';
-                                    $estado_class = 'bg-warning';
-                                }
-                            }
+                            $estado = calcularEstado($invitacion['fecha_evento']);
                             ?>
                             <div class="mb-3">
-                                <span class="badge <?php echo $estado_class; ?>">
-                                    <?php echo $estado_texto; ?>
+                                <span class="badge <?php echo $estado['class']; ?>">
+                                    <?php if ($estado['key'] === 'finalizada'): ?>
+                                        <i class="bi bi-check-circle-fill me-1"></i>
+                                    <?php elseif ($estado['key'] === 'proxima'): ?>
+                                        <i class="bi bi-exclamation-circle-fill me-1"></i>
+                                    <?php else: ?>
+                                        <i class="bi bi-calendar-event me-1"></i>
+                                    <?php endif; ?>
+                                    <?php echo $estado['texto']; ?>
                                 </span>
+                                
+                                <?php if ($invitacion['fecha_evento']): ?>
+                                    <?php
+                                    $hoy = new DateTime();
+                                    $fecha = new DateTime($invitacion['fecha_evento']);
+                                    $dias = $hoy->diff($fecha)->days;
+                                    $es_futuro = $fecha >= $hoy;
+                                    ?>
+                                    <small class="text-muted ms-2">
+                                        <?php if ($es_futuro): ?>
+                                            <?php if ($dias === 0): ?>
+                                                ¡Hoy!
+                                            <?php elseif ($dias === 1): ?>
+                                                Mañana
+                                            <?php else: ?>
+                                                En <?php echo $dias; ?> días
+                                            <?php endif; ?>
+                                        <?php else: ?>
+                                            Hace <?php echo $dias; ?> días
+                                        <?php endif; ?>
+                                    </small>
+                                <?php endif; ?>
                             </div>
-                        </div>
                         
                         <div class="card-footer bg-transparent">
                             <div class="d-grid gap-2">
