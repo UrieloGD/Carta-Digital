@@ -503,10 +503,8 @@ function showSuccessAlert() {
             title: '¡Éxito!',
             text: 'Invitación actualizada correctamente',
             icon: 'success',
-            timer: 3000,
-            showConfirmButton: false,
-            position: 'top-end',
-            toast: true
+            timer: 1000,
+            showConfirmButton: false
         });
     }
 }
