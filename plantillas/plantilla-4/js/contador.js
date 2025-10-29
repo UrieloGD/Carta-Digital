@@ -191,7 +191,7 @@ function initSimpleCountdown(fechaEvento) {
     return setInterval(updateSimpleCountdown, 60000); // Actualizar cada minuto
 }
 
-// CONTADOR COMPLETO - FUNCIÓN EXISTENTE (ligeramente modificada)
+// CONTADOR COMPLETO - FUNCIÓN CORREGIDA
 function initCompleteCountdown(fechaEvento) {
     const contadorElement = document.querySelector('.contador');
     const countdownElement = document.getElementById('countdown');
@@ -241,11 +241,11 @@ function initCompleteCountdown(fechaEvento) {
             const minutos = Math.floor((distancia % (1000 * 60 * 60)) / (1000 * 60));
             const segundos = Math.floor((distancia % (1000 * 60)) / 1000);
             
-            // Efectos especiales basados en tiempo restante
+            // Efectos especiales basados en tiempo restante - CORREGIDO
             if (contadorElement) {
                 contadorElement.classList.toggle('close-date', dias <= 14);
                 contadorElement.classList.toggle('very-close', dias <= 7);
-                contadorContainer.classList.toggle('final-countdown', dias <= 1);
+                contadorElement.classList.toggle('final-countdown', dias <= 1);
             }
             
             // Obtener elementos del DOM
@@ -364,6 +364,8 @@ function initCountdown() {
         fechaEvento = parseEventDate(invitacionData.fecha, invitacionData.hora);
         console.log('Fecha del evento parseada:', fechaEvento);
         console.log('Tipo de contador:', countdownType);
+        console.log('Fecha actual:', new Date());
+        console.log('Diferencia en días:', Math.floor((fechaEvento - new Date()) / (1000 * 60 * 60 * 24)));
     } catch (error) {
         console.error('Error al parsear la fecha del evento:', error);
         
@@ -389,17 +391,6 @@ function initCountdown() {
     } else {
         countdownInterval = initCompleteCountdown(fechaEvento);
         console.log('Contador completo inicializado');
-    }
-    
-    // Para desarrollo: actualizar más frecuentemente
-    if ((window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && countdownType === 'simple') {
-        setInterval(() => {
-            const updateFunction = countdownType === 'simple' ? initSimpleCountdown : initCompleteCountdown;
-            if (countdownInterval) {
-                clearInterval(countdownInterval);
-            }
-            countdownInterval = updateFunction(fechaEvento);
-        }, 10000); // Actualizar cada 10 segundos en desarrollo
     }
 }
 

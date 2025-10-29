@@ -109,7 +109,7 @@
     flex-direction: column;
     align-items: center;
     position: relative;
-    background: var(--bg-card); /* Usando el color más oscuro de tu paleta */
+    background: var(--bg-card);
     border: 1px solid var(--border-subtle);
     border-radius: 12px;
     padding: 1.5rem 1rem;
@@ -126,7 +126,7 @@
 }
 
 .time-unit:hover {
-    background: var(--accent-champagne); /* Color más oscuro al hover */
+    background: var(--accent-champagne);
     border-color: var(--accent-beige);
     transform: translateY(-3px);
     box-shadow: 0 8px 25px rgba(139, 115, 85, 0.25);
@@ -259,6 +259,23 @@
 }
 
 /* Estados especiales mejorados */
+.countdown-expired {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: 300px;
+}
+
+.countdown-expired .time-unit {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .countdown-expired .time-number {
     color: var(--gold-accent);
     animation: celebrate 2s infinite ease-in-out;
@@ -272,6 +289,14 @@
     content: ' ✨';
 }
 
+/* Para el contador completo cuando expira */
+.countdown-grid.final-day {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    grid-template-columns: 1fr;
+}
+
 @keyframes celebrate {
     0%, 100% {
         transform: scale(1);
@@ -281,6 +306,63 @@
         transform: scale(1.08);
         text-shadow: 0 0 15px rgba(139, 115, 85, 0.4);
     }
+}
+
+/* Estados de celebración adaptados - MEJORADO */
+.celebration-content {
+    text-align: center;
+    padding: 2rem;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.celebration-emoji {
+    font-size: 4rem;
+    display: block;
+    margin-bottom: 1rem;
+    animation: bounce 1s infinite;
+}
+
+.celebration-text {
+    font-family: var(--font-script);
+    font-size: clamp(2rem, 5vw, 3rem);
+    color: var(--gold-accent);
+    display: block;
+    margin-bottom: 0.5rem;
+    width: 100%;
+}
+
+.celebration-subtitle {
+    font-family: var(--font-serif);
+    font-size: 1.2rem;
+    color: var(--accent-beige);
+    font-style: italic;
+    width: 100%;
+}
+
+/* Animación de rebote para el emoji */
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* Estados de error adaptados */
+.error-message {
+    text-align: center;
+    padding: 2rem;
+    color: #c74545;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 /* Responsive Design Mejorado */
@@ -319,10 +401,10 @@
     }
     
     .time-unit {
-        background: rgba(255, 255, 255, 0.8); /* Más opaco en móvil */
+        background: rgba(255, 255, 255, 0.8);
         border: 1px solid rgba(139, 115, 85, 0.25);
         padding: 1.5rem 1rem;
-        margin-bottom: 1rem; /* Separación entre elementos */
+        margin-bottom: 1rem;
         box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
     }
     
@@ -359,6 +441,22 @@
     .time-label {
         font-size: clamp(0.75rem, 2vw, 0.9rem);
     }
+    
+    .countdown-expired {
+        min-height: 250px;
+    }
+    
+    .celebration-emoji {
+        font-size: 3rem;
+    }
+    
+    .celebration-text {
+        font-size: clamp(1.5rem, 4vw, 2rem);
+    }
+    
+    .celebration-subtitle {
+        font-size: 1rem;
+    }
 }
 
 @media (max-width: 480px) {
@@ -379,7 +477,7 @@
     }
     
     .time-unit {
-        background: rgba(255, 255, 255, 0.85); /* Máximo contraste en pantallas pequeñas */
+        background: rgba(255, 255, 255, 0.85);
         border: 1px solid rgba(139, 115, 85, 0.3);
         padding: 1.25rem 0.75rem;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
@@ -404,6 +502,27 @@
     .countdown-message .script-text {
         font-size: clamp(1.1rem, 4vw, 1.4rem);
         padding: 0 1rem;
+    }
+    
+    .countdown-expired {
+        min-height: 200px;
+    }
+    
+    .celebration-content {
+        padding: 1.5rem;
+    }
+    
+    .celebration-emoji {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .celebration-text {
+        font-size: clamp(1.2rem, 3.5vw, 1.5rem);
+    }
+    
+    .celebration-subtitle {
+        font-size: 0.9rem;
     }
 }
 
@@ -483,41 +602,6 @@
         rgba(139, 105, 20, 0.06) 50%,
         transparent 70%
     );
-}
-
-/* Estados de celebración adaptados */
-.celebration-content {
-    text-align: center;
-    padding: 2rem;
-}
-
-.celebration-emoji {
-    font-size: 4rem;
-    display: block;
-    margin-bottom: 1rem;
-    animation: bounce 1s infinite;
-}
-
-.celebration-text {
-    font-family: var(--font-script);
-    font-size: clamp(2rem, 5vw, 3rem);
-    color: var(--gold-accent);
-    display: block;
-    margin-bottom: 0.5rem;
-}
-
-.celebration-subtitle {
-    font-family: var(--font-serif);
-    font-size: 1.2rem;
-    color: var(--accent-beige);
-    font-style: italic;
-}
-
-/* Estados de error adaptados */
-.error-message {
-    text-align: center;
-    padding: 2rem;
-    color: #c74545; /* Color de error más adecuado para fondo claro */
 }
 
 /* Contador Simple - Adaptado de Plantilla 2 */
@@ -667,6 +751,25 @@
         transform: scale(1.08);
         text-shadow: 0 0 25px rgba(139, 115, 85, 0.4);
     }
+}
+
+/* Para contador simple cuando expira - MEJORADO */
+.contador-simple .time-unit-large.celebration {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    text-align: center;
+}
+
+.contador-simple .time-unit-large.celebration .label {
+    order: 1;
+    margin-bottom: 1rem;
+}
+
+.contador-simple .time-unit-large.celebration .number {
+    order: 2;
 }
 
 .contador-simple.countdown-expired .time-unit-large {

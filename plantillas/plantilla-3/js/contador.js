@@ -204,6 +204,12 @@ function initCountdown() {
                 countdownElement.classList.add('final-day');
                 createCelebrationEffect();
                 
+                // OCULTAR EL MENSAJE "Faltan muy pocos días"
+                const messageElement = document.querySelector('.countdown-message');
+                if (messageElement) {
+                    messageElement.style.display = 'none';
+                }
+                
                 if (countdownInterval) {
                     clearInterval(countdownInterval);
                     countdownInterval = null;
@@ -276,6 +282,12 @@ function initCountdown() {
                         previousValues[key] = newValues[key];
                     }
                 });
+                
+                // Mostrar el mensaje solo si el evento NO ha llegado
+                const messageElement = document.querySelector('.countdown-message');
+                if (messageElement) {
+                    messageElement.style.display = 'block'; // Asegurarse de que esté visible
+                }
                 
                 updateCountdownMessage(dias, horas, minutos);
             }

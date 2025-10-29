@@ -1,4 +1,8 @@
-/* Contador - Estilo Natural */
+/* ============================================
+   CONTADOR - ESTILO NATURAL (PLANTILLA 2)
+   CSS Completo con Celebración Mejorada
+   ============================================ */
+
 .contador {
     background: var(--warm-white);
     position: relative;
@@ -53,6 +57,10 @@
     max-width: 600px;
     margin: 0 auto;
 }
+
+/* ============================================
+   TIME-UNIT - ESTADO NORMAL
+   ============================================ */
 
 .time-unit {
     position: relative;
@@ -114,29 +122,7 @@
     display: block;
 }
 
-/* Animación de entrada */
-.time-unit {
-    animation: slideInUp 0.8s ease-out forwards;
-    opacity: 0;
-}
-
-.time-unit:nth-child(1) { animation-delay: 0.1s; }
-.time-unit:nth-child(2) { animation-delay: 0.2s; }
-.time-unit:nth-child(3) { animation-delay: 0.3s; }
-.time-unit:nth-child(4) { animation-delay: 0.4s; }
-
-@keyframes slideInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Efectos decorativos */
+/* Efectos decorativos normales */
 .time-unit::after {
     content: '';
     position: absolute;
@@ -149,89 +135,307 @@
     opacity: 0.5;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-    .countdown {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1.5rem;
-        max-width: 400px;
-    }
-    
-    .time-unit {
-        padding: 1.5rem 0.8rem;
-    }
-    
-    .time-unit .label {
-        font-size: 0.8rem;
-    }
+/* ============================================
+   TIME-UNIT.CELEBRATION - ESTADO DE CELEBRACIÓN
+   Estilos específicos para "¡Hoy es el día!"
+   ============================================ */
 
-    .contador-simple .time-unit-large {
-        padding: 2.5rem 1.5rem;
-        margin: 0 1rem;
-    }
-    
-    .contador-simple .time-unit-large .number {
-        font-size: clamp(3.5rem, 10vw, 5rem);
-    }
-    
-    .contador-simple .time-unit-large .label {
-        font-size: clamp(0.8rem, 3vw, 1rem);
-    }
+/* Contenedor del countdown cuando está en modo celebración */
+.countdown.final-day {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 350px;
+    padding: 3rem 1rem;
 }
 
-@media (max-width: 480px) {
-    .countdown {
-        grid-template-columns: 1fr 1fr;
-        gap: 1rem;
-        max-width: 300px;
-    }
+/* Card de celebración - CENTRADO Y MEJORADO */
+.time-unit.celebration {
+    /* Layout y posicionamiento */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
     
-    .time-unit {
-        padding: 1rem 0.5rem;
-        border-radius: 15px;
-    }
+    /* Tamaño y espaciado */
+    max-width: 500px;
+    width: 90%;
+    margin: 0 auto;
+    padding: 4rem 3rem;
     
-    .time-unit .label {
-        font-size: 0.7rem;
-        letter-spacing: 0.5px;
-    }
-
-    .contador-simple .time-unit-large {
-        padding: 2rem 1rem;
-        border-radius: 20px;
-    }
+    /* Fondo y efectos */
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.95) 0%, 
+        rgba(255, 255, 255, 0.9) 100%);
+    backdrop-filter: blur(20px);
     
-    .contador-simple .time-unit-large .number {
-        font-size: clamp(3rem, 12vw, 4rem);
-        margin-bottom: 0.8rem;
-    }
+    /* Bordes */
+    border: 3px solid rgba(107, 123, 58, 0.25);
+    border-radius: 30px;
     
-    .contador-simple .time-unit-large .label {
-        font-size: 0.8rem;
-        line-height: 1.3;
-    }
+    /* Sombras */
+    box-shadow: 
+        0 20px 60px rgba(107, 123, 58, 0.2),
+        0 10px 30px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 1),
+        inset 0 -1px 0 rgba(107, 123, 58, 0.05);
     
-    .contador-simple .time-unit-large::after {
-        top: 15px;
-        right: 15px;
-        width: 8px;
-        height: 8px;
-    }
+    /* Animación */
+    animation: celebrationPulse 3s ease-in-out infinite;
+    
+    /* Reset de propiedades del estado normal */
+    transform: none !important;
+    grid-column: 1 / -1;
 }
 
-/* Estados especiales para números bajos */
-.contador-simple .time-unit-large .number[data-days="0"],
-.contador-simple .time-unit-large .number[data-days="1"],
-.contador-simple .time-unit-large .number[data-days="2"] {
-    color: var(--dark-olive);
+/* Resetear hover para el estado de celebración */
+.time-unit.celebration:hover {
+    transform: scale(1.02) !important;
+}
+
+.time-unit.celebration:hover::before {
+    opacity: 0.15;
+}
+
+/* Efecto de fondo sutil con gradiente radial */
+.time-unit.celebration::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 30% 70%, rgba(212, 184, 150, 0.12) 0%, transparent 50%),
+        radial-gradient(circle at 70% 30%, rgba(107, 123, 58, 0.1) 0%, transparent 50%);
+    z-index: 0;
+    opacity: 1;
+    border-radius: 30px;
+}
+
+/* Línea decorativa superior */
+.time-unit.celebration::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 15%;
+    right: 15%;
+    height: 4px;
+    width: 70%;
+    background: linear-gradient(90deg, 
+        transparent, 
+        var(--primary-olive) 20%,
+        var(--sand) 50%,
+        var(--primary-olive) 80%,
+        transparent);
+    border-radius: 0 0 4px 4px;
+    box-shadow: 
+        0 2px 10px rgba(107, 123, 58, 0.3),
+        0 0 20px rgba(212, 184, 150, 0.2);
+    opacity: 1;
+}
+
+/* ============================================
+   TEXTOS DE CELEBRACIÓN
+   ============================================ */
+
+/* Texto principal "¡Hoy es el día!" */
+.time-unit.celebration .celebration-text,
+.time-unit.celebration .number {
+    font-family: var(--font-serif);
+    font-size: clamp(2.5rem, 6vw, 4.5rem) !important;
     font-weight: 400;
+    color: var(--primary-olive);
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+    display: block;
+    position: relative;
+    z-index: 1;
+    text-shadow: 
+        0 2px 4px rgba(0, 0, 0, 0.05),
+        0 4px 12px rgba(107, 123, 58, 0.15);
+    animation: celebrationTextGlow 2.5s ease-in-out infinite;
 }
 
-.contador-simple .time-unit-large .number[data-days="0"] {
-    animation: pulse 2s ease-in-out infinite;
+/* Subtítulo "¡Celebremos!" */
+.time-unit.celebration .label {
+    font-family: var(--font-serif) !important;
+    font-size: clamp(1.3rem, 3vw, 2rem) !important;
+    font-weight: 400;
+    color: var(--sand);
+    text-transform: none !important;
+    letter-spacing: 0.5px !important;
+    position: relative;
+    z-index: 1;
+    font-style: italic;
+    margin-top: 0.5rem;
+    animation: celebrationLabelFloat 3s ease-in-out infinite;
 }
 
-/* Contador Sencillo - Estilo Natural */
+/* Línea decorativa entre los textos */
+.time-unit.celebration .label::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 2px;
+    background: linear-gradient(90deg, 
+        transparent, 
+        var(--sand) 30%,
+        var(--primary-olive) 70%,
+        transparent);
+    opacity: 0.6;
+    box-shadow: 0 0 8px rgba(212, 184, 150, 0.3);
+}
+
+/* ============================================
+   PUNTOS DECORATIVOS EN LAS ESQUINAS
+   ============================================ */
+
+.time-unit.celebration .decoration-dot {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    background: linear-gradient(135deg, var(--sand), var(--primary-olive));
+    border-radius: 50%;
+    opacity: 0.7;
+    z-index: 2;
+    box-shadow: 
+        0 2px 8px rgba(107, 123, 58, 0.3),
+        inset 0 1px 2px rgba(255, 255, 255, 0.5);
+}
+
+.time-unit.celebration .decoration-dot:nth-of-type(1) {
+    top: 25px;
+    left: 25px;
+    animation: dotPulse 2s ease-in-out infinite;
+}
+
+.time-unit.celebration .decoration-dot:nth-of-type(2) {
+    top: 25px;
+    right: 25px;
+    animation: dotPulse 2s ease-in-out infinite 0.5s;
+}
+
+.time-unit.celebration .decoration-dot:nth-of-type(3) {
+    bottom: 25px;
+    left: 25px;
+    animation: dotPulse 2s ease-in-out infinite 1s;
+}
+
+.time-unit.celebration .decoration-dot:nth-of-type(4) {
+    bottom: 25px;
+    right: 25px;
+    animation: dotPulse 2s ease-in-out infinite 1.5s;
+}
+
+/* ============================================
+   ANIMACIONES DE CELEBRACIÓN
+   ============================================ */
+
+@keyframes celebrationPulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 
+            0 20px 60px rgba(107, 123, 58, 0.2),
+            0 10px 30px rgba(0, 0, 0, 0.1),
+            inset 0 1px 0 rgba(255, 255, 255, 1);
+        border-color: rgba(107, 123, 58, 0.25);
+    }
+    50% {
+        transform: scale(1.02);
+        box-shadow: 
+            0 25px 70px rgba(107, 123, 58, 0.25),
+            0 15px 40px rgba(0, 0, 0, 0.12),
+            0 0 0 4px rgba(107, 123, 58, 0.1),
+            inset 0 1px 0 rgba(255, 255, 255, 1);
+        border-color: rgba(107, 123, 58, 0.35);
+    }
+}
+
+@keyframes celebrationTextGlow {
+    0%, 100% {
+        color: var(--primary-olive);
+        text-shadow: 
+            0 2px 4px rgba(0, 0, 0, 0.05),
+            0 4px 12px rgba(107, 123, 58, 0.15);
+    }
+    50% {
+        color: var(--dark-olive);
+        text-shadow: 
+            0 2px 4px rgba(0, 0, 0, 0.08),
+            0 4px 12px rgba(107, 123, 58, 0.25),
+            0 6px 20px rgba(212, 184, 150, 0.2);
+    }
+}
+
+@keyframes celebrationLabelFloat {
+    0%, 100% {
+        transform: translateY(0);
+        opacity: 0.9;
+        color: var(--sand);
+    }
+    50% {
+        transform: translateY(-5px);
+        opacity: 1;
+        color: var(--primary-olive);
+    }
+}
+
+@keyframes dotPulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.7;
+        box-shadow: 
+            0 2px 8px rgba(107, 123, 58, 0.3),
+            inset 0 1px 2px rgba(255, 255, 255, 0.5);
+    }
+    50% {
+        transform: scale(1.4);
+        opacity: 1;
+        box-shadow: 
+            0 4px 16px rgba(107, 123, 58, 0.5),
+            0 0 20px rgba(212, 184, 150, 0.4),
+            inset 0 1px 2px rgba(255, 255, 255, 0.7);
+    }
+}
+
+/* ============================================
+   ANIMACIONES DE ENTRADA
+   ============================================ */
+
+.time-unit {
+    animation: slideInUp 0.8s ease-out forwards;
+    opacity: 0;
+}
+
+.time-unit:nth-child(1) { animation-delay: 0.1s; }
+.time-unit:nth-child(2) { animation-delay: 0.2s; }
+.time-unit:nth-child(3) { animation-delay: 0.3s; }
+.time-unit:nth-child(4) { animation-delay: 0.4s; }
+
+.time-unit.celebration {
+    animation: slideInUp 0.8s ease-out forwards, celebrationPulse 3s ease-in-out 1s infinite;
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================================
+   CONTADOR SIMPLE
+   ============================================ */
+
 .contador-simple .countdown-simple {
     display: flex;
     justify-content: center;
@@ -307,7 +511,6 @@
     margin: 0 auto;
 }
 
-/* Efectos decorativos para el contador simple */
 .contador-simple .time-unit-large::after {
     content: '';
     position: absolute;
@@ -326,7 +529,6 @@
     opacity: 0.8;
 }
 
-/* Borde decorativo */
 .contador-simple .time-unit-large {
     border: 2px solid transparent;
     background: 
@@ -336,7 +538,6 @@
     background-clip: padding-box, border-box;
 }
 
-/* Animación específica para contador simple */
 .contador-simple .time-unit-large {
     animation: fadeInScale 1s ease-out forwards;
     opacity: 0;
@@ -354,51 +555,190 @@
     }
 }
 
-/* Efecto de partículas decorativas */
-.contador-simple .time-unit-large {
-    position: relative;
-}
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
 
-.contador-simple .time-unit-large .particle {
-    position: absolute;
-    width: 4px;
-    height: 4px;
-    background: var(--sand);
-    border-radius: 50%;
-    opacity: 0;
-}
-
-.contador-simple .time-unit-large:hover .particle {
-    animation: floatParticles 3s ease-in-out infinite;
-}
-
-.contador-simple .time-unit-large .particle:nth-child(1) {
-    top: 15%;
-    left: 10%;
-    animation-delay: 0s;
-}
-
-.contador-simple .time-unit-large .particle:nth-child(2) {
-    top: 25%;
-    right: 15%;
-    animation-delay: 0.5s;
-}
-
-.contador-simple .time-unit-large .particle:nth-child(3) {
-    bottom: 30%;
-    left: 20%;
-    animation-delay: 1s;
-}
-
-@keyframes floatParticles {
-    0%, 100% {
-        transform: translateY(0) scale(1);
-        opacity: 0.3;
+@media (max-width: 768px) {
+    .countdown {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+        max-width: 400px;
     }
-    50% {
-        transform: translateY(-10px) scale(1.2);
-        opacity: 0.6;
+    
+    .time-unit {
+        padding: 1.5rem 0.8rem;
     }
+    
+    .time-unit .label {
+        font-size: 0.8rem;
+    }
+    
+    /* Celebración responsive */
+    .countdown.final-day {
+        min-height: 300px;
+        padding: 2rem 1rem;
+    }
+    
+    .time-unit.celebration {
+        padding: 3rem 2rem;
+        max-width: 95%;
+    }
+    
+    .time-unit.celebration .celebration-text,
+    .time-unit.celebration .number {
+        font-size: clamp(2rem, 5vw, 3rem) !important;
+    }
+    
+    .time-unit.celebration .label {
+        font-size: clamp(1.1rem, 2.5vw, 1.5rem) !important;
+    }
+    
+    .time-unit.celebration .decoration-dot {
+        width: 12px;
+        height: 12px;
+    }
+    
+    .time-unit.celebration .decoration-dot:nth-of-type(1),
+    .time-unit.celebration .decoration-dot:nth-of-type(2) {
+        top: 20px;
+    }
+    
+    .time-unit.celebration .decoration-dot:nth-of-type(1),
+    .time-unit.celebration .decoration-dot:nth-of-type(3) {
+        left: 20px;
+    }
+    
+    .time-unit.celebration .decoration-dot:nth-of-type(2),
+    .time-unit.celebration .decoration-dot:nth-of-type(4) {
+        right: 20px;
+    }
+    
+    .time-unit.celebration .decoration-dot:nth-of-type(3),
+    .time-unit.celebration .decoration-dot:nth-of-type(4) {
+        bottom: 20px;
+    }
+    
+    /* Contador simple */
+    .contador-simple .time-unit-large {
+        padding: 2.5rem 1.5rem;
+        margin: 0 1rem;
+    }
+    
+    .contador-simple .time-unit-large .number {
+        font-size: clamp(3.5rem, 10vw, 5rem);
+    }
+    
+    .contador-simple .time-unit-large .label {
+        font-size: clamp(0.8rem, 3vw, 1rem);
+    }
+}
+
+@media (max-width: 480px) {
+    .countdown {
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        max-width: 300px;
+    }
+    
+    .time-unit {
+        padding: 1rem 0.5rem;
+        border-radius: 15px;
+    }
+    
+    .time-unit .label {
+        font-size: 0.7rem;
+        letter-spacing: 0.5px;
+    }
+    
+    /* Celebración mobile */
+    .countdown.final-day {
+        min-height: 280px;
+        padding: 1.5rem 0.5rem;
+    }
+    
+    .time-unit.celebration {
+        padding: 2.5rem 1.5rem;
+        max-width: 98%;
+        border-radius: 20px;
+        border-width: 2px;
+    }
+    
+    .time-unit.celebration .celebration-text,
+    .time-unit.celebration .number {
+        font-size: 2rem !important;
+        margin-bottom: 1rem;
+    }
+    
+    .time-unit.celebration .label {
+        font-size: 1.2rem !important;
+        margin-top: 0.3rem;
+    }
+    
+    .time-unit.celebration .decoration-dot {
+        width: 10px;
+        height: 10px;
+    }
+    
+    .time-unit.celebration .decoration-dot:nth-of-type(1),
+    .time-unit.celebration .decoration-dot:nth-of-type(2) {
+        top: 15px;
+    }
+    
+    .time-unit.celebration .decoration-dot:nth-of-type(1),
+    .time-unit.celebration .decoration-dot:nth-of-type(3) {
+        left: 15px;
+    }
+    
+    .time-unit.celebration .decoration-dot:nth-of-type(2),
+    .time-unit.celebration .decoration-dot:nth-of-type(4) {
+        right: 15px;
+    }
+    
+    .time-unit.celebration .decoration-dot:nth-of-type(3),
+    .time-unit.celebration .decoration-dot:nth-of-type(4) {
+        bottom: 15px;
+    }
+    
+    .time-unit.celebration .label::before {
+        width: 80px;
+        top: -15px;
+    }
+    
+    /* Contador simple mobile */
+    .contador-simple .time-unit-large {
+        padding: 2rem 1rem;
+        border-radius: 20px;
+    }
+    
+    .contador-simple .time-unit-large .number {
+        font-size: clamp(3rem, 12vw, 4rem);
+        margin-bottom: 0.8rem;
+    }
+    
+    .contador-simple .time-unit-large .label {
+        font-size: 0.8rem;
+        line-height: 1.3;
+    }
+    
+    .contador-simple .time-unit-large::after {
+        top: 15px;
+        right: 15px;
+        width: 8px;
+        height: 8px;
+    }
+}
+
+/* Estados especiales para números bajos */
+.contador-simple .time-unit-large .number[data-days="0"],
+.contador-simple .time-unit-large .number[data-days="1"],
+.contador-simple .time-unit-large .number[data-days="2"] {
+    color: var(--dark-olive);
+    font-weight: 400;
+}
+
+.contador-simple .time-unit-large .number[data-days="0"] {
+    animation: pulse 2s ease-in-out infinite;
 }
 
 @keyframes pulse {
@@ -409,3 +749,159 @@
         transform: scale(1.05);
     }
 }
+
+/* ============================================
+   ESTADO DE AGRADECIMIENTO - DESPUÉS DEL EVENTO
+   ============================================ */
+
+/* Card de agradecimiento */
+.time-unit.celebration-thanks {
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.98) 0%, 
+        rgba(255, 250, 245, 0.95) 100%);
+    border-color: rgba(212, 184, 150, 0.3);
+    animation: celebrationThanksGlow 4s ease-in-out infinite;
+}
+
+.time-unit.celebration-thanks::before {
+    background: 
+        radial-gradient(circle at 30% 70%, rgba(212, 184, 150, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 70% 30%, rgba(107, 123, 58, 0.08) 0%, transparent 50%);
+}
+
+.time-unit.celebration-thanks::after {
+    background: linear-gradient(90deg, 
+        transparent, 
+        var(--sand) 20%,
+        var(--primary-olive) 50%,
+        var(--sand) 80%,
+        transparent);
+}
+
+/* Icono de agradecimiento (corazón o emoji) */
+.celebration-icon {
+    font-size: 4rem;
+    display: block;
+    margin: 0 auto 1.5rem;
+    animation: heartBeat 1.5s ease-in-out infinite;
+    filter: drop-shadow(0 4px 8px rgba(212, 184, 150, 0.3));
+}
+
+@keyframes heartBeat {
+    0%, 100% {
+        transform: scale(1);
+    }
+    10%, 30% {
+        transform: scale(1.1);
+    }
+    20%, 40% {
+        transform: scale(1);
+    }
+}
+
+/* Texto principal de agradecimiento */
+.time-unit.celebration-thanks .celebration-text {
+    font-size: clamp(2rem, 5vw, 3.5rem) !important;
+    color: var(--dark-olive);
+    animation: thanksTextGlow 3s ease-in-out infinite;
+}
+
+/* Subtítulo de agradecimiento */
+.time-unit.celebration-thanks .label {
+    color: var(--sand);
+    font-size: clamp(1.1rem, 2.5vw, 1.8rem) !important;
+    animation: thanksLabelFade 3s ease-in-out infinite;
+}
+
+/* Animaciones específicas para agradecimiento */
+@keyframes celebrationThanksGlow {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 
+            0 20px 60px rgba(212, 184, 150, 0.25),
+            0 10px 30px rgba(0, 0, 0, 0.1),
+            inset 0 1px 0 rgba(255, 255, 255, 1);
+        border-color: rgba(212, 184, 150, 0.3);
+    }
+    50% {
+        transform: scale(1.01);
+        box-shadow: 
+            0 25px 70px rgba(212, 184, 150, 0.35),
+            0 15px 40px rgba(0, 0, 0, 0.12),
+            0 0 0 4px rgba(212, 184, 150, 0.15),
+            inset 0 1px 0 rgba(255, 255, 255, 1);
+        border-color: rgba(212, 184, 150, 0.4);
+    }
+}
+
+@keyframes thanksTextGlow {
+    0%, 100% {
+        color: var(--dark-olive);
+        text-shadow: 
+            0 2px 4px rgba(0, 0, 0, 0.08),
+            0 4px 12px rgba(212, 184, 150, 0.2);
+    }
+    50% {
+        color: var(--primary-olive);
+        text-shadow: 
+            0 2px 4px rgba(0, 0, 0, 0.1),
+            0 4px 12px rgba(212, 184, 150, 0.3),
+            0 6px 20px rgba(107, 123, 58, 0.15);
+    }
+}
+
+@keyframes thanksLabelFade {
+    0%, 100% {
+        opacity: 0.85;
+        color: var(--sand);
+    }
+    50% {
+        opacity: 1;
+        color: var(--primary-olive);
+    }
+}
+
+/* Puntos decorativos con color dorado para agradecimiento */
+.time-unit.celebration-thanks .decoration-dot {
+    background: linear-gradient(135deg, var(--primary-olive), var(--sand));
+    opacity: 0.8;
+}
+
+/* Responsive para mensaje de agradecimiento */
+@media (max-width: 768px) {
+    .time-unit.celebration-thanks .celebration-text {
+        font-size: clamp(1.8rem, 4.5vw, 2.8rem) !important;
+    }
+    
+    .time-unit.celebration-thanks .label {
+        font-size: clamp(1rem, 2.2vw, 1.4rem) !important;
+    }
+    
+    .celebration-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .time-unit.celebration-thanks {
+        padding: 2.5rem 1.5rem;
+    }
+    
+    .time-unit.celebration-thanks .celebration-text {
+        font-size: 1.6rem !important;
+    }
+    
+    .time-unit.celebration-thanks .label {
+        font-size: 1.1rem !important;
+    }
+    
+    .celebration-icon {
+        font-size: 2.5rem;
+        margin-bottom: 0.8rem;
+    }
+}
+
+/* ============================================
+   FIN DEL CSS - CONTADOR
+   ============================================ */
