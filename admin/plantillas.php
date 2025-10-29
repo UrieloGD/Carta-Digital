@@ -213,7 +213,10 @@ $plantillas = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 class="btn btn-outline-primary btn-sm">
                                     <i class="bi bi-pencil"></i>
                                 </a>
-                                <button type="button" class="btn btn-outline-danger btn-sm">
+                                <button type="button" 
+                                    class="btn btn-outline-danger btn-sm btn-delete-plantilla"
+                                    data-plantilla-id="<?php echo $plantilla['id']; ?>"
+                                    data-plantilla-nombre="<?php echo htmlspecialchars($plantilla['nombre']); ?>">
                                     <i class="bi bi-trash"></i>
                                 </button>
                             </div>

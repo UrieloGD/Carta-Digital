@@ -115,9 +115,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </nav>
 
     <div class="container py-4">
-        <!-- Alertas de Bootstrap (serán reemplazadas por SweetAlert2) -->
+        <!-- Alertas de Bootstrap (ocultas, manejadas por SweetAlert2) -->
         <?php if (isset($success)): ?>
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <div class="alert alert-success alert-dismissible fade show" role="alert" style="display: none;">
                 <i class="bi bi-check-circle me-2"></i>
                 <?php echo htmlspecialchars($success); ?>
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
@@ -125,7 +125,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php endif; ?>
 
         <?php if (isset($error)): ?>
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <div class="alert alert-danger alert-dismissible fade show" role="alert" style="display: none;">
                 <i class="bi bi-exclamation-triangle me-2"></i>
                 <?php echo htmlspecialchars($error); ?>
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
@@ -133,6 +133,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php endif; ?>
 
         <form method="POST" class="needs-validation" novalidate>
+            <!-- Sección de información de la plantilla -->
             <div class="form-section">
                 <h3 class="section-title">
                     <i class="bi bi-info-circle me-2"></i>
@@ -249,7 +250,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="form-text">Ejemplo: img/preview.png (relativo a la carpeta de la plantilla)</div>
                 </div>
 
-                <!-- NUEVO CAMPO: Invitación Ejemplo (solo si la columna existe) -->
+                <!-- Campo de Invitación Ejemplo -->
                 <?php if ($invitacionEjemploColumnExists): ?>
                 <div class="mb-3">
                     <label for="invitacion_ejemplo_id" class="form-label">
@@ -287,6 +288,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             </div>
 
+            <!-- Sección de Vista Previa (será movida por JS en desktop) -->
             <?php if (!empty($plantilla['imagen_preview'])): ?>
                 <?php 
                 $imagen_preview = ltrim($plantilla['imagen_preview'], './');
@@ -310,6 +312,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
             <?php endif; ?>
 
+            <!-- Botones de acción (serán convertidos a flotantes por JS) -->
             <div class="form-section">
                 <div class="d-flex gap-2 justify-content-end">
                     <a href="plantillas.php" class="btn btn-outline-secondary btn-lg">

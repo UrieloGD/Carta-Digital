@@ -11,9 +11,9 @@ class PlantillaEditor {
 
     init() {
         this.bindEvents();
-        this.setupAutoCloseAlerts();
         this.setupFormValidation();
         this.showSweetAlerts();
+        this.reorganizarLayout();
         
         console.log('Editor de plantillas inicializado');
     }
@@ -31,6 +31,9 @@ class PlantillaEditor {
 
         // Validación de campos requeridos en tiempo real
         this.setupRealTimeValidation();
+
+        // Confirmación antes de cancelar
+        this.setupCancelConfirmation();
     }
 
     updateStatusBadge() {
@@ -52,27 +55,7 @@ class PlantillaEditor {
                 const slug = match[1];
                 console.log('Invitación seleccionada:', selectedOption.text);
                 console.log('URL que se usará:', `/invitacion/${slug}`);
-                
-                // Mostrar información adicional con SweetAlert2
-                this.showInvitacionInfo(selectedOption.text, slug);
             }
-        }
-    }
-
-    showInvitacionInfo(nombre, slug) {
-        // Podemos mostrar un tooltip o información adicional
-        const element = this.invitacionEjemploSelect;
-        const originalTitle = element.title;
-        
-        element.title = `Ejemplo: ${nombre}\nSlug: ${slug}`;
-        
-        // Tooltip de Bootstrap
-        if (typeof bootstrap !== 'undefined') {
-            const tooltip = new bootstrap.Tooltip(element, {
-                title: `Ejemplo: ${nombre}\nSlug: ${slug}`,
-                placement: 'top',
-                trigger: 'hover focus'
-            });
         }
     }
 
@@ -107,8 +90,9 @@ class PlantillaEditor {
             icon: 'error',
             title: 'Campos requeridos',
             html: `Por favor completa los siguientes campos obligatorios:<br><strong>${fieldNames.join(', ')}</strong>`,
-            confirmButtonColor: '#3085d6',
-            confirmButtonText: 'Entendido'
+            confirmButtonColor: '#0d6efd',
+            confirmButtonText: 'Entendido',
+            position: 'center'
         }).then(() => {
             // Enfocar el primer campo inválido
             if (invalidFields.length > 0) {
@@ -123,25 +107,27 @@ class PlantillaEditor {
             text: 'Se actualizará la información de la plantilla',
             icon: 'question',
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
+            confirmButtonColor: '#0d6efd',
             cancelButtonColor: '#6c757d',
             confirmButtonText: 'Sí, guardar',
             cancelButtonText: 'Cancelar',
-            reverseButtons: true
+            reverseButtons: true,
+            position: 'center'
         }).then((result) => {
             if (result.isConfirmed) {
-                // Enviar formulario
-                this.form.submit();
-                
                 // Mostrar loading
                 Swal.fire({
                     title: 'Guardando...',
                     text: 'Por favor espera',
                     allowOutsideClick: false,
+                    position: 'center',
                     didOpen: () => {
                         Swal.showLoading();
                     }
                 });
+                
+                // Enviar formulario
+                this.form.submit();
             }
         });
     }
@@ -173,37 +159,22 @@ class PlantillaEditor {
         }
     }
 
-    setupAutoCloseAlerts() {
-        // Auto-ocultar alertas de Bootstrap después de 5 segundos
-        setTimeout(() => {
-            const alerts = document.querySelectorAll('.alert');
-            alerts.forEach((alert) => {
-                try {
-                    const bsAlert = new bootstrap.Alert(alert);
-                    bsAlert.close();
-                } catch (e) {
-                    // Si falla, ocultar manualmente
-                    alert.style.display = 'none';
-                }
-            });
-        }, 5000);
-    }
-
     showSweetAlerts() {
-        // Mostrar alertas de éxito/error con SweetAlert2 si existen
+        // Mostrar alertas de éxito/error con SweetAlert2 si existen (CENTRADAS)
         const successAlert = document.querySelector('.alert-success');
         const errorAlert = document.querySelector('.alert-danger');
         
         if (successAlert) {
-            const message = successAlert.textContent.trim();
+            const message = successAlert.textContent.trim().replace(/\s+/g, ' ');
             Swal.fire({
                 icon: 'success',
                 title: '¡Éxito!',
                 text: message,
                 timer: 3000,
-                showConfirmButton: false,
-                position: 'top-end',
-                toast: true
+                showConfirmButton: true,
+                confirmButtonColor: '#0d6efd',
+                timerProgressBar: true,
+                position: 'center'
             });
             
             // Ocultar alerta de Bootstrap
@@ -211,16 +182,128 @@ class PlantillaEditor {
         }
         
         if (errorAlert) {
-            const message = errorAlert.textContent.trim();
+            const message = errorAlert.textContent.trim().replace(/\s+/g, ' ');
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
                 text: message,
-                confirmButtonColor: '#3085d6'
+                confirmButtonColor: '#dc3545',
+                position: 'center'
             });
             
             // Ocultar alerta de Bootstrap
             errorAlert.style.display = 'none';
+        }
+    }
+
+    setupCancelConfirmation() {
+        const cancelButtons = document.querySelectorAll('.floating-actions .btn-outline-secondary');
+        cancelButtons.forEach(cancelButton => {
+            cancelButton.addEventListener('click', (e) => {
+                // Solo preguntar si hay cambios en el formulario
+                if (this.form && this.form.classList.contains('was-validated')) {
+                    e.preventDefault();
+                    
+                    Swal.fire({
+                        title: '¿Cancelar edición?',
+                        text: 'Los cambios no guardados se perderán',
+                        icon: 'warning',
+                        position: 'center',
+                        showCancelButton: true,
+                        confirmButtonColor: '#dc3545',
+                        cancelButtonColor: '#6c757d',
+                        confirmButtonText: 'Sí, cancelar',
+                        cancelButtonText: 'Continuar editando',
+                        reverseButtons: true
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = 'plantillas.php';
+                        }
+                    });
+                }
+            });
+        });
+    }
+
+    // Reorganizar el layout para desktop (2/3 formulario, 1/3 preview)
+    reorganizarLayout() {
+        const previewSection = document.querySelector('.preview-card')?.closest('.form-section');
+        const actionButtonsSection = this.form?.querySelector('.d-flex.gap-2.justify-content-end')?.closest('.form-section');
+        
+        if (!this.form) return;
+        
+        // Crear wrapper principal solo si hay preview
+        if (previewSection) {
+            const mainWrapper = document.createElement('div');
+            mainWrapper.className = 'form-section';
+            
+            const contentWrapper = document.createElement('div');
+            contentWrapper.className = 'main-content-wrapper';
+            
+            // Crear columna de formulario
+            const formContent = document.createElement('div');
+            formContent.className = 'form-content';
+            
+            // Mover todos los form-sections al formContent (excepto preview y botones)
+            const formSections = this.form.querySelectorAll('.form-section');
+            formSections.forEach(section => {
+                if (section !== previewSection && section !== actionButtonsSection) {
+                    const sectionContent = document.createElement('div');
+                    sectionContent.className = 'form-section-content mb-4';
+                    
+                    while (section.firstChild) {
+                        sectionContent.appendChild(section.firstChild);
+                    }
+                    
+                    formContent.appendChild(sectionContent);
+                    section.remove();
+                }
+            });
+            
+            contentWrapper.appendChild(formContent);
+            
+            // Crear sidebar de preview
+            const previewSidebar = document.createElement('div');
+            previewSidebar.className = 'preview-sidebar';
+            
+            const previewCard = previewSection.querySelector('.preview-card');
+            if (previewCard) {
+                previewSidebar.appendChild(previewCard.cloneNode(true));
+            }
+            
+            contentWrapper.appendChild(previewSidebar);
+            mainWrapper.appendChild(contentWrapper);
+            
+            // Insertar el nuevo layout en el formulario
+            if (actionButtonsSection) {
+                this.form.insertBefore(mainWrapper, actionButtonsSection);
+                previewSection.remove();
+            }
+        }
+        
+        // Mover botones y CORREGIR el justify-content-end
+        if (actionButtonsSection) {
+            const actionButtonsDiv = actionButtonsSection.querySelector('.d-flex.gap-2');
+            
+            if (actionButtonsDiv) {
+                // REMOVER la clase justify-content-end que causa el problema
+                actionButtonsDiv.classList.remove('justify-content-end');
+                
+                const floatingActions = document.createElement('div');
+                floatingActions.className = 'floating-actions';
+                
+                // Clonar solo los botones, no el div con justify-content-end
+                const buttons = actionButtonsDiv.querySelectorAll('.btn');
+                buttons.forEach(button => {
+                    floatingActions.appendChild(button.cloneNode(true));
+                });
+                
+                // Reemplazar el contenido de la sección
+                actionButtonsSection.innerHTML = '';
+                actionButtonsSection.appendChild(floatingActions);
+                
+                console.log('Botones reorganizados correctamente sin justify-content-end');
+            }
         }
     }
 }

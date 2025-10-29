@@ -46,29 +46,40 @@ class PlantillasManager {
     bindDeleteEvents() {
         // Enlazar eventos a los botones de eliminar para usar SweetAlert2
         document.addEventListener('click', (e) => {
-            if (e.target.closest('.btn-outline-danger') || 
-                e.target.classList.contains('btn-outline-danger')) {
+            const button = e.target.closest('.btn-outline-danger');
+            if (button) {
                 e.preventDefault();
-                const button = e.target.closest('.btn-outline-danger');
-                const card = button.closest('.plantilla-card');
-                const plantillaId = this.getPlantillaIdFromCard(card);
-                const plantillaNombre = this.getPlantillaNombreFromCard(card);
                 
-                if (plantillaId && plantillaNombre) {
+                // Obtener ID y nombre del botón
+                const plantillaId = button.getAttribute('data-plantilla-id');
+                const plantillaNombre = button.getAttribute('data-plantilla-nombre');
+                
+                // Si no están en el botón, buscar en la tarjeta
+                if (!plantillaId) {
+                    const card = button.closest('.plantilla-card');
+                    const editLink = card.querySelector('a[href*="plantilla_editar.php"]');
+                    if (editLink) {
+                        const urlParams = new URLSearchParams(editLink.href.split('?')[1]);
+                        const id = urlParams.get('id');
+                        const nombre = card.querySelector('.card-title')?.textContent.trim() || 'esta plantilla';
+                        
+                        if (id) {
+                            this.showDeleteConfirmation(id, nombre);
+                        }
+                    }
+                } else {
                     this.showDeleteConfirmation(plantillaId, plantillaNombre);
                 }
             }
         });
     }
 
+    // Puedes eliminar este método ya que usamos otro enfoque
     getPlantillaIdFromCard(card) {
-        // Buscar el ID en el modal asociado o en el formulario
-        const modalId = card.closest('.col-xl-3, .col-lg-4, .col-md-6')
-            .querySelector('.modal')?.id;
-        
-        if (modalId) {
-            const match = modalId.match(/deleteModal(\d+)/);
-            return match ? match[1] : null;
+        const editLink = card.querySelector('a[href*="plantilla_editar.php"]');
+        if (editLink) {
+            const urlParams = new URLSearchParams(editLink.href.split('?')[1]);
+            return urlParams.get('id');
         }
         return null;
     }

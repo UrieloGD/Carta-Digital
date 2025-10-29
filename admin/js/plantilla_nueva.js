@@ -14,6 +14,7 @@ class PlantillaNueva {
         this.bindEvents();
         this.setupFormValidation();
         this.setupSweetAlerts();
+        this.reorganizarBotones();
         
         console.log('Creación de plantillas inicializado');
     }
@@ -28,6 +29,9 @@ class PlantillaNueva {
         if (this.invitacionEjemploSelect) {
             this.invitacionEjemploSelect.addEventListener('change', (e) => this.handleInvitacionChange(e));
         }
+
+        // Confirmación antes de cancelar
+        this.setupCancelConfirmation();
     }
 
     generateFolderName(event) {
@@ -128,8 +132,9 @@ class PlantillaNueva {
             icon: 'error',
             title: 'Campos requeridos',
             html: `Por favor completa los siguientes campos obligatorios:<br><strong>${fieldNames.join(', ')}</strong>`,
-            confirmButtonColor: '#3085d6',
-            confirmButtonText: 'Entendido'
+            confirmButtonColor: '#0d6efd',
+            confirmButtonText: 'Entendido',
+            position: 'center'
         }).then(() => {
             // Enfocar el primer campo inválido
             if (invalidFields.length > 0) {
@@ -159,11 +164,12 @@ class PlantillaNueva {
             `,
             icon: 'question',
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
+            confirmButtonColor: '#0d6efd',
             cancelButtonColor: '#6c757d',
             confirmButtonText: 'Sí, crear plantilla',
             cancelButtonText: 'Cancelar',
-            reverseButtons: true
+            reverseButtons: true,
+            position: 'center'
         }).then((result) => {
             if (result.isConfirmed) {
                 // Mostrar loading
@@ -171,6 +177,7 @@ class PlantillaNueva {
                     title: 'Creando plantilla...',
                     text: 'Por favor espera',
                     allowOutsideClick: false,
+                    position: 'center',
                     didOpen: () => {
                         Swal.showLoading();
                     }
@@ -182,6 +189,38 @@ class PlantillaNueva {
                 }, 500);
             }
         });
+    }
+
+    setupCancelConfirmation() {
+        // Se configurará después de reorganizar los botones
+        setTimeout(() => {
+            const cancelButtons = document.querySelectorAll('.floating-actions .btn-outline-secondary');
+            cancelButtons.forEach(cancelButton => {
+                cancelButton.addEventListener('click', (e) => {
+                    // Solo preguntar si hay cambios en el formulario
+                    if (this.form && this.form.classList.contains('was-validated')) {
+                        e.preventDefault();
+                        
+                        Swal.fire({
+                            title: '¿Cancelar creación?',
+                            text: 'Los datos ingresados se perderán',
+                            icon: 'warning',
+                            position: 'center',
+                            showCancelButton: true,
+                            confirmButtonColor: '#dc3545',
+                            cancelButtonColor: '#6c757d',
+                            confirmButtonText: 'Sí, cancelar',
+                            cancelButtonText: 'Continuar editando',
+                            reverseButtons: true
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = 'plantillas.php';
+                            }
+                        });
+                    }
+                });
+            });
+        }, 100);
     }
 
     setupSweetAlerts() {
@@ -208,13 +247,43 @@ class PlantillaNueva {
                         </div>
                     `,
                     icon: 'info',
-                    confirmButtonColor: '#3085d6',
-                    confirmButtonText: 'Entendido'
+                    confirmButtonColor: '#0d6efd',
+                    confirmButtonText: 'Entendido',
+                    position: 'center'
                 });
                 
                 // Marcar como mostrado
                 sessionStorage.setItem('plantillaNuevaWelcomeShown', 'true');
             }, 1000);
+        }
+    }
+
+    // NUEVA FUNCIÓN: Reorganizar botones (sin justify-content-end)
+    reorganizarBotones() {
+        const actionButtonsSection = this.form?.querySelector('.d-flex.gap-2.justify-content-end')?.closest('.form-section');
+        
+        if (!this.form || !actionButtonsSection) return;
+        
+        const actionButtonsDiv = actionButtonsSection.querySelector('.d-flex.gap-2');
+        
+        if (actionButtonsDiv) {
+            // REMOVER la clase justify-content-end que causa el problema
+            actionButtonsDiv.classList.remove('justify-content-end');
+            
+            const floatingActions = document.createElement('div');
+            floatingActions.className = 'floating-actions';
+            
+            // Clonar solo los botones, no el div con justify-content-end
+            const buttons = actionButtonsDiv.querySelectorAll('.btn');
+            buttons.forEach(button => {
+                floatingActions.appendChild(button.cloneNode(true));
+            });
+            
+            // Reemplazar el contenido de la sección
+            actionButtonsSection.innerHTML = '';
+            actionButtonsSection.appendChild(floatingActions);
+            
+            console.log('Botones reorganizados correctamente sin justify-content-end');
         }
     }
 
