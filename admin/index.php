@@ -277,9 +277,9 @@ foreach ($invitaciones as $inv) {
                         <!-- Imagen hero si existe -->
                         <?php if (!empty($invitacion['imagen_hero'])): ?>
                         <img src="<?php echo htmlspecialchars('../' . $invitacion['imagen_hero']); ?>"
-                             alt="Imagen de <?php echo htmlspecialchars($invitacion['nombres_novios']); ?>"
-                             class="preview-image"
-                             onerror="this.style.display='none';">
+                            alt="Imagen de <?php echo htmlspecialchars($invitacion['nombres_novios']); ?>"
+                            class="preview-image"
+                            onerror="this.style.display='none';">
                         <?php else: ?>
                         <div class="preview-image bg-light d-flex align-items-center justify-content-center">
                             <i class="bi bi-image text-muted" style="font-size: 3rem;"></i>
@@ -359,16 +359,17 @@ foreach ($invitaciones as $inv) {
                                     </small>
                                 <?php endif; ?>
                             </div>
+                        </div>
                         
                         <div class="card-footer bg-transparent">
                             <div class="d-grid gap-2">
                                 <div class="btn-group" role="group">
                                     <a href="./functions/editar.php?id=<?php echo $invitacion['id']; ?>" 
-                                       class="btn btn-outline-primary btn-sm">
+                                    class="btn btn-outline-primary btn-sm">
                                         <i class="bi bi-pencil"></i>
                                     </a>
                                     <a href="../invitacion.php?slug=<?php echo htmlspecialchars($invitacion['slug'] ?? ''); ?>" 
-                                       class="btn btn-outline-success btn-sm" target="_blank">
+                                    class="btn btn-outline-success btn-sm" target="_blank">
                                         <i class="bi bi-box-arrow-up-right"></i>
                                     </a>
                                 </div>
@@ -382,40 +383,41 @@ foreach ($invitaciones as $inv) {
                             </div>
                         </div>
                     </div>
-                    
-                    <!-- Modal de confirmación de eliminación -->
-                    <div class="modal fade" id="deleteModal<?php echo $invitacion['id']; ?>" tabindex="-1">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title">Confirmar eliminación</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                
+                <!-- Modal de confirmación de eliminación -->
+                <div class="modal fade" id="deleteModal<?php echo $invitacion['id']; ?>" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Confirmar eliminación</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>¿Estás seguro de que quieres eliminar la invitación de <strong><?php echo htmlspecialchars($invitacion['nombres_novios']); ?></strong>?</p>
+                                <div class="alert alert-warning">
+                                    <i class="bi bi-exclamation-triangle me-2"></i>
+                                    Esta acción eliminará también todos los archivos asociados.
                                 </div>
-                                <div class="modal-body">
-                                    <p>¿Estás seguro de que quieres eliminar la invitación de <strong><?php echo htmlspecialchars($invitacion['nombres_novios']); ?></strong>?</p>
-                                    <div class="alert alert-warning">
-                                        <i class="bi bi-exclamation-triangle me-2"></i>
-                                        Esta acción eliminará también todos los archivos asociados.
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                    <form method="POST" class="d-inline">
-                                        <input type="hidden" name="action" value="eliminar">
-                                        <input type="hidden" name="id" value="<?php echo $invitacion['id']; ?>">
-                                        <button type="submit" class="btn btn-danger">
-                                            <i class="bi bi-trash me-1"></i>
-                                            Eliminar definitivamente
-                                        </button>
-                                    </form>
-                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                <form method="POST" class="d-inline">
+                                    <input type="hidden" name="action" value="eliminar">
+                                    <input type="hidden" name="id" value="<?php echo $invitacion['id']; ?>">
+                                    <button type="submit" class="btn btn-danger">
+                                        <i class="bi bi-trash me-1"></i>
+                                        Eliminar definitivamente
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>
                 </div>
                 <?php endforeach; ?>
             </div>
-        <?php else: ?>
+            <?php else: ?>
+
             <!-- Estado vacío -->
             <div class="empty-state text-center">
                 <i class="bi bi-envelope-plus"></i>
