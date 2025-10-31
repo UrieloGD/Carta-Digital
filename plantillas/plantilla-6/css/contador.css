@@ -1,0 +1,1905 @@
+/* ================================================
+   CONTADOR - ROMANCE CLÁSICO
+   Mantiene toda la funcionalidad, solo colores actualizados
+   ================================================ */
+
+/* Contador - Romance Clásico con Fondo Elegante */
+.contador {
+    background: var(--bg-primary);
+    position: relative;
+    overflow: hidden;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+}
+
+/* Efecto de pétalos románticos de fondo */
+.contador::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(
+        circle at center,
+        rgba(245, 198, 198, 0.08) 0%,
+        rgba(197, 164, 109, 0.04) 40%,
+        transparent 70%
+    );
+    animation: waveRotate 30s linear infinite;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Efecto adicional de profundidad romántica */
+.contador::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(ellipse at 15% 30%, rgba(245, 198, 198, 0.06) 0%, transparent 40%),
+        radial-gradient(ellipse at 85% 70%, rgba(248, 212, 212, 0.05) 0%, transparent 40%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Círculos flotantes decorativos */
+.contador .floating-circle {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, 
+        rgba(245, 198, 198, 0.1), 
+        rgba(197, 164, 109, 0.05));
+    pointer-events: none;
+    z-index: 1;
+    animation: floatCircle 20s ease-in-out infinite;
+    border: 1px solid rgba(245, 198, 198, 0.1);
+}
+
+.contador .floating-circle:nth-child(1) {
+    width: 300px;
+    height: 300px;
+    top: 10%;
+    left: -150px;
+    animation-duration: 25s;
+    animation-delay: 0s;
+}
+
+.contador .floating-circle:nth-child(2) {
+    width: 200px;
+    height: 200px;
+    top: 60%;
+    right: -100px;
+    animation-duration: 30s;
+    animation-delay: 5s;
+}
+
+.contador .floating-circle:nth-child(3) {
+    width: 150px;
+    height: 150px;
+    bottom: 20%;
+    left: 10%;
+    animation-duration: 28s;
+    animation-delay: 10s;
+}
+
+.contador .floating-circle:nth-child(4) {
+    width: 250px;
+    height: 250px;
+    top: 30%;
+    right: 15%;
+    animation-duration: 35s;
+    animation-delay: 3s;
+}
+
+/* Figuras geométricas decorativas */
+.contador .geometric-shape {
+    position: absolute;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.08;
+    animation: rotateShape 40s linear infinite;
+}
+
+.contador .geometric-shape:nth-child(5) {
+    width: 100px;
+    height: 100px;
+    top: 15%;
+    right: 20%;
+    background: linear-gradient(135deg, 
+        rgba(245, 198, 198, 0.2), 
+        transparent);
+    transform: rotate(45deg);
+    animation-duration: 45s;
+}
+
+.contador .geometric-shape:nth-child(6) {
+    width: 80px;
+    height: 80px;
+    bottom: 25%;
+    right: 30%;
+    background: linear-gradient(135deg, 
+        rgba(248, 212, 212, 0.15), 
+        transparent);
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    animation-duration: 50s;
+}
+
+.contador .geometric-shape:nth-child(7) {
+    width: 120px;
+    height: 120px;
+    top: 50%;
+    left: 5%;
+    background: linear-gradient(135deg, 
+        rgba(197, 164, 109, 0.12), 
+        transparent);
+    clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+    animation-duration: 55s;
+}
+
+@keyframes floatCircle {
+    0%, 100% {
+        transform: translate(0, 0) scale(1);
+        opacity: 0.3;
+    }
+    25% {
+        transform: translate(30px, -30px) scale(1.1);
+        opacity: 0.5;
+    }
+    50% {
+        transform: translate(-20px, -50px) scale(0.95);
+        opacity: 0.4;
+    }
+    75% {
+        transform: translate(40px, -20px) scale(1.05);
+        opacity: 0.45;
+    }
+}
+
+@keyframes rotateShape {
+    0% {
+        transform: rotate(0deg) scale(1);
+        opacity: 0.08;
+    }
+    50% {
+        transform: rotate(180deg) scale(1.2);
+        opacity: 0.12;
+    }
+    100% {
+        transform: rotate(360deg) scale(1);
+        opacity: 0.08;
+    }
+}
+
+.contador-content {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.contador-header {
+    text-align: center;
+    margin-bottom: 4rem;
+    opacity: 0;
+    animation: fadeInUp 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s both;
+}
+
+.contador-header h2 {
+    font-family: var(--font-script);
+    font-size: clamp(2.5rem, 6vw, 3.5rem);
+    color: var(--accent-rose-dark);
+    font-weight: 400;
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.02em;
+    text-shadow: 
+        0 2px 4px rgba(255, 255, 255, 0.8),
+        0 2px 8px rgba(245, 198, 198, 0.4),
+        1px 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+.contador-subtitle {
+    font-family: var(--font-elegant);
+    font-size: clamp(1rem, 2.5vw, 1.2rem);
+    color: var(--text-secondary);
+    font-weight: 400;
+    font-style: italic;
+    letter-spacing: 0.5px;
+    margin: 0;
+    text-shadow: 
+        0 1px 2px rgba(255, 255, 255, 0.8),
+        0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.countdown-wrapper {
+    opacity: 0;
+    animation: fadeInUp 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.4s both;
+    position: relative;
+}
+
+/* Línea base del cronograma - visible en desktop */
+.countdown-wrapper::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 8rem);
+    height: 2px;
+    background: linear-gradient(90deg, 
+        transparent 0%,
+        rgba(245, 198, 198, 0.2) 10%,
+        rgba(245, 198, 198, 0.4) 50%,
+        rgba(245, 198, 198, 0.2) 90%,
+        transparent 100%);
+    z-index: 0;
+    display: none;
+}
+
+/* Grid del contador completo con mejor alineación */
+.countdown-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+    max-width: 1000px;
+    margin: 0 auto 3rem;
+    padding: clamp(2rem, 4vw, 3.5rem);
+    background: linear-gradient(135deg, 
+        rgba(254, 243, 243, 0.95) 0%, 
+        rgba(248, 212, 212, 0.9) 100%);
+    border: 1px solid rgba(245, 198, 198, 0.3);
+    border-radius: 12px;
+    backdrop-filter: blur(15px);
+    transition: var(--transition-smooth);
+    position: relative;
+    box-shadow: 
+        0 10px 40px rgba(245, 198, 198, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    align-items: end;
+}
+
+/* Efecto de brillo romántico en hover */
+.countdown-grid::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, 
+        transparent 40%, 
+        rgba(245, 198, 198, 0.05) 50%, 
+        transparent 60%);
+    opacity: 0;
+    transition: var(--transition-smooth);
+    border-radius: 12px;
+    pointer-events: none;
+}
+
+/* Línea base interna del grid */
+.countdown-grid::after {
+    content: '';
+    position: absolute;
+    bottom: 2rem;
+    left: 10%;
+    right: 10%;
+    height: 3px;
+    background: linear-gradient(90deg, 
+        transparent,
+        rgba(245, 198, 198, 0.3) 20%,
+        rgba(245, 198, 198, 0.5) 50%,
+        rgba(245, 198, 198, 0.3) 80%,
+        transparent);
+    border-radius: 2px;
+    box-shadow: 0 0 15px rgba(245, 198, 198, 0.4);
+    z-index: 0;
+}
+
+.countdown-grid:hover {
+    transform: translateY(-8px);
+    box-shadow: 
+        0 15px 50px rgba(245, 198, 198, 0.4),
+        0 0 0 1px rgba(245, 198, 198, 0.3),
+        0 0 30px rgba(245, 198, 198, 0.2);
+    border-color: rgba(245, 198, 198, 0.5);
+}
+
+.countdown-grid:hover::before {
+    opacity: 1;
+}
+
+.time-unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+}
+
+/* Conector a la línea base */
+.time-unit::before {
+    content: '';
+    position: absolute;
+    bottom: -2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 2rem;
+    background: linear-gradient(to bottom,
+        var(--accent-rose-light),
+        rgba(245, 198, 198, 0.5));
+    opacity: 0;
+    transition: var(--transition-smooth);
+    box-shadow: 0 0 10px rgba(245, 198, 198, 0.5);
+}
+
+.time-unit:hover::before {
+    opacity: 1;
+    height: 2.5rem;
+}
+
+/* Punto en la línea base */
+.time-unit::after {
+    content: '';
+    position: absolute;
+    bottom: -2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 10px;
+    height: 10px;
+    background: var(--accent-rose);
+    border-radius: 50%;
+    border: 2px solid var(--bg-primary);
+    box-shadow: 
+        0 0 15px rgba(245, 198, 198, 0.6),
+        inset 0 0 5px rgba(255, 255, 255, 0.5);
+    opacity: 0;
+    transition: var(--transition-smooth);
+    z-index: 2;
+}
+
+.time-unit:hover::after {
+    opacity: 1;
+    width: 14px;
+    height: 14px;
+}
+
+.time-card {
+    background: linear-gradient(135deg, 
+        rgba(254, 243, 243, 0.95) 0%, 
+        rgba(248, 212, 212, 0.9) 100%) !important;
+    border: 2px solid rgba(245, 198, 198, 0.4) !important;
+    border-radius: 15px !important;
+    padding: 2rem 1.5rem !important;
+    text-align: center;
+    transition: var(--transition-smooth);
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    box-shadow: 
+        0 8px 25px rgba(245, 198, 198, 0.3),
+        0 4px 12px rgba(197, 164, 109, 0.15),
+        inset 0 1px 3px rgba(255, 255, 255, 0.6) !important;
+}
+
+.time-card:hover {
+    transform: scale(1.08) translateY(-5px);
+}
+
+.time-unit .time-card,
+.countdown-grid .time-card {
+    background: linear-gradient(135deg, 
+        rgba(254, 243, 243, 0.95) 0%, 
+        rgba(248, 212, 212, 0.9) 100%) !important;
+    border: 2px solid rgba(245, 198, 198, 0.4) !important;
+    box-shadow: 
+        0 8px 25px rgba(245, 198, 198, 0.3),
+        0 4px 12px rgba(197, 164, 109, 0.15),
+        inset 0 1px 3px rgba(255, 255, 255, 0.6) !important;
+}
+
+/* Efecto de resplandor en hover */
+.time-card::before {
+    content: '';
+    position: absolute;
+    top: -15px;
+    left: -15px;
+    right: -15px;
+    bottom: -15px;
+    background: radial-gradient(circle at center, 
+        rgba(245, 198, 198, 0.15) 0%, 
+        transparent 60%);
+    border-radius: 50%;
+    opacity: 0;
+    transition: var(--transition-smooth);
+    z-index: -1;
+}
+
+.time-card:hover::before {
+    opacity: 1;
+}
+
+.time-number {
+    font-family: var(--font-elegant);
+    font-size: clamp(2.8rem, 8vw, 4.5rem);
+    color: var(--accent-rose-dark);
+    font-weight: 400;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+    position: relative;
+    transition: var(--transition-smooth);
+    text-shadow: 
+        0 2px 4px rgba(255, 255, 255, 0.8),
+        0 2px 8px rgba(245, 198, 198, 0.4),
+        1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Línea decorativa bajo el número */
+.time-number::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, 
+        transparent, 
+        var(--accent-rose), 
+        var(--accent-rose-light), 
+        transparent);
+    transition: var(--transition-smooth);
+    box-shadow: 0 0 10px rgba(245, 198, 198, 0.5);
+}
+
+.time-card:hover .time-number {
+    color: var(--accent-gold);
+    transform: translateY(-3px);
+    text-shadow: 
+        0 3px 6px rgba(255, 255, 255, 0.9),
+        0 3px 10px rgba(197, 164, 109, 0.4),
+        1px 1px 2px rgba(0, 0, 0, 0.15);
+}
+
+.time-card:hover .time-number::after {
+    width: 80%;
+}
+
+.time-label {
+    font-family: var(--font-sans);
+    font-size: clamp(0.85rem, 2vw, 1.05rem);
+    color: var(--text-secondary);
+    font-weight: 400;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    opacity: 0.85;
+    transition: var(--transition-smooth);
+    text-shadow: 
+        0 1px 2px rgba(255, 255, 255, 0.8),
+        0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.time-card:hover .time-label {
+    color: var(--accent-rose);
+    opacity: 1;
+    letter-spacing: 2px;
+}
+
+.countdown-message {
+    text-align: center;
+    opacity: 0;
+    animation: fadeInUp 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.6s both;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.countdown-message .script-text {
+    font-family: var(--font-script);
+    font-size: clamp(1.3rem, 3.5vw, 1.8rem);
+    color: var(--accent-rose-dark);
+    font-weight: 400;
+    margin: 0;
+    text-shadow: 
+        0 2px 4px rgba(255, 255, 255, 0.8),
+        0 2px 8px rgba(245, 198, 198, 0.3),
+        1px 1px 2px rgba(0, 0, 0, 0.1);
+    line-height: 1.4;
+}
+
+/* Animación de rotación */
+@keyframes waveRotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Efectos de actualización de números */
+.time-number.updating {
+    animation: numberWave 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+@keyframes numberWave {
+    0% {
+        transform: translateY(0) rotateX(0deg);
+        opacity: 1;
+    }
+    50% {
+        transform: translateY(-10px) rotateX(90deg);
+        opacity: 0.6;
+        color: var(--accent-rose);
+        text-shadow: 0 0 20px rgba(245, 198, 198, 0.6);
+    }
+    100% {
+        transform: translateY(0) rotateX(0deg);
+        opacity: 1;
+    }
+}
+
+/* Estados especiales cuando el contador expira */
+.countdown-expired .time-number {
+    color: var(--accent-gold);
+    animation: oceanGlow 2.5s infinite ease-in-out;
+}
+
+.countdown-expired .countdown-message .script-text {
+    color: var(--accent-rose);
+}
+
+@keyframes oceanGlow {
+    0%, 100% {
+        transform: scale(1);
+        text-shadow: 
+            0 2px 4px rgba(255, 255, 255, 0.8),
+            0 2px 8px rgba(197, 164, 109, 0.4),
+            1px 1px 2px rgba(0, 0, 0, 0.1);
+    }
+    50% {
+        transform: scale(1.1);
+        text-shadow: 
+            0 3px 6px rgba(255, 255, 255, 0.9),
+            0 3px 12px rgba(197, 164, 109, 0.6),
+            0 0 35px rgba(245, 198, 198, 0.4),
+            1px 1px 3px rgba(0, 0, 0, 0.15);
+    }
+}
+
+/* ========================================
+   CONTADOR SIMPLE - Romance Clásico Style
+   ======================================== */
+
+.contador-simple {
+    background: var(--bg-primary);
+    position: relative;
+    overflow: hidden;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+}
+
+.contador-simple::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(
+        circle at center,
+        rgba(245, 198, 198, 0.06) 0%,
+        rgba(197, 164, 109, 0.03) 50%,
+        transparent 70%
+    );
+    animation: waveRotate 35s linear infinite;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Círculos flotantes para contador simple */
+.contador-simple .floating-circle {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, 
+        rgba(245, 198, 198, 0.08), 
+        rgba(197, 164, 109, 0.04));
+    pointer-events: none;
+    z-index: 1;
+    animation: floatCircle 25s ease-in-out infinite;
+    border: 1px solid rgba(245, 198, 198, 0.08);
+}
+
+.contador-simple .floating-circle:nth-child(1) {
+    width: 250px;
+    height: 250px;
+    top: 15%;
+    left: -125px;
+    animation-duration: 28s;
+}
+
+.contador-simple .floating-circle:nth-child(2) {
+    width: 180px;
+    height: 180px;
+    bottom: 20%;
+    right: -90px;
+    animation-duration: 32s;
+    animation-delay: 7s;
+}
+
+.contador-simple .floating-circle:nth-child(3) {
+    width: 200px;
+    height: 200px;
+    top: 50%;
+    left: 8%;
+    animation-duration: 30s;
+    animation-delay: 12s;
+}
+
+.contador-simple .geometric-shape {
+    position: absolute;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.06;
+    animation: rotateShape 45s linear infinite;
+}
+
+.contador-simple .geometric-shape:nth-child(4) {
+    width: 90px;
+    height: 90px;
+    top: 20%;
+    right: 15%;
+    background: linear-gradient(135deg, 
+        rgba(245, 198, 198, 0.15), 
+        transparent);
+    transform: rotate(45deg);
+}
+
+.contador-simple .geometric-shape:nth-child(5) {
+    width: 110px;
+    height: 110px;
+    bottom: 30%;
+    left: 12%;
+    background: linear-gradient(135deg, 
+        rgba(248, 212, 212, 0.12), 
+        transparent);
+    clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+    animation-duration: 50s;
+}
+
+.contador-simple .contador-content {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 650px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.contador-simple .contador-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    opacity: 0;
+    animation: fadeInUp 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s both;
+}
+
+.contador-simple .contador-header h2 {
+    font-family: var(--font-script);
+    font-size: clamp(2.2rem, 5vw, 3rem);
+    color: var(--accent-rose-dark);
+    font-weight: 400;
+    margin-bottom: 1rem;
+    letter-spacing: 0.02em;
+    text-shadow: 
+        0 2px 4px rgba(255, 255, 255, 0.8),
+        0 2px 8px rgba(245, 198, 198, 0.4),
+        1px 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+.contador-simple .contador-subtitle {
+    font-family: var(--font-elegant);
+    font-size: clamp(0.9rem, 2vw, 1.1rem);
+    color: var(--text-secondary);
+    font-weight: 400;
+    font-style: italic;
+    letter-spacing: 0.5px;
+    margin: 0;
+    text-shadow: 
+        0 1px 2px rgba(255, 255, 255, 0.8),
+        0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Countdown Simple */
+.countdown-simple {
+    opacity: 0;
+    animation: fadeInUp 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.4s both;
+    margin-bottom: 3rem;
+}
+
+.time-unit-large {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 3.5rem 2.5rem;
+    background: linear-gradient(135deg, 
+        rgba(254, 243, 243, 0.98) 0%, 
+        rgba(248, 212, 212, 0.95) 100%);
+    border: 1px solid rgba(245, 198, 198, 0.3);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    transition: var(--transition-smooth);
+    overflow: hidden;
+    box-shadow: 
+        0 15px 50px rgba(245, 198, 198, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+/* Efecto de ondas en el fondo */
+.time-unit-large::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 30% 40%, rgba(245, 198, 198, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 70% 60%, rgba(248, 212, 212, 0.06) 0%, transparent 50%);
+    opacity: 0;
+    transition: var(--transition-smooth);
+}
+
+.time-unit-large:hover {
+    transform: translateY(-10px);
+    box-shadow: 
+        0 25px 60px rgba(245, 198, 198, 0.4),
+        0 0 0 1px rgba(245, 198, 198, 0.3),
+        0 0 40px rgba(245, 198, 198, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.7);
+    border-color: rgba(245, 198, 198, 0.5);
+}
+
+.time-unit-large:hover::before {
+    opacity: 1;
+}
+
+/* Partículas flotantes románticas */
+.time-unit-large .particle {
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    background: var(--accent-rose);
+    border-radius: 50%;
+    opacity: 0;
+    animation: floatParticle 4s ease-in-out infinite;
+    box-shadow: 0 0 10px rgba(245, 198, 198, 0.6);
+}
+
+.time-unit-large .particle:nth-child(1) {
+    top: 20%;
+    left: 15%;
+    animation-delay: 0s;
+}
+
+.time-unit-large .particle:nth-child(2) {
+    top: 70%;
+    right: 20%;
+    animation-delay: 1.3s;
+}
+
+.time-unit-large .particle:nth-child(3) {
+    bottom: 30%;
+    left: 25%;
+    animation-delay: 2.6s;
+}
+
+.time-unit-large .label {
+    font-family: var(--font-elegant);
+    font-size: clamp(0.9rem, 2vw, 1.1rem);
+    color: var(--text-secondary);
+    font-weight: 400;
+    margin-bottom: 1.5rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    opacity: 0.8;
+    transition: var(--transition-smooth);
+    text-shadow: 
+        0 1px 2px rgba(255, 255, 255, 0.8),
+        0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.time-unit-large:hover .label {
+    color: var(--accent-rose);
+    opacity: 1;
+    transform: translateY(-3px);
+    letter-spacing: 2px;
+}
+
+.time-unit-large .number {
+    font-family: var(--font-elegant);
+    font-size: clamp(4rem, 15vw, 8rem);
+    color: var(--accent-rose-dark);
+    font-weight: 300;
+    line-height: 1;
+    position: relative;
+    transition: var(--transition-smooth);
+    text-shadow: 
+        0 3px 6px rgba(255, 255, 255, 0.8),
+        0 3px 10px rgba(245, 198, 198, 0.4),
+        1px 1px 3px rgba(0, 0, 0, 0.15);
+    margin: 0.5rem 0;
+}
+
+/* Línea decorativa bajo el número grande */
+.time-unit-large .number::before {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 3px;
+    background: linear-gradient(90deg, 
+        transparent, 
+        var(--accent-rose), 
+        var(--accent-rose-light), 
+        transparent);
+    transition: var(--transition-smooth);
+    border-radius: 2px;
+    box-shadow: 0 0 15px rgba(245, 198, 198, 0.6);
+}
+
+.time-unit-large:hover .number {
+    color: var(--accent-gold);
+    transform: scale(1.08);
+    text-shadow: 
+        0 4px 8px rgba(255, 255, 255, 0.9),
+        0 4px 15px rgba(197, 164, 109, 0.5),
+        0 0 40px rgba(245, 198, 198, 0.3),
+        1px 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+.time-unit-large:hover .number::before {
+    width: 90%;
+}
+
+/* Animación de partículas */
+@keyframes floatParticle {
+    0%, 100% {
+        opacity: 0;
+        transform: translateY(0) scale(0);
+    }
+    20% {
+        opacity: 1;
+        transform: translateY(-15px) scale(1);
+    }
+    80% {
+        opacity: 0.6;
+        transform: translateY(-40px) scale(0.8);
+    }
+}
+
+/* Pulso suave para contador simple */
+@keyframes pulseOcean {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 
+            0 15px 50px rgba(245, 198, 198, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    }
+    50% {
+        transform: scale(1.02);
+        box-shadow: 
+            0 20px 60px rgba(245, 198, 198, 0.4),
+            0 0 40px rgba(245, 198, 198, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.7);
+    }
+}
+
+/* Estados especiales contador simple */
+.contador-simple.countdown-expired .time-unit-large {
+    animation: pulseOcean 2.5s infinite ease-in-out;
+}
+
+.contador-simple.countdown-expired .number {
+    color: var(--accent-gold);
+    animation: oceanGlowSimple 3s infinite ease-in-out;
+}
+
+.contador-simple.countdown-expired .label {
+    color: var(--accent-rose);
+    opacity: 1;
+}
+
+@keyframes oceanGlowSimple {
+    0%, 100% {
+        transform: scale(1);
+        text-shadow: 
+            0 3px 6px rgba(255, 255, 255, 0.8),
+            0 3px 10px rgba(197, 164, 109, 0.4),
+            1px 1px 3px rgba(0, 0, 0, 0.15);
+    }
+    50% {
+        transform: scale(1.12);
+        text-shadow: 
+            0 5px 10px rgba(255, 255, 255, 0.9),
+            0 5px 15px rgba(197, 164, 109, 0.6),
+            0 0 50px rgba(245, 198, 198, 0.4),
+            1px 1px 3px rgba(0, 0, 0, 0.15);
+    }
+}
+
+/* Efecto de actualización contador simple */
+.time-unit-large .number.updating {
+    animation: numberWaveSimple 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+@keyframes numberWaveSimple {
+    0% {
+        transform: rotateY(0deg) scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: rotateY(90deg) scale(0.95);
+        opacity: 0.5;
+        color: var(--accent-rose);
+    }
+    100% {
+        transform: rotateY(0deg) scale(1);
+        opacity: 1;
+    }
+}
+
+/* Mensaje contador simple */
+.contador-simple .countdown-message {
+    text-align: center;
+    opacity: 0;
+    animation: fadeInUp 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.6s both;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.contador-simple .countdown-message .script-text {
+    font-family: var(--font-script);
+    font-size: clamp(1.4rem, 4vw, 2rem);
+    color: var(--accent-rose-dark);
+    font-weight: 400;
+    margin: 0;
+    text-shadow: 
+        0 2px 4px rgba(255, 255, 255, 0.8),
+        0 2px 8px rgba(245, 198, 198, 0.3),
+        1px 1px 2px rgba(0, 0, 0, 0.1);
+    line-height: 1.4;
+    padding: 0 1rem;
+}
+
+/* Estado de celebración */
+.contador-simple.celebration .time-unit-large {
+    background: linear-gradient(135deg, 
+        rgba(254, 243, 243, 0.95) 0%, 
+        rgba(245, 198, 198, 0.15) 100%);
+    border-color: rgba(245, 198, 198, 0.5);
+}
+
+.contador-simple.celebration .number {
+    animation: oceanGlowSimple 2s infinite ease-in-out;
+}
+
+/* Líneas decorativas con estilo romántico - CENTRADO PERFECTO */
+.decorative-line {
+    width: 120px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent-rose), var(--accent-rose-light), transparent);
+    margin: 2rem auto;
+    position: relative;
+    box-shadow: 0 0 10px rgba(245, 198, 198, 0.3);
+    display: block;
+}
+
+.decorative-line::before,
+.decorative-line::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 6px;
+    height: 6px;
+    background: var(--accent-rose);
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(245, 198, 198, 0.5);
+}
+
+.decorative-line::before {
+    left: -12px;
+}
+
+.decorative-line::after {
+    right: -12px;
+}
+
+.decorative-line .line-accent {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 12px;
+    height: 12px;
+    background: var(--accent-rose-light);
+    border-radius: 50%;
+    box-shadow: 0 0 15px rgba(248, 212, 212, 0.6);
+}
+
+/* ========================================
+   ESTADO DE CELEBRACIÓN - "¡ES HOY!"
+   Estilos completos para cuando el contador expira
+   ======================================== */
+
+/* Contenedor principal cuando expira */
+.countdown-expired {
+    text-align: center;
+    padding: 4rem 2rem;
+    position: relative;
+    z-index: 10;
+}
+
+/* Unidad de tiempo en modo celebración */
+.countdown-expired .time-unit,
+.countdown-expired .time-unit.celebration {
+    background: linear-gradient(135deg, 
+        rgba(254, 243, 243, 0.98) 0%, 
+        rgba(245, 198, 198, 0.15) 50%,
+        rgba(248, 212, 212, 0.95) 100%);
+    border: 2px solid var(--accent-gold);
+    border-radius: 25px;
+    padding: 4rem 3rem;
+    max-width: 600px;
+    margin: 0 auto;
+    box-shadow: 
+        0 25px 60px rgba(245, 198, 198, 0.4),
+        0 0 50px rgba(197, 164, 109, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.7);
+    animation: pulseGlowCelebration 3s ease-in-out infinite;
+    backdrop-filter: blur(20px);
+    display: block;
+}
+
+@keyframes pulseGlowCelebration {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 
+            0 25px 60px rgba(245, 198, 198, 0.4),
+            0 0 50px rgba(197, 164, 109, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.7);
+        border-color: var(--accent-gold);
+    }
+    50% {
+        transform: scale(1.03);
+        box-shadow: 
+            0 30px 70px rgba(245, 198, 198, 0.5),
+            0 0 80px rgba(197, 164, 109, 0.5),
+            0 0 100px rgba(245, 198, 198, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        border-color: var(--accent-rose-light);
+    }
+}
+
+/* Contenedor de contenido de celebración */
+.celebration-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    position: relative;
+    z-index: 2;
+}
+
+/* Emoji de celebración */
+.celebration-emoji {
+    font-size: clamp(4rem, 10vw, 7rem);
+    line-height: 1;
+    animation: bounceEmoji 2s ease-in-out infinite;
+    display: block;
+    filter: drop-shadow(0 10px 20px rgba(245, 198, 198, 0.4));
+    margin: 0 auto;
+}
+
+@keyframes bounceEmoji {
+    0%, 100% {
+        transform: translateY(0) rotate(0deg) scale(1);
+    }
+    25% {
+        transform: translateY(-20px) rotate(-10deg) scale(1.05);
+    }
+    50% {
+        transform: translateY(-30px) rotate(0deg) scale(1.1);
+    }
+    75% {
+        transform: translateY(-20px) rotate(10deg) scale(1.05);
+    }
+}
+
+/* Texto principal "¡Es hoy!" */
+.celebration-text {
+    font-family: var(--font-script);
+    font-size: clamp(2.5rem, 8vw, 5rem);
+    color: var(--accent-gold);
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    line-height: 1.2;
+    text-shadow: 
+        0 3px 6px rgba(255, 255, 255, 0.9),
+        0 3px 10px rgba(197, 164, 109, 0.6),
+        0 0 40px rgba(245, 198, 198, 0.4),
+        1px 1px 3px rgba(0, 0, 0, 0.15);
+    animation: glowPulseText 2.5s ease-in-out infinite;
+    position: relative;
+    display: block;
+    margin: 1rem 0;
+    text-align: center;
+}
+
+/* Línea decorativa bajo el texto principal */
+.celebration-text::after {
+    content: '';
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    height: 3px;
+    background: linear-gradient(90deg, 
+        transparent, 
+        var(--accent-rose), 
+        var(--accent-gold),
+        var(--accent-rose-light),
+        transparent);
+    border-radius: 2px;
+    box-shadow: 0 0 20px rgba(197, 164, 109, 0.6);
+    animation: lineGlow 2s ease-in-out infinite;
+}
+
+@keyframes glowPulseText {
+    0%, 100% {
+        color: var(--accent-gold);
+        text-shadow: 
+            0 3px 6px rgba(255, 255, 255, 0.9),
+            0 3px 10px rgba(197, 164, 109, 0.6),
+            0 0 40px rgba(245, 198, 198, 0.4),
+            1px 1px 3px rgba(0, 0, 0, 0.15);
+        transform: scale(1);
+    }
+    50% {
+        color: var(--accent-rose-dark);
+        text-shadow: 
+            0 4px 8px rgba(255, 255, 255, 1),
+            0 4px 15px rgba(245, 198, 198, 0.7),
+            0 0 60px rgba(197, 164, 109, 0.5),
+            1px 1px 3px rgba(0, 0, 0, 0.15);
+        transform: scale(1.05);
+    }
+}
+
+@keyframes lineGlow {
+    0%, 100% {
+        opacity: 0.6;
+        box-shadow: 0 0 20px rgba(197, 164, 109, 0.6);
+    }
+    50% {
+        opacity: 1;
+        box-shadow: 0 0 40px rgba(197, 164, 109, 0.9);
+    }
+}
+
+/* Subtítulo de celebración */
+.celebration-subtitle {
+    font-family: var(--font-elegant);
+    font-size: clamp(1.2rem, 3.5vw, 2rem);
+    color: var(--text-secondary);
+    font-weight: 400;
+    font-style: italic;
+    letter-spacing: 0.5px;
+    line-height: 1.4;
+    text-shadow: 
+        0 2px 4px rgba(255, 255, 255, 0.8),
+        0 2px 8px rgba(0, 0, 0, 0.1);
+    animation: fadeInOutSubtitle 3s ease-in-out infinite;
+    display: block;
+    margin: 0 auto;
+    max-width: 500px;
+    text-align: center;
+}
+
+@keyframes fadeInOutSubtitle {
+    0%, 100% {
+        opacity: 0.8;
+        color: var(--text-secondary);
+    }
+    50% {
+        opacity: 1;
+        color: var(--accent-rose);
+    }
+}
+
+/* Estado final-day para el countdown */
+.countdown-grid.final-day,
+.countdown-simple.final-day {
+    animation: pulseGlowCelebration 3s ease-in-out infinite;
+    min-height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Partículas de celebración flotantes */
+.celebration-particle {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: var(--accent-rose);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 100;
+    box-shadow: 0 0 15px rgba(245, 198, 198, 0.8);
+    animation: particleFall 5s linear forwards;
+}
+
+.celebration-particle:nth-child(2n) {
+    background: var(--accent-rose-light);
+    box-shadow: 0 0 15px rgba(248, 212, 212, 0.8);
+}
+
+.celebration-particle:nth-child(3n) {
+    background: var(--accent-gold);
+    box-shadow: 0 0 15px rgba(197, 164, 109, 0.8);
+    width: 8px;
+    height: 8px;
+}
+
+@keyframes particleFall {
+    0% {
+        transform: translateY(-100vh) rotate(0deg) scale(1);
+        opacity: 1;
+    }
+    50% {
+        opacity: 1;
+        transform: translateY(50vh) rotate(360deg) scale(1.2);
+    }
+    100% {
+        transform: translateY(100vh) rotate(720deg) scale(0.5);
+        opacity: 0;
+    }
+}
+
+/* Efecto de resplandor de fondo */
+.countdown-expired::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 120%;
+    height: 120%;
+    background: radial-gradient(circle at center,
+        rgba(245, 198, 198, 0.15) 0%,
+        rgba(248, 212, 212, 0.08) 30%,
+        transparent 70%);
+    animation: glowExpand 4s ease-in-out infinite;
+    z-index: 1;
+    pointer-events: none;
+}
+
+@keyframes glowExpand {
+    0%, 100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.5;
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.3);
+        opacity: 0.8;
+    }
+}
+
+/* Círculos decorativos alrededor del contenido */
+.celebration-content::before,
+.celebration-content::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    border: 2px solid rgba(245, 198, 198, 0.3);
+    animation: circleExpand 3s ease-in-out infinite;
+}
+
+.celebration-content::before {
+    width: 300px;
+    height: 300px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.celebration-content::after {
+    width: 400px;
+    height: 400px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation-delay: 0.5s;
+}
+
+@keyframes circleExpand {
+    0%, 100% {
+        transform: translate(-50%, -50%) scale(0.8);
+        opacity: 0;
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.2);
+        opacity: 0.4;
+    }
+}
+
+/* Estado de celebración para el contador completo */
+.contador.celebration {
+    background: linear-gradient(135deg,
+        var(--bg-primary) 0%,
+        rgba(245, 198, 198, 0.12) 50%,
+        var(--bg-primary) 100%);
+}
+
+.contador.celebration::before {
+    animation-duration: 15s;
+    background: radial-gradient(
+        circle at center,
+        rgba(245, 198, 198, 0.15) 0%,
+        rgba(197, 164, 109, 0.08) 40%,
+        transparent 70%
+    );
+}
+
+/* Mensaje final para contador simple en celebración */
+.contador-simple .countdown-expired .celebration-text {
+    font-size: clamp(3rem, 10vw, 6rem);
+}
+
+.contador-simple .countdown-expired .celebration-subtitle {
+    font-size: clamp(1.4rem, 4vw, 2.2rem);
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+
+@media (min-width: 1024px) {
+    /* Mostrar línea base en desktop */
+    .countdown-wrapper::before {
+        display: block;
+    }
+}
+
+@media (max-width: 992px) {
+    .contador {
+        min-height: 90vh;
+    }
+    
+    .countdown-grid {
+        max-width: 700px;
+        gap: 1.5rem;
+        padding: 2.5rem 2rem;
+    }
+    
+    .countdown-grid::after {
+        display: none;
+    }
+    
+    .time-unit::before,
+    .time-unit::after {
+        display: none;
+    }
+    
+    .time-number {
+        font-size: clamp(2.2rem, 7vw, 3.5rem);
+    }
+    
+    /* Ocultar algunas figuras en tablets */
+    .contador .floating-circle:nth-child(4),
+    .contador .geometric-shape:nth-child(7) {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .contador {
+        min-height: auto;
+        padding: 3rem 0;
+    }
+    
+    .contador-header {
+        margin-bottom: 3rem;
+    }
+    
+    .countdown-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+        padding: 2rem 1.5rem;
+        margin-bottom: 2.5rem;
+        max-width: 500px;
+        border-radius: 10px;
+    }
+    
+    .countdown-grid::after {
+        display: none;
+    }
+    
+    .time-unit {
+        padding: 1.5rem 1rem;
+        background: rgba(254, 243, 243, 0.7);
+        border: 1px solid rgba(245, 198, 198, 0.3);
+        border-radius: 8px;
+        transition: var(--transition-smooth);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .time-unit::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, 
+            rgba(245, 198, 198, 0.05) 0%, 
+            transparent 100%);
+        opacity: 0;
+        transition: var(--transition-smooth);
+    }
+    
+    .time-unit::after {
+        display: none;
+    }
+    
+    .time-unit:hover {
+        background: rgba(254, 243, 243, 0.9);
+        border-color: rgba(245, 198, 198, 0.5);
+        transform: translateY(-5px);
+    }
+    
+    .time-unit:hover::before {
+        opacity: 1;
+    }
+    
+    .time-number {
+        font-size: clamp(2rem, 6vw, 3rem);
+        margin-bottom: 0.5rem;
+    }
+    
+    .time-label {
+        font-size: clamp(0.75rem, 2vw, 0.9rem);
+    }
+    
+    /* Ocultar más elementos decorativos */
+    .contador .floating-circle:nth-child(3),
+    .contador .geometric-shape:nth-child(6) {
+        display: none;
+    }
+    
+    /* Contador simple responsive */
+    .contador-simple {
+        min-height: 80vh;
+        padding: 2rem 0;
+    }
+    
+    .contador-simple .contador-header {
+        margin-bottom: 2rem;
+    }
+    
+    .time-unit-large {
+        padding: 2.5rem 1.5rem;
+        margin: 0 auto;
+        max-width: 320px;
+        border-radius: 15px;
+    }
+    
+    .time-unit-large .number {
+        font-size: clamp(3.5rem, 12vw, 6rem);
+    }
+    
+    .time-unit-large .label {
+        font-size: clamp(0.8rem, 2.5vw, 1rem);
+        margin-bottom: 1rem;
+    }
+    
+    .contador-simple .countdown-message .script-text {
+        font-size: clamp(1.2rem, 4vw, 1.6rem);
+    }
+    
+    .contador-simple .floating-circle:nth-child(3),
+    .contador-simple .geometric-shape:nth-child(5) {
+        display: none;
+    }
+    
+    /* Celebración responsive */
+    .countdown-expired {
+        padding: 3rem 1.5rem;
+    }
+    
+    .countdown-expired .time-unit {
+        padding: 3rem 2rem;
+        border-radius: 20px;
+    }
+    
+    .celebration-content {
+        gap: 1.5rem;
+    }
+    
+    .celebration-emoji {
+        font-size: clamp(3rem, 8vw, 5rem);
+    }
+    
+    .celebration-text {
+        font-size: clamp(2rem, 7vw, 3.5rem);
+    }
+    
+    .celebration-text::after {
+        width: 70%;
+        height: 2px;
+        bottom: -10px;
+    }
+    
+    .celebration-subtitle {
+        font-size: clamp(1rem, 3vw, 1.5rem);
+        max-width: 400px;
+        padding: 0 1rem;
+    }
+    
+    .celebration-content::before {
+        width: 200px;
+        height: 200px;
+    }
+    
+    .celebration-content::after {
+        width: 280px;
+        height: 280px;
+    }
+    
+    .decorative-line {
+        width: 100px;
+        margin: 1.5rem auto;
+    }
+    
+    .decorative-line::before {
+        left: -10px;
+    }
+    
+    .decorative-line::after {
+        right: -10px;
+    }
+    
+    .decorative-line .line-accent {
+        width: 10px;
+        height: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .contador {
+        padding: 2rem 0;
+    }
+    
+    .contador-header {
+        margin-bottom: 2rem;
+    }
+    
+    .countdown-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        padding: 1.5rem 1rem;
+        margin-bottom: 2rem;
+        max-width: 280px;
+    }
+    
+    .time-unit {
+        padding: 1.25rem 0.75rem;
+        margin: 0;
+    }
+    
+    .time-number {
+        font-size: clamp(1.8rem, 5vw, 2.5rem);
+        margin-bottom: 0.25rem;
+    }
+    
+    .time-label {
+        font-size: 0.8rem;
+        letter-spacing: 1px;
+    }
+    
+    .countdown-message .script-text {
+        font-size: clamp(1.1rem, 4vw, 1.4rem);
+        padding: 0 1rem;
+    }
+    
+    /* Ocultar todos los elementos decorativos grandes */
+    .contador .floating-circle,
+    .contador .geometric-shape {
+        display: none;
+    }
+    
+    /* Contador simple */
+    .contador-simple {
+        min-height: 70vh;
+        padding: 1.5rem 0;
+    }
+    
+    .contador-simple .contador-header {
+        margin-bottom: 1.5rem;
+    }
+    
+    .time-unit-large {
+        padding: 2rem 1rem;
+        max-width: 260px;
+    }
+    
+    .time-unit-large .number {
+        font-size: clamp(3rem, 10vw, 4.5rem);
+    }
+    
+    .time-unit-large .label {
+        font-size: 0.85rem;
+        margin-bottom: 0.8rem;
+    }
+    
+    .time-unit-large:hover {
+        transform: translateY(-6px);
+    }
+    
+    .contador-simple .countdown-message .script-text {
+        font-size: clamp(1.1rem, 4vw, 1.4rem);
+        padding: 0 0.5rem;
+    }
+    
+    .contador-simple .floating-circle,
+    .contador-simple .geometric-shape {
+        display: none;
+    }
+    
+    /* Celebración */
+    .countdown-expired {
+        padding: 2rem 1rem;
+    }
+    
+    .countdown-expired .time-unit {
+        padding: 2.5rem 1.5rem;
+        border-radius: 15px;
+    }
+    
+    .celebration-content {
+        gap: 1rem;
+    }
+    
+    .celebration-emoji {
+        font-size: 3rem;
+    }
+    
+    .celebration-text {
+        font-size: 2rem;
+    }
+    
+    .celebration-text::after {
+        width: 60%;
+        height: 2px;
+        bottom: -8px;
+    }
+    
+    .celebration-subtitle {
+        font-size: 1rem;
+        max-width: 280px;
+    }
+    
+    .celebration-content::before {
+        width: 150px;
+        height: 150px;
+    }
+    
+    .celebration-content::after {
+        width: 220px;
+        height: 220px;
+    }
+    
+    .celebration-particle {
+        width: 8px;
+        height: 8px;
+    }
+    
+    .celebration-particle:nth-child(3n) {
+        width: 6px;
+        height: 6px;
+    }
+    
+    .decorative-line {
+        width: 80px;
+        margin: 1rem auto;
+    }
+    
+    .decorative-line::before,
+    .decorative-line::after {
+        width: 5px;
+        height: 5px;
+    }
+    
+    .decorative-line::before {
+        left: -8px;
+    }
+    
+    .decorative-line::after {
+        right: -8px;
+    }
+    
+    .decorative-line .line-accent {
+        width: 8px;
+        height: 8px;
+    }
+}
+
+@media (max-width: 320px) {
+    .countdown-grid {
+        padding: 1rem 0.5rem;
+        max-width: 250px;
+    }
+    
+    .time-unit {
+        padding: 1rem 0.5rem;
+    }
+    
+    .time-number {
+        font-size: 1.6rem;
+    }
+    
+    .time-label {
+        font-size: 0.75rem;
+    }
+    
+    /* Contador simple */
+    .time-unit-large {
+        padding: 1.5rem 0.8rem;
+        max-width: 230px;
+    }
+    
+    .time-unit-large .number {
+        font-size: 2.8rem;
+    }
+    
+    .time-unit-large .label {
+        font-size: 0.8rem;
+    }
+}
+
+/* ========================================
+   ACCESIBILIDAD Y PREFERENCIAS
+   ======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+    .contador::before,
+    .contador::after,
+    .contador-simple::before,
+    .contador .floating-circle,
+    .contador .geometric-shape,
+    .contador-simple .floating-circle,
+    .contador-simple .geometric-shape,
+    .time-unit-large .particle,
+    .time-number.updating,
+    .time-unit-large .number.updating,
+    .countdown-expired .time-number,
+    .contador-simple.countdown-expired .number,
+    .contador-simple.celebration .number {
+        animation: none;
+    }
+    
+    .countdown-grid:hover,
+    .time-card:hover,
+    .time-unit-large:hover {
+        transform: none;
+    }
+}
+
+/* Estados de carga */
+.loading .countdown-wrapper {
+    opacity: 0;
+    transform: translateY(50px);
+}
+
+.loaded .countdown-wrapper {
+    opacity: 1;
+    transform: translateY(0);
+    transition: all 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Pantallas grandes */
+@media (min-width: 1200px) {
+    .countdown-grid {
+        padding: 4rem;
+        max-width: 1100px;
+    }
+    
+    .time-number {
+        font-size: 4.8rem;
+    }
+    
+    .time-label {
+        font-size: 1.1rem;
+    }
+    
+    /* Contador simple */
+    .contador-simple .contador-content {
+        max-width: 750px;
+    }
+    
+    .time-unit-large {
+        padding: 4.5rem 3.5rem;
+    }
+    
+    .time-unit-large .number {
+        font-size: 9rem;
+    }
+    
+    .time-unit-large .label {
+        font-size: 1.2rem;
+    }
+}
+
+/* Estados especiales de proximidad */
+.contador.very-close {
+    background: linear-gradient(135deg, 
+        var(--bg-primary) 0%, 
+        rgba(245, 198, 198, 0.08) 100%);
+}
+
+.contador.final-countdown::before {
+    animation-duration: 20s;
+    background: radial-gradient(
+        circle at center,
+        rgba(245, 198, 198, 0.12) 0%,
+        rgba(197, 164, 109, 0.06) 50%,
+        transparent 70%);
+}
+
+/* Contador simple proximidad */
+.contador-simple.very-close {
+    background: linear-gradient(135deg, 
+        var(--bg-primary) 0%, 
+        rgba(245, 198, 198, 0.1) 100%);
+}
+
+.contador-simple.final-countdown::before {
+    animation-duration: 25s;
+    background: radial-gradient(
+        circle at center,
+        rgba(245, 198, 198, 0.1) 0%,
+        rgba(197, 164, 109, 0.05) 50%,
+        transparent 70%
+    );
+}
+
+/* Transiciones del mensaje */
+.countdown-message .script-text,
+.contador-simple .countdown-message .script-text {
+    transition: all 0.3s ease-in-out;
+}
+
+/* Animación de entrada */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ========================================
+   FIN DE ESTILOS DEL CONTADOR
+   ======================================== */

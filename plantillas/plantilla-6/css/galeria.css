@@ -1,0 +1,672 @@
+/* ================================================
+   GALERÍA ROMANCE CLÁSICO - DISEÑO MODERNO MASONRY
+   ================================================ */
+
+.galeria {
+    --grid-gap: 1.25rem;
+    --grid-columns: 1;
+    --animation-duration: 0.4s;
+    --animation-ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding: 120px 0;
+    background: var(--bg-primary);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+}
+
+/* Efectos de fondo romántico */
+.galeria::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(
+        circle at center,
+        rgba(245, 198, 198, 0.06) 0%,
+        rgba(197, 164, 109, 0.03) 50%,
+        transparent 70%
+    );
+    animation: waveRotate 35s linear infinite;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.galeria::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(ellipse at 20% 30%, rgba(245, 198, 198, 0.05) 0%, transparent 40%),
+        radial-gradient(ellipse at 80% 70%, rgba(248, 212, 212, 0.04) 0%, transparent 40%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+@keyframes waveRotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Contenedor de la galería */
+.galeria .container {
+    width: 100%;
+    position: relative;
+    z-index: 2;
+}
+
+/* Header */
+.galeria-header {
+    text-align: center;
+    margin-bottom: 4rem;
+    position: relative;
+    z-index: 2;
+}
+
+.galeria-header h2,
+.galeria-header .section-title {
+    font-family: var(--font-script);
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    color: var(--accent-rose-dark);
+    margin-bottom: 1rem;
+    font-weight: 400;
+    text-shadow: 
+        0 2px 4px rgba(255, 255, 255, 0.8),
+        0 2px 8px rgba(245, 198, 198, 0.4),
+        1px 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+/* Línea decorativa romántica */
+.galeria-header .decorative-line {
+    width: 120px;
+    height: 2px;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        var(--accent-rose) 20%, 
+        var(--accent-rose-light) 50%, 
+        var(--accent-rose) 80%, 
+        transparent 100%);
+    margin: 24px auto;
+    display: block;
+    box-shadow: 0 0 15px rgba(245, 198, 198, 0.3);
+}
+
+.galeria-subtitle {
+    font-family: var(--font-elegant);
+    font-size: 1.125rem;
+    color: var(--text-secondary);
+    font-style: italic;
+    font-weight: 400;
+    text-shadow: 
+        0 1px 2px rgba(255, 255, 255, 0.8),
+        0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Grid masonry para desktop */
+.galeria-grid {
+    position: relative;
+    z-index: 2;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    column-count: var(--grid-columns);
+    column-gap: var(--grid-gap);
+}
+
+/* Items de galería */
+.galeria-item {
+    position: relative;
+    break-inside: avoid;
+    margin-bottom: var(--grid-gap);
+    border-radius: 12px;
+    overflow: hidden;
+    background: rgba(254, 243, 243, 0.3);
+    cursor: pointer;
+    transition: all var(--animation-duration) var(--animation-ease);
+    border: 1px solid rgba(245, 198, 198, 0.3);
+    box-shadow: 
+        0 4px 20px rgba(245, 198, 198, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    will-change: transform;
+    transform: translateZ(0);
+    opacity: 1;
+}
+
+/* Skeleton loading */
+.galeria-item.loading {
+    background: linear-gradient(
+        135deg,
+        rgba(254, 243, 243, 0.6) 0%,
+        rgba(245, 198, 198, 0.2) 50%,
+        rgba(254, 243, 243, 0.6) 100%
+    );
+    background-size: 200% 100%;
+    animation: skeleton 1.5s ease-in-out infinite;
+    min-height: 250px;
+}
+
+.galeria-item.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 28px;
+    height: 28px;
+    border: 3px solid var(--accent-rose);
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin 0.8s linear infinite;
+    z-index: 5;
+}
+
+@keyframes skeleton {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+@keyframes spin {
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Imagen */
+.galeria-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: transform var(--animation-duration) var(--animation-ease);
+    filter: brightness(0.95) contrast(1.05) saturate(1.05);
+}
+
+.galeria-item:hover {
+    transform: translateY(-8px) scale(1.02);
+    border-color: rgba(245, 198, 198, 0.5);
+    box-shadow: 
+        0 20px 50px rgba(245, 198, 198, 0.3),
+        0 0 30px rgba(245, 198, 198, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+.galeria-item:hover .galeria-image {
+    transform: scale(1.08);
+    filter: brightness(1) contrast(1.05) saturate(1.1);
+}
+
+/* Overlay - OCULTO por defecto */
+.galeria-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        180deg,
+        transparent 0%,
+        rgba(254, 243, 243, 0.3) 40%,
+        rgba(245, 198, 198, 0.7) 100%
+    );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity var(--animation-duration) var(--animation-ease);
+}
+
+.galeria-item:hover .galeria-overlay {
+    opacity: 1;
+}
+
+/* Icono de zoom */
+.galeria-zoom-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, 
+        var(--accent-rose) 0%, 
+        var(--accent-rose-light) 100%);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 600;
+    transform: scale(0);
+    transition: transform var(--animation-duration) var(--animation-ease);
+    box-shadow: 
+        0 8px 25px rgba(245, 198, 198, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.galeria-item:hover .galeria-zoom-icon {
+    transform: scale(1);
+}
+
+/* ================================================
+   LIGHTBOX - PANTALLA COMPLETA 100dvh/100vh
+   ================================================ */
+
+.galeria-lightbox {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100vw !important;
+    width: 100dvw !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    z-index: 2147483647 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 !important;
+    margin: 0 !important;
+    opacity: 0;
+    visibility: hidden;
+    transition: all var(--animation-duration) var(--animation-ease);
+}
+
+.galeria-lightbox[aria-hidden="false"] {
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+}
+
+.galeria-lightbox[aria-hidden="true"] {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+}
+
+.lightbox-backdrop {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100vw !important;
+    width: 100dvw !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    background: rgba(254, 249, 249, 0.97) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    z-index: 1 !important;
+}
+
+.lightbox-container {
+    position: relative !important;
+    width: 100%;
+    height: 100%;
+    max-width: 100vw;
+    max-height: 100vh;
+    max-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    z-index: 100 !important;
+    padding: 2rem;
+    box-sizing: border-box;
+}
+
+.lightbox-header {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1rem;
+    z-index: 110;
+    flex-shrink: 0;
+}
+
+.lightbox-close {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, 
+        rgba(254, 243, 243, 0.95) 0%, 
+        rgba(248, 212, 212, 0.9) 100%);
+    border: 2px solid var(--accent-rose);
+    color: var(--accent-rose-dark);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--animation-duration) var(--animation-ease);
+    z-index: 120;
+    box-shadow: 
+        0 4px 15px rgba(245, 198, 198, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+.lightbox-close:hover,
+.lightbox-close:focus {
+    background: linear-gradient(135deg, 
+        var(--accent-rose) 0%, 
+        var(--accent-rose-light) 100%);
+    color: #ffffff;
+    transform: scale(1.1) rotate(90deg);
+    box-shadow: 
+        0 6px 20px rgba(245, 198, 198, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.lightbox-close svg {
+    width: 22px;
+    height: 22px;
+}
+
+.lightbox-image-wrapper {
+    position: relative;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 0;
+    z-index: 105;
+    overflow: hidden;
+}
+
+#lightbox-image {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: 12px;
+    box-shadow: 
+        0 30px 80px rgba(245, 198, 198, 0.4),
+        0 0 50px rgba(245, 198, 198, 0.2);
+}
+
+.lightbox-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, 
+        rgba(254, 243, 243, 0.95) 0%, 
+        rgba(248, 212, 212, 0.9) 100%);
+    border: 2px solid var(--accent-rose);
+    color: var(--accent-rose-dark);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--animation-duration) var(--animation-ease);
+    opacity: 0.85;
+    z-index: 110;
+    box-shadow: 
+        0 4px 15px rgba(245, 198, 198, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+.lightbox-nav:hover,
+.lightbox-nav:focus {
+    background: linear-gradient(135deg, 
+        var(--accent-rose) 0%, 
+        var(--accent-rose-light) 100%);
+    color: #ffffff;
+    opacity: 1;
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 
+        0 6px 20px rgba(245, 198, 198, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.lightbox-nav svg {
+    width: 22px;
+    height: 22px;
+}
+
+.lightbox-prev {
+    left: 2rem;
+}
+
+.lightbox-next {
+    right: 2rem;
+}
+
+.lightbox-footer {
+    text-align: center;
+    margin-top: 1rem;
+    z-index: 105;
+    flex-shrink: 0;
+}
+
+.lightbox-counter {
+    display: inline-block;
+    padding: 0.65rem 1.25rem;
+    background: linear-gradient(135deg, 
+        rgba(254, 243, 243, 0.95) 0%, 
+        rgba(248, 212, 212, 0.9) 100%);
+    border: 2px solid var(--accent-rose);
+    border-radius: 25px;
+    color: var(--accent-rose-dark);
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    box-shadow: 
+        0 4px 15px rgba(245, 198, 198, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+/* Animaciones */
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ================================================
+   CARRUSEL MÓVIL
+   ================================================ */
+
+@media (max-width: 767px) {
+    .galeria {
+        min-height: 100vh;
+        min-height: 100dvh;
+        padding: 60px 0;
+    }
+    
+    .galeria-header {
+        margin-bottom: 2.5rem;
+    }
+    
+    .galeria-grid {
+        display: flex;
+        gap: 1rem;
+        width: 300%;
+        animation: infiniteScroll 35s linear infinite;
+        column-count: initial;
+        padding: 0 1rem;
+    }
+    
+    .galeria-item {
+        flex: 0 0 calc(85vw - 2rem);
+        max-width: 320px;
+        margin-bottom: 0;
+    }
+    
+    .galeria-grid:hover {
+        animation-play-state: paused;
+    }
+    
+    @keyframes infiniteScroll {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(calc(-100% / 3)); }
+    }
+    
+    .galeria-item:active {
+        transform: scale(0.97);
+    }
+    
+    .galeria-overlay {
+        opacity: 0.4;
+    }
+    
+    .galeria-item:hover .galeria-overlay {
+        opacity: 0.7;
+    }
+    
+    /* Lightbox responsive - 80dvh en móvil */
+    .lightbox-container {
+        padding: 1rem;
+        width: 95%;
+        height: 80vh !important;
+        height: 80dvh !important;
+        max-height: 80vh !important;
+        max-height: 80dvh !important;
+        margin-top: -3.5rem;
+    }
+    
+    .lightbox-image-wrapper {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    #lightbox-image {
+        max-height: 100%;
+        border-radius: 8px;
+    }
+    
+    .lightbox-nav {
+        width: 44px;
+        height: 44px;
+    }
+    
+    .lightbox-prev {
+        left: 0.5rem;
+    }
+    
+    .lightbox-next {
+        right: 0.5rem;
+    }
+    
+    .lightbox-close {
+        width: 44px;
+        height: 44px;
+    }
+    
+    .lightbox-counter {
+        font-size: 0.85rem;
+        padding: 0.5rem 1rem;
+    }
+    
+    .lightbox-header {
+        margin-bottom: 0.5rem;
+    }
+    
+    .lightbox-footer {
+        margin-top: 0.5rem;
+    }
+}
+
+/* ================================================
+   RESPONSIVE DESKTOP
+   ================================================ */
+
+@media (min-width: 768px) {
+    .galeria {
+        --grid-columns: 2;
+        --grid-gap: 1.25rem;
+        min-height: 100vh;
+        min-height: 100dvh;
+        padding: 100px 0;
+    }
+    
+    .galeria-header {
+        margin-bottom: 4rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .galeria {
+        --grid-columns: 3;
+        --grid-gap: 1.5rem;
+    }
+}
+
+@media (min-width: 1400px) {
+    .galeria {
+        --grid-columns: 4;
+    }
+}
+
+/* Responsive lightbox desktop */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .lightbox-container {
+        padding: 1.5rem;
+    }
+}
+
+/* ================================================
+   ACCESIBILIDAD
+   ================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+    .galeria::before,
+    .galeria-grid,
+    .galeria-item,
+    .galeria-image,
+    .galeria-overlay,
+    .galeria-zoom-icon,
+    .galeria-lightbox,
+    .lightbox-close,
+    .lightbox-nav {
+        animation: none !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+.sr-only {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
+.galeria-item:focus,
+.lightbox-close:focus,
+.lightbox-nav:focus {
+    outline: 2px solid var(--accent-rose);
+    outline-offset: 3px;
+}
+
+@media (pointer: coarse) {
+    .galeria-overlay {
+        opacity: 0.3;
+    }
+    
+    .lightbox-nav {
+        opacity: 1;
+    }
+}
+
+/* Fix para z-index cuando lightbox está abierto */
+body:has(.galeria-lightbox[aria-hidden="false"]) {
+    overflow: hidden !important;
+}
+
+body:has(.galeria-lightbox[aria-hidden="false"]) header,
+body:has(.galeria-lightbox[aria-hidden="false"]) nav,
+body:has(.galeria-lightbox[aria-hidden="false"]) footer {
+    z-index: 1 !important;
+}
+
+/* ================================================
+   FIN DE ESTILOS DE GALERÍA
+   ================================================ */

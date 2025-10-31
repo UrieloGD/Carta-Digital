@@ -1,0 +1,902 @@
+/* Plantilla Romance Clásico - Estilos Globales */
+:root {
+    /* Paleta Romance Clásico */
+    --bg-primary: #fef9f9;           /* Blanco rosado muy suave */
+    --bg-secondary: #fef3f3;         /* Rosa muy claro */
+    --bg-card: #ffffff;              /* Blanco puro */
+    --accent-rose: #fbdddd;          /* Rosa empolvado principal */
+    --accent-rose-light: #f8d4d4;    /* Rosa pastel claro */
+    --accent-rose-dark: #e69696;     /* Rosa empolvado oscuro */
+    --accent-gold: #c5a46d;          /* Dorado elegante */
+    --accent-gold-light: #d4b580;    /* Dorado claro */
+    --accent-champagne: #f7ede2;     /* Champagne suave */
+    --text-primary: #3d2e2e;         /* Marrón rosado oscuro */
+    --text-secondary: #5a4545;       /* Chocolate rosado */
+    --text-muted: #8a7373;           /* Rosa grisáceo */
+    --highlight: #d4a76d;            /* Dorado brillante */
+    --border-subtle: rgba(245, 198, 198, 0.2);
+    
+    /* Tipografías románticas elegantes */
+    --font-serif: 'Playfair Display', serif;      /* Elegancia clásica */
+    --font-script: 'Great Vibes', cursive;        /* Script muy elegante */
+    --font-elegant: 'Cormorant Garamond', serif;  /* Alternativa elegante */
+    --font-sans: 'Lato', sans-serif;              /* Limpia y legible */
+    
+    /* Espaciado y tamaños */
+    --container-max: 1200px;
+    --border-radius: 12px;
+    --section-padding: 120px 0;
+    
+    /* Sombras suaves románticas */
+    --shadow-soft: 0 10px 40px rgba(245, 198, 198, 0.15);
+    --shadow-card: 0 5px 25px rgba(197, 164, 109, 0.12);
+    --shadow-glow: 0 0 20px rgba(245, 198, 198, 0.25);
+    --shadow-gold: 0 5px 20px rgba(197, 164, 109, 0.2);
+    
+    /* Overlays */
+    --overlay-light: rgba(254, 249, 249, 0.95);
+    --overlay-gradient: linear-gradient(135deg, 
+        rgba(254, 249, 249, 0.9) 0%, 
+        rgba(254, 243, 243, 0.85) 100%
+    );
+    
+    /* Transiciones elegantes */
+    --transition-smooth: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --transition-soft: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Reset y base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+}
+
+body {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--text-primary);
+    background-color: var(--bg-primary);
+    background-image: 
+        radial-gradient(circle at 20% 80%, rgba(245, 198, 198, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(197, 164, 109, 0.06) 0%, transparent 50%);
+    overflow-x: hidden;
+    font-weight: 300;
+}
+
+/* Container responsive */
+.container {
+    max-width: var(--container-max);
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* Tipografías jerarquizadas románticas */
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-script);
+    font-weight: 400;
+    line-height: 1.3;
+    margin-bottom: 0.5em;
+    color: var(--text-primary);
+}
+
+h1 {
+    font-family: var(--font-script);
+    font-size: clamp(3.5rem, 8vw, 7rem);
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    text-shadow: 0 2px 15px rgba(245, 198, 198, 0.3);
+    color: var(--accent-rose);
+}
+
+h2 {
+    font-family: var(--font-script);
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    color: var(--accent-rose-dark);
+    margin-bottom: 2rem;
+    text-align: center;
+    font-weight: 400;
+    text-shadow: 0 2px 10px rgba(245, 198, 198, 0.2);
+}
+
+h3 {
+    font-family: var(--font-elegant);
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    color: var(--accent-rose);
+    font-weight: 500;
+}
+
+h4 {
+    font-family: var(--font-serif);
+    font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+    color: var(--text-secondary);
+    font-weight: 600;
+    font-style: italic;
+}
+
+/* Clases específicas para diferentes elementos */
+.hero-names {
+    font-family: var(--font-script);
+    font-size: clamp(4rem, 10vw, 8rem);
+    font-weight: 400;
+    color: var(--accent-rose);
+    text-shadow: 0 4px 20px rgba(245, 198, 198, 0.4),
+                 0 0 40px rgba(197, 164, 109, 0.2);
+    letter-spacing: 0.03em;
+}
+
+.section-title {
+    font-family: var(--font-script);
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    color: var(--accent-rose-dark);
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-weight: 400;
+    position: relative;
+}
+
+.event-title, .ubicacion-nombre {
+    font-family: var(--font-elegant);
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    color: var(--accent-rose);
+    font-weight: 500;
+}
+
+/* Párrafos elegantes */
+p {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.8;
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+    font-weight: 300;
+}
+
+.lead {
+    font-family: var(--font-serif);
+    font-size: 1.125rem;
+    color: var(--text-primary);
+    font-weight: 400;
+    font-style: italic;
+    line-height: 1.9;
+}
+
+/* Líneas decorativas románticas */
+.decorative-line {
+    width: 100px;
+    height: 2px;
+    background: linear-gradient(90deg, 
+        transparent, 
+        var(--accent-rose), 
+        var(--accent-gold),
+        var(--accent-rose), 
+        transparent
+    );
+    margin: 2rem auto;
+    position: relative;
+    box-shadow: 0 0 10px rgba(245, 198, 198, 0.3);
+}
+
+.decorative-line::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    background: var(--accent-gold);
+    border-radius: 50%;
+    box-shadow: 0 0 12px rgba(197, 164, 109, 0.5);
+}
+
+.decorative-line::after {
+    content: '♥';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 0.7rem;
+    color: var(--accent-rose);
+    text-shadow: 0 0 8px rgba(245, 198, 198, 0.5);
+}
+
+/* Decoración floral */
+.floral-accent {
+    position: relative;
+    display: inline-block;
+}
+
+.floral-accent::before,
+.floral-accent::after {
+    content: '✿';
+    position: absolute;
+    color: var(--accent-rose-light);
+    font-size: 1.5rem;
+    opacity: 0.4;
+}
+
+.floral-accent::before {
+    left: -30px;
+    top: 50%;
+    transform: translateY(-50%) rotate(-15deg);
+}
+
+.floral-accent::after {
+    right: -30px;
+    top: 50%;
+    transform: translateY(-50%) rotate(15deg);
+}
+
+/* Botones elegantes románticos */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 16px 32px;
+    background: transparent;
+    color: var(--accent-rose-dark);
+    text-decoration: none;
+    border: 2px solid var(--accent-rose);
+    border-radius: var(--border-radius);
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    min-width: 180px;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: var(--accent-rose-light);
+    transform: translate(-50%, -50%);
+    transition: width 0.5s, height 0.5s;
+    border-radius: 50%;
+    opacity: 0.3;
+}
+
+.btn:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.btn:hover {
+    background: linear-gradient(135deg, var(--accent-rose) 0%, var(--accent-rose-light) 100%);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-soft), var(--shadow-glow);
+    border-color: var(--accent-gold);
+}
+
+.btn-gold {
+    border-color: var(--accent-gold);
+    color: var(--accent-gold);
+}
+
+.btn-gold:hover {
+    background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-gold-light) 100%);
+    color: white;
+}
+
+/* Secciones */
+section {
+    padding: var(--section-padding);
+    position: relative;
+}
+
+.section-alternate {
+    background: var(--bg-secondary);
+    position: relative;
+}
+
+.section-alternate::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, 
+        transparent, 
+        var(--accent-rose-light), 
+        transparent
+    );
+    opacity: 0.5;
+}
+
+/* Headers de sección */
+.section-header {
+    text-align: center;
+    margin-bottom: 4rem;
+    position: relative;
+}
+
+.section-header h2 {
+    margin-bottom: 1rem;
+}
+
+.section-header p {
+    font-size: 1rem;
+    color: var(--text-muted);
+    max-width: 600px;
+    margin: 0 auto;
+    font-style: italic;
+}
+
+/* Cards elegantes románticas */
+.card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--border-radius);
+    padding: 2.5rem;
+    transition: var(--transition-soft);
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow-card);
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, 
+        var(--accent-rose), 
+        var(--accent-gold),
+        var(--accent-rose)
+    );
+    opacity: 0;
+    transition: var(--transition-smooth);
+}
+
+.card::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(245, 198, 198, 0.1) 0%, transparent 70%);
+    opacity: 0;
+    transition: var(--transition-soft);
+}
+
+.card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-soft), var(--shadow-glow);
+    border-color: var(--accent-rose);
+}
+
+.card:hover::before {
+    opacity: 1;
+}
+
+.card:hover::after {
+    opacity: 1;
+}
+
+/* Texto cursivo destacado */
+.script-text {
+    font-family: var(--font-script);
+    font-size: 1.8rem;
+    color: var(--accent-gold);
+    text-align: center;
+    margin: 2rem 0;
+    font-weight: 400;
+    text-shadow: 0 2px 10px rgba(197, 164, 109, 0.3);
+}
+
+/* Citas y frases especiales */
+.quote-text {
+    font-family: var(--font-script);
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
+    color: var(--accent-rose);
+    font-style: italic;
+    text-align: center;
+    line-height: 1.4;
+    text-shadow: 0 2px 10px rgba(245, 198, 198, 0.2);
+    position: relative;
+    padding: 0 2rem;
+}
+
+.quote-text::before,
+.quote-text::after {
+    font-family: Georgia, serif;
+    font-size: 3rem;
+    color: var(--accent-rose-light);
+    opacity: 0.5;
+    position: absolute;
+}
+
+.quote-text::before {
+    content: '"';
+    left: -10px;
+    top: -20px;
+}
+
+.quote-text::after {
+    content: '"';
+    right: -10px;
+    bottom: -40px;
+}
+
+.quote-author {
+    font-family: var(--font-elegant);
+    font-size: 1.2rem;
+    color: var(--accent-gold);
+    text-align: center;
+    margin-top: 1rem;
+    font-style: italic;
+}
+
+/* Subtítulos elegantes */
+.section-subtitle {
+    font-family: var(--font-serif);
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    text-align: center;
+    font-style: italic;
+    font-weight: 300;
+}
+
+/* Animaciones románticas */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes floatGentle {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes heartbeat {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+@keyframes shimmerRose {
+    0% {
+        background-position: -200% center;
+    }
+    100% {
+        background-position: 200% center;
+    }
+}
+
+.fade-in-up {
+    animation: fadeInUp 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.float-gentle {
+    animation: floatGentle 4s ease-in-out infinite;
+}
+
+.heartbeat {
+    animation: heartbeat 2s ease-in-out infinite;
+}
+
+/* Estados de hover elegantes */
+.hover-elegant {
+    transition: var(--transition-soft);
+}
+
+.hover-elegant:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-soft);
+}
+
+/* Efectos de brillo */
+.shimmer {
+    position: relative;
+    overflow: hidden;
+}
+
+.shimmer::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg,
+        transparent,
+        rgba(245, 198, 198, 0.3),
+        transparent
+    );
+    animation: shimmerRose 3s infinite;
+}
+
+/* Badges románticos */
+.badge-rose {
+    display: inline-block;
+    padding: 6px 16px;
+    background: linear-gradient(135deg, var(--accent-rose), var(--accent-rose-light));
+    color: var(--text-primary);
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    box-shadow: var(--shadow-glow);
+}
+
+.badge-gold {
+    background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-light));
+    color: white;
+}
+
+/* Separadores decorativos */
+.section-divider {
+    width: 100%;
+    height: 60px;
+    position: relative;
+    margin: -1px 0;
+}
+
+.section-divider::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, transparent, var(--bg-secondary));
+}
+
+/* Iconos románticos */
+.icon-rose {
+    color: var(--accent-rose);
+    filter: drop-shadow(0 2px 5px rgba(245, 198, 198, 0.3));
+}
+
+.icon-gold {
+    color: var(--accent-gold);
+    filter: drop-shadow(0 2px 5px rgba(197, 164, 109, 0.3));
+}
+
+/* Tooltips */
+.tooltip-romance {
+    position: relative;
+    cursor: help;
+}
+
+.tooltip-romance::before {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-10px);
+    padding: 8px 12px;
+    background: var(--accent-rose);
+    color: white;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: var(--transition-smooth);
+    box-shadow: var(--shadow-card);
+}
+
+.tooltip-romance:hover::before {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-5px);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .container {
+        padding: 0 20px;
+    }
+    
+    section {
+        padding: 100px 0;
+    }
+}
+
+@media (max-width: 768px) {
+    :root {
+        --section-padding: 80px 0;
+    }
+    
+    .container {
+        padding: 0 16px;
+    }
+    
+    .btn {
+        padding: 14px 24px;
+        font-size: 0.85rem;
+        min-width: 160px;
+    }
+    
+    .card {
+        padding: 2rem;
+    }
+    
+    .hero-names {
+        font-size: clamp(3rem, 8vw, 6rem);
+    }
+    
+    .script-text {
+        font-size: 1.5rem;
+    }
+    
+    .decorative-line {
+        width: 80px;
+    }
+    
+    .floral-accent::before,
+    .floral-accent::after {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    section {
+        padding: 60px 0;
+    }
+    
+    p {
+        font-size: 0.95rem;
+    }
+    
+    .quote-text {
+        font-size: clamp(1.25rem, 4vw, 1.8rem);
+        padding: 0 1rem;
+    }
+    
+    .card {
+        padding: 1.5rem;
+    }
+    
+    .decorative-line {
+        width: 60px;
+    }
+}
+
+/* Utilidades */
+.text-center {
+    text-align: center;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.mb-0 { margin-bottom: 0; }
+.mb-1 { margin-bottom: 1rem; }
+.mb-2 { margin-bottom: 2rem; }
+.mb-3 { margin-bottom: 3rem; }
+.mb-4 { margin-bottom: 4rem; }
+
+.mt-0 { margin-top: 0; }
+.mt-1 { margin-top: 1rem; }
+.mt-2 { margin-top: 2rem; }
+.mt-3 { margin-top: 3rem; }
+.mt-4 { margin-top: 4rem; }
+
+.py-0 { padding-top: 0; padding-bottom: 0; }
+.py-1 { padding-top: 1rem; padding-bottom: 1rem; }
+.py-2 { padding-top: 2rem; padding-bottom: 2rem; }
+.py-3 { padding-top: 3rem; padding-bottom: 3rem; }
+
+/* Colores de acento */
+.rose-accent {
+    color: var(--accent-rose);
+}
+
+.gold-accent {
+    color: var(--accent-gold);
+}
+
+.text-primary-color {
+    color: var(--text-primary);
+}
+
+.text-secondary-color {
+    color: var(--text-secondary);
+}
+
+/* Fondos */
+.bg-rose-light {
+    background-color: var(--accent-rose-light);
+}
+
+.bg-champagne {
+    background-color: var(--accent-champagne);
+}
+
+/* Gradientes */
+.bg-gradient-rose {
+    background: linear-gradient(135deg, 
+        var(--accent-rose-light) 0%, 
+        var(--bg-primary) 100%
+    );
+}
+
+.bg-gradient-gold {
+    background: linear-gradient(135deg, 
+        var(--accent-gold-light) 0%, 
+        var(--accent-champagne) 100%
+    );
+}
+
+/* Bordes */
+.border-rose {
+    border: 2px solid var(--accent-rose);
+}
+
+.border-gold {
+    border: 2px solid var(--accent-gold);
+}
+
+/* Scrollbar personalizado */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--accent-rose), var(--accent-gold));
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-rose-dark);
+}
+
+/* Selección de texto */
+::selection {
+    background: var(--accent-rose-light);
+    color: var(--text-primary);
+}
+
+::-moz-selection {
+    background: var(--accent-rose-light);
+    color: var(--text-primary);
+}
+
+/* Focus states accesibles */
+*:focus-visible {
+    outline: 2px solid var(--accent-rose);
+    outline-offset: 2px;
+}
+
+/* Links */
+a {
+    color: var(--accent-rose);
+    text-decoration: none;
+    transition: var(--transition-smooth);
+}
+
+a:hover {
+    color: var(--accent-gold);
+    text-decoration: underline;
+}
+
+/* Imágenes responsivas */
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Grid system */
+.grid {
+    display: grid;
+    gap: 2rem;
+}
+
+.grid-2 {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.grid-3 {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+/* Flex utilities */
+.flex {
+    display: flex;
+}
+
+.flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.flex-between {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* Accesibilidad */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* Animación de carga */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+body {
+    animation: fadeIn 0.6s ease-in;
+}
+
+/* Hidden utilities */
+.hidden {
+    display: none !important;
+}
+
+.visible {
+    display: block !important;
+}
+
+@media (max-width: 768px) {
+    .hidden-mobile {
+        display: none !important;
+    }
+}
+
+@media (min-width: 769px) {
+    .visible-mobile {
+        display: none !important;
+    }
+}
