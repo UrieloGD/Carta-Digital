@@ -1,1 +1,18 @@
 plantillas/*/uploads/
+vendor/
+composer.lock
+composer.phar
+
+# Variables de entorno
+.env
+.env.example
+.env.local
+.env.*.local
+
+# Composer
+/vendor/
+
+# Sistema
+.DS_Store
+Thumbs.db
+*.log

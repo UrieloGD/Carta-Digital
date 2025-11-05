@@ -42,14 +42,10 @@ try {
             <?php if (!empty($plantillas)): ?>
                 <?php foreach ($plantillas as $plantilla): ?>
                     <?php 
-                    // Construir la ruta completa de la imagen preview
-                    $imagenRuta = './images/default-template.png'; // Por defecto
-                    
+                    $imagenRuta = './images/default-template.png';
                     if (!empty($plantilla['imagen_preview'])) {
                         $imagenRuta = './plantillas/' . $plantilla['carpeta'] . '/' . $plantilla['imagen_preview'];
                     }
-                    
-                    // Determinar si tiene ejemplo
                     $tieneEjemplo = !empty($plantilla['ejemplo_slug']);
                     $urlDestino = $tieneEjemplo 
                         ? './invitacion.php?slug=' . urlencode($plantilla['ejemplo_slug'])
@@ -57,24 +53,54 @@ try {
                     $textoBoton = $tieneEjemplo ? 'Ver plantilla' : 'Próximamente';
                     $claseBoton = $tieneEjemplo ? 'btn btn-secondary template-btn' : 'btn btn-secondary template-btn disabled';
                     ?>
-                    <div class="template-card">
+                    <div class="template-card" data-category="<?php echo htmlspecialchars($plantilla['categoria'] ?? 'todas'); ?>">
                         <div class="template-image">
                             <img src="<?php echo htmlspecialchars($imagenRuta); ?>" 
-                                 alt="Preview de <?php echo htmlspecialchars($plantilla['nombre']); ?>"
-                                 onerror="this.src='./images/default-template.png'">
+                                alt="Preview de <?php echo htmlspecialchars($plantilla['nombre']); ?>"
+                                onerror="this.src='./images/default-template.png'">
                         </div>
                         <div class="template-info">
                             <h3><?php echo htmlspecialchars($plantilla['nombre']); ?></h3>
-                            
-                            <?php if ($tieneEjemplo): ?>
+
+                            <div>
                                 <a href="<?php echo $urlDestino; ?>" 
-                                   class="<?php echo $claseBoton; ?>"
-                                   target="_blank"><?php echo $textoBoton; ?></a>
-                            <?php else: ?>
-                                <span class="<?php echo $claseBoton; ?>"><?php echo $textoBoton; ?></span>
-                            <?php endif; ?>
+                                class="<?php echo $claseBoton; ?>"
+                                target="_blank" 
+                                rel="noopener">
+                                    <i class="fas fa-eye"></i> <?php echo $textoBoton; ?>
+                                </a>
+                            </div>
+
+                            <!-- Dropdown solo visible en hover -->
+                            <div class="buy-options">
+                                <select id="select-plan-<?php echo $plantilla['id']; ?>" class="select-plan">
+                                    <option value="escencial">Plan Escencial - $699 MXN</option>
+                                    <option value="premium" selected>Plan Premium - $899 MXN</option>
+                                    <option value="exclusivo">Plan Exclusivo - $1,199 MXN</option>
+                                </select>
+                            </div>
+
+                            <!-- Botón comprar SIEMPRE visible -->
+                            <a href="./checkout.php?plan=premium&plantilla=<?php echo $plantilla['id']; ?>" 
+                            id="boton-comprar-<?php echo $plantilla['id']; ?>"
+                            class="btn btn-primary template-btn">
+                                <i class="fas fa-shopping-cart"></i> Comprar
+                            </a>
                         </div>
                     </div>
+
+                    <script>
+                    // Actualizar el enlace del botón comprar cuando el usuario cambia el plan
+                    document.addEventListener('DOMContentLoaded', function () {
+                        const selectPlan = document.getElementById('select-plan-<?php echo $plantilla['id']; ?>');
+                        const btnComprar = document.getElementById('boton-comprar-<?php echo $plantilla['id']; ?>');
+                        btnComprar.href = `./checkout.php?plan=${selectPlan.value}&plantilla=<?php echo $plantilla['id']; ?>`;
+                        
+                        selectPlan.addEventListener('change', function () {
+                            btnComprar.href = `./checkout.php?plan=${this.value}&plantilla=<?php echo $plantilla['id']; ?>`;
+                        });
+                    });
+                    </script>
                 <?php endforeach; ?>
             <?php else: ?>
                 <div class="no-templates">
@@ -82,6 +108,17 @@ try {
                     <small>Agrega algunas plantillas desde el panel de administración.</small>
                 </div>
             <?php endif; ?>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="plantillas-cta">
+    <div class="container">
+        <div class="cta-content">
+            <h2>¿No sabes cuál elegir?</h2>
+            <p>Compara nuestros planes y encuentra el que mejor se adapta a tus necesidades</p>
+            <a href="./precios.php" class="btn btn-primary">Ver Planes y Precios</a>
         </div>
     </div>
 </section>

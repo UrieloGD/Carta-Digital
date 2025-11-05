@@ -1,3 +1,6 @@
+/* ========================================
+   GLOBAL STYLES
+======================================== */
 :root {
     --primary-color: #c8a882;
     --primary-hover: #b8956b;
@@ -12,18 +15,24 @@
     --border-radius: 15px;
 }
 
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 /* ========================================
    PAGE HEADER - Centrado
 ======================================== */
 .page-header {
     background: var(--background-white);
     padding: 3rem 0 3rem 0;
-    text-align: center; /* Centrado */
+    text-align: center;
 }
 
 .header-content {
     max-width: 800px;
-    margin: 0 auto; /* Centrado del contenedor */
+    margin: 0 auto;
 }
 
 .page-header h1 {
@@ -49,48 +58,10 @@
 }
 
 /* ========================================
-   NAVIGATION TABS - Centrado
-======================================== */
-.template-nav {
-    display: inline-flex; /* Mantiene inline-flex para centrar el grupo */
-    background: var(--background-light);
-    border-radius: 12px;
-    padding: 6px;
-    gap: 4px;
-    border: 1px solid rgba(200, 168, 130, 0.2);
-    /* Se centra automáticamente por el text-align: center del padre */
-}
-
-.nav-btn {
-    background: transparent;
-    border: none;
-    color: var(--text-medium);
-    padding: 0.8rem 1.5rem;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: var(--transition);
-    font-size: 0.95rem;
-    font-weight: 500;
-    white-space: nowrap;
-    position: relative;
-}
-
-.nav-btn:hover {
-    color: var(--text-dark);
-    background: rgba(200, 168, 130, 0.1);
-}
-
-.nav-btn.active {
-    background: var(--primary-color);
-    color: var(--background-white);
-    box-shadow: 0 2px 8px rgba(200, 168, 130, 0.3);
-}
-
-/* ========================================
    TEMPLATES SECTION
 ======================================== */
 .templates {
-    padding: 0rem 0 4rem 0;
+    padding: 2rem 0 4rem 0;
     background: var(--background-white);
 }
 
@@ -127,6 +98,11 @@
     margin: 0;
 }
 
+.no-templates small {
+    color: #999;
+    font-size: 0.9rem;
+}
+
 /* ========================================
    TEMPLATE CARDS
 ======================================== */
@@ -137,6 +113,9 @@
     transition: var(--transition);
     box-shadow: var(--shadow-light);
     border: 2px solid rgba(200, 168, 130, 0.1);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 .template-card:hover {
@@ -147,19 +126,20 @@
 
 .template-image {
     position: relative;
-    height: 400px; /* Reducido de 500px para mejor proporción */
+    height: 400px;
     overflow: hidden;
-    background: #f8f9fa; /* Fondo suave por si la imagen no llena todo */
+    background: #f8f9fa;
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
 }
 
 .template-image img {
-    width: auto; /* Cambio clave: permitir que el ancho se ajuste automáticamente */
+    width: auto;
     height: 100%;
-    max-width: 100%; /* Asegurar que no se desborde horizontalmente */
-    object-fit: contain; /* Cambio clave: contain en lugar de cover */
+    max-width: 100%;
+    object-fit: contain;
     transition: var(--transition);
 }
 
@@ -182,122 +162,211 @@
 }
 
 .template-card:hover .template-image img {
-    transform: scale(1.01); /* Reducido de 1.08 para evitar recortes */
+    transform: scale(1.01);
 }
 
 .template-info {
-    padding: 1.2rem;
+    padding: 1.5rem;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
 }
 
 .template-info h3 {
-    font-size: 1.1rem;
-    margin: 0;
+    font-size: 1.2rem;
+    margin: 0 0 1rem 0;
     color: var(--text-dark);
     font-weight: 500;
-}
-
-/* Estilo para botón deshabilitado */
-.template-btn.disabled {
-    background: var(--primary-color);
-    color: var(--background-light) !important;
-    cursor: not-allowed !important;
-}
-
-.template-btn.disabled:hover {
-    background: var(--primary-hover);
-    color: var(--background-light) !important;
-    transform: none !important;
+    line-height: 1.3;
 }
 
 /* ========================================
-   BUTTONS
+   TEMPLATE PRICING
 ======================================== */
-.btn {
-    display: inline-block;
-    padding: 0.8rem 1.8rem;
-    text-decoration: none;
-    border-radius: 25px;
-    transition: var(--transition);
-    font-weight: 500;
+.template-pricing {
+    margin: 1rem 0;
+    padding: 1rem 0;
+    border-top: 1px solid #e9ecef;
+    border-bottom: 1px solid #e9ecef;
     text-align: center;
+}
+
+.template-pricing small {
+    color: var(--text-medium);
+    font-size: 0.8rem;
+    display: block;
+}
+
+.template-pricing .price {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    margin: 0.3rem 0;
+}
+
+.template-pricing .plan-info {
+    color: var(--text-medium);
+    font-size: 0.75rem;
+    font-style: italic;
+    display: block;
+}
+
+/* ========================================
+   TEMPLATE ACTIONS (BUTTONS)
+======================================== */
+.template-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: flex-end;
+}
+
+.template-actions .btn {
+    width: 100%;
+    padding: 10px 15px;
+    font-size: 0.9rem;
+    border-radius: 8px;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    text-decoration: none;
     border: none;
     cursor: pointer;
-    font-size: 0.9rem;
+    font-weight: 500;
 }
 
-.btn-secondary {
+.template-actions .btn i {
+    font-size: 0.85rem;
+}
+
+.template-actions .btn:hover {
+    transform: translateY(-2px);
+}
+
+.template-actions .btn-primary {
     background: var(--primary-color);
-    color: var(--background-white);
+    color: white;
+    border: none;
 }
 
-.btn-secondary:hover {
+.template-actions .btn-primary:hover {
+    background: var(--primary-hover);
+}
+
+.template-actions .btn-secondary {
+    background: transparent;
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+}
+
+.template-actions .btn-secondary:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+.template-actions .btn-secondary.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    border-color: #bdc3c7;
+    color: #bdc3c7;
+}
+
+.template-actions .btn-secondary.disabled:hover {
+    background: transparent;
+    color: #bdc3c7;
+}
+
+.template-actions .btn.template-btn {
+    padding: 10px 15px;
+}
+
+/* ========================================
+   CTA SECTION
+======================================== */
+.plantillas-cta {
+    padding: 60px 0;
+    background: linear-gradient(135deg, rgba(200, 168, 130, 0.05), rgba(200, 168, 130, 0.1));
+    text-align: center;
+}
+
+.cta-content {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.cta-content h2 {
+    font-size: 2.5rem;
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+    font-weight: 400;
+}
+
+.cta-content p {
+    font-size: 1.1rem;
+    color: var(--text-medium);
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+.cta-content .btn {
+    display: inline-block;
+    padding: 12px 30px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: var(--transition);
+}
+
+.cta-content .btn-primary {
+    background: var(--primary-color);
+    color: white;
+}
+
+.cta-content .btn-primary:hover {
     background: var(--primary-hover);
     transform: translateY(-2px);
     box-shadow: var(--shadow-light);
 }
 
 /* ========================================
-   RESPONSIVE DESIGN
+   ANIMATIONS
 ======================================== */
-@media (max-width: 768px) {
-    .page-header {
-        text-align: center; /* Ya está centrado */
-        padding: 3rem 0 2rem 0;
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
     }
-    
-    .page-header h1 {
-        font-size: 2.2rem;
-    }
-    
-    .header-subtitle {
-        font-size: 1rem;
-        margin-bottom: 2rem;
-    }
-    
-    .template-nav {
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-    
-    .templates-grid {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-    }
-    
-    .template-image {
-        height: 300px;
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
 
-@media (max-width: 480px) {
-    .page-header h1 {
-        font-size: 1.8rem;
+@keyframes fadeIn {
+    from {
+        opacity: 0;
     }
-    
-    .template-nav {
-        width: 100%;
-        flex-direction: column;
-        align-items: center; /* Centrado en móvil */
-    }
-    
-    .nav-btn {
-        text-align: center;
-        min-width: 120px; /* Ancho mínimo para mejor apariencia */
-    }
-    
-    .templates {
-        padding: 2rem 0;
-    }
-
-    .template-image {
-        height: 250px;
+    to {
+        opacity: 1;
     }
 }
 
-/* ========================================
-   FILTER ANIMATIONS
-======================================== */
+@keyframes scaleUp {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
 .template-card.hidden {
     opacity: 0;
     transform: scale(0.8);
@@ -308,4 +377,204 @@
     opacity: 1;
     transform: scale(1);
     transition: var(--transition);
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+======================================== */
+@media (max-width: 1024px) {
+    .templates-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .page-header {
+        text-align: center;
+        padding: 2rem 0;
+    }
+    
+    .page-header h1 {
+        font-size: 2.2rem;
+    }
+    
+    .header-subtitle {
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .templates {
+        padding: 1rem 0 2rem 0;
+    }
+    
+    .templates-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .template-image {
+        height: 300px;
+    }
+    
+    .template-info {
+        padding: 1rem;
+    }
+    
+    .template-info h3 {
+        font-size: 1.1rem;
+    }
+    
+    .template-actions {
+        flex-direction: row;
+        gap: 0.5rem;
+    }
+    
+    .template-actions .btn {
+        flex: 1;
+        font-size: 0.85rem;
+        padding: 8px 10px;
+    }
+    
+    .plantillas-cta {
+        padding: 40px 0;
+    }
+    
+    .cta-content h2 {
+        font-size: 1.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .page-header h1 {
+        font-size: 1.8rem;
+    }
+    
+    .page-header .highlight {
+        display: block;
+    }
+    
+    .templates {
+        padding: 0.5rem 0 1.5rem 0;
+    }
+    
+    .templates-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .template-image {
+        height: 250px;
+    }
+    
+    .template-info {
+        padding: 0.8rem;
+    }
+    
+    .template-info h3 {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .template-pricing {
+        margin: 0.5rem 0;
+        padding: 0.5rem 0;
+    }
+    
+    .template-pricing .price {
+        font-size: 1.2rem;
+    }
+    
+    .template-actions {
+        flex-direction: column;
+        gap: 0.3rem;
+    }
+    
+    .template-actions .btn {
+        width: 100%;
+        padding: 8px;
+        font-size: 0.8rem;
+    }
+    
+    .no-templates {
+        padding: 1.5rem;
+    }
+    
+    .plantillas-cta {
+        padding: 2rem 0;
+    }
+    
+    .cta-content h2 {
+        font-size: 1.5rem;
+    }
+    
+    .cta-content p {
+        font-size: 1rem;
+    }
+}
+
+/* Por defecto no muestra el selector ni botón comprar */
+.template-info .buy-options {
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: opacity 0.3s ease, max-height 0.3s ease;
+    margin-top: 1rem;
+}
+
+/* Al hacer hover en la tarjeta, muestra el contenedor */
+.template-card:hover .template-info .buy-options {
+    opacity: 1;
+    max-height: 100px;
+}
+
+.template-info .btn-primary.template-btn {
+    margin-top: 0.5rem;
+}
+
+/* Estilos para seleccionar y botón, ya te los di antes */
+.select-plan {
+    width: 100%;
+    padding: 10px 15px;
+    font-size: 0.95rem;
+    border: 2px solid var(--primary-color);
+    border-radius: 12px;
+    background-color: var(--background-white);
+    color: var(--text-dark);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    transition: border-color 0.3s ease;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg fill='var(--primary-color)' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 18px;
+    margin-bottom: 0.5rem;
+}
+
+.select-plan:hover,
+.select-plan:focus {
+    border-color: var(--primary-hover);
+    outline: none;
+}
+
+.template-actions .btn-primary {
+    background: var(--primary-color);
+    color: white;
+    padding: 12px 15px;
+    font-weight: 600;
+    border-radius: 12px;
+    box-shadow: var(--shadow-light);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+.template-actions .btn-primary:hover {
+    background: var(--primary-hover);
+    transform: translateY(-2px);
 }

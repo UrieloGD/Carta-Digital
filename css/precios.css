@@ -1,25 +1,55 @@
 /* ========================================
-   PRECIOS STYLES
+   GLOBAL STYLES
 ======================================== */
+:root {
+    --primary-color: #c8a882;
+    --primary-hover: #b8956b;
+    --text-dark: #2c3e50;
+    --text-medium: #6c757d;
+    --text-light: #bdc3c7;
+    --background-light: #f8f9fa;
+    --background-white: #ffffff;
+    --shadow-light: 0 5px 15px rgba(0,0,0,0.1);
+    --shadow-medium: 0 10px 30px rgba(0,0,0,0.15);
+    --transition: all 0.3s ease;
+    --border-radius: 15px;
+}
 
-/* Page Header */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ========================================
+   PAGE HEADER
+======================================== */
 .page-header {
     background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%);
     color: var(--background-white);
     padding: 100px 0 80px;
     text-align: center;
+    animation: fadeIn 0.8s ease-out;
 }
 
-.header-content h1 {
+.header-content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.page-header h1 {
     font-size: 3rem;
     font-weight: 300;
     margin-bottom: 1rem;
-    animation: fadeInUp 1s ease-out;
+    animation: fadeInUp 0.8s ease-out;
+    letter-spacing: -1px;
 }
 
-.header-content .highlight {
+.page-header .highlight {
     color: var(--background-white);
     text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    font-weight: 600;
 }
 
 .header-subtitle {
@@ -27,18 +57,27 @@
     opacity: 0.9;
     max-width: 600px;
     margin: 0 auto;
-    animation: fadeInUp 1s ease-out 0.3s both;
+    animation: fadeInUp 0.8s ease-out 0.2s both;
+    line-height: 1.6;
 }
 
-/* Pricing Plans */
+/* ========================================
+   PRICING PLANS SECTION
+======================================== */
 .pricing-plans {
     padding: 80px 0;
     background: var(--background-light);
 }
 
+.pricing-plans .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
 .plans-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 2rem;
     margin-top: 2rem;
     align-items: stretch;
@@ -56,6 +95,20 @@
     display: flex;
     flex-direction: column;
     height: 100%;
+    animation: fadeInUp 0.8s ease-out;
+    animation-fill-mode: both;
+}
+
+.plan-card:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.plan-card:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.plan-card:nth-child(3) {
+    animation-delay: 0.3s;
 }
 
 .plan-card:hover {
@@ -63,7 +116,8 @@
     box-shadow: var(--shadow-medium);
 }
 
-.plan-card.premium-plan {
+/* Plan Premium Destacado */
+.plan-card.featured {
     background: var(--primary-color);
     color: var(--background-white);
     transform: scale(1.05);
@@ -71,7 +125,7 @@
     border: 3px solid var(--primary-color);
 }
 
-.plan-card.premium-plan:hover {
+.plan-card.featured:hover {
     transform: scale(1.05) translateY(-10px);
     background: var(--primary-hover);
 }
@@ -90,25 +144,46 @@
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
+/* Plan Header */
+.plan-header {
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(200, 168, 130, 0.2);
+}
+
+.plan-card.featured .plan-header {
+    border-bottom-color: rgba(255, 255, 255, 0.2);
+}
+
 .plan-header h3 {
     font-size: 1.8rem;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
     color: var(--text-dark);
     font-weight: 500;
 }
 
-.plan-card.premium-plan .plan-header h3 {
+.plan-card.featured .plan-header h3 {
     color: var(--background-white);
 }
 
+/* Precio */
 .price {
-    margin-bottom: 2rem;
+    margin-bottom: 0;
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 0.5rem;
 }
 
 .price .currency {
     font-size: 1.5rem;
     color: var(--text-medium);
     vertical-align: top;
+    font-weight: 400;
+}
+
+.plan-card.featured .price .currency {
+    color: rgba(255, 255, 255, 0.8);
 }
 
 .price .amount {
@@ -117,20 +192,27 @@
     color: var(--primary-color);
 }
 
-.plan-card.premium-plan .price .amount {
+.plan-card.featured .price .amount {
     color: var(--background-white);
 }
 
 .price .period {
-    font-size: 1.2rem;
+    font-size: 1rem;
     color: var(--text-medium);
     margin-left: 5px;
+    font-weight: 400;
 }
 
+.plan-card.featured .price .period {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Plan Features */
 .plan-features {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
+    margin: 2rem 0;
 }
 
 .plan-features ul {
@@ -139,6 +221,8 @@
     margin: 0;
     text-align: left;
     flex-grow: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .plan-features li {
@@ -146,9 +230,12 @@
     border-bottom: 1px solid var(--background-light);
     display: flex;
     align-items: center;
+    gap: 0.8rem;
+    font-size: 0.95rem;
+    color: var(--text-medium);
 }
 
-.plan-card.premium-plan .plan-features li {
+.plan-card.featured .plan-features li {
     color: var(--background-white);
     border-bottom-color: rgba(255, 255, 255, 0.2);
 }
@@ -157,134 +244,149 @@
     border-bottom: none;
 }
 
-.plan-features i {
+.plan-features li i {
     color: var(--primary-color);
-    margin-right: 1rem;
     width: 16px;
     text-align: center;
+    flex-shrink: 0;
 }
 
-.plan-card.premium-plan .plan-features i {
+.plan-card.featured .plan-features li i {
     color: var(--background-white);
 }
 
-.plan-card .btn {
+/* Plan Buttons */
+.plan-card .btn-plan {
+    width: 100%;
+    padding: 12px 24px;
     margin-top: auto;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: var(--transition);
+    font-size: 1rem;
 }
 
-.plan-card.premium-plan .btn-primary {
+.plan-card .btn-plan i {
+    font-size: 0.95rem;
+}
+
+.plan-card .btn-outline {
+    background: transparent;
+    color: var(--text-dark);
+    border: 2px solid var(--text-dark);
+}
+
+.plan-card .btn-outline:hover {
+    background: var(--text-dark);
+    color: var(--background-white);
+    transform: translateY(-2px);
+}
+
+.plan-card.featured .btn-primary {
     background: var(--background-white);
     color: var(--primary-color);
     border: 2px solid var(--background-white);
 }
 
-.plan-card.premium-plan .btn-primary:hover {
+.plan-card.featured .btn-primary:hover {
     background: var(--background-light);
     color: var(--primary-color);
     transform: translateY(-2px);
 }
 
-/* Templates with Prices */
-.templates-pricing {
+.plan-card .btn-primary {
+    background: var(--primary-color);
+    color: var(--background-white);
+    border: 2px solid var(--primary-color);
+}
+
+.plan-card .btn-primary:hover {
+    background: var(--primary-hover);
+    color: var(--background-white);
+    transform: translateY(-2px);
+}
+
+/* ========================================
+   COMPARISON SECTION
+======================================== */
+.comparison-section {
     padding: 80px 0;
     background: var(--background-white);
 }
 
-.templates-pricing h2 {
+.comparison-section h2 {
     text-align: center;
     font-size: 2.5rem;
-    margin-bottom: 1rem;
+    margin-bottom: 3rem;
     color: var(--text-dark);
     font-weight: 300;
 }
 
-.section-subtitle {
-    text-align: center;
-    font-size: 1.2rem;
-    color: var(--text-medium);
-    margin-bottom: 3rem;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.templates-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 2rem;
-    margin-top: 3rem;
-}
-
-.template-price-card {
-    background: var(--background-white);
+.table-responsive {
+    overflow-x: auto;
     border-radius: var(--border-radius);
-    overflow: hidden;
     box-shadow: var(--shadow-light);
-    transition: var(--transition);
 }
 
-.template-price-card:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-medium);
-}
-
-.template-image img {
+.comparison-table {
     width: 100%;
-    height: 400px;
-    object-fit: contain;
-    background-color: var(--background-light);
+    border-collapse: collapse;
+    background: var(--background-white);
 }
 
-.template-info {
-    padding: 1.5rem;
+.comparison-table thead {
+    background: var(--primary-color);
+    color: var(--background-white);
+}
+
+.comparison-table th,
+.comparison-table td {
+    padding: 1.2rem;
     text-align: center;
+    border-bottom: 1px solid #e9ecef;
+    font-size: 0.95rem;
 }
 
-.template-info h3 {
-    font-size: 1.4rem;
-    margin-bottom: 0.5rem;
-    color: var(--text-dark);
-    font-weight: 500;
-}
-
-.template-description {
-    color: var(--text-medium);
-    font-size: 0.9rem;
-    margin-bottom: 1rem;
-    line-height: 1.5;
-}
-
-.template-price {
-    margin: 1.5rem 0;
-}
-
-.template-price .price-amount {
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--primary-color);
-}
-
-.template-price .price-currency {
+.comparison-table th {
+    font-weight: 600;
     font-size: 1rem;
-    color: var(--text-medium);
-    margin-left: 5px;
 }
 
-.template-actions {
-    display: flex;
-    gap: 0.5rem;
-    justify-content: center;
-    flex-wrap: wrap;
+.comparison-table td:first-child,
+.comparison-table th:first-child {
+    text-align: left;
 }
 
-.template-actions .btn {
-    flex: 1;
-    min-width: 120px;
-    padding: 10px 20px;
-    font-size: 0.9rem;
+.comparison-table tbody tr:hover {
+    background: var(--background-light);
 }
 
-/* FAQ Section */
+.comparison-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.comparison-table i {
+    font-size: 1.2rem;
+}
+
+.comparison-table i.fa-check {
+    color: #28a745;
+}
+
+.comparison-table i.fa-times {
+    color: #dc3545;
+}
+
+/* ========================================
+   FAQ SECTION
+======================================== */
 .faq-section {
     padding: 80px 0;
     background: var(--background-light);
@@ -300,7 +402,7 @@
 
 .faq-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 2rem;
 }
 
@@ -309,26 +411,43 @@
     padding: 2rem;
     border-radius: var(--border-radius);
     box-shadow: var(--shadow-light);
+    transition: var(--transition);
+    border-left: 4px solid transparent;
+}
+
+.faq-item:hover {
+    border-left-color: var(--primary-color);
+    transform: translateX(5px);
 }
 
 .faq-item h4 {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     margin-bottom: 1rem;
     color: var(--primary-color);
-    font-weight: 500;
+    font-weight: 600;
 }
 
 .faq-item p {
     color: var(--text-medium);
     line-height: 1.6;
+    font-size: 0.95rem;
+    margin: 0;
 }
 
-/* CTA Section */
+/* ========================================
+   CTA SECTION
+======================================== */
 .cta-section {
     padding: 80px 0;
-    background: var(--primary-color);
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%);
     color: var(--background-white);
     text-align: center;
+}
+
+.cta-content {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 0 20px;
 }
 
 .cta-content h2 {
@@ -341,123 +460,35 @@
     font-size: 1.2rem;
     margin-bottom: 2rem;
     opacity: 0.9;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
+    line-height: 1.6;
+}
+
+.cta-section .btn {
+    display: inline-block;
+    padding: 12px 30px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: var(--transition);
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
 }
 
 .cta-section .btn-primary {
     background: var(--background-white);
     color: var(--primary-color);
-    font-weight: 600;
 }
 
 .cta-section .btn-primary:hover {
     background: var(--background-light);
     transform: translateY(-2px);
+    box-shadow: var(--shadow-light);
 }
 
-/* No Templates */
-.no-templates {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: 3rem;
-    background: var(--background-light);
-    border-radius: var(--border-radius);
-}
-
-.no-templates p {
-    font-size: 1.2rem;
-    color: var(--text-medium);
-    margin-bottom: 1.5rem;
-}
-
-/* Estilos para botones deshabilitados */
-.btn.disabled,
-.btn-secondary.disabled {
-    background-color: #e9ecef;
-    color: #6c757d;
-    border-color: #dee2e6;
-    cursor: not-allowed;
-    opacity: 0.6;
-}
-
-.btn.disabled:hover,
-.btn-secondary.disabled:hover {
-    background-color: #e9ecef;
-    color: #6c757d;
-    border-color: #dee2e6;
-    transform: none;
-}
-
-/* Mejorar la presentación del template sin ejemplo */
-.template-actions .btn.disabled + .btn-primary {
-    width: 100%;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .header-content h1 {
-        font-size: 2.5rem;
-    }
-    
-    .plans-grid {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-    }
-    
-    .plan-card.premium-plan {
-        transform: none;
-    }
-    
-    .plan-card.premium-plan:hover {
-        transform: translateY(-10px);
-    }
-    
-    .templates-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .template-actions {
-        flex-direction: column;
-    }
-    
-    .template-actions .btn {
-        flex: none;
-        width: 100%;
-    }
-}
-
-@media (max-width: 480px) {
-    .page-header {
-        padding: 80px 0 60px;
-    }
-    
-    .header-content h1 {
-        font-size: 2rem;
-    }
-    
-    .pricing-plans,
-    .templates-pricing,
-    .faq-section,
-    .cta-section {
-        padding: 60px 0;
-    }
-    
-    .plan-card {
-        padding: 2rem 1.5rem;
-    }
-    
-    .price .amount {
-        font-size: 3rem;
-    }
-    
-    .cta-content h2 {
-        font-size: 2rem;
-    }
-}
-
-/* Animation keyframes */
+/* ========================================
+   ANIMATIONS
+======================================== */
 @keyframes fadeInUp {
     from {
         opacity: 0;
@@ -467,4 +498,213 @@
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes scaleUp {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+======================================== */
+@media (max-width: 1024px) {
+    .plans-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+    
+    .plan-card.featured {
+        transform: scale(1.02);
+    }
+    
+    .plan-card.featured:hover {
+        transform: scale(1.02) translateY(-10px);
+    }
+}
+
+@media (max-width: 768px) {
+    .page-header {
+        padding: 80px 0 60px;
+    }
+    
+    .page-header h1 {
+        font-size: 2.5rem;
+    }
+    
+    .header-subtitle {
+        font-size: 1.1rem;
+    }
+    
+    .pricing-plans {
+        padding: 60px 0;
+    }
+    
+    .plans-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .plan-card {
+        padding: 2rem;
+    }
+    
+    .plan-card.featured {
+        transform: none;
+    }
+    
+    .plan-card.featured:hover {
+        transform: translateY(-10px);
+    }
+    
+    .price .amount {
+        font-size: 3rem;
+    }
+    
+    .comparison-section,
+    .faq-section,
+    .cta-section {
+        padding: 60px 0;
+    }
+    
+    .comparison-section h2,
+    .faq-section h2,
+    .cta-content h2 {
+        font-size: 2rem;
+    }
+    
+    .cta-content p {
+        font-size: 1.1rem;
+    }
+    
+    .table-responsive {
+        font-size: 0.85rem;
+    }
+    
+    .comparison-table th,
+    .comparison-table td {
+        padding: 0.8rem;
+    }
+    
+    .faq-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .page-header {
+        padding: 60px 0 50px;
+    }
+    
+    .page-header h1 {
+        font-size: 2rem;
+    }
+    
+    .page-header .highlight {
+        display: block;
+    }
+    
+    .header-subtitle {
+        font-size: 1rem;
+    }
+    
+    .pricing-plans,
+    .comparison-section,
+    .faq-section,
+    .cta-section {
+        padding: 40px 0;
+    }
+    
+    .plan-card {
+        padding: 1.5rem;
+    }
+    
+    .plan-header {
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+    }
+    
+    .plan-header h3 {
+        font-size: 1.4rem;
+    }
+    
+    .price .amount {
+        font-size: 2.5rem;
+    }
+    
+    .price .currency {
+        font-size: 1.2rem;
+    }
+    
+    .price .period {
+        font-size: 0.85rem;
+    }
+    
+    .plan-features li {
+        padding: 0.6rem 0;
+        font-size: 0.85rem;
+    }
+    
+    .plan-card .btn-plan {
+        padding: 10px 15px;
+        font-size: 0.9rem;
+    }
+    
+    .comparison-section h2,
+    .faq-section h2 {
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .table-responsive {
+        font-size: 0.75rem;
+    }
+    
+    .comparison-table th,
+    .comparison-table td {
+        padding: 0.6rem;
+    }
+    
+    .faq-item {
+        padding: 1.5rem;
+    }
+    
+    .faq-item h4 {
+        font-size: 1rem;
+    }
+    
+    .faq-item p {
+        font-size: 0.85rem;
+    }
+    
+    .cta-content h2 {
+        font-size: 1.8rem;
+    }
+    
+    .cta-content p {
+        font-size: 1rem;
+    }
+}
+
+/* ========================================
+   UTILITY CLASSES
+======================================== */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
 }

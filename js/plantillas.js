@@ -24,3 +24,18 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+document.querySelectorAll('.template-card').forEach(card => {
+    const selectPlan = card.querySelector('.select-plan');
+    const btnComprar = card.querySelector('.btn-primary.template-btn');
+
+    if (selectPlan && btnComprar) {
+        // Actualiza URL inicial
+        btnComprar.href = `./checkout.php?plan=${selectPlan.value}&plantilla=${card.querySelector('.open-modal, [data-plantilla-id]')?.getAttribute('data-plantilla-id') || ''}`;
+
+        // Actualiza URL cuando cambie el select
+        selectPlan.addEventListener('change', () => {
+            btnComprar.href = `./checkout.php?plan=${selectPlan.value}&plantilla=${card.querySelector('.open-modal, [data-plantilla-id]')?.getAttribute('data-plantilla-id') || ''}`;
+        });
+    }
+});
