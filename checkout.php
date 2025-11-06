@@ -120,17 +120,6 @@ $precio_display = number_format($precio / 100, 2);
                         
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="nombre_novio">Nombre del Novio</label>
-                                <input 
-                                    type="text" 
-                                    id="nombre_novio" 
-                                    name="nombre_novio" required 
-                                    placeholder="Ejemplo: Juan" 
-                                    class="form-control">
-                                <span class="form-error" id="error-nombre-novio"></span>
-                            </div>
-
-                            <div class="form-group">
                                 <label for="nombre_novia">Nombre de la Novia</label>
                                 <input 
                                     type="text" 
@@ -139,6 +128,17 @@ $precio_display = number_format($precio / 100, 2);
                                     placeholder="Ejemplo: Ana" 
                                     class="form-control">
                                 <span class="form-error" id="error-nombre-novia"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="nombre_novio">Nombre del Novio</label>
+                                <input 
+                                    type="text" 
+                                    id="nombre_novio" 
+                                    name="nombre_novio" required 
+                                    placeholder="Ejemplo: Juan" 
+                                    class="form-control">
+                                <span class="form-error" id="error-nombre-novio"></span>
                             </div>
                         </div>
 
@@ -287,7 +287,7 @@ $precio_display = number_format($precio / 100, 2);
             apellido: document.getElementById('apellido').value.trim(),
             nombre_novio: nombreNovio,
             nombre_novia: nombreNovia,
-            nombres_novios: `${nombreNovio} & ${nombreNovia}`,
+            nombres_novios: `${nombreNovia} & ${nombreNovio}`,
             fecha_evento: document.getElementById('fecha_evento').value,
             hora_evento: document.getElementById('hora_evento').value,
             email: document.getElementById('email').value.trim(),

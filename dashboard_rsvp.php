@@ -1,30 +1,47 @@
 <?php
-// dashboard_cliente.php (Versión mejorada)
 session_start();
 require_once 'config/database.php';
-require_once 'functions/auth-check.php';
 header('Content-Type: text/html; charset=UTF-8');
+
+// Verificar si hay sesión activa
+if (!isset($_SESSION['cliente_logueado']) || $_SESSION['cliente_logueado'] !== true) {
+    header('Location: login.php');
+    exit;
+}
 
 $db = new Database();
 $conn = $db->getConnection();
 
-// Obtener información de la invitación del cliente
+// Obtener TODAS las invitaciones del cliente
 $stmt = $conn->prepare("
     SELECT i.*, p.nombre as plantilla_nombre 
     FROM invitaciones i 
     INNER JOIN plantillas p ON i.plantilla_id = p.id 
-    WHERE EXISTS (
-        SELECT 1 FROM clientes_login cl 
-        WHERE cl.slug COLLATE utf8mb4_unicode_ci = i.slug COLLATE utf8mb4_unicode_ci 
-        AND cl.id = ?
-    ) 
-    LIMIT 1
+    WHERE i.cliente_id = ?
+    ORDER BY i.fecha_creacion DESC
 ");
 $stmt->execute([$_SESSION['cliente_id']]);
-$invitacion = $stmt->fetch();
+$invitaciones = $stmt->fetchAll();
+
+if (empty($invitaciones)) {
+    die("Error: No se encontraron invitaciones asociadas a tu cuenta.");
+}
+
+// Determinar qué invitación mostrar
+$invitacion_seleccionada_id = isset($_GET['invitacion_id']) ? (int)$_GET['invitacion_id'] : $invitaciones[0]['id'];
+
+// Obtener la invitación seleccionada
+$invitacion = null;
+foreach ($invitaciones as $inv) {
+    if ($inv['id'] == $invitacion_seleccionada_id) {
+        $invitacion = $inv;
+        break;
+    }
+}
 
 if (!$invitacion) {
-    die("Error: No se encontró la invitación asociada a tu cuenta.");
+    // Si no se encuentra, usar la primera
+    $invitacion = $invitaciones[0];
 }
 
 $invitacion_slug = $invitacion['slug'];
@@ -237,7 +254,7 @@ $invitacion_url = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . $_SER
     <title>Dashboard - <?php echo htmlspecialchars($invitacion['nombres_novios']); ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="css/dashboard.css" rel="stylesheet">
+    <link rel="stylesheet" href="./css/dashboard_rsvp.css?v=<?php echo filemtime('./css/dashboard_rsvp.css'); ?>" />
     <link rel="shortcut icon" href="./images/logo.webp" />
 </head>
 <body>
@@ -281,6 +298,36 @@ $invitacion_url = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . $_SER
             </div>
         </div>
     </div>
+
+    <?php if (count($invitaciones) > 1): ?>
+    <div class="container mt-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between flex-wrap">
+                    <div class="mb-2 mb-md-0">
+                        <h6 class="mb-0">
+                            <i class="fas fa-list me-2"></i>
+                            Tienes <?php echo count($invitaciones); ?> invitaciones
+                        </h6>
+                    </div>
+                    <div>
+                        <select class="form-select" id="selector-invitaciones" onchange="cambiarInvitacion(this.value)">
+                            <?php foreach ($invitaciones as $inv): ?>
+                                <option value="<?php echo $inv['id']; ?>" <?php echo $inv['id'] == $invitacion['id'] ? 'selected' : ''; ?>>
+                                    <?php echo htmlspecialchars($inv['nombres_novios']); ?> 
+                                    - <?php echo date('d/m/Y', strtotime($inv['fecha_evento'])); ?>
+                                    <?php if ($inv['plantilla_nombre']): ?>
+                                        (<?php echo htmlspecialchars($inv['plantilla_nombre']); ?>)
+                                    <?php endif; ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
 
     <div class="container main-container">
         <!-- Mensajes de estado -->
@@ -754,6 +801,11 @@ $invitacion_url = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . $_SER
             invitacionUrl: '<?php echo $invitacion_url; ?>',
             nombresNovios: '<?php echo htmlspecialchars($invitacion['nombres_novios'], ENT_QUOTES); ?>'
         };
+
+        function cambiarInvitacion(invitacionId) {
+            // Recargar la página con la nueva invitación seleccionada
+            window.location.href = 'dashboard_cliente.php?invitacion_id=' + invitacionId;
+        }
     </script>
     <script src="js/dashboard.js"></script>
 </body>

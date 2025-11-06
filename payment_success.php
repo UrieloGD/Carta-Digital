@@ -17,11 +17,11 @@ if ($pedido_id) {
         $database = new Database();
         $db = $database->getConnection();
         
-        // Obtener información del pedido
+        // Obtener información del pedido con el slug del cliente
         $stmt = $db->prepare("
             SELECT 
                 p.*, 
-                c.nombre, c.apellido, c.email, 
+                c.nombre, c.apellido, c.email, c.slug,
                 c.nombres_novios, c.telefono,
                 pl.nombre as plantilla_nombre,
                 i.slug as invitacion_slug, 
@@ -38,14 +38,13 @@ if ($pedido_id) {
         if (!$pedido) {
             $error = "No se encontró el pedido o el pago no ha sido confirmado aún.";
         } else {
-            // Generar contraseña para incluirla en emails
-            $raw_password = $pedido['invitacion_slug'] . str_replace('-', '', $pedido['fecha_evento']);
+            // Generar contraseña (slug del cliente + fecha evento)
+            $raw_password = $pedido['slug'] . str_replace('-', '', $pedido['fecha_evento']);
             
             // Enviar email al cliente
-            enviarEmailBienvenida($pedido);
+            enviarEmailBienvenida($pedido, $raw_password);
             
             // Enviar notificación al admin
-            require_once './functions/email_notificacion_admin.php';
             enviarNotificacionAdmin($pedido, $raw_password);
         }
     } catch (Exception $e) {
@@ -215,7 +214,7 @@ if ($pedido_id) {
                     </div>
                     
                     <h1>Algo Salió Mal</h1>
-                    <p class="error-message"><?php echo htmlspecialchars($error); ?></span>
+                    <p class="error-message"><?php echo htmlspecialchars($error); ?></p>
                     
                     <div class="error-actions">
                         <p>Por favor, intenta de nuevo o contáctanos si el problema persiste.</p>

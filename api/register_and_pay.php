@@ -18,8 +18,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-function generarSlugNovios($nombre_novio, $nombre_novia) {
-    $combinar = trim("{$nombre_novio}-{$nombre_novia}");
+function generarSlugNovios($nombre_novia, $nombre_novio) {
+    $combinar = trim("{$nombre_novia}-{$nombre_novio}");
     if (empty($combinar)) {
         return 'invitacion-' . time();
     }
@@ -46,19 +46,19 @@ try {
     }
     
     // Validar campos requeridos
-    $requiredFields = ['nombre', 'apellido', 'email', 'telefono', 'plan', 'nombres_novios', 'fecha_evento', 'hora_evento'];
+    $requiredFields = ['nombre', 'apellido', 'email', 'telefono', 'plan', 'nombre_novio', 'nombre_novia', 'fecha_evento', 'hora_evento'];
     foreach ($requiredFields as $field) {
         if (empty($data[$field])) {
             throw new Exception("El campo {$field} es requerido");
         }
     }
     
-    // Limpiar y validar datos - DEFINIR TODAS LAS VARIABLES AQUÍ
+    // Limpiar y validar datos
     $nombre = trim($data['nombre']);
     $apellido = trim($data['apellido']);
     $nombre_novio = trim($data['nombre_novio']);
     $nombre_novia = trim($data['nombre_novia']);
-    $nombres_novios = "{$nombre_novio} & {$nombre_novia}";
+    $nombres_novios = "{$nombre_novia} & {$nombre_novio}";
     $fecha_evento = $data['fecha_evento'];
     $hora_evento = $data['hora_evento'];
     $email = trim(strtolower($data['email']));
@@ -95,36 +95,39 @@ try {
     // Iniciar transacción
     $db->beginTransaction();
     
-    // Verificar si el email ya existe
-    $stmt = $db->prepare("SELECT id FROM clientes WHERE email = ?");
-    $stmt->execute([$email]);
-    $clienteExistente = $stmt->fetch(PDO::FETCH_ASSOC);
+    // ============================================
+    // GENERAR SLUG ÚNICO (SIEMPRE NUEVO)
+    // ============================================
+    $slug_cliente = generarSlugNovios($nombre_novia, $nombre_novio);
     
-    if ($clienteExistente) {
-        // Si ya existe, usar ese cliente_id
-        $cliente_id = $clienteExistente['id'];
-        
-        // Actualizar nombres_novios si cambió
-        $stmt = $db->prepare("UPDATE clientes SET nombres_novios = ? WHERE id = ?");
-        $stmt->execute([$nombres_novios, $cliente_id]);
-    } else {
-        // Generar slug único para el cliente
-        $slug_cliente = generarSlugNovios($nombre_novio, $nombre_novia);
-
-        // Generar contraseña temporal
-        $raw_password = $slug_cliente . str_replace('-', '', $fecha_evento);
-        $password_hash = password_hash($raw_password, PASSWORD_DEFAULT);
-
-        // Crear nuevo cliente con password
-        $stmt = $db->prepare("
-            INSERT INTO clientes (slug, nombre, apellido, nombres_novios, email, telefono, password, fecha_registro) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, NOW())
-        ");
-        $stmt->execute([$slug_cliente, $nombre, $apellido, $nombres_novios, $email, $telefono, $password_hash]);
-        $cliente_id = $db->lastInsertId();
+    // Verificar que sea único
+    $stmt = $db->prepare("SELECT COUNT(*) FROM clientes WHERE slug = ?");
+    $stmt->execute([$slug_cliente]);
+    if ($stmt->fetchColumn() > 0) {
+        $slug_cliente = $slug_cliente . '-' . substr(md5(uniqid()), 0, 8);
     }
     
-    // Crear Payment Intent en Stripe
+    // ============================================
+    // GENERAR CONTRASEÑA
+    // ============================================
+    $raw_password = $slug_cliente . str_replace('-', '', $fecha_evento);
+    $password_hash = password_hash($raw_password, PASSWORD_DEFAULT);
+    
+    // ============================================
+    // CREAR NUEVO CLIENTE (SIEMPRE)
+    // ============================================
+    $stmt = $db->prepare("
+        INSERT INTO clientes (slug, nombre, apellido, nombres_novios, email, telefono, password, fecha_registro) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, NOW())
+    ");
+    $stmt->execute([$slug_cliente, $nombre, $apellido, $nombres_novios, $email, $telefono, $password_hash]);
+    $cliente_id = $db->lastInsertId();
+    
+    error_log("✅ Nuevo cliente: ID={$cliente_id}, Slug={$slug_cliente}, Email={$email}");
+    
+    // ============================================
+    // CREAR PAYMENT INTENT EN STRIPE
+    // ============================================
     $paymentIntent = \Stripe\PaymentIntent::create([
         'amount' => $monto,
         'currency' => 'mxn',
@@ -145,28 +148,22 @@ try {
         ]
     ]);
     
-    // Generar slug único para la invitación
-    $slug_invitacion = generarSlugNovios($nombre_novio, $nombre_novia);
+    // ============================================
+    // GENERAR SLUG ÚNICO PARA LA INVITACIÓN
+    // ============================================
+    $slug_invitacion = generarSlugNovios($nombre_novia, $nombre_novio);
     
-    // Verificar que el slug sea único en invitaciones
+    // Verificar que sea único
     $stmt = $db->prepare("SELECT COUNT(*) FROM invitaciones WHERE slug = ?");
     $stmt->execute([$slug_invitacion]);
-    $count = $stmt->fetchColumn();
-    
-    if ($count > 0) {
-        // Formatear fecha del evento para usarla en el slug, si existe ya el slug
-        $fecha_formateada = '';
-        if (!empty($fecha_evento)) {
-            // Formato día, mes, año
-            $fecha_formateada = date('dmy', strtotime($fecha_evento));
-        } else {
-            $fecha_formateada = date('dmy');
-        }
-
+    if ($stmt->fetchColumn() > 0) {
+        $fecha_formateada = date('dmy', strtotime($fecha_evento));
         $slug_invitacion = $slug_invitacion . '-' . $fecha_formateada;
     }
     
-    // Crear registro en invitaciones
+    // ============================================
+    // CREAR REGISTRO EN INVITACIONES
+    // ============================================
     $stmt = $db->prepare("
         INSERT INTO invitaciones (plantilla_id, cliente_id, slug, nombres_novios, fecha_evento, hora_evento, activa, fecha_creacion) 
         VALUES (?, ?, ?, ?, ?, ?, 1, NOW())
@@ -177,7 +174,9 @@ try {
     
     $invitacion_id = $db->lastInsertId();
     
-    // Crear registro de pedido con el invitacion_id
+    // ============================================
+    // CREAR REGISTRO DE PEDIDO
+    // ============================================
     $stmt = $db->prepare("
         INSERT INTO pedidos (cliente_id, invitacion_id, plantilla_id, plan, monto, metodo_pago, estado, payment_intent_id, fecha_creacion) 
         VALUES (?, ?, ?, ?, ?, 'stripe', 'pendiente', ?, NOW())
@@ -197,7 +196,7 @@ try {
     $db->commit();
     
     // Log para debugging
-    error_log("✅ Pedido creado exitosamente: ID={$pedido_id}, Cliente={$email}, Novios={$nombres_novios}, Plan={$plan}, Invitación={$invitacion_id}, PaymentIntent={$paymentIntent->id}");
+    error_log("✅ Pedido creado: ID={$pedido_id}, Cliente={$cliente_id}, Invitación={$invitacion_id}, Email={$email}");
     
     // Responder con éxito
     http_response_code(200);
@@ -207,6 +206,7 @@ try {
         'pedido_id' => $pedido_id,
         'cliente_id' => $cliente_id,
         'invitacion_id' => $invitacion_id,
+        'slug_cliente' => $slug_cliente,
         'slug_invitacion' => $slug_invitacion,
         'payment_intent_id' => $paymentIntent->id
     ]);

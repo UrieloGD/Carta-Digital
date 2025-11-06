@@ -10,10 +10,10 @@ require __DIR__ . '/../config/load_env.php';
  * @param array $pedido - Datos del pedido y cliente
  * @return bool - True si se envió correctamente, false si falló
  */
-function enviarEmailBienvenida($pedido) {
+function enviarEmailBienvenida($pedido, $raw_password) {
     $email_destino = $pedido['email'];
     $nombre_cliente = $pedido['nombre'];
-    $raw_password = $pedido['invitacion_slug'] . str_replace('-', '', $pedido['fecha_evento']);
+    $slug_cliente = $pedido['slug'];
     
     $subject = "🎊 ¡Confirmación de tu pedido - Carta Digital!";
     
@@ -36,7 +36,7 @@ function enviarEmailBienvenida($pedido) {
                 max-width: 600px;
                 margin: 20px auto;
                 background-color: #ffffff;
-                border-radius: 10px;
+                border-radius: 15px;
                 overflow: hidden;
                 box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             }
@@ -89,7 +89,7 @@ function enviarEmailBienvenida($pedido) {
                 background: #c8a882;
                 color: white;
                 padding: 20px;
-                border-radius: 8px;
+                border-radius: 15px;
                 margin: 25px 0;
                 text-align: center;
             }
@@ -100,7 +100,7 @@ function enviarEmailBienvenida($pedido) {
             .credential-item {
                 background-color: rgba(255,255,255,0.2);
                 padding: 12px;
-                border-radius: 5px;
+                border-radius: 8px;
                 margin: 10px 0;
                 font-size: 16px;
             }
@@ -125,6 +125,9 @@ function enviarEmailBienvenida($pedido) {
                 font-weight: 600;
                 margin: 20px 0;
             }
+            .btn-primary:hover {
+                background: #b8956b;
+            }
             .steps {
                 margin: 25px 0;
             }
@@ -138,7 +141,7 @@ function enviarEmailBienvenida($pedido) {
                 color: white;
                 width: 30px;
                 height: 30px;
-                border-radius: 100%;
+                border-radius: 50%;
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -208,40 +211,40 @@ function enviarEmailBienvenida($pedido) {
                 
                 <div class='credentials-box'>
                     <h3>🔑 Tus Credenciales de Acceso</h3>
-                    <p style='margin-bottom: 15px; opacity: 0.9;'>Usa estos datos para acceder a tu dashboard y gestionar tu invitación:</p>
+                    <p style='margin-bottom: 15px; opacity: 0.9;'>Usa estos datos para acceder a tu dashboard:</p>
                     
                     <div class='credential-item'>
-                        <strong>📧 Email:</strong>
-                        <div class='credential-value'>" . htmlspecialchars($email_destino) . "</div>
+                        <strong>📝 Código de acceso:</strong>
+                        <div class='credential-value'>" . htmlspecialchars($slug_cliente) . "</div>
                     </div>
                     
                     <div class='credential-item'>
-                        <strong>🔒 Contraseña temporal:</strong>
+                        <strong>🔒 Contraseña:</strong>
                         <div class='credential-value'>" . htmlspecialchars($raw_password) . "</div>
                     </div>
                 </div>
                 
                 <div style='text-align: center;'>
-                    <a href='https://cartadigital.com.mx/login.php' class='btn-primary'>
+                    <a href='https://cartadigital.com.mx/dashboard.php' class='btn-primary'>
                         Acceder a mi Dashboard
                     </a>
                 </div>
                 
-                <h3 style='color: #667eea; margin-top: 30px;'>📝 Próximos Pasos</h3>
+                <h3 style='color: #c8a882; margin-top: 30px;'>📝 Próximos Pasos</h3>
                 <div class='steps'>
                     <div class='step'>
                         <div class='step-number'>1</div>
                         <div class='step-content'>
                             <h4>Accede a tu dashboard</h4>
-                            <p>Usa las credenciales arriba para entrar y gestionar tu invitación.</p>
+                            <p>Ingresa con tu código de acceso y contraseña para entrar a tu panel.</p>
                         </div>
                     </div>
                     
                     <div class='step'>
                         <div class='step-number'>2</div>
                         <div class='step-content'>
-                            <h4>Personaliza tu invitación</h4>
-                            <p>Agrega fotos, historia, ubicaciones y todos los detalles de tu evento.</p>
+                            <h4>Espera nuestro contacto</h4>
+                            <p>Nos comunicaremos contigo para obtener los detalles de tu invitación.</p>
                         </div>
                     </div>
                     
@@ -249,7 +252,7 @@ function enviarEmailBienvenida($pedido) {
                         <div class='step-number'>3</div>
                         <div class='step-content'>
                             <h4>Comparte con tus invitados</h4>
-                            <p>Envía tu invitación digital por WhatsApp, email o redes sociales.</p>
+                            <p>Cuando esté lista, comparte tu invitación digital por WhatsApp, email o redes sociales.</p>
                         </div>
                     </div>
                 </div>
@@ -276,7 +279,7 @@ function enviarEmailBienvenida($pedido) {
     </html>
     ";
     
-        try {
+    try {
         $mail = new PHPMailer(true);
         
         $mail->isSMTP();
@@ -289,7 +292,7 @@ function enviarEmailBienvenida($pedido) {
         
         $mail->setFrom(SMTP_FROM_EMAIL, SMTP_FROM_NAME);
         $mail->addAddress($email_destino, $nombre_cliente);
-        $mail->addReplyTo($_ENV['SMTP_FROM_EMAIL'], 'Soporte Carta Digital');
+        $mail->addReplyTo(SMTP_FROM_EMAIL, 'Soporte Carta Digital');
         
         // Contenido
         $mail->isHTML(true);

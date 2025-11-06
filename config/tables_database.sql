@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS clientes (
     nombre VARCHAR(100) NOT NULL,
     apellido VARCHAR(100) NOT NULL,
     nombres_novios VARCHAR(200) NOT NULL,
-    email VARCHAR(150) UNIQUE NOT NULL,
+    email VARCHAR(150) NOT NULL,
     telefono VARCHAR(20),
     password VARCHAR(255),
     fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
