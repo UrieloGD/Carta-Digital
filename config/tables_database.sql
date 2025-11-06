@@ -14,10 +14,10 @@ CREATE TABLE IF NOT EXISTS clientes (
     password VARCHAR(255),
     fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     fecha_actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    activo TINYINT(1) DEFAULT 1
+    activo TINYINT(1) DEFAULT 1,
     recibe_notificaciones TINYINT DEFAULT 1,
     notificar_email TINYINT DEFAULT 1,
-    notificar_whatsapp TINYINT DEFAULT 0,
+    notificar_whatsapp TINYINT DEFAULT 0
 );
 
 -- Tabla de plantillas base

@@ -1,6 +1,9 @@
 <?php 
 require_once './includes/header.php';
 require_once './config/database.php';
+require_once './config/email_config.php';
+require_once './functions/email_bienvenida.php';
+require_once './functions/email_notificacion_admin.php';
 
 // Obtener parámetros
 $pedido_id = isset($_GET['pedido_id']) ? (int)$_GET['pedido_id'] : null;
@@ -34,6 +37,16 @@ if ($pedido_id) {
         
         if (!$pedido) {
             $error = "No se encontró el pedido o el pago no ha sido confirmado aún.";
+        } else {
+            // Generar contraseña para incluirla en emails
+            $raw_password = $pedido['invitacion_slug'] . str_replace('-', '', $pedido['fecha_evento']);
+            
+            // Enviar email al cliente
+            enviarEmailBienvenida($pedido);
+            
+            // Enviar notificación al admin
+            require_once './functions/email_notificacion_admin.php';
+            enviarNotificacionAdmin($pedido, $raw_password);
         }
     } catch (Exception $e) {
         error_log("Error al obtener pedido: " . $e->getMessage());
@@ -174,7 +187,7 @@ if ($pedido_id) {
                             </li>
                             <li>
                                 <i class="fas fa-envelope"></i>
-                                <a href="mailto:contacto@cartadigital.com">contacto@cartadigital.com</a>
+                                <a href="mailto:contacto@cartadigital.com.mx">contacto@cartadigital.com.mx</a>
                             </li>
                         </ul>
                     </div>
@@ -202,7 +215,7 @@ if ($pedido_id) {
                     </div>
                     
                     <h1>Algo Salió Mal</h1>
-                    <p class="error-message"><?php echo htmlspecialchars($error); ?></p>
+                    <p class="error-message"><?php echo htmlspecialchars($error); ?></span>
                     
                     <div class="error-actions">
                         <p>Por favor, intenta de nuevo o contáctanos si el problema persiste.</p>

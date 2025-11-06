@@ -110,13 +110,17 @@ try {
     } else {
         // Generar slug único para el cliente
         $slug_cliente = generarSlugNovios($nombre_novio, $nombre_novia);
-        
-        // Crear nuevo cliente
+
+        // Generar contraseña temporal
+        $raw_password = $slug_cliente . str_replace('-', '', $fecha_evento);
+        $password_hash = password_hash($raw_password, PASSWORD_DEFAULT);
+
+        // Crear nuevo cliente con password
         $stmt = $db->prepare("
-            INSERT INTO clientes (slug, nombre, apellido, nombres_novios, email, telefono, fecha_registro) 
-            VALUES (?, ?, ?, ?, ?, ?, NOW())
+            INSERT INTO clientes (slug, nombre, apellido, nombres_novios, email, telefono, password, fecha_registro) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, NOW())
         ");
-        $stmt->execute([$slug_cliente, $nombre, $apellido, $nombres_novios, $email, $telefono]);
+        $stmt->execute([$slug_cliente, $nombre, $apellido, $nombres_novios, $email, $telefono, $password_hash]);
         $cliente_id = $db->lastInsertId();
     }
     
