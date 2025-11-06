@@ -138,7 +138,7 @@ function enviarEmailBienvenida($pedido) {
                 color: white;
                 width: 30px;
                 height: 30px;
-                border-radius: 50%;
+                border-radius: 100%;
                 display: flex;
                 align-items: center;
                 justify-content: center;

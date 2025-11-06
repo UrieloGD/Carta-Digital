@@ -6,9 +6,6 @@ composer.phar
 .env.local
 .env.*.local
 
-# Composer
-/vendor/
-
 # Sistema
 .DS_Store
 Thumbs.db
