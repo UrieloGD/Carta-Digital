@@ -7,7 +7,7 @@ require_once './config/database.php';
 $plan = $_GET['plan'] ?? 'escencial';
 $plantilla_id = isset($_GET['plantilla']) ? (int)$_GET['plantilla'] : null;
 
-// Obtener precio
+// Validar plan
 if (!isset($PLANES_PRECIOS[$plan])) {
     $plan = 'escencial';
 }
@@ -29,7 +29,6 @@ if ($plantilla_id) {
     }
 }
 ?>
-
 
 <link rel="stylesheet" href="./css/checkout.css?v=<?php echo filemtime('./css/checkout.css'); ?>" />
 
@@ -186,121 +185,11 @@ if ($plantilla_id) {
 <!-- Scripts -->
 <script src="https://js.stripe.com/v3/"></script>
 <script>
-    const STRIPE_KEY = '<?php echo STRIPE_PUBLISHABLE_KEY; ?>';
-    const PLAN = '<?php echo $plan; ?>';
-    const PLANTILLA_ID = <?php echo $plantilla_id ?? 'null'; ?>;
-    
-    // Inicializar Stripe
-    const stripe = Stripe(STRIPE_KEY);
-    const elements = stripe.elements();
-    
-    // Crear elemento de tarjeta con estilos
-    const cardElement = elements.create('card', {
-        hidePostalCode: true,
-        style: {
-            base: {
-                fontSize: '16px',
-                color: '#424770',
-                fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-                '::placeholder': {
-                    color: '#aab7c4',
-                }
-            },
-            invalid: {
-                color: '#fa755a',
-                iconColor: '#fa755a'
-            }
-        }
-    });
-    
-    cardElement.mount('#card-element');
-    
-    // Manejo de errores en tiempo real
-    cardElement.on('change', function(event) {
-        const displayError = document.getElementById('card-errors');
-        if (event.error) {
-            displayError.textContent = event.error.message;
-            displayError.style.display = 'block';
-        } else {
-            displayError.textContent = '';
-            displayError.style.display = 'none';
-        }
-    });
-    
-    // Envío del formulario
-    document.getElementById('checkout-form').addEventListener('submit', async function(e) {
-        e.preventDefault();
-        
-        // Deshabilitar botón
-        const submitBtn = document.getElementById('submit-button');
-        submitBtn.disabled = true;
-        document.getElementById('submit-text').style.display = 'none';
-        document.getElementById('submit-loading').style.display = 'inline';
-
-        const nombreNovio = document.getElementById('nombre_novio').value.trim();
-        const nombreNovia = document.getElementById('nombre_novia').value.trim();
-        
-        // Preparar datos
-        const formData = {
-            nombre: document.getElementById('nombre').value.trim(),
-            apellido: document.getElementById('apellido').value.trim(),
-            nombre_novio: nombreNovio,
-            nombre_novia: nombreNovia,
-            nombres_novios: `${nombreNovia} & ${nombreNovio}`,
-            fecha_evento: document.getElementById('fecha_evento').value,
-            hora_evento: document.getElementById('hora_evento').value,
-            email: document.getElementById('email').value.trim(),
-            telefono: document.getElementById('telefono').value.trim(),
-            plan: PLAN,
-            plantilla_id: PLANTILLA_ID
-        };
-        
-        try {
-            // Paso 1: Registrar cliente y crear payment intent
-            const registerResponse = await fetch('./api/register_and_pay.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData)
-            });
-            
-            const registerData = await registerResponse.json();
-            
-            if (!registerResponse.ok || registerData.error) {
-                throw new Error(registerData.error || 'Error al procesar el registro');
-            }
-            
-            const { clientSecret, pedido_id } = registerData;
-            
-            // Paso 2: Confirmar pago con Stripe
-            const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
-                payment_method: {
-                    card: cardElement,
-                    billing_details: {
-                        name: `${formData.nombre} ${formData.apellido}`,
-                        email: formData.email
-                    }
-                }
-            });
-            
-            if (error) {
-                throw new Error(error.message);
-            }
-            
-            // Pago exitoso
-            if (paymentIntent.status === 'succeeded') {
-                window.location.href = `./payment_success.php?pedido_id=${pedido_id}&payment_intent=${paymentIntent.id}`;
-            }
-            
-        } catch (error) {
-            console.error('Error:', error);
-            document.getElementById('card-errors').textContent = error.message;
-            document.getElementById('card-errors').style.display = 'block';
-            
-            submitBtn.disabled = false;
-            document.getElementById('submit-text').style.display = 'inline';
-            document.getElementById('submit-loading').style.display = 'none';
-        }
-    });
+    // Variables globales para el módulo
+    const CHECKOUT_CONFIG = {
+        stripeKey: '<?php echo STRIPE_PUBLISHABLE_KEY; ?>',
+        plan: '<?php echo $plan; ?>',
+        plantillaId: <?php echo $plantilla_id ?? 'null'; ?>
+    };
 </script>
+<script src="./js/checkout.js?v=<?php echo filemtime('./js/checkout.js'); ?>"></script>

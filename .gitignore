@@ -10,3 +10,6 @@ composer.phar
 .DS_Store
 Thumbs.db
 *.log
+
+# Base de datos
+config/tables_database.sql
