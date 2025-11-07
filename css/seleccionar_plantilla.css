@@ -169,7 +169,7 @@
     width: 100%;
     padding: 12px 20px;
     font-size: 0.95rem;
-    border-radius: 10px;
+    border-radius: 30px;
     transition: var(--transition);
     display: flex;
     align-items: center;

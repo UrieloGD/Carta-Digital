@@ -279,12 +279,12 @@
 
 .plan-card .btn-outline {
     background: transparent;
-    color: var(--text-dark);
-    border: 2px solid var(--text-dark);
+    color: var(--primary-color);
+    border: 2px solid var(--primary-hover);
 }
 
 .plan-card .btn-outline:hover {
-    background: var(--text-dark);
+    background: var(--primary-color);
     color: var(--background-white);
     transform: translateY(-2px);
 }
