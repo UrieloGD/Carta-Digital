@@ -1,9 +1,9 @@
 <?php 
 include './includes/header.php';
+require_once './config/stripe_config.php';
+require_once './config/database.php';
 
 try {
-    require_once './config/database.php';
-    
     $database = new Database();
     $db = $database->getConnection();
     
@@ -125,6 +125,12 @@ try {
         </div>
     </div>
 </div>
+
+<!-- Variables globales para el modal -->
+<script>
+    // Los planes se pasan como JSON desde PHP
+    const PLANES_DESDE_BD = <?php echo json_encode($PLANES_PRECIOS); ?>;
+</script>
 
 <script src="./js/plantillas.js?v=<?php echo filemtime('./js/plantillas.js'); ?>"></script>
 

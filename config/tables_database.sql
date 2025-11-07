@@ -34,6 +34,16 @@ CREATE TABLE IF NOT EXISTS plantillas (
     FOREIGN KEY (invitacion_ejemplo_id) REFERENCES invitaciones(id) ON DELETE SET NULL;
 );
 
+-- Tabla Planes
+CREATE TABLE IF NOT EXISTS planes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50) UNIQUE NOT NULL,
+    precio DECIMAL(10,2) NOT NULL,
+    descripcion TEXT,
+    activo TINYINT(1) DEFAULT 1,
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Tabla de invitaciones
 CREATE TABLE IF NOT EXISTS invitaciones (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -86,8 +96,11 @@ CREATE TABLE IF NOT EXISTS invitaciones (
     whatsapp_confirmacion VARCHAR(20) DEFAULT NULL,
     
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    plan_id INT DEFAULT 1,    
     activa BOOLEAN DEFAULT TRUE,
     cliente_id INT NOT NULL,
+    FOREIGN KEY (plan_id) REFERENCES planes(id) ON DELETE SET NULL,
     FOREIGN KEY (cliente_id) REFERENCES clientes(id) ON DELETE CASCADE,
     FOREIGN KEY (plantilla_id) REFERENCES plantillas(id) ON DELETE CASCADE
 );
@@ -160,18 +173,6 @@ CREATE TABLE IF NOT EXISTS invitacion_mesa_regalos (
     FOREIGN KEY (invitacion_id) REFERENCES invitaciones(id) ON DELETE CASCADE
 );
 
--- Tabla de estadísticas y tracking
-CREATE TABLE IF NOT EXISTS invitacion_estadisticas (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    invitacion_id INT NOT NULL,
-    tipo_evento ENUM('visita', 'rsvp', 'compartir', 'galeria_click', 'ubicacion_click') NOT NULL,
-    ip_address VARCHAR(45),
-    user_agent TEXT,
-    datos_adicionales JSON,
-    fecha_evento TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (invitacion_id) REFERENCES invitaciones(id) ON DELETE CASCADE
-);
-
 -- Tabla de clientes login
 /* CREATE TABLE IF NOT EXISTS clientes_login (
     id int NOT NULL AUTO_INCREMENT,
@@ -191,6 +192,7 @@ CREATE TABLE IF NOT EXISTS invitacion_estadisticas (
     UNIQUE KEY slug_unique (slug)
 );*/ 
 
+-- Tabla de grupos de invitados
 CREATE TABLE IF NOT EXISTS invitados_grupos (
     id_grupo INT AUTO_INCREMENT PRIMARY KEY,
     slug_invitacion VARCHAR(100) NOT NULL,
@@ -202,6 +204,7 @@ CREATE TABLE IF NOT EXISTS invitados_grupos (
     INDEX idx_token_unico (token_unico)
 );
 
+-- Tabla de respuestas RSVP
 CREATE TABLE IF NOT EXISTS rsvp_respuestas (
     id_respuesta INT AUTO_INCREMENT PRIMARY KEY,
     id_grupo INT NOT NULL,
@@ -214,6 +217,7 @@ CREATE TABLE IF NOT EXISTS rsvp_respuestas (
     FOREIGN KEY (id_grupo) REFERENCES invitados_grupos(id_grupo) ON DELETE CASCADE
 );
 
+-- Tabla de pedidos
 CREATE TABLE IF NOT EXISTS pedidos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     cliente_id INT NOT NULL,
@@ -230,10 +234,3 @@ CREATE TABLE IF NOT EXISTS pedidos (
     FOREIGN KEY (plantilla_id) REFERENCES plantillas(id) ON DELETE CASCADE,
     FOREIGN KEY (invitacion_id) REFERENCES invitaciones(id) ON DELETE SET NULL
 );
-
-
--- Insertar plantilla base
-INSERT INTO plantillas (id, nombre, descripcion, carpeta, archivo_principal, imagen_preview, activa) 
-VALUES (1, 'Tinta', 'Plantilla elegante con diseño clásico en tonos tintos y arena', 'plantilla-1', 'plantilla-1.php', 'img/preview.png', 1)
-
-ON DUPLICATE KEY UPDATE nombre = VALUES(nombre);

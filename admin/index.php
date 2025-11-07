@@ -57,11 +57,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
 }
 
-// Obtener todas las invitaciones con información adicional
-$query = "SELECT i.*, p.nombre as plantilla_nombre
-          FROM invitaciones i 
-          LEFT JOIN plantillas p ON i.plantilla_id = p.id 
-          ORDER BY i.fecha_creacion DESC";
+// Obtener todas las invitaciones con plantilla y plan
+$query = "SELECT 
+    i.*, 
+    p.nombre as plantilla_nombre,
+    pl.nombre as plan_nombre,
+    pl.precio as precio_plan,
+    ped.estado as pedido_estado
+FROM invitaciones i 
+LEFT JOIN plantillas p ON i.plantilla_id = p.id
+LEFT JOIN planes pl ON i.plan_id = pl.id
+LEFT JOIN pedidos ped ON i.id = ped.invitacion_id
+ORDER BY i.fecha_creacion DESC";
+
 $stmt = $db->prepare($query);
 $stmt->execute();
 $invitaciones = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -91,17 +99,14 @@ usort($invitaciones, function($a, $b) {
     $estadoA = calcularEstado($a['fecha_evento']);
     $estadoB = calcularEstado($b['fecha_evento']);
     
-    // Primero ordenar por estado (orden: proxima, activa, finalizada)
     if ($estadoA['orden'] !== $estadoB['orden']) {
         return $estadoA['orden'] - $estadoB['orden'];
     }
     
-    // Si son del mismo estado, ordenar por fecha de evento
     if ($a['fecha_evento'] && $b['fecha_evento']) {
         return strtotime($a['fecha_evento']) - strtotime($b['fecha_evento']);
     }
     
-    // Si no tienen fecha, ordenar por fecha de creación
     return strtotime($b['fecha_creacion']) - strtotime($a['fecha_creacion']);
 });
 
@@ -230,8 +235,10 @@ foreach ($invitaciones as $inv) {
                     </small>
                 </div>
             </div>
+        </div>
+    </div>
 
-        <div class="container-fluid py-4">
+    <div class="container-fluid py-4">
         <!-- Alertas -->
         <?php if (isset($success_message)): ?>
             <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -314,6 +321,31 @@ foreach ($invitaciones as $inv) {
                                     <?php echo htmlspecialchars($invitacion['plantilla_nombre'] ?? 'Sin plantilla'); ?>
                                 </small>
                             </div>
+
+                            <div class="mb-2">
+                                <small class="text-muted">
+                                    <i class="bi bi-box me-1"></i>
+                                    <strong><?php echo htmlspecialchars($invitacion['plan_nombre'] ?? 'Sin plan'); ?></strong>
+                                </small>
+                            </div>
+
+                            <div class="mb-2">
+                                <small class="text-muted">
+                                    <i class="bi bi-cash-coin me-1"></i>
+                                    $<?php echo number_format($invitacion['precio_plan'] ?? 0, 2); ?> MXN
+                                </small>
+                            </div>
+
+                            <?php if ($invitacion['pedido_estado']): ?>
+                            <div class="mb-2">
+                                <small>
+                                    <span class="badge bg-info">
+                                        <i class="bi bi-receipt me-1"></i>
+                                        <?php echo htmlspecialchars(ucfirst($invitacion['pedido_estado'])); ?>
+                                    </span>
+                                </small>
+                            </div>
+                            <?php endif; ?>
                             
                             <div class="mb-3">
                                 <code class="small bg-light px-2 py-1 rounded">
@@ -416,8 +448,7 @@ foreach ($invitaciones as $inv) {
                 </div>
                 <?php endforeach; ?>
             </div>
-            <?php else: ?>
-
+        <?php else: ?>
             <!-- Estado vacío -->
             <div class="empty-state text-center">
                 <i class="bi bi-envelope-plus"></i>

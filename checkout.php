@@ -4,13 +4,16 @@ require_once './config/stripe_config.php';
 require_once './config/database.php';
 
 // Obtener parámetros de URL
-$plan = $_GET['plan'] ?? 'premium';
+$plan = $_GET['plan'] ?? 'escencial';
 $plantilla_id = isset($_GET['plantilla']) ? (int)$_GET['plantilla'] : null;
 
-// Validar plan
+// Obtener precio
 if (!isset($PLANES_PRECIOS[$plan])) {
-    $plan = 'premium';
+    $plan = 'escencial';
 }
+
+$precio = $PLANES_PRECIOS[$plan];
+$precio_display = number_format($precio / 100, 2);
 
 // Obtener info de plantilla
 $plantilla = null;
@@ -25,10 +28,8 @@ if ($plantilla_id) {
         error_log("Error al obtener plantilla: " . $e->getMessage());
     }
 }
-
-$precio = $PLANES_PRECIOS[$plan];
-$precio_display = number_format($precio / 100, 2);
 ?>
+
 
 <link rel="stylesheet" href="./css/checkout.css?v=<?php echo filemtime('./css/checkout.css'); ?>" />
 
@@ -95,25 +96,13 @@ $precio_display = number_format($precio / 100, 2);
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="nombre">Nombre</label>
-                                <input 
-                                    type="text" 
-                                    id="nombre" 
-                                    name="nombre" 
-                                    required
-                                    placeholder="Ej: Juan"
-                                    class="form-control">
+                                <input type="text" id="nombre" name="nombre" required placeholder="Ej: Juan" class="form-control">
                                 <span class="form-error" id="error-nombre"></span>
                             </div>
                             
                             <div class="form-group">
                                 <label for="apellido">Apellido</label>
-                                <input 
-                                    type="text" 
-                                    id="apellido" 
-                                    name="apellido" 
-                                    required
-                                    placeholder="Ej: García"
-                                    class="form-control">
+                                <input type="text" id="apellido" name="apellido" required placeholder="Ej: García" class="form-control">
                                 <span class="form-error" id="error-apellido"></span>
                             </div>
                         </div>
@@ -121,68 +110,38 @@ $precio_display = number_format($precio / 100, 2);
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="nombre_novia">Nombre de la Novia</label>
-                                <input 
-                                    type="text" 
-                                    id="nombre_novia" 
-                                    name="nombre_novia" required 
-                                    placeholder="Ejemplo: Ana" 
-                                    class="form-control">
+                                <input type="text" id="nombre_novia" name="nombre_novia" required placeholder="Ejemplo: Ana" class="form-control">
                                 <span class="form-error" id="error-nombre-novia"></span>
                             </div>
 
                             <div class="form-group">
                                 <label for="nombre_novio">Nombre del Novio</label>
-                                <input 
-                                    type="text" 
-                                    id="nombre_novio" 
-                                    name="nombre_novio" required 
-                                    placeholder="Ejemplo: Juan" 
-                                    class="form-control">
+                                <input type="text" id="nombre_novio" name="nombre_novio" required placeholder="Ejemplo: Juan" class="form-control">
                                 <span class="form-error" id="error-nombre-novio"></span>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label for="fecha_evento">Fecha del evento</label>
-                            <input 
-                                type="date"
-                                id="fecha_evento" 
-                                name="fecha_evento" 
-                                class="form-control" required>
+                            <input type="date" id="fecha_evento" name="fecha_evento" class="form-control" required>
                         </div>
 
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="hora_evento">Hora del evento</label>
-                                <input 
-                                    type="time" 
-                                    id="hora_evento" 
-                                    name="hora_evento" 
-                                    class="form-control" required>
+                                <input type="time" id="hora_evento" name="hora_evento" class="form-control" required>
                             </div>
 
                             <div class="form-group">
                                 <label for="telefono">Teléfono</label>
-                                <input 
-                                    type="tel" 
-                                    id="telefono" 
-                                    name="telefono" 
-                                    required
-                                    placeholder="+52 55 1234 5678"
-                                    class="form-control">
+                                <input type="tel" id="telefono" name="telefono" required placeholder="+52 55 1234 5678" class="form-control">
                                 <span class="form-error" id="error-telefono"></span>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label for="email">Email</label>
-                            <input 
-                                type="email" 
-                                id="email" 
-                                name="email" 
-                                required
-                                placeholder="tuemail@ejemplo.com"
-                                class="form-control">
+                            <input type="email" id="email" name="email" required placeholder="tuemail@ejemplo.com" class="form-control">
                             <span class="form-error" id="error-email"></span>
                         </div>
                     </fieldset>
@@ -345,4 +304,3 @@ $precio_display = number_format($precio / 100, 2);
         }
     });
 </script>
-

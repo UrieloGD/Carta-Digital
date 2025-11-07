@@ -96,7 +96,21 @@ try {
     $db->beginTransaction();
     
     // ============================================
-    // GENERAR SLUG ÚNICO (SIEMPRE NUEVO)
+    // OBTENER PLAN_ID DE LA TABLA PLANES
+    // ============================================
+    $stmt = $db->prepare("SELECT id, precio FROM planes WHERE nombre = ? LIMIT 1");
+    $stmt->execute([$plan]);
+    $plan_data = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    if (!$plan_data) {
+        throw new Exception('Plan no encontrado en la base de datos');
+    }
+    
+    $plan_id = $plan_data['id'];
+    $precio_plan = $plan_data['precio'];
+    
+    // ============================================
+    // GENERAR SLUG ÚNICO
     // ============================================
     $slug_cliente = generarSlugNovios($nombre_novia, $nombre_novio);
     
@@ -122,9 +136,7 @@ try {
     ");
     $stmt->execute([$slug_cliente, $nombre, $apellido, $nombres_novios, $email, $telefono, $password_hash]);
     $cliente_id = $db->lastInsertId();
-    
-    error_log("✅ Nuevo cliente: ID={$cliente_id}, Slug={$slug_cliente}, Email={$email}");
-    
+        
     // ============================================
     // CREAR PAYMENT INTENT EN STRIPE
     // ============================================
@@ -135,6 +147,7 @@ try {
         'metadata' => [
             'cliente_id' => $cliente_id,
             'plan' => $plan,
+            'plan_id' => $plan_id,
             'plantilla_id' => $plantilla_id ?? '',
             'nombres_novios' => $nombres_novios,
             'nombre_completo' => $nombre . ' ' . $apellido,
@@ -161,15 +174,33 @@ try {
         $slug_invitacion = $slug_invitacion . '-' . $fecha_formateada;
     }
     
-    // ============================================
+    // ==============================
     // CREAR REGISTRO EN INVITACIONES
-    // ============================================
+    // ==============================
     $stmt = $db->prepare("
-        INSERT INTO invitaciones (plantilla_id, cliente_id, slug, nombres_novios, fecha_evento, hora_evento, activa, fecha_creacion) 
-        VALUES (?, ?, ?, ?, ?, ?, 1, NOW())
+        INSERT INTO invitaciones (
+            plantilla_id, 
+            cliente_id, 
+            slug, 
+            nombres_novios, 
+            fecha_evento, 
+            hora_evento, 
+            plan_id, 
+            activa, 
+            estado,
+            fecha_creacion
+        ) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, 1, 'borrador', NOW())
     ");
+    
     $stmt->execute([
-        $plantilla_id, $cliente_id, $slug_invitacion, $nombres_novios, $fecha_evento, $hora_evento
+        $plantilla_id ?? 1,
+        $cliente_id,
+        $slug_invitacion,
+        $nombres_novios,
+        $fecha_evento,
+        $hora_evento,
+        $plan_id
     ]);
     
     $invitacion_id = $db->lastInsertId();
@@ -178,27 +209,38 @@ try {
     // CREAR REGISTRO DE PEDIDO
     // ============================================
     $stmt = $db->prepare("
-        INSERT INTO pedidos (cliente_id, invitacion_id, plantilla_id, plan, monto, metodo_pago, estado, payment_intent_id, fecha_creacion) 
+        INSERT INTO pedidos (
+            cliente_id, 
+            invitacion_id, 
+            plantilla_id, 
+            plan, 
+            monto, 
+            metodo_pago, 
+            estado, 
+            payment_intent_id, 
+            fecha_creacion
+        ) 
         VALUES (?, ?, ?, ?, ?, 'stripe', 'pendiente', ?, NOW())
     ");
     
     $stmt->execute([
-        $cliente_id, $invitacion_id, $plantilla_id, $plan, $monto / 100, $paymentIntent->id
+        $cliente_id,
+        $invitacion_id,
+        $plantilla_id ?? 1,
+        $plan,
+        $precio_plan,
+        $paymentIntent->id
     ]);
     
     $pedido_id = $db->lastInsertId();
 
-    // SOLO PARA PRUEBAS LOCALES --- COMENTA O ELIMINA EN PRODUCCIÓN
+    // ⚠️ SOLO PARA PRUEBAS LOCALES - COMENTA O ELIMINA EN PRODUCCIÓN
     $stmt = $db->prepare("UPDATE pedidos SET estado = 'completado', fecha_pago = NOW() WHERE id = ?");
     $stmt->execute([$pedido_id]);
     
     // Confirmar transacción
     $db->commit();
-    
-    // Log para debugging
-    error_log("✅ Pedido creado: ID={$pedido_id}, Cliente={$cliente_id}, Invitación={$invitacion_id}, Email={$email}");
-    
-    // Responder con éxito
+
     http_response_code(200);
     echo json_encode([
         'success' => true,
@@ -291,3 +333,4 @@ try {
     ]);
     error_log("❌ General Error: " . $e->getMessage());
 }
+?>

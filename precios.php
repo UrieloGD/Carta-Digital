@@ -1,29 +1,20 @@
 <?php 
 $page_title = "Precios"; 
 include './includes/header.php';
+require_once './config/stripe_config.php';
+require_once './config/database.php';
 
 try {
-    require_once './config/database.php';
-    
+    // Obtener planes desde la BD
     $database = new Database();
     $db = $database->getConnection();
     
-    // Obtener plantillas con sus precios
-    $stmt = $db->prepare("
-        SELECT p.*, 
-               ie.slug as ejemplo_slug,
-               ie.nombres_novios as ejemplo_nombres
-        FROM plantillas p 
-        LEFT JOIN invitaciones ie ON p.invitacion_ejemplo_id = ie.id
-        WHERE p.activa = 1 
-        ORDER BY p.precio ASC, p.fecha_creacion DESC
-    ");
-    $stmt->execute();
-    $plantillas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $stmt = $db->query("SELECT id, nombre, precio, descripcion FROM planes WHERE activo = 1 ORDER BY precio ASC");
+    $planes = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
 } catch(Exception $e) {
-    $plantillas = [];
-    error_log("Error al obtener plantillas con precios: " . $e->getMessage());
+    $planes = [];
+    error_log("Error al obtener planes: " . $e->getMessage());
 }
 ?>
 
@@ -43,87 +34,77 @@ try {
 <section class="pricing-plans">
     <div class="container">
         <div class="plans-grid">
-            <!-- Plan Escencial -->
-            <div class="plan-card basic-plan">
+            <?php 
+            // Características por plan (puedes también ponerlas en la BD si lo deseas)
+            $caracteristicas = [
+                'escencial' => [
+                    'Portada, Bienvenida, Historia',
+                    'Contador simple',
+                    'Ubicación (info + botón)',
+                    'Galería 6 fotos',
+                    'Dresscode solo texto',
+                    'Reservación por WhatsApp',
+                    'Soporte 7 días'
+                ],
+                'premium' => [
+                    'Portada, Bienvenida, Historia',
+                    'Contador con cuenta regresiva',
+                    'Cronograma del evento',
+                    'Ubicaciones con imágenes',
+                    'Galería 10 fotos',
+                    'Dresscode con imágenes',
+                    'Reservación con boletaje digital',
+                    'Reproductor musical',
+                    'Soporte 30 días'
+                ],
+                'exclusivo' => [
+                    'Todo lo del plan Premium',
+                    'Galería 15 fotos',
+                    'Sección para tu mesa de regalos',
+                    'Reservación con boletaje digital',
+                    'Límite de tiempo para confirmación',
+                    'Sección para eventos adultos',
+                    'Soporte hasta el evento',
+                    'Cambios de colores y tipografía'
+                ]
+            ];
+            
+            foreach ($planes as $index => $plan):
+                $es_popular = strtolower($plan['nombre']) === 'premium';
+                $clase_plan = 'plan-card ' . strtolower($plan['nombre']) . '-plan';
+                if ($es_popular) {
+                    $clase_plan .= ' featured';
+                }
+                $caracteristicas_plan = $caracteristicas[strtolower($plan['nombre'])] ?? [];
+            ?>
+            <div class="<?php echo $clase_plan; ?>">
+                <?php if ($es_popular): ?>
+                    <div class="featured-badge">Más Popular</div>
+                <?php endif; ?>
+                
                 <div class="plan-header">
-                    <h3>Escencial</h3>
+                    <h3><?php echo htmlspecialchars($plan['nombre']); ?></h3>
                     <div class="price">
                         <span class="currency">$</span>
-                        <span class="amount">699</span>
+                        <span class="amount"><?php echo number_format($plan['precio'], 0); ?></span>
                         <span class="period">MXN</span>
                     </div>
                 </div>
+                
                 <div class="plan-features">
                     <ul>
-                        <li><i class="fas fa-check"></i>Portada, Bienvenida, Historia</li>
-                        <li><i class="fas fa-check"></i>Contador simple</li>
-                        <li><i class="fas fa-check"></i>Ubicación (info + botón)</li>
-                        <li><i class="fas fa-check"></i>Galería 6 fotos</li>
-                        <li><i class="fas fa-check"></i>Dresscode solo texto</li>
-                        <li><i class="fas fa-check"></i>Reservación por WhatsApp</li>
-                        <li><i class="fas fa-check"></i>Soporte 7 días</li>
+                        <?php foreach ($caracteristicas_plan as $caracteristica): ?>
+                            <li><i class="fas fa-check"></i><?php echo htmlspecialchars($caracteristica); ?></li>
+                        <?php endforeach; ?>
                     </ul>
                 </div>
-                <a href="./seleccionar_plantilla.php?plan=escencial" class="btn btn-outline btn-plan">
+                
+                <a href="./plantillas.php?plan=<?php echo urlencode(strtolower($plan['nombre'])); ?>" 
+                   class="btn <?php echo $es_popular ? 'btn-primary' : 'btn-outline'; ?> btn-plan">
                     <i class="fas fa-shopping-cart"></i> Elegir Plan
                 </a>
             </div>
-
-            <!-- Plan Premium -->
-            <div class="plan-card premium-plan featured">
-                <div class="featured-badge">Más Popular</div>
-                <div class="plan-header">
-                    <h3>Premium</h3>
-                    <div class="price">
-                        <span class="currency">$</span>
-                        <span class="amount">899</span>
-                        <span class="period">MXN</span>
-                    </div>
-                </div>
-                <div class="plan-features">
-                    <ul>
-                        <li><i class="fas fa-check"></i>Portada, Bienvenida, Historia</li>
-                        <li><i class="fas fa-check"></i>Contador con cuenta regresiva</li>
-                        <li><i class="fas fa-check"></i>Cronograma del evento</li>
-                        <li><i class="fas fa-check"></i>Ubicaciones con imágenes</li>
-                        <li><i class="fas fa-check"></i>Galería 10 fotos</li>
-                        <li><i class="fas fa-check"></i>Dresscode con imágenes</li>
-                        <li><i class="fas fa-check"></i>Reservación con boletaje digital</li>
-                        <li><i class="fas fa-check"></i>Reproductor musical</li>
-                        <li><i class="fas fa-check"></i>Soporte 30 días</li>
-                    </ul>
-                </div>
-                <a href="./seleccionar_plantilla.php?plan=premium" class="btn btn-primary btn-plan">
-                    <i class="fas fa-shopping-cart"></i> Elegir Plan
-                </a>
-            </div>
-
-            <!-- Plan Exclusivo -->
-            <div class="plan-card exclusivo-plan">
-                <div class="plan-header">
-                    <h3>Exclusivo</h3>
-                    <div class="price">
-                        <span class="currency">$</span>
-                        <span class="amount">1199</span>
-                        <span class="period">MXN</span>
-                    </div>
-                </div>
-                <div class="plan-features">
-                    <ul>
-                        <li><i class="fas fa-check"></i>Todo lo del plan Premium</li>
-                        <li><i class="fas fa-check"></i>Galería 15 fotos</li>
-                        <li><i class="fas fa-check"></i>Sección para tu mesa de regalos</li>
-                        <li><i class="fas fa-check"></i>Reservación con boletaje digital</li>
-                        <li><i class="fas fa-check"></i>Límite de tiempo para confirmación</li>
-                        <li><i class="fas fa-check"></i>Sección para eventos adultos</li>
-                        <li><i class="fas fa-check"></i>Soporte hasta el evento</li>
-                        <li><i class="fas fa-check"></i>Cambios de colores y tipografía</li>
-                    </ul>
-                </div>
-                <a href="./seleccionar_plantilla.php?plan=exclusivo" class="btn btn-outline btn-plan">
-                    <i class="fas fa-shopping-cart"></i> Elegir Plan
-                </a>
-            </div>
+            <?php endforeach; ?>
         </div>
     </div>
 </section>
@@ -137,23 +118,23 @@ try {
                 <thead>
                     <tr>
                         <th>Características</th>
-                        <th>Escencial</th>
-                        <th>Premium</th>
-                        <th>Exclusivo</th>
+                        <?php foreach ($planes as $plan): ?>
+                            <th><?php echo htmlspecialchars($plan['nombre']); ?></th>
+                        <?php endforeach; ?>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td><strong>Precio</strong></td>
-                        <td>$699</td>
-                        <td>$899</td>
-                        <td>$1,199</td>
+                        <?php foreach ($planes as $plan): ?>
+                            <td>$<?php echo number_format($plan['precio'], 0); ?></td>
+                        <?php endforeach; ?>
                     </tr>
                     <tr>
                         <td>Portada Personalizada</td>
-                        <td><i class="fas fa-check"></i></td>
-                        <td><i class="fas fa-check"></i></td>
-                        <td><i class="fas fa-check"></i></td>
+                        <?php foreach ($planes as $plan): ?>
+                            <td><i class="fas fa-check"></i></td>
+                        <?php endforeach; ?>
                     </tr>
                     <tr>
                         <td>Galería de Fotos</td>

@@ -47,12 +47,22 @@ try {
             $stmt->execute([$paymentIntent->id]);
             
             if ($stmt->rowCount() > 0) {
-                // Obtener datos del pedido para enviar notificación
+                // Obtener datos del pedido con plan desde tabla planes
                 $stmt = $db->prepare("
-                    SELECT p.*, c.nombre, c.apellido, c.email, c.whatsapp, pl.nombre as plantilla_nombre
+                    SELECT 
+                        p.*, 
+                        c.nombre, 
+                        c.apellido, 
+                        c.email, 
+                        c.telefono,
+                        pt.nombre as plantilla_nombre,
+                        pl.nombre as plan_nombre,
+                        pl.precio as precio_plan
                     FROM pedidos p
                     JOIN clientes c ON p.cliente_id = c.id
-                    LEFT JOIN plantillas pl ON p.plantilla_id = pl.id
+                    LEFT JOIN plantillas pt ON p.plantilla_id = pt.id
+                    LEFT JOIN invitaciones i ON p.invitacion_id = i.id
+                    LEFT JOIN planes pl ON i.plan_id = pl.id
                     WHERE p.payment_intent_id = ?
                 ");
                 $stmt->execute([$paymentIntent->id]);
@@ -164,12 +174,12 @@ function enviarEmailConfirmacion($pedido) {
                 
                 <h3>Detalles de tu pedido:</h3>
                 <ul>
-                    <li><strong>Plan:</strong> " . ucfirst($pedido['plan']) . "</li>
+                    <li><strong>Plan:</strong> " . ucfirst($pedido['plan_nombre'] ?? $pedido['plan']) . "</li>
                     <li><strong>Plantilla:</strong> " . ($pedido['plantilla_nombre'] ?? 'Por definir') . "</li>
-                    <li><strong>Monto:</strong> $" . number_format($pedido['monto'], 2) . " MXN</li>
+                    <li><strong>Monto:</strong> $" . number_format($pedido['precio_plan'] ?? $pedido['monto'], 2) . " MXN</li>
                 </ul>
                 
-                <p>Nos pondremos en contacto contigo vía WhatsApp al número <strong>{$pedido['whatsapp']}</strong> para solicitar los detalles de tu invitación.</p>
+                <p>Nos pondremos en contacto contigo vía WhatsApp al número <strong>{$pedido['telefono']}</strong> para solicitar los detalles de tu invitación.</p>
                 
                 <p>Tu invitación estará lista el mismo día.</p>
                 
@@ -217,14 +227,14 @@ function enviarNotificacionAdmin($pedido) {
         <ul>
             <li><strong>Nombre:</strong> {$pedido['nombre']} {$pedido['apellido']}</li>
             <li><strong>Email:</strong> {$pedido['email']}</li>
-            <li><strong>WhatsApp:</strong> {$pedido['whatsapp']}</li>
+            <li><strong>Teléfono:</strong> {$pedido['telefono']}</li>
         </ul>
         
         <h3>Detalles del Pedido:</h3>
         <ul>
-            <li><strong>Plan:</strong> " . ucfirst($pedido['plan']) . "</li>
+            <li><strong>Plan:</strong> " . ucfirst($pedido['plan_nombre'] ?? $pedido['plan']) . "</li>
             <li><strong>Plantilla:</strong> " . ($pedido['plantilla_nombre'] ?? 'No seleccionada') . "</li>
-            <li><strong>Monto:</strong> $" . number_format($pedido['monto'], 2) . " MXN</li>
+            <li><strong>Monto:</strong> $" . number_format($pedido['precio_plan'] ?? $pedido['monto'], 2) . " MXN</li>
             <li><strong>Payment Intent ID:</strong> {$pedido['payment_intent_id']}</li>
         </ul>
         

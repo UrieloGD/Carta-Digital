@@ -52,7 +52,6 @@ const PLANES = [
     }
 ];
 
-
 // ============================================
 // GESTIÓN DEL MODAL CUSTOM CON ANIMACIÓN
 // ============================================
@@ -91,7 +90,6 @@ class ModalPlanes {
     }
     
     abrir(plantillaId, plantillaNombre = '') {
-        
         this.plantillaActualId = plantillaId;
         
         // Actualizar título
@@ -115,6 +113,23 @@ class ModalPlanes {
         this.plantillaActualId = null;
     }
     
+    /**
+     * Obtener precio formateado desde PLANES_DESDE_BD
+     * Si no está disponible, usa el valor por defecto
+     */
+    obtenerPrecioFormateado(nombrePlan) {
+        // Si viene precio desde PHP/BD
+        if (typeof PLANES_DESDE_BD !== 'undefined' && PLANES_DESDE_BD[nombrePlan]) {
+            // Convertir centavos a formato MXN: 89900 → 899.00
+            const pesos = (PLANES_DESDE_BD[nombrePlan] / 100).toFixed(2);
+            return `$${pesos} MXN`;
+        }
+        
+        // Fallback: buscar en PLANES (hardcodeado)
+        const plan = PLANES.find(p => p.valor === nombrePlan);
+        return plan ? plan.precio : '$0.00 MXN';
+    }
+    
     renderizarPlanes() {        
         this.plansList.innerHTML = PLANES.map((plan, index) => `
             <a href="./checkout.php?plan=${plan.valor}&plantilla=${this.plantillaActualId}" 
@@ -125,7 +140,7 @@ class ModalPlanes {
                         ${plan.nombre}
                         ${plan.recomendado ? '<span class="badge-small">Recomendado</span>' : ''}
                     </h6>
-                    <p class="plan-price">${plan.precio}</p>
+                    <p class="plan-price">${this.obtenerPrecioFormateado(plan.valor)}</p>
                     <ul class="plan-ventajas">
                         ${plan.ventajas.slice(0, 3).map(ventaja => `
                             <li><i class="fas fa-check-circle"></i>${ventaja}</li>
@@ -139,7 +154,6 @@ class ModalPlanes {
     }
 }
 
-
 // ============================================
 // INICIALIZACIÓN DE LA PÁGINA
 // ============================================
@@ -148,33 +162,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // Inicializar modal
     const modal = new ModalPlanes();
     
-    // Navegación por categorías (código original)
-    const navButtons = document.querySelectorAll('.nav-btn');
-    const templateCards = document.querySelectorAll('.template-card');
-
-    navButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            navButtons.forEach(btn => btn.classList.remove('active'));
-            this.classList.add('active');
-            
-            const category = this.getAttribute('data-category');
-            
-            templateCards.forEach(card => {
-                if (category === 'todas' || card.getAttribute('data-category') === category) {
-                    card.classList.remove('hidden');
-                    card.classList.add('visible');
-                } else {
-                    card.classList.add('hidden');
-                    card.classList.remove('visible');
-                }
-            });
-        });
-    });
-    
     // Botones de compra
     const botonesComprar = document.querySelectorAll('.btn-comprar');
     
-    botonesComprar.forEach((boton, index) => {
+    botonesComprar.forEach((boton) => {
         boton.addEventListener('click', function(e) {
             e.preventDefault();
             
@@ -183,19 +174,5 @@ document.addEventListener('DOMContentLoaded', function() {
             
             modal.abrir(plantillaId, plantillaNombre);
         });
-    });
-    
-    // Actualización de URLs en selects (código original)
-    document.querySelectorAll('.template-card').forEach(card => {
-        const selectPlan = card.querySelector('.select-plan');
-        const btnComprar = card.querySelector('.btn-primary.template-btn');
-
-        if (selectPlan && btnComprar) {
-            btnComprar.href = `./checkout.php?plan=${selectPlan.value}&plantilla=${card.querySelector('.open-modal, [data-plantilla-id]')?.getAttribute('data-plantilla-id') || ''}`;
-
-            selectPlan.addEventListener('change', () => {
-                btnComprar.href = `./checkout.php?plan=${selectPlan.value}&plantilla=${card.querySelector('.open-modal, [data-plantilla-id]')?.getAttribute('data-plantilla-id') || ''}`;
-            });
-        }
     });
 });
