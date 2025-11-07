@@ -145,13 +145,43 @@ if ($plantilla_id) {
                         </div>
                     </fieldset>
 
-                    <!-- Sección: Método de Pago (Tarjeta) -->
-                    <fieldset class="form-fieldset">
-                        <legend>Información de Pago</legend>
+                    <!-- Selector de Método de Pago -->
+                    <div class="payment-method-selector">
+                        <label class="method-option">
+                            <input type="radio" name="payment_method" value="stripe" checked>
+                            <span class="method-label">
+                                <i class="fas fa-credit-card"></i>
+                                <strong>Tarjeta de Crédito/Débito</strong>
+                                <!-- <small>Stripe Seguro</small> -->
+                            </span>
+                        </label>
+                        <label class="method-option">
+                            <input type="radio" name="payment_method" value="mercadopago">
+                            <span class="method-label">
+                                <i class="fas fa-wallet"></i>
+                                <strong>Pagar con Mercado Pago</strong>
+                                <!-- <small>Múltiples opciones</small> -->
+                            </span>
+                        </label>
+                    </div>
+
+                    <!-- Sección: Stripe -->
+                    <fieldset class="form-fieldset stripe-section" id="stripe-section">
+                        <legend>Información de Pago - Tarjeta</legend>
                         <p class="payment-info">Ingresa los datos de tu tarjeta de crédito o débito</p>
                         
                         <div id="card-element" class="stripe-element"></div>
                         <div id="card-errors" class="form-error"></div>
+                    </fieldset>
+
+                    <!-- Sección: Mercado Pago -->
+                    <fieldset class="form-fieldset mercadopago-section" id="mercadopago-section" style="display: none;">
+                        <legend>Información de Pago - Mercado Pago</legend>
+                        <p class="payment-info">Serás redirigido a Mercado Pago de forma segura</p>
+                        <p style="color: #666; font-size: 0.9rem; margin: 1rem 0 0 0;">
+                            <i class="fas fa-info-circle"></i>
+                            Puedes pagar con tarjeta de crédito, tarjeta de débito, efectivo en sucursales y más.
+                        </p>
                     </fieldset>
 
                     <!-- Botón de Pago -->
@@ -183,13 +213,14 @@ if ($plantilla_id) {
 </section>
 
 <!-- Scripts -->
-<script src="https://js.stripe.com/v3/"></script>
 <script>
     // Variables globales para el módulo
     const CHECKOUT_CONFIG = {
         stripeKey: '<?php echo STRIPE_PUBLISHABLE_KEY; ?>',
         plan: '<?php echo $plan; ?>',
-        plantillaId: <?php echo $plantilla_id ?? 'null'; ?>
+        plantillaId: <?php echo $plantilla_id ?? 'null'; ?>,
+        precio: '<?php echo $precio_display; ?>'
     };
 </script>
+<script src="https://js.stripe.com/v3/"></script>
 <script src="./js/checkout.js?v=<?php echo filemtime('./js/checkout.js'); ?>"></script>

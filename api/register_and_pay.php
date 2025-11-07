@@ -187,10 +187,9 @@ try {
             hora_evento, 
             plan_id, 
             activa, 
-            estado,
             fecha_creacion
         ) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, 1, 'borrador', NOW())
+        VALUES (?, ?, ?, ?, ?, ?, ?, 1, NOW())
     ");
     
     $stmt->execute([
@@ -215,12 +214,11 @@ try {
             plantilla_id, 
             plan, 
             monto, 
-            metodo_pago, 
-            estado, 
+            metodo_pago,  
             payment_intent_id, 
             fecha_creacion
         ) 
-        VALUES (?, ?, ?, ?, ?, 'stripe', 'pendiente', ?, NOW())
+        VALUES (?, ?, ?, ?, ?, 'stripe', ?, NOW())
     ");
     
     $stmt->execute([

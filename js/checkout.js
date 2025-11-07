@@ -1,5 +1,5 @@
 /**
- * MÓDULO CHECKOUT - Gestión de pagos con Stripe
+ * MÓDULO CHECKOUT - Gestión de pagos con Stripe y Mercado Pago
  * Maneja el flujo completo de compra y pago
  */
 
@@ -24,24 +24,34 @@ class CheckoutManager {
      * Inicializar el módulo
      */
     init() {
-        this.initStripe();
         this.setupEventListeners();
+        this.initStripe();
     }
     
     /**
      * Inicializar Stripe y crear elemento de tarjeta
      */
     initStripe() {
-        this.stripe = Stripe(this.config.stripeKey);
-        const elements = this.stripe.elements();
-        
-        this.cardElement = elements.create('card', {
-            hidePostalCode: true,
-            style: this.getCardStyle()
-        });
-        
-        this.cardElement.mount('#card-element');
-        this.setupCardErrorHandling();
+        try {
+            this.stripe = Stripe(this.config.stripeKey);
+            const elements = this.stripe.elements();
+            
+            const cardElementDiv = document.getElementById('card-element');
+            if (!cardElementDiv) {
+                console.warn('Elemento card-element no encontrado');
+                return;
+            }
+            
+            this.cardElement = elements.create('card', {
+                hidePostalCode: true,
+                style: this.getCardStyle()
+            });
+            
+            this.cardElement.mount('#card-element');
+            this.setupCardErrorHandling();
+        } catch (error) {
+            console.error('Error inicializando Stripe:', error);
+        }
     }
     
     /**
@@ -68,6 +78,8 @@ class CheckoutManager {
      * Configurar manejo de errores en tiempo real del elemento de tarjeta
      */
     setupCardErrorHandling() {
+        if (!this.cardElement) return;
+        
         this.cardElement.on('change', (event) => {
             if (event.error) {
                 this.showError(event.error.message);
@@ -78,11 +90,43 @@ class CheckoutManager {
     }
     
     /**
-     * Configurar listeners de eventos
+     * Configurar listeners de eventos - MÉTODO ÚNICO
      */
     setupEventListeners() {
+        // Listener para envío del formulario
         if (this.form) {
             this.form.addEventListener('submit', (e) => this.handleFormSubmit(e));
+        }
+        
+        // Listener para cambiar método de pago
+        const radioButtons = document.querySelectorAll('input[name="payment_method"]');
+        
+        if (radioButtons.length > 0) {
+            radioButtons.forEach(radio => {
+                radio.addEventListener('change', (e) => {
+                    this.handlePaymentMethodChange(e.target.value);
+                });
+            });
+        }
+    }
+    
+    /**
+     * Manejar cambio de método de pago
+     */
+    handlePaymentMethodChange(method) {
+        const stripeSection = document.getElementById('stripe-section');
+        const mpSection = document.getElementById('mercadopago-section');
+        const submitText = document.getElementById('submit-text');
+        
+        if (method === 'stripe') {
+            if (stripeSection) stripeSection.style.display = 'block';
+            if (mpSection) mpSection.style.display = 'none';
+            if (submitText) submitText.textContent = `Pagar $${this.config.precio} MXN`;
+            if (!this.cardElement) this.initStripe();
+        } else if (method === 'mercadopago') {
+            if (stripeSection) stripeSection.style.display = 'none';
+            if (mpSection) mpSection.style.display = 'block';
+            if (submitText) submitText.textContent = `Continuar a Mercado Pago`;
         }
     }
     
@@ -100,8 +144,16 @@ class CheckoutManager {
         
         try {
             const formData = this.collectFormData();
-            await this.processPayment(formData);
+            const paymentMethodRadio = document.querySelector('input[name="payment_method"]:checked');
+            const paymentMethod = paymentMethodRadio ? paymentMethodRadio.value : 'stripe';
+            
+            if (paymentMethod === 'mercadopago') {
+                await this.processMercadoPagoPayment(formData);
+            } else {
+                await this.processPayment(formData);
+            }
         } catch (error) {
+            console.error('Error:', error);
             this.showError(error.message);
             this.setLoading(false);
             this.isProcessing = false;
@@ -112,19 +164,33 @@ class CheckoutManager {
      * Recopilar datos del formulario
      */
     collectFormData() {
-        const nombreNovio = document.getElementById('nombre_novio').value.trim();
-        const nombreNovia = document.getElementById('nombre_novia').value.trim();
+        const nombreNovio = document.getElementById('nombre_novio');
+        const nombreNovia = document.getElementById('nombre_novia');
+        const nombre = document.getElementById('nombre');
+        const apellido = document.getElementById('apellido');
+        const fechaEvento = document.getElementById('fecha_evento');
+        const horaEvento = document.getElementById('hora_evento');
+        const email = document.getElementById('email');
+        const telefono = document.getElementById('telefono');
+        
+        // Validar que existan los elementos
+        if (!nombreNovio || !nombreNovia || !nombre || !apellido || !email || !telefono) {
+            throw new Error('Faltan campos en el formulario');
+        }
+        
+        const nombreNovioValue = nombreNovio.value.trim();
+        const nombreNovaValue = nombreNovia.value.trim();
         
         return {
-            nombre: document.getElementById('nombre').value.trim(),
-            apellido: document.getElementById('apellido').value.trim(),
-            nombre_novio: nombreNovio,
-            nombre_novia: nombreNovia,
-            nombres_novios: `${nombreNovia} & ${nombreNovio}`,
-            fecha_evento: document.getElementById('fecha_evento').value,
-            hora_evento: document.getElementById('hora_evento').value,
-            email: document.getElementById('email').value.trim(),
-            telefono: document.getElementById('telefono').value.trim(),
+            nombre: nombre.value.trim(),
+            apellido: apellido.value.trim(),
+            nombre_novio: nombreNovioValue,
+            nombre_novia: nombreNovaValue,
+            nombres_novios: `${nombreNovaValue} & ${nombreNovioValue}`,
+            fecha_evento: fechaEvento ? fechaEvento.value : '',
+            hora_evento: horaEvento ? horaEvento.value : '',
+            email: email.value.trim(),
+            telefono: telefono.value.trim(),
             plan: this.config.plan,
             plantilla_id: this.config.plantillaId
         };
@@ -150,6 +216,30 @@ class CheckoutManager {
         
         if (paymentResult.success) {
             window.location.href = paymentResult.redirectUrl;
+        }
+    }
+    
+    /**
+     * Procesar pago con Mercado Pago
+     */
+    async processMercadoPagoPayment(formData) {
+        const response = await fetch('./api/register_mercadopago.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData)
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok || data.error) {
+            throw new Error(data.error || 'Error al procesar el pago');
+        }
+        
+        // Redirigir a Mercado Pago
+        if (data.preference_url) {
+            window.location.href = data.preference_url;
         }
     }
     
@@ -182,6 +272,10 @@ class CheckoutManager {
      * Confirmar pago con Stripe
      */
     async confirmCardPayment(clientSecret, formData, pedidoId) {
+        if (!this.stripe || !this.cardElement) {
+            throw new Error('Stripe no está inicializado correctamente');
+        }
+        
         const { error, paymentIntent } = await this.stripe.confirmCardPayment(clientSecret, {
             payment_method: {
                 card: this.cardElement,
@@ -230,9 +324,9 @@ class CheckoutManager {
      * Mostrar/ocultar estado de carga
      */
     setLoading(isLoading) {
-        this.submitBtn.disabled = isLoading;
-        this.submitText.style.display = isLoading ? 'none' : 'inline';
-        this.submitLoading.style.display = isLoading ? 'inline' : 'none';
+        if (this.submitBtn) this.submitBtn.disabled = isLoading;
+        if (this.submitText) this.submitText.style.display = isLoading ? 'none' : 'inline';
+        if (this.submitLoading) this.submitLoading.style.display = isLoading ? 'inline' : 'none';
     }
 }
 
@@ -242,5 +336,7 @@ class CheckoutManager {
 document.addEventListener('DOMContentLoaded', () => {
     if (typeof CHECKOUT_CONFIG !== 'undefined') {
         new CheckoutManager(CHECKOUT_CONFIG);
+    } else {
+        console.warn('CHECKOUT_CONFIG no está definido');
     }
 });

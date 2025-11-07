@@ -234,3 +234,17 @@ CREATE TABLE IF NOT EXISTS pedidos (
     FOREIGN KEY (plantilla_id) REFERENCES plantillas(id) ON DELETE CASCADE,
     FOREIGN KEY (invitacion_id) REFERENCES invitaciones(id) ON DELETE SET NULL
 );
+
+-- Tabla de usuarios administradores
+CREATE TABLE IF NOT EXISTS usuarios_admin (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    rol ENUM('admin', 'editor', 'viewer') DEFAULT 'viewer',
+    activo TINYINT(1) DEFAULT 1,
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    ultimo_login TIMESTAMP NULL,
+    INDEX (email),
+    INDEX (rol)
+);
