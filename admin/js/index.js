@@ -500,9 +500,7 @@ class AdminUtilities {
 // INICIALIZACIÓN
 // ============================================
 
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('Inicializando panel de administración...');
-    
+document.addEventListener('DOMContentLoaded', function() {    
     // Inicializar módulos principales
     window.adminPanel = new AdminPanel();
     window.deleteHandler = new DeleteHandler();
@@ -519,8 +517,6 @@ document.addEventListener('DOMContentLoaded', function() {
             AdminUtilities.copyToClipboard(text);
         });
     });
-    
-    console.log('Panel de administración listo.');
 });
 
 // ============================================

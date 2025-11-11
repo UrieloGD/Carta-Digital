@@ -68,7 +68,7 @@ $plantillas = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <i class="bi bi-envelope-plus me-1"></i>
                             <span class="d-none d-md-inline">Nueva </span>Invitación
                         </a>
-                        <a href="index.php" class="btn btn-outline-light btn-sm">
+                        <a href="./index.php" class="btn btn-outline-light btn-sm">
                             <i class="bi bi-arrow-left me-1"></i>
                             <span class="d-none d-md-inline">Volver al </span>Panel
                         </a>
@@ -115,15 +115,15 @@ $plantillas = $stmt->fetchAll(PDO::FETCH_ASSOC);
             
             <!-- Estadísticas -->
             <div class="col-lg-2 col-12">
-                <div class="d-flex justify-content-between justify-content-lg-end gap-3">
-                    <small class="text-muted d-flex align-items-center">
-                        <i class="bi bi-check-circle me-1 text-success"></i>
+                <div class="stats-wrapper">
+                    <div class="stats-item">
+                        <i class="bi bi-check-circle text-success"></i>
                         <span id="activasCount">0</span> activas
-                    </small>
-                    <small class="text-muted d-flex align-items-center">
-                        <i class="bi bi-collection me-1 text-primary"></i>
+                    </div>
+                    <div class="stats-item">
+                        <i class="bi bi-collection text-primary"></i>
                         <span id="totalCount"><?php echo count($plantillas); ?></span> total
-                    </small>
+                    </div>
                 </div>
             </div>
         </div>

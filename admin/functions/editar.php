@@ -157,15 +157,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $id
         ]);
         
-        // Actualizar ubicaciones (eliminar y volver a insertar)
+        // OBTENER UBICACIONES ACTUALES ANTES DE ELIMINAR
+        $ubicaciones_query = "SELECT * FROM invitacion_ubicaciones WHERE invitacion_id = ?";
+        $ubicaciones_stmt = $db->prepare($ubicaciones_query);
+        $ubicaciones_stmt->execute([$id]);
+        $ubicaciones_actuales = $ubicaciones_stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Separar ubicaciones por tipo
+        $ceremonia_actual = null;
+        $evento_actual = null;
+        foreach($ubicaciones_actuales as $ub) {
+            if($ub['tipo'] == 'ceremonia') $ceremonia_actual = $ub;
+            if($ub['tipo'] == 'evento') $evento_actual = $ub;
+        }
+
+        // AHORA eliminar ubicaciones
         $db->prepare("DELETE FROM invitacion_ubicaciones WHERE invitacion_id = ?")->execute([$id]);
-        
+
         // Insertar ceremonia si se proporcionó
         if (!empty($_POST['ceremonia_lugar'])) {
             $imagen_ceremonia = subirImagenUbicacion('ceremonia_imagen', $plantilla_id, $slug, 'ceremonia');
             // Si no se subió nueva imagen, mantener la actual
-            if (!$imagen_ceremonia && $ceremonia) {
-                $imagen_ceremonia = $ceremonia['imagen'];
+            if (!$imagen_ceremonia && $ceremonia_actual) {
+                $imagen_ceremonia = $ceremonia_actual['imagen'];
             }
             
             $stmt = $db->prepare("INSERT INTO invitacion_ubicaciones (invitacion_id, tipo, nombre_lugar, direccion, hora_inicio, google_maps_url, imagen) VALUES (?, 'ceremonia', ?, ?, ?, ?, ?)");
@@ -178,13 +192,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $imagen_ceremonia
             ]);
         }
-        
+
         // Insertar evento si se proporcionó
         if (!empty($_POST['evento_lugar'])) {
             $imagen_evento = subirImagenUbicacion('evento_imagen', $plantilla_id, $slug, 'evento');
             // Si no se subió nueva imagen, mantener la actual
-            if (!$imagen_evento && $evento) {
-                $imagen_evento = $evento['imagen'];
+            if (!$imagen_evento && $evento_actual) {
+                $imagen_evento = $evento_actual['imagen'];
             }
             
             $stmt = $db->prepare("INSERT INTO invitacion_ubicaciones (invitacion_id, tipo, nombre_lugar, direccion, hora_inicio, google_maps_url, imagen) VALUES (?, 'evento', ?, ?, ?, ?, ?)");
@@ -273,7 +287,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
         
-        // Actualizar imágenes de dresscode
+        // OBTENER DRESSCODE ACTUAL ANTES DE ACTUALIZAR
         $dresscode_query = "SELECT * FROM invitacion_dresscode WHERE invitacion_id = ?";
         $dresscode_stmt = $db->prepare($dresscode_query);
         $dresscode_stmt->execute([$id]);
@@ -334,9 +348,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         
         $db->commit();
-        $success = true;
         
-        // Redireccionar con mensaje de éxito
+        // IMPORTANTE: Redireccionar INMEDIATAMENTE después del commit
+        // Esto previene el reenvío del formulario al recargar la página
         header("Location: editar.php?id=" . $id . "&success=1");
         exit();
         
@@ -400,13 +414,18 @@ foreach($ubicaciones as $ub) {
     if($ub['tipo'] == 'ceremonia') $ceremonia = $ub;
     if($ub['tipo'] == 'evento') $evento = $ub;
 }
+
+// FUNCIÓN HELPER PARA HTMLSPECIALCHARS CON NULL-SAFETY
+function safe_html($value) {
+    return htmlspecialchars($value ?? '', ENT_QUOTES, 'UTF-8');
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar Invitación - <?php echo htmlspecialchars($invitacion['nombres_novios']); ?></title>
+    <title>Editar Invitación - <?php echo safe_html($invitacion['nombres_novios']); ?></title>
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
@@ -424,8 +443,8 @@ foreach($ubicaciones as $ub) {
         <div class="container-fluid">
             <a class="navbar-brand d-flex align-items-center" href="./../index.php">
                 <i class="bi bi-pencil-square me-2"></i>
-                <span class="d-none d-lg-inline">Editar Invitación: <?php echo htmlspecialchars($invitacion['nombres_novios']); ?></span>
-                <span class="d-lg-none d-none d-md-inline">Editar: <?php echo htmlspecialchars(substr($invitacion['nombres_novios'], 0, 15) . (strlen($invitacion['nombres_novios']) > 15 ? '...' : '')); ?></span>
+                <span class="d-none d-lg-inline">Editar Invitación: <?php echo safe_html($invitacion['nombres_novios']); ?></span>
+                <span class="d-lg-none d-none d-md-inline">Editar: <?php echo safe_html(substr($invitacion['nombres_novios'], 0, 15) . (strlen($invitacion['nombres_novios']) > 15 ? '...' : '')); ?></span>
                 <span class="d-md-none">Editar</span>
             </a>
             
@@ -436,8 +455,8 @@ foreach($ubicaciones as $ub) {
             <div class="collapse navbar-collapse" id="navbarNav">
                 <div class="navbar-nav ms-auto">
                     <div class="d-lg-flex flex-lg-row flex-column gap-2 mt-2 mt-lg-0">
-                        <a href="./../../invitacion.php?slug=<?php echo htmlspecialchars($invitacion['slug']); ?>" 
-                        class="btn btn-outline-light btn-sm" target="_blank">
+                        <a href="./../../invitacion.php?slug=<?php echo safe_html($invitacion['slug']); ?>" 
+                           class="btn btn-outline-light btn-sm" target="_blank">
                             <i class="bi bi-eye me-1"></i>
                             <span class="d-none d-md-inline">Vista </span>Previa
                         </a>
@@ -464,7 +483,7 @@ foreach($ubicaciones as $ub) {
 
         <?php if (isset($error) && !empty($error)): ?>
         <div class="error-alert">
-            <p class="mb-0"><i class="bi bi-exclamation-circle-fill me-2"></i> <?php echo htmlspecialchars($error); ?></p>
+            <p class="mb-0"><i class="bi bi-exclamation-circle-fill me-2"></i> <?php echo safe_html($error); ?></p>
         </div>
         <?php endif; ?>
 
@@ -482,7 +501,7 @@ foreach($ubicaciones as $ub) {
                             <option value="">-- Elegir plantilla --</option>
                             <?php foreach ($plantillas as $plantilla): ?>
                                 <option value="<?= $plantilla['id'] ?>" <?= $plantilla['id'] == $invitacion['plantilla_id'] ? 'selected' : '' ?>>
-                                    <?= htmlspecialchars($plantilla['nombre']) ?>
+                                    <?= safe_html($plantilla['nombre']) ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>
@@ -499,7 +518,7 @@ foreach($ubicaciones as $ub) {
                         <label for="musica_youtube_url" class="form-label">URL de YouTube</label>
                         <input type="url" id="musica_youtube_url" name="musica_youtube_url" 
                             class="form-control" placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-                            value="<?php echo htmlspecialchars($invitacion['musica_youtube_url'] ?? ''); ?>">
+                            value="<?php echo safe_html($invitacion['musica_youtube_url']); ?>">
                         <div class="form-text">Pega el enlace completo del video de YouTube</div>
                     </div>
                     
@@ -568,13 +587,13 @@ foreach($ubicaciones as $ub) {
                     <div class="form-group">
                         <label for="nombres_novios" class="form-label">Nombres de los Novios *</label>
                         <input type="text" id="nombres_novios" name="nombres_novios" class="form-control" required
-                            value="<?php echo htmlspecialchars($invitacion['nombres_novios']); ?>">
+                            value="<?php echo safe_html($invitacion['nombres_novios']); ?>">
                     </div>
                     <div class="form-group">
                         <label for="slug" class="form-label">URL (slug)</label>
                         <input type="text" id="slug" name="slug" class="form-control" required 
                             placeholder="ej: victoria-matthew-2025" 
-                            value="<?php echo htmlspecialchars($invitacion['slug']); ?>" readonly>
+                            value="<?php echo safe_html($invitacion['slug']); ?>" readonly>
                         <div class="form-text">La URL no se puede modificar una vez creada</div>
                     </div>
                     
@@ -606,7 +625,7 @@ foreach($ubicaciones as $ub) {
                             <label for="ceremonia_lugar" class="form-label">Lugar de la Ceremonia</label>
                             <input type="text" id="ceremonia_lugar" name="ceremonia_lugar" 
                                 class="form-control" placeholder="Iglesia San José"
-                                value="<?php echo $ceremonia ? htmlspecialchars($ceremonia['nombre_lugar']) : ''; ?>">
+                                value="<?php echo $ceremonia ? safe_html($ceremonia['nombre_lugar']) : ''; ?>">
                         </div>
                         <div class="form-group">
                             <label for="ceremonia_hora" class="form-label">Hora de la Ceremonia</label>
@@ -617,13 +636,13 @@ foreach($ubicaciones as $ub) {
                             <label for="ceremonia_direccion" class="form-label">Dirección de la Ceremonia</label>
                             <input type="text" id="ceremonia_direccion" name="ceremonia_direccion" 
                                 class="form-control" placeholder="Calle Principal 123"
-                                value="<?php echo $ceremonia ? htmlspecialchars($ceremonia['direccion']) : ''; ?>">
+                                value="<?php echo $ceremonia ? safe_html($ceremonia['direccion']) : ''; ?>">
                         </div>
                         <div class="form-group">
                             <label for="ceremonia_maps" class="form-label">URL de Google Maps (Ceremonia)</label>
                             <input type="url" id="ceremonia_maps" name="ceremonia_maps" 
                                 class="form-control" placeholder="https://maps.google.com/?q=..."
-                                value="<?php echo $ceremonia ? htmlspecialchars($ceremonia['google_maps_url']) : ''; ?>">
+                                value="<?php echo $ceremonia ? safe_html($ceremonia['google_maps_url']) : ''; ?>">
                         </div>
                         
                         <!-- Imagen Ceremonia -->
@@ -665,7 +684,7 @@ foreach($ubicaciones as $ub) {
                             <label for="evento_lugar" class="form-label">Lugar del Evento</label>
                             <input type="text" id="evento_lugar" name="evento_lugar" 
                                 class="form-control" placeholder="Salón de Eventos Villa Jardín"
-                                value="<?php echo $evento ? htmlspecialchars($evento['nombre_lugar']) : ''; ?>">
+                                value="<?php echo $evento ? safe_html($evento['nombre_lugar']) : ''; ?>">
                         </div>
                         <div class="form-group">
                             <label for="evento_hora" class="form-label">Hora del Evento</label>
@@ -676,13 +695,13 @@ foreach($ubicaciones as $ub) {
                             <label for="evento_direccion" class="form-label">Dirección del Evento</label>
                             <input type="text" id="evento_direccion" name="evento_direccion" 
                                 class="form-control" placeholder="Avenida Central 456"
-                                value="<?php echo $evento ? htmlspecialchars($evento['direccion']) : ''; ?>">
+                                value="<?php echo $evento ? safe_html($evento['direccion']) : ''; ?>">
                         </div>
                         <div class="form-group">
                             <label for="evento_maps" class="form-label">URL de Google Maps (Evento)</label>
                             <input type="url" id="evento_maps" name="evento_maps" 
                                 class="form-control" placeholder="https://maps.google.com/?q=..."
-                                value="<?php echo $evento ? htmlspecialchars($evento['google_maps_url']) : ''; ?>">
+                                value="<?php echo $evento ? safe_html($evento['google_maps_url']) : ''; ?>">
                         </div>
                         
                         <!-- Imagen Evento -->
@@ -729,7 +748,7 @@ foreach($ubicaciones as $ub) {
                 <div class="form-group">
                     <label for="historia" class="form-label">Historia de Amor</label>
                     <textarea id="historia" name="historia" rows="4" class="form-control" 
-                        placeholder="Cuenta vuestra historia de amor..."><?php echo htmlspecialchars($invitacion['historia']); ?></textarea>
+                        placeholder="Cuenta vuestra historia de amor..."><?php echo safe_html($invitacion['historia']); ?></textarea>
                 </div>
             </div>
 
@@ -848,26 +867,26 @@ foreach($ubicaciones as $ub) {
                         <label for="padres_novia" class="form-label">Padres de la Novia</label>
                         <input type="text" id="padres_novia" name="padres_novia" class="form-control" 
                             placeholder="Nombres de los padres de la novia"
-                            value="<?php echo htmlspecialchars($invitacion['padres_novia']); ?>">
+                            value="<?php echo safe_html($invitacion['padres_novia']); ?>">
                     </div>
                     <div class="form-group">
                         <label for="padres_novio" class="form-label">Padres del Novio</label>
                         <input type="text" id="padres_novio" name="padres_novio" class="form-control" 
                             placeholder="Nombres de los padres del novio"
-                            value="<?php echo htmlspecialchars($invitacion['padres_novio']); ?>">
+                            value="<?php echo safe_html($invitacion['padres_novio']); ?>">
                     </div>
                     
                     <div class="form-group">
                         <label for="padrinos_novia" class="form-label">Padrinos de la Novia</label>
                         <input type="text" id="padrinos_novia" name="padrinos_novia" class="form-control" 
                             placeholder="Nombres de los padrinos de la novia"
-                            value="<?php echo htmlspecialchars($invitacion['padrinos_novia']); ?>">
+                            value="<?php echo safe_html($invitacion['padrinos_novia']); ?>">
                     </div>
                     <div class="form-group">
                         <label for="padrinos_novio" class="form-label">Padrinos del Novio</label>
                         <input type="text" id="padrinos_novio" name="padrinos_novio" class="form-control" 
                             placeholder="Nombres de los padrinos del novio"
-                            value="<?php echo htmlspecialchars($invitacion['padrinos_novio']); ?>">
+                            value="<?php echo safe_html($invitacion['padrinos_novio']); ?>">
                     </div>
                 </div>
             </div>
@@ -979,13 +998,13 @@ foreach($ubicaciones as $ub) {
                                         <label class="form-label">Evento</label>
                                         <input type="text" name="cronograma_evento[]" class="form-control" 
                                             placeholder="Ceremonia"
-                                            value="<?php echo htmlspecialchars($item['evento']); ?>">
+                                            value="<?php echo safe_html($item['evento']); ?>">
                                     </div>
                                     <div class="col-md-4">
                                         <label class="form-label">Descripción</label>
                                         <input type="text" name="cronograma_descripcion[]" class="form-control" 
                                             placeholder="Descripción del evento"
-                                            value="<?php echo htmlspecialchars($item['descripcion']); ?>">
+                                            value="<?php echo safe_html($item['descripcion']); ?>">
                                     </div>
                                     <div class="col-md-2">
                                         <label class="form-label">Icono</label>
@@ -1084,7 +1103,7 @@ foreach($ubicaciones as $ub) {
                 <div class="form-group">
                     <label for="dresscode" class="form-label">Descripción del Código de Vestimenta</label>
                     <textarea id="dresscode" name="dresscode" rows="2" class="form-control" 
-                        placeholder="Por favor, viste atuendo elegante..."><?php echo htmlspecialchars($invitacion['dresscode']); ?></textarea>
+                        placeholder="Por favor, viste atuendo elegante..."><?php echo safe_html($invitacion['dresscode']); ?></textarea>
                 </div>
             </div>
 
@@ -1118,12 +1137,12 @@ foreach($ubicaciones as $ub) {
                                 <div class="col-md-3">
                                     <label class="form-label">Número de Evento</label>
                                     <input type="text" name="mesa_regalos_numero[]" class="form-control" 
-                                        placeholder="Ej: 123456" value="<?php echo htmlspecialchars($mesa['numero_evento']); ?>">
+                                        placeholder="Ej: 123456" value="<?php echo safe_html($mesa['numero_evento']); ?>">
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label">URL del Registro</label>
                                     <input type="url" name="mesa_regalos_url[]" class="form-control" 
-                                        placeholder="https://..." value="<?php echo htmlspecialchars($mesa['url']); ?>">
+                                        placeholder="https://..." value="<?php echo safe_html($mesa['url']); ?>">
                                 </div>
                                 <div class="col-md-2 d-flex align-items-end">
                                     <button type="button" onclick="eliminarMesaRegalos(this)" class="btn btn-outline-danger btn-sm">
@@ -1136,7 +1155,7 @@ foreach($ubicaciones as $ub) {
                                     <label class="form-label">Descripción (opcional)</label>
                                     <input type="text" name="mesa_regalos_descripcion[]" class="form-control" 
                                         placeholder="Ej: Mesa principal en Liverpool"
-                                        value="<?php echo htmlspecialchars($mesa['descripcion']); ?>">
+                                        value="<?php echo safe_html($mesa['descripcion']); ?>">
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-check mt-4">
@@ -1228,7 +1247,7 @@ foreach($ubicaciones as $ub) {
                         <label for="texto_rsvp" class="form-label">Texto para RSVP</label>
                         <input type="text" id="texto_rsvp" name="texto_rsvp" class="form-control" 
                             placeholder="Confirma tu asistencia antes del..."
-                            value="<?php echo htmlspecialchars($invitacion['texto_rsvp']); ?>">
+                            value="<?php echo safe_html($invitacion['texto_rsvp']); ?>">
                     </div>
                     
                     <!-- Fecha límite RSVP -->
@@ -1284,7 +1303,7 @@ foreach($ubicaciones as $ub) {
                             <label for="whatsapp_confirmacion" class="form-label">Número de WhatsApp para Confirmaciones *</label>
                             <input type="tel" id="whatsapp_confirmacion" name="whatsapp_confirmacion" class="form-control" 
                                 placeholder="3339047672" pattern="[0-9]{10,15}"
-                                value="<?php echo htmlspecialchars($invitacion['whatsapp_confirmacion'] ?? ''); ?>"
+                                value="<?php echo safe_html($invitacion['whatsapp_confirmacion']); ?>"
                                 <?php echo ($invitacion['tipo_rsvp'] ?? 'digital') == 'whatsapp' ? 'required' : ''; ?>>
                             <div class="form-text">
                                 <i class="bi bi-info-circle me-1"></i>
@@ -1319,7 +1338,7 @@ foreach($ubicaciones as $ub) {
                             <label for="texto_solo_adultos" class="form-label">Texto personalizado para seccion "Solo Adultos"</label>
                             <input type="text" id="texto_solo_adultos" name="texto_solo_adultos" class="form-control" 
                                 placeholder="Solo adultos"
-                                value="<?php echo htmlspecialchars($invitacion['texto_solo_adultos'] ?? 'Celebración exclusiva para adultos (No niños).'); ?>">
+                                value="<?php echo safe_html($invitacion['texto_solo_adultos'] ?? 'Celebración exclusiva para adultos (No niños).'); ?>">
                             <div class="form-text">Personaliza el mensaje sobre la restricción de edad</div>
                         </div>
                     </div>
@@ -1336,14 +1355,14 @@ foreach($ubicaciones as $ub) {
                 <div class="form-group">
                     <label for="mensaje_footer" class="form-label">Mensaje del Footer</label>
                     <textarea id="mensaje_footer" name="mensaje_footer" rows="2" class="form-control" 
-                        placeholder="El amor es la fuerza más poderosa del mundo..."><?php echo htmlspecialchars($invitacion['mensaje_footer']); ?></textarea>
+                        placeholder="El amor es la fuerza más poderosa del mundo..."><?php echo safe_html($invitacion['mensaje_footer']); ?></textarea>
                 </div>
                 
                 <div class="form-group">
                     <label for="firma_footer" class="form-label">Firma del Footer</label>
                     <input type="text" id="firma_footer" name="firma_footer" class="form-control" 
                         placeholder="Con amor, Victoria & Matthew"
-                        value="<?php echo htmlspecialchars($invitacion['firma_footer']); ?>">
+                        value="<?php echo safe_html($invitacion['firma_footer']); ?>">
                 </div>
 
                 <!-- Mostrar Botones Compartir -->

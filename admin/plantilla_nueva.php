@@ -102,11 +102,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 Nombre de la Plantilla *
                             </label>
                             <input type="text" 
-                                   class="form-control" 
-                                   id="nombre" 
-                                   name="nombre" 
-                                   placeholder="Ej: Plantilla Elegante Dorada"
-                                   required>
+                                class="form-control" 
+                                id="nombre" 
+                                name="nombre" 
+                                placeholder="Ej: Plantilla Elegante Dorada"
+                                required>
                             <div class="invalid-feedback">
                                 Por favor ingresa el nombre de la plantilla.
                             </div>
@@ -120,11 +120,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 Carpeta *
                             </label>
                             <input type="text" 
-                                   class="form-control" 
-                                   id="carpeta" 
-                                   name="carpeta" 
-                                   placeholder="Ej: plantilla-1"
-                                   required>
+                                class="form-control" 
+                                id="carpeta" 
+                                name="carpeta" 
+                                placeholder="Ej: plantilla-1"
+                                required>
                             <div class="form-text">Nombre de la carpeta donde están los archivos de la plantilla</div>
                             <div class="invalid-feedback">
                                 Por favor ingresa el nombre de la carpeta.
@@ -139,10 +139,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         Descripción
                     </label>
                     <textarea class="form-control" 
-                              id="descripcion" 
-                              name="descripcion" 
-                              rows="3"
-                              placeholder="Describe las características de esta plantilla..."></textarea>
+                            id="descripcion" 
+                            name="descripcion" 
+                            rows="3"
+                            placeholder="Describe las características de esta plantilla..."></textarea>
                 </div>
                 
                 <div class="row">
@@ -153,11 +153,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 Archivo Principal *
                             </label>
                             <input type="text" 
-                                   class="form-control" 
-                                   id="archivo_principal" 
-                                   name="archivo_principal" 
-                                   placeholder="Ej: index.php"
-                                   required>
+                                class="form-control" 
+                                id="archivo_principal" 
+                                name="archivo_principal" 
+                                placeholder="Ej: index.php"
+                                required>
                             <div class="form-text">Archivo PHP principal de la plantilla</div>
                             <div class="invalid-feedback">
                                 Por favor ingresa el archivo principal.
@@ -172,10 +172,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 Imagen Preview
                             </label>
                             <input type="text" 
-                                   class="form-control" 
-                                   id="imagen_preview" 
-                                   name="imagen_preview" 
-                                   placeholder="Ej: img/preview.png">
+                                class="form-control" 
+                                id="imagen_preview" 
+                                name="imagen_preview" 
+                                placeholder="Ej: img/preview.png">
                             <div class="form-text">Ruta relativa a la imagen de vista previa (opcional)</div>
                         </div>
                     </div>
@@ -220,17 +220,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <!-- Botones de acción -->
-            <div class="form-section">
-                <div class="d-flex gap-2 justify-content-end">
-                    <a href="plantillas.php" class="btn btn-outline-secondary btn-lg">
-                        <i class="bi bi-x-circle me-1"></i>
-                        Cancelar
-                    </a>
-                    <button type="submit" class="btn btn-primary btn-lg">
-                        <i class="bi bi-check-circle me-1"></i>
-                        Guardar Plantilla
-                    </button>
-                </div>
+            <div class="floating-actions">
+                <a href="plantillas.php" class="btn btn-outline-secondary btn-lg">
+                    <i class="bi bi-x-circle me-1"></i>
+                    Cancelar
+                </a>
+                <button type="submit" class="btn btn-primary btn-lg">
+                    <i class="bi bi-check-circle me-1"></i>
+                    Guardar Plantilla
+                </button>
             </div>
         </form>
     </div>
