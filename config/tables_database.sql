@@ -2,6 +2,24 @@
 CREATE DATABASE IF NOT EXISTS carta_digital CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE carta_digital;
 
+-- Tabla de clientes
+CREATE TABLE IF NOT EXISTS clientes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    slug VARCHAR(255) NOT NULL UNIQUE,
+    nombre VARCHAR(100) NOT NULL,
+    apellido VARCHAR(100) NOT NULL,
+    nombres_novios VARCHAR(200) NOT NULL,
+    email VARCHAR(150) NOT NULL,
+    telefono VARCHAR(20),
+    password VARCHAR(255),
+    fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    fecha_actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    activo TINYINT(1) DEFAULT 1,
+    recibe_notificaciones TINYINT DEFAULT 1,
+    notificar_email TINYINT DEFAULT 1,
+    notificar_whatsapp TINYINT DEFAULT 0
+);
+
 -- Tabla de plantillas base
 CREATE TABLE IF NOT EXISTS plantillas (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -16,7 +34,17 @@ CREATE TABLE IF NOT EXISTS plantillas (
     FOREIGN KEY (invitacion_ejemplo_id) REFERENCES invitaciones(id) ON DELETE SET NULL;
 );
 
--- Tabla de invitaciones (estructura completa actualizada)
+-- Tabla Planes
+CREATE TABLE IF NOT EXISTS planes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50) UNIQUE NOT NULL,
+    precio DECIMAL(10,2) NOT NULL,
+    descripcion TEXT,
+    activo TINYINT(1) DEFAULT 1,
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Tabla de invitaciones
 CREATE TABLE IF NOT EXISTS invitaciones (
     id INT AUTO_INCREMENT PRIMARY KEY,
     plantilla_id INT NOT NULL,
@@ -56,7 +84,7 @@ CREATE TABLE IF NOT EXISTS invitaciones (
     mostrar_cronograma TINYINT(1) DEFAULT 1,
     mostrar_fecha_limite_rsvp TINYINT(1) DEFAULT 1,
     mostrar_solo_adultos TINYINT(1) DEFAULT 1,
-    mostrar_solo_adultos TINYINT(1) DEFAULT 1,
+    texto_solo_adultos VARCHAR(255) NULL,
     mostrar_compartir TINYINT(1) DEFAULT 1,
 
     -- Musica
@@ -68,7 +96,12 @@ CREATE TABLE IF NOT EXISTS invitaciones (
     whatsapp_confirmacion VARCHAR(20) DEFAULT NULL,
     
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    plan_id INT DEFAULT 1,    
     activa BOOLEAN DEFAULT TRUE,
+    cliente_id INT NOT NULL,
+    FOREIGN KEY (plan_id) REFERENCES planes(id) ON DELETE SET NULL,
+    FOREIGN KEY (cliente_id) REFERENCES clientes(id) ON DELETE CASCADE,
     FOREIGN KEY (plantilla_id) REFERENCES plantillas(id) ON DELETE CASCADE
 );
 
@@ -140,37 +173,26 @@ CREATE TABLE IF NOT EXISTS invitacion_mesa_regalos (
     FOREIGN KEY (invitacion_id) REFERENCES invitaciones(id) ON DELETE CASCADE
 );
 
--- Tabla de estadísticas y tracking
-CREATE TABLE IF NOT EXISTS invitacion_estadisticas (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    invitacion_id INT NOT NULL,
-    tipo_evento ENUM('visita', 'rsvp', 'compartir', 'galeria_click', 'ubicacion_click') NOT NULL,
-    ip_address VARCHAR(45),
-    user_agent TEXT,
-    datos_adicionales JSON,
-    fecha_evento TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (invitacion_id) REFERENCES invitaciones(id) ON DELETE CASCADE
-);
-
 -- Tabla de clientes login
-CREATE TABLE IF NOT EXISTS clientes_login (
-  id int NOT NULL AUTO_INCREMENT,
-  slug varchar(255) NOT NULL,
-  usuario varchar(255) NOT NULL,
-  email varchar(255) NULL,
-  telefono varchar(20) NULL,
-  recibe_notificaciones TINYINT DEFAULT 1,
-  notificar_email TINYINT DEFAULT 1,
-  notificar_whatsapp TINYINT DEFAULT 0,
-  fecha_actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  password varchar(255) NOT NULL,
-  created_at timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (id),
-  UNIQUE KEY slug (slug),
-  UNIQUE KEY slug_unique (slug)
-);
+/* CREATE TABLE IF NOT EXISTS clientes_login (
+    id int NOT NULL AUTO_INCREMENT,
+    slug varchar(255) NOT NULL,
+    usuario varchar(255) NOT NULL,
+    email varchar(255) NULL,
+    telefono varchar(20) NULL,
+    recibe_notificaciones TINYINT DEFAULT 1,
+    notificar_email TINYINT DEFAULT 1,
+    notificar_whatsapp TINYINT DEFAULT 0,
+    fecha_actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    password varchar(255) NOT NULL,
+    created_at timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    UNIQUE KEY slug (slug),
+    UNIQUE KEY slug_unique (slug)
+);*/ 
 
+-- Tabla de grupos de invitados
 CREATE TABLE IF NOT EXISTS invitados_grupos (
     id_grupo INT AUTO_INCREMENT PRIMARY KEY,
     slug_invitacion VARCHAR(100) NOT NULL,
@@ -182,6 +204,7 @@ CREATE TABLE IF NOT EXISTS invitados_grupos (
     INDEX idx_token_unico (token_unico)
 );
 
+-- Tabla de respuestas RSVP
 CREATE TABLE IF NOT EXISTS rsvp_respuestas (
     id_respuesta INT AUTO_INCREMENT PRIMARY KEY,
     id_grupo INT NOT NULL,
@@ -194,8 +217,34 @@ CREATE TABLE IF NOT EXISTS rsvp_respuestas (
     FOREIGN KEY (id_grupo) REFERENCES invitados_grupos(id_grupo) ON DELETE CASCADE
 );
 
--- Insertar plantilla base
-INSERT INTO plantillas (id, nombre, descripcion, carpeta, archivo_principal, imagen_preview, activa) 
-VALUES (1, 'Tinta', 'Plantilla elegante con diseño clásico en tonos tintos y arena', 'plantilla-1', 'plantilla-1.php', 'img/preview.png', 1)
+-- Tabla de pedidos
+CREATE TABLE IF NOT EXISTS pedidos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    cliente_id INT NOT NULL,
+    plantilla_id INT NOT NULL,
+    plan ENUM('escencial', 'premium', 'exclusivo') NOT NULL,
+    monto DECIMAL(10,2) NOT NULL,
+    metodo_pago ENUM('stripe', 'mercado_pago', 'spei') DEFAULT 'stripe',
+    estado ENUM('pendiente', 'completado', 'cancelado', 'reembolsado') DEFAULT 'pendiente',
+    payment_intent_id VARCHAR(100) UNIQUE,
+    invitacion_id INT NULL,
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    fecha_pago TIMESTAMP NULL,
+    FOREIGN KEY (cliente_id) REFERENCES clientes(id) ON DELETE CASCADE,
+    FOREIGN KEY (plantilla_id) REFERENCES plantillas(id) ON DELETE CASCADE,
+    FOREIGN KEY (invitacion_id) REFERENCES invitaciones(id) ON DELETE SET NULL
+);
 
-ON DUPLICATE KEY UPDATE nombre = VALUES(nombre);
+-- Tabla de usuarios administradores
+CREATE TABLE IF NOT EXISTS usuarios_admin (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    rol ENUM('admin', 'editor', 'viewer') DEFAULT 'viewer',
+    activo TINYINT(1) DEFAULT 1,
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    ultimo_login TIMESTAMP NULL,
+    INDEX (email),
+    INDEX (rol)
+);

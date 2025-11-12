@@ -162,16 +162,23 @@
                                 <div class="template-actions">
                                     <?php if ($tieneEjemplo): ?>
                                         <a href="<?php echo $urlDestino; ?>" 
-                                           class="<?php echo $claseBoton; ?>"
-                                           target="_blank"
-                                           rel="noopener"><?php echo $textoBoton; ?></a>
-                                        <a href="./contacto.php?plantilla=<?php echo $plantilla['id']; ?>" 
-                                           class="btn-template btn-secondary">Solicitar</a>
+                                        class="<?php echo $claseBoton; ?>"
+                                        target="_blank"
+                                        rel="noopener">
+                                        <i class="fas fa-eye"></i> <?php echo $textoBoton; ?>
+                                        </a>
                                     <?php else: ?>
-                                        <span class="<?php echo $claseBoton; ?>"><?php echo $textoBoton; ?></span>
-                                        <a href="./contacto.php?plantilla=<?php echo $plantilla['id']; ?>" 
-                                           class="btn-template btn-primary">Solicitar</a>
+                                        <span class="<?php echo $claseBoton; ?>">
+                                        <i class="fas fa-eye"></i> <?php echo $textoBoton; ?>
+                                        </span>
                                     <?php endif; ?>
+                                    
+                                    <!-- Nuevo: Botón de Pago -->
+                                    <a href="./checkout.php?plan=premium&plantilla=<?php echo $plantilla['id']; ?>" 
+                                    class="btn btn-primary"
+                                    title="Comprar e iniciar tu invitación">
+                                    <i class="fas fa-shopping-cart"></i> Comprar
+                                    </a>
                                 </div>
                             </div>
                         </div>

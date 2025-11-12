@@ -70,14 +70,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $update_stmt = $db->prepare($update_query);
         
         if ($update_stmt->execute($params)) {
-            $success = "Plantilla actualizada correctamente.";
-            // Refrescar datos de la plantilla
-            $stmt->execute([$id]);
-            $plantilla = $stmt->fetch(PDO::FETCH_ASSOC);
+            // Patrón Post-Redirect-Get (PRG)
+            session_start();
+            $_SESSION['success_message'] = 'Plantilla actualizada correctamente.';
+            
+            // Redireccionar a la misma página con GET
+            header("Location: plantilla_editar.php?id=" . $id);
+            exit();
         } else {
             $error = "Error al actualizar la plantilla.";
         }
     }
+}
+
+//Mostrar mensaje de éxito desde sesión
+session_start();
+$success = null;
+if (isset($_SESSION['success_message'])) {
+    $success = $_SESSION['success_message'];
+    unset($_SESSION['success_message']);
 }
 ?>
 
@@ -237,53 +248,58 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                 </div>
 
-                <div class="mb-3">
-                    <label for="imagen_preview" class="form-label">
-                        <i class="bi bi-image me-1"></i>
-                        Imagen Preview
-                    </label>
-                    <input type="text" 
-                           class="form-control" 
-                           id="imagen_preview" 
-                           name="imagen_preview" 
-                           value="<?php echo htmlspecialchars($plantilla['imagen_preview']); ?>">
-                    <div class="form-text">Ejemplo: img/preview.png (relativo a la carpeta de la plantilla)</div>
-                </div>
-
-                <!-- Campo de Invitación Ejemplo -->
-                <?php if ($invitacionEjemploColumnExists): ?>
-                <div class="mb-3">
-                    <label for="invitacion_ejemplo_id" class="form-label">
-                        <i class="bi bi-eye me-1"></i>
-                        Invitación de Ejemplo
-                    </label>
-                    <select class="form-select" 
-                            id="invitacion_ejemplo_id" 
-                            name="invitacion_ejemplo_id">
-                        <option value="">-- Seleccionar invitación ejemplo (opcional) --</option>
-                        <?php foreach ($invitaciones as $invitacion): ?>
-                            <option value="<?= $invitacion['id'] ?>" 
-                                    <?= (isset($plantilla['invitacion_ejemplo_id']) && $plantilla['invitacion_ejemplo_id'] == $invitacion['id']) ? 'selected' : '' ?>>
-                                <?= htmlspecialchars($invitacion['nombres_novios']) ?> 
-                                (<?= htmlspecialchars($invitacion['slug']) ?>)
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                    <div class="form-text">
-                        <i class="bi bi-info-circle me-1"></i>
-                        Selecciona una invitación existente que sirva como ejemplo para mostrar esta plantilla. 
-                        Los usuarios podrán ver esta invitación cuando hagan clic en "Ver Plantilla".
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="imagen_preview" class="form-label">
+                                <i class="bi bi-image me-1"></i>
+                                Imagen Preview
+                            </label>
+                            <input type="text" 
+                                   class="form-control" 
+                                   id="imagen_preview" 
+                                   name="imagen_preview" 
+                                   value="<?php echo htmlspecialchars($plantilla['imagen_preview']); ?>">
+                            <div class="form-text">Ejemplo: img/preview.png (relativo a la carpeta de la plantilla)</div>
+                        </div>
                     </div>
+
+                    <!-- Campo de Invitación Ejemplo -->
+                    <?php if ($invitacionEjemploColumnExists): ?>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="invitacion_ejemplo_id" class="form-label">
+                                <i class="bi bi-eye me-1"></i>
+                                Invitación de Ejemplo
+                            </label>
+                            <select class="form-select" 
+                                    id="invitacion_ejemplo_id" 
+                                    name="invitacion_ejemplo_id">
+                                <option value="">-- Seleccionar invitación ejemplo (opcional) --</option>
+                                <?php foreach ($invitaciones as $invitacion): ?>
+                                    <option value="<?= $invitacion['id'] ?>" 
+                                            <?= (isset($plantilla['invitacion_ejemplo_id']) && $plantilla['invitacion_ejemplo_id'] == $invitacion['id']) ? 'selected' : '' ?>>
+                                        <?= htmlspecialchars($invitacion['nombres_novios']) ?> 
+                                        (<?= htmlspecialchars($invitacion['slug']) ?>)
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                            <div class="form-text">
+                                <i class="bi bi-info-circle me-1"></i>
+                                Selecciona una invitación existente que sirva como ejemplo para mostrar esta plantilla.
+                            </div>
+                        </div>
+                    </div>
+                    <?php endif; ?>
                 </div>
 
-                <?php if (empty($invitaciones)): ?>
+                <?php if ($invitacionEjemploColumnExists && empty($invitaciones)): ?>
                 <div class="alert alert-info" role="alert">
                     <i class="bi bi-info-circle me-2"></i>
                     <strong>Nota:</strong> No hay invitaciones creadas aún. 
                     <a href="functions/crear.php" class="alert-link">Crea una invitación</a> 
                     primero para poder usarla como ejemplo.
                 </div>
-                <?php endif; ?>
                 <?php endif; ?>
 
             </div>

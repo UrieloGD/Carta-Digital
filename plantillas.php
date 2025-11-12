@@ -1,9 +1,9 @@
 <?php 
 include './includes/header.php';
+require_once './config/stripe_config.php';
+require_once './config/database.php';
 
 try {
-    require_once './config/database.php';
-    
     $database = new Database();
     $db = $database->getConnection();
     
@@ -42,14 +42,10 @@ try {
             <?php if (!empty($plantillas)): ?>
                 <?php foreach ($plantillas as $plantilla): ?>
                     <?php 
-                    // Construir la ruta completa de la imagen preview
-                    $imagenRuta = './images/default-template.png'; // Por defecto
-                    
+                    $imagenRuta = './images/default-template.png';
                     if (!empty($plantilla['imagen_preview'])) {
                         $imagenRuta = './plantillas/' . $plantilla['carpeta'] . '/' . $plantilla['imagen_preview'];
                     }
-                    
-                    // Determinar si tiene ejemplo
                     $tieneEjemplo = !empty($plantilla['ejemplo_slug']);
                     $urlDestino = $tieneEjemplo 
                         ? './invitacion.php?slug=' . urlencode($plantilla['ejemplo_slug'])
@@ -57,22 +53,38 @@ try {
                     $textoBoton = $tieneEjemplo ? 'Ver plantilla' : 'Próximamente';
                     $claseBoton = $tieneEjemplo ? 'btn btn-secondary template-btn' : 'btn btn-secondary template-btn disabled';
                     ?>
+                    
                     <div class="template-card">
                         <div class="template-image">
                             <img src="<?php echo htmlspecialchars($imagenRuta); ?>" 
-                                 alt="Preview de <?php echo htmlspecialchars($plantilla['nombre']); ?>"
-                                 onerror="this.src='./images/default-template.png'">
+                                alt="Preview de <?php echo htmlspecialchars($plantilla['nombre']); ?>"
+                                onerror="this.src='./images/default-template.png'">
                         </div>
+                        
                         <div class="template-info">
                             <h3><?php echo htmlspecialchars($plantilla['nombre']); ?></h3>
-                            
+
+                            <!-- Ver plantilla -->
                             <?php if ($tieneEjemplo): ?>
                                 <a href="<?php echo $urlDestino; ?>" 
-                                   class="<?php echo $claseBoton; ?>"
-                                   target="_blank"><?php echo $textoBoton; ?></a>
+                                    class="<?php echo $claseBoton; ?>"
+                                    target="_blank" 
+                                    rel="noopener">
+                                    <i class="fas fa-eye"></i> <?php echo $textoBoton; ?>
+                                </a>
                             <?php else: ?>
-                                <span class="<?php echo $claseBoton; ?>"><?php echo $textoBoton; ?></span>
+                                <button class="<?php echo $claseBoton; ?>" disabled>
+                                    <i class="fas fa-eye"></i> <?php echo $textoBoton; ?>
+                                </button>
                             <?php endif; ?>
+
+                            <!-- Botón comprar -->
+                            <button type="button" 
+                                    class="btn btn-primary template-btn btn-comprar" 
+                                    data-plantilla-id="<?php echo $plantilla['id']; ?>"
+                                    data-plantilla-nombre="<?php echo htmlspecialchars($plantilla['nombre']); ?>">
+                                <i class="fas fa-shopping-cart"></i> Comprar
+                            </button>
                         </div>
                     </div>
                 <?php endforeach; ?>
@@ -85,5 +97,41 @@ try {
         </div>
     </div>
 </section>
+
+<!-- CTA Section -->
+<section class="plantillas-cta">
+    <div class="container">
+        <div class="cta-content">
+            <h2>¿No sabes cuál elegir?</h2>
+            <p>Compara nuestros planes y encuentra el que mejor se adapta a tus necesidades</p>
+            <a href="./precios.php" class="btn btn-primary">Ver Planes y Precios</a>
+        </div>
+    </div>
+</section>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal-container">
+        <div class="modal-header">
+            <h3 class="modal-title" id="modalTitle">Selecciona tu plan</h3>
+            <button class="modal-close" id="modalClose" aria-label="Cerrar modal">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="plans-list" id="plansList">
+                <!-- Se llena dinámicamente con JavaScript -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Variables globales para el modal -->
+<script>
+    // Los planes se pasan como JSON desde PHP
+    const PLANES_DESDE_BD = <?php echo json_encode($PLANES_PRECIOS); ?>;
+</script>
+
+<script src="./js/plantillas.js?v=<?php echo filemtime('./js/plantillas.js'); ?>"></script>
 
 <?php include './includes/footer.php'; ?>

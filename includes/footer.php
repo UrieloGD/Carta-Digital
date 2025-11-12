@@ -27,13 +27,14 @@
                 <a href="index.php">Inicio</a>
                 <a href="plantillas.php">Plantillas</a>
                 <a href="contacto.php">Contacto</a>
+                <a href="precios.php">Precios</a>
             </div>
             <div class="footer-section">
                 <h4>Síguenos</h4>
                 <div class="social-icons">
-                    <a href="#" class="social-icon">Instagram</a>
-                    <a href="#" class="social-icon">Facebook</a>
                     <a href="#" class="social-icon">WhatsApp</a>
+                    <a href="#" class="social-icon">Facebook</a>
+                    <a href="#" class="social-icon">Instagram</a>
                 </div>
             </div>
         </div>

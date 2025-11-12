@@ -1,1 +1,15 @@
 plantillas/*/uploads/
+composer.phar
+
+# Variables de entorno
+.env
+.env.local
+.env.*.local
+
+# Sistema
+.DS_Store
+Thumbs.db
+*.log
+
+# Base de datos
+config/tables_database.sql
