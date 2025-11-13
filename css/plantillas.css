@@ -331,6 +331,50 @@
     min-height: 44px;
 }
 
+/* Badge "Próximamente" */
+.template-image {
+    position: relative;
+    overflow: hidden;
+}
+
+.badge-soon {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: var(--primary-color);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+/* Estilo para cards "Próximamente" */
+.template-card.coming-soon {
+    opacity: 0.85;
+}
+
+.template-card.coming-soon:hover {
+    opacity: 1;
+}
+
+.template-card.coming-soon .template-image img {
+    filter: grayscale(20%);
+}
+
+
 .template-info .btn-comprar:hover {
     background: var(--primary-hover);
     transform: translateY(-2px);

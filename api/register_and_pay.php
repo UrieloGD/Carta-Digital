@@ -233,8 +233,8 @@ try {
     $pedido_id = $db->lastInsertId();
 
     // ⚠️ SOLO PARA PRUEBAS LOCALES - COMENTA O ELIMINA EN PRODUCCIÓN
-    $stmt = $db->prepare("UPDATE pedidos SET estado = 'completado', fecha_pago = NOW() WHERE id = ?");
-    $stmt->execute([$pedido_id]);
+    //$stmt = $db->prepare("UPDATE pedidos SET estado = 'completado', fecha_pago = NOW() WHERE id = ?");
+    //$stmt->execute([$pedido_id]);
     
     // Confirmar transacción
     $db->commit();

@@ -7,14 +7,18 @@ try {
     $database = new Database();
     $db = $database->getConnection();
     
-    // Obtener plantillas con información de invitaciones de ejemplo
+    // ✅ ORDENAR: Primero las que tienen ejemplo, luego las que no
     $stmt = $db->prepare("
         SELECT p.*, 
-               ie.slug as ejemplo_slug
+               ie.slug as ejemplo_slug,
+               CASE 
+                   WHEN p.invitacion_ejemplo_id IS NOT NULL THEN 0 
+                   ELSE 1 
+               END as sin_ejemplo
         FROM plantillas p 
         LEFT JOIN invitaciones ie ON p.invitacion_ejemplo_id = ie.id
         WHERE p.activa = 1 
-        ORDER BY p.fecha_creacion DESC
+        ORDER BY sin_ejemplo ASC, p.fecha_creacion DESC
     ");
     $stmt->execute();
     $plantillas = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -52,11 +56,15 @@ try {
                         : '#';
                     ?>
                     
-                    <div class="template-card">
+                    <div class="template-card <?php echo !$tieneEjemplo ? 'coming-soon' : ''; ?>">
                         <div class="template-image">
                             <img src="<?php echo htmlspecialchars($imagenRuta); ?>" 
                                 alt="Preview de <?php echo htmlspecialchars($plantilla['nombre']); ?>"
                                 onerror="this.src='./images/default-template.png'">
+                            
+                            <?php if (!$tieneEjemplo): ?>
+                                <div class="badge-soon">Próximamente</div>
+                            <?php endif; ?>
                         </div>
                         
                         <div class="template-info">
@@ -126,7 +134,6 @@ try {
 
 <!-- Variables globales para el modal -->
 <script>
-    // Los planes se pasan como JSON desde PHP
     const PLANES_DESDE_BD = <?php echo json_encode($PLANES_PRECIOS); ?>;
 </script>
 

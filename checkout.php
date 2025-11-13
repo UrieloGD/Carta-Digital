@@ -4,12 +4,12 @@ require_once './config/stripe_config.php';
 require_once './config/database.php';
 
 // Obtener parámetros de URL
-$plan = $_GET['plan'] ?? 'escencial';
+$plan = $_GET['plan'] ?? 'Escencial';
 $plantilla_id = isset($_GET['plantilla']) ? (int)$_GET['plantilla'] : null;
 
 // Validar plan
 if (!isset($PLANES_PRECIOS[$plan])) {
-    $plan = 'escencial';
+    $plan = 'Escencial';
 }
 
 $precio = $PLANES_PRECIOS[$plan];
@@ -61,17 +61,17 @@ if ($plantilla_id) {
                     <div class="summary-features">
                         <h4>¿Qué Incluye?</h4>
                         <ul>
-                            <?php if ($plan === 'escencial' || $plan === 'premium' || $plan === 'exclusivo'): ?>
+                            <?php if ($plan === 'Escencial' || $plan === 'Premium' || $plan === 'Exclusivo'): ?>
                                 <li><i class="fas fa-check"></i> Portada personalizada</li>
                                 <li><i class="fas fa-check"></i> Historia de pareja</li>
                                 <li><i class="fas fa-check"></i> Información de ceremonia y recepción</li>
                                 <li><i class="fas fa-check"></i> Galería de fotos</li>
                                 <li><i class="fas fa-check"></i> Formulario de confirmación</li>
-                                <?php if ($plan === 'premium' || $plan === 'exclusivo'): ?>
+                                <?php if ($plan === 'Premium' || $plan === 'Exclusivo'): ?>
                                     <li><i class="fas fa-check"></i> Cronograma del evento</li>
                                     <li><i class="fas fa-check"></i> Reproductor de música</li>
                                 <?php endif; ?>
-                                <?php if ($plan === 'exclusivo'): ?>
+                                <?php if ($plan === 'Exclusivo'): ?>
                                     <li><i class="fas fa-check"></i> Mesa de regalos</li>
                                     <li><i class="fas fa-check"></i> Sección adultos</li>
                                 <?php endif; ?>

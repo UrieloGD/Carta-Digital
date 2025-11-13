@@ -157,7 +157,7 @@
                                         <i class="fas fa-eye"></i> Ver Ejemplo
                                     </a>
                                     
-                                    <a href="./carrito.php?plantilla_id=<?php echo $plantilla['id']; ?>" 
+                                    <a href="./checkout.php?plantilla_id=<?php echo $plantilla['id']; ?>" 
                                        class="btn btn-primary">
                                         <i class="fas fa-shopping-cart"></i> Comprar Plantilla
                                     </a>
