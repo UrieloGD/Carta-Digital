@@ -220,6 +220,7 @@
     border-radius: 12px;
     border: 1px solid #e9ecef;
     transition: var(--transition);
+    margin-bottom: 1rem;
 }
 
 .form-fieldset.stripe-section.active,
