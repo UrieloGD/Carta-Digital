@@ -42,5 +42,119 @@
             <p>&copy; <?php echo date('Y'); ?> Carta Digital. Todos los derechos reservados.</p>
         </div>
     </div>
+
 <script src="./js/main.js?v=<?php echo filemtime('./js/main.js'); ?>"></script>
+<script>
+(function() {
+    'use strict';
+    
+    function initNavbar() {
+        const navToggle = document.getElementById('nav-toggle');
+        const navMenu = document.getElementById('nav-menu');
+        
+        if (!navToggle || !navMenu) return;
+                
+        // Limpiar estado inicial
+        navMenu.classList.remove('active');
+        navToggle.classList.remove('active');
+        
+        // Estilos mobile
+        function setMobileStyles() {
+            if (window.innerWidth <= 768) {
+                navMenu.style.position = 'fixed';
+                navMenu.style.top = '0';
+                navMenu.style.width = '100%';
+                navMenu.style.height = '100vh';
+                navMenu.style.background = 'rgba(255, 255, 255, 0.98)';
+                navMenu.style.backdropFilter = 'blur(10px)';
+                navMenu.style.display = 'flex';
+                navMenu.style.flexDirection = 'column';
+                navMenu.style.justifyContent = 'center';
+                navMenu.style.alignItems = 'center';
+                navMenu.style.gap = '2rem';
+                navMenu.style.zIndex = '10000';
+                navMenu.style.transition = 'left 0.3s ease';
+                navMenu.style.left = '-100%';
+            } else {
+                navMenu.style.cssText = '';
+            }
+        }
+        
+        setMobileStyles();
+        window.addEventListener('resize', setMobileStyles);
+        
+        // Toggle
+        navToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const isActive = navMenu.classList.contains('active');
+            
+            if (isActive) {
+                navMenu.classList.remove('active');
+                navToggle.classList.remove('active');
+                navMenu.style.left = '-100%';
+                document.body.style.overflow = '';
+            } else {
+                navMenu.classList.add('active');
+                navToggle.classList.add('active');
+                navMenu.style.left = '0';
+                document.body.style.overflow = 'hidden';
+            }
+        });
+        
+        // Cerrar con links
+        document.querySelectorAll('.nav-link, .nav-cta-btn').forEach(link => {
+            link.addEventListener('click', function() {
+                navMenu.classList.remove('active');
+                navToggle.classList.remove('active');
+                if (window.innerWidth <= 768) {
+                    navMenu.style.left = '-100%';
+                }
+                document.body.style.overflow = '';
+            });
+        });
+        
+        // Cerrar clickeando fuera
+        document.addEventListener('click', function(e) {
+            if (!navToggle.contains(e.target) && !navMenu.contains(e.target) && navMenu.classList.contains('active')) {
+                navMenu.classList.remove('active');
+                navToggle.classList.remove('active');
+                if (window.innerWidth <= 768) {
+                    navMenu.style.left = '-100%';
+                }
+                document.body.style.overflow = '';
+            }
+        });
+        
+        // ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && navMenu.classList.contains('active')) {
+                navMenu.classList.remove('active');
+                navToggle.classList.remove('active');
+                if (window.innerWidth <= 768) {
+                    navMenu.style.left = '-100%';
+                }
+                document.body.style.overflow = '';
+            }
+        });
+        
+    }
+    
+    // Scroll header
+    window.addEventListener('scroll', function() {
+        const header = document.querySelector('.header');
+        if (header) {
+            header.classList.toggle('scrolled', window.scrollY > 50);
+        }
+    });
+    
+    // Init
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initNavbar);
+    } else {
+        initNavbar();
+    }
+})();
+</script>
 </footer>
