@@ -53,7 +53,9 @@
         const navMenu = document.getElementById('nav-menu');
         
         if (!navToggle || !navMenu) return;
-                
+        
+        console.log('✅ Navbar inicializando...');
+        
         // Limpiar estado inicial
         navMenu.classList.remove('active');
         navToggle.classList.remove('active');
@@ -115,9 +117,18 @@
             });
         });
         
-        // Cerrar clickeando fuera
+        // Cerrar clickeando fuera - MEJORADO para no interferir con formularios
         document.addEventListener('click', function(e) {
-            if (!navToggle.contains(e.target) && !navMenu.contains(e.target) && navMenu.classList.contains('active')) {
+            // Solo cerrar si el menú está activo Y el click no es en un input/button/form
+            if (navMenu.classList.contains('active') && 
+                !navToggle.contains(e.target) && 
+                !navMenu.contains(e.target) &&
+                !e.target.closest('form') && 
+                !e.target.closest('input') && 
+                !e.target.closest('button') &&
+                !e.target.closest('select') &&
+                !e.target.closest('textarea')) {
+                
                 navMenu.classList.remove('active');
                 navToggle.classList.remove('active');
                 if (window.innerWidth <= 768) {
@@ -139,6 +150,7 @@
             }
         });
         
+        console.log('✅ Navbar listo');
     }
     
     // Scroll header

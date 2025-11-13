@@ -2,7 +2,23 @@
    INDEX STYLES
 ======================================== */
 
-/* Hero Section */
+:root {
+    --primary-color: #c8a882;
+    --primary-hover: #b8956b;
+    --text-dark: #2c3e50;
+    --text-medium: #6c757d;
+    --text-light: #bdc3c7;
+    --background-light: #f8f9fa;
+    --background-white: #ffffff;
+    --shadow-light: 0 5px 15px rgba(0,0,0,0.1);
+    --shadow-medium: 0 10px 30px rgba(0,0,0,0.15);
+    --transition: all 0.3s ease;
+    --border-radius: 15px;
+}
+
+/* ========================================
+   HERO SECTION
+======================================== */
 .hero {
     position: relative;
     min-height: 95vh;
@@ -113,7 +129,9 @@
     color: var(--primary-color);
 }
 
-/* About Section */
+/* ========================================
+   ABOUT SECTION
+======================================== */
 .about {
     padding: 80px 0;
     background: var(--background-white);
@@ -190,7 +208,9 @@
     font-size: 40px;
 }
 
-/* Benefits Section */
+/* ========================================
+   BENEFITS SECTION
+======================================== */
 .benefits {
     padding: 80px 0;
     background: var(--background-light);
@@ -253,7 +273,9 @@
     font-size: 30px;
 }
 
-/* Templates Preview */
+/* ========================================
+   TEMPLATES PREVIEW SECTION (MEJORADO)
+======================================== */
 .templates-preview {
     padding: 80px 0;
     background: var(--background-white);
@@ -271,60 +293,158 @@
     text-align: center;
     font-size: 1.2rem;
     color: var(--text-medium);
-    margin-bottom: 2rem;
+    margin-bottom: 3rem;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .templates-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 2rem;
     margin-bottom: 3rem;
 }
 
+/* ✅ ESTILOS MEJORADOS DE LAS CARDS */
 .template-card {
     background: var(--background-white);
     border-radius: var(--border-radius);
     overflow: hidden;
     box-shadow: var(--shadow-light);
     transition: var(--transition);
+    border: 2px solid rgba(200, 168, 130, 0.1);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 .template-card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-8px);
     box-shadow: var(--shadow-medium);
+    border-color: var(--primary-color);
 }
 
 .template-card img {
     width: 100%;
     height: 500px;
-    object-fit: contain; /* Muestra la imagen completa */
-    background-color: var(--background-light); /* Opcional: color de fondo para espacios vacíos */
+    object-fit: contain;
+    background-color: var(--background-light);
+    transition: var(--transition);
+}
+
+.template-card:hover img {
+    transform: scale(1.01);
 }
 
 .template-info {
-    padding: 1.2rem;
+    padding: 1.5rem;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    gap: 1rem;
 }
 
 .template-info h3 {
     font-size: 1.3rem;
-    margin-bottom: 1rem;
+    margin: 0 0 0.5rem 0;
     color: var(--text-dark);
+    font-weight: 500;
+    line-height: 1.3;
 }
 
-.btn-template {
-    display: inline-block;
-    padding: 8px 20px;
-    background: var(--primary-color);
-    color: var(--background-white);
-    text-decoration: none;
-    border-radius: 20px;
+.template-description {
     font-size: 0.9rem;
-    transition: var(--transition);
+    color: var(--text-medium);
+    margin: 0.5rem 0;
+    line-height: 1.4;
 }
 
-.btn-template:hover {
+/* ✅ TEMPLATE ACTIONS (BOTONES MEJORADOS) */
+.template-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: auto;
+}
+
+.template-actions .btn,
+.template-actions a,
+.template-actions button {
+    width: 100%;
+    padding: 12px 20px;
+    font-size: 0.95rem;
+    border-radius: 8px;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    font-family: inherit;
+}
+
+.template-actions .btn i,
+.template-actions a i,
+.template-actions button i {
+    font-size: 0.9rem;
+}
+
+.template-actions .btn:hover,
+.template-actions a:hover,
+.template-actions button:hover {
+    transform: translateY(-2px);
+}
+
+/* Botón Ver Plantilla (secundario) */
+.btn-template,
+.template-actions .btn-secondary {
+    background: transparent;
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+    border-radius: 25px;
+    margin: 0;
+}
+
+.btn-template:hover,
+.template-actions .btn-secondary:hover {
+    background: var(--primary-color);
+    color: white;
+    border-radius: 25px;
+}
+
+.btn-template.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    border-color: var(--text-light);
+    color: var(--text-light);
+    border-radius: 25px;
+}
+
+.btn-template.disabled:hover {
+    background: transparent;
+    color: var(--text-light);
+    transform: none;
+    border-radius: 25px;
+}
+
+/* Botón Comprar (primario) */
+.template-actions .btn-primary {
+    background: var(--primary-color);
+    color: white;
+    border: 2px solid var(--primary-color);
+    font-weight: 600;
+    border-radius: 25px;
+}
+
+.template-actions .btn-primary:hover {
     background: var(--primary-hover);
+    border-color: var(--primary-hover);
+    box-shadow: 0 4px 12px rgba(200, 168, 130, 0.3);
 }
 
 .templates-cta {
@@ -332,18 +452,61 @@
     margin-top: 3rem;
 }
 
+.templates-cta .btn {
+    display: inline-block;
+    padding: 12px 30px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: var(--transition);
+}
+
+.templates-cta .btn-primary {
+    background: var(--primary-color);
+    color: white;
+}
+
+.templates-cta .btn-primary:hover {
+    background: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-light);
+}
+
 .template-example-info {
     margin: 5px 0;
-    color: #666;
+    color: var(--text-medium);
     font-style: italic;
+    font-size: 0.85rem;
 }
 
 .template-example-info i {
     margin-right: 5px;
-    color: #007bff;
+    color: var(--primary-color);
 }
 
-/* Quote Section */
+.no-templates {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 3rem;
+    background: var(--background-light);
+    border-radius: var(--border-radius);
+    margin: 2rem 0;
+}
+
+.no-templates p {
+    font-size: 1.1rem;
+    color: var(--text-medium);
+    margin: 0 0 0.5rem 0;
+}
+
+.no-templates small {
+    color: var(--text-light);
+    font-size: 0.9rem;
+}
+
+/* ========================================
+   QUOTE SECTION
+======================================== */
 .quote {
     position: relative;
     padding: 80px 0;
@@ -403,7 +566,9 @@
     animation: fadeInUp 1s ease-out 1s forwards;
 }
 
-/* Keyframes (sin cambios, ya están optimizadas) */
+/* ========================================
+   ANIMATIONS
+======================================== */
 @keyframes fadeInUp {
     from {
         opacity: 0;
@@ -479,7 +644,16 @@
     }
 }
 
-/* Responsive Design */
+/* ========================================
+   RESPONSIVE DESIGN
+======================================== */
+@media (max-width: 1024px) {
+    .templates-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+    }
+}
+
 @media (max-width: 768px) {
     .hero-content {
         padding-left: 20px;
@@ -497,9 +671,17 @@
     }
     
     .features-grid,
-    .benefits-grid,
+    .benefits-grid {
+        grid-template-columns: 1fr;
+    }
+    
     .templates-grid {
         grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .template-card img {
+        height: 400px;
     }
     
     .quote-content h2 {
@@ -515,5 +697,25 @@
     .hero-content h1,
     .hero-content h2 {
         font-size: 2rem;
+    }
+    
+    .template-card img {
+        height: 300px;
+    }
+    
+    .template-info {
+        padding: 1rem;
+        gap: 0.75rem;
+    }
+    
+    .template-info h3 {
+        font-size: 1.1rem;
+    }
+    
+    .template-actions .btn,
+    .template-actions a,
+    .template-actions button {
+        padding: 10px 15px;
+        font-size: 0.9rem;
     }
 }

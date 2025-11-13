@@ -50,8 +50,6 @@ try {
                     $urlDestino = $tieneEjemplo 
                         ? './invitacion.php?slug=' . urlencode($plantilla['ejemplo_slug'])
                         : '#';
-                    $textoBoton = $tieneEjemplo ? 'Ver plantilla' : 'Próximamente';
-                    $claseBoton = $tieneEjemplo ? 'btn btn-secondary template-btn' : 'btn btn-secondary template-btn disabled';
                     ?>
                     
                     <div class="template-card">
@@ -64,27 +62,27 @@ try {
                         <div class="template-info">
                             <h3><?php echo htmlspecialchars($plantilla['nombre']); ?></h3>
 
-                            <!-- Ver plantilla -->
                             <?php if ($tieneEjemplo): ?>
+                                <!-- Plantilla con ejemplo: mostrar ambos botones -->
                                 <a href="<?php echo $urlDestino; ?>" 
-                                    class="<?php echo $claseBoton; ?>"
+                                    class="btn btn-secondary template-btn"
                                     target="_blank" 
                                     rel="noopener">
-                                    <i class="fas fa-eye"></i> <?php echo $textoBoton; ?>
+                                    <i class="fas fa-eye"></i> Ver plantilla
                                 </a>
+
+                                <button type="button" 
+                                        class="btn btn-primary template-btn btn-comprar" 
+                                        data-plantilla-id="<?php echo $plantilla['id']; ?>"
+                                        data-plantilla-nombre="<?php echo htmlspecialchars($plantilla['nombre']); ?>">
+                                    <i class="fas fa-shopping-cart"></i> Comprar
+                                </button>
                             <?php else: ?>
-                                <button class="<?php echo $claseBoton; ?>" disabled>
-                                    <i class="fas fa-eye"></i> <?php echo $textoBoton; ?>
+                                <!-- Plantilla sin ejemplo: solo mostrar "Próximamente" -->
+                                <button class="btn btn-secondary template-btn disabled" disabled>
+                                    <i class="fas fa-clock"></i> Próximamente
                                 </button>
                             <?php endif; ?>
-
-                            <!-- Botón comprar -->
-                            <button type="button" 
-                                    class="btn btn-primary template-btn btn-comprar" 
-                                    data-plantilla-id="<?php echo $plantilla['id']; ?>"
-                                    data-plantilla-nombre="<?php echo htmlspecialchars($plantilla['nombre']); ?>">
-                                <i class="fas fa-shopping-cart"></i> Comprar
-                            </button>
                         </div>
                     </div>
                 <?php endforeach; ?>

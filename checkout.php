@@ -224,3 +224,5 @@ if ($plantilla_id) {
 </script>
 <script src="https://js.stripe.com/v3/"></script>
 <script src="./js/checkout.js?v=<?php echo filemtime('./js/checkout.js'); ?>"></script>
+
+<?php include './includes/footer.php'; ?>

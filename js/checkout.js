@@ -44,6 +44,7 @@ class CheckoutManager {
             
             this.cardElement = elements.create('card', {
                 hidePostalCode: true,
+                disableLink: true,
                 style: this.getCardStyle()
             });
             
