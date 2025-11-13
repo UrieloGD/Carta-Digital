@@ -1,9 +1,9 @@
 <nav class="navbar">
     <div class="nav-container">
-        <div class="nav-logo">
+        <a href="./index.php" class="nav-logo">
             <img src="./images/logo.webp" alt="Carta Digital" class="logo-img">
             <span>Carta Digital</span>
-        </div>
+        </a>
         
         <!-- Botón hamburguesa -->
         <button class="nav-toggle" id="nav-toggle" aria-label="Abrir menú" aria-expanded="false">
@@ -26,4 +26,3 @@
         </div>
     </div>
 </nav>
-
