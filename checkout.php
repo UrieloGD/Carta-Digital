@@ -167,7 +167,10 @@ if ($plantilla_id) {
 
                     <!-- Sección: Stripe -->
                     <fieldset class="form-fieldset stripe-section" id="stripe-section">
-                        <legend>Información de Pago - Tarjeta</legend>
+                        <div class="payment-section-title">
+                            <i class="fas fa-credit-card"></i>
+                            Información de Pago - Tarjeta
+                        </div>
                         <p class="payment-info">Ingresa los datos de tu tarjeta de crédito o débito</p>
                         
                         <div id="card-element" class="stripe-element"></div>
@@ -176,9 +179,12 @@ if ($plantilla_id) {
 
                     <!-- Sección: Mercado Pago -->
                     <fieldset class="form-fieldset mercadopago-section" id="mercadopago-section" style="display: none;">
-                        <legend>Información de Pago - Mercado Pago</legend>
+                        <div class="payment-section-title">
+                            <i class="fas fa-wallet"></i>
+                            Información de Pago - Mercado Pago
+                        </div>
                         <p class="payment-info">Serás redirigido a Mercado Pago de forma segura</p>
-                        <p style="color: #666; font-size: 0.9rem; margin: 1rem 0 0 0;">
+                        <p class="payment-details">
                             <i class="fas fa-info-circle"></i>
                             Puedes pagar con tarjeta de crédito, tarjeta de débito, efectivo en sucursales y más.
                         </p>
@@ -203,7 +209,6 @@ if ($plantilla_id) {
                         <span>Conexión Segura SSL</span>
                     </div>
                     <div class="badge">
-                        <img src="https://www.svgrepo.com/show/303139/stripe-logo.svg" alt="Stripe" style="height: 20px;">
                         <span>Powered by Stripe</span>
                     </div>
                 </div>

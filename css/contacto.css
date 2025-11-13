@@ -118,7 +118,7 @@
     border-radius: var(--border-radius);
     box-shadow: var(--shadow-light);
     border: 1px solid #e9ecef;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
 }
 
 .contact-info-card h2 {
@@ -154,7 +154,7 @@
 }
 
 /* ========================================
-   SOCIAL MEDIA CARD
+   SOCIAL MEDIA CARD (ACTUALIZADO)
 ======================================== */
 .social-media-card {
     background: var(--background-white);
@@ -172,11 +172,13 @@
 }
 
 .contact-social-buttons {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    justify-content: center;
     gap: 1rem;
+    flex-wrap: wrap;
 }
 
+/* ✅ BOTONES CON CÍRCULOS DORADOS */
 .contact-social-btn {
     display: flex;
     align-items: center;
@@ -184,11 +186,12 @@
     gap: 0.75rem;
     padding: 1rem;
     background: var(--background-white);
-    border: 1px solid #e9ecef;
-    border-radius: 8px;
-    color: var(--text-medium);
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    color: var(--text-dark);
     text-decoration: none;
     font-size: 0.95rem;
+    font-weight: 500;
     transition: var(--transition);
     text-align: center;
 }
@@ -196,49 +199,33 @@
 .contact-social-btn:hover {
     background: var(--background-light);
     border-color: var(--primary-color);
-    color: var(--text-dark);
-    transform: translateY(-2px);
+    transform: translateY(-3px);
     box-shadow: var(--shadow-light);
 }
 
-/* Estilos específicos para las imágenes de redes sociales */
-.contact-social-icon {
-    width: 24px;
-    height: 24px;
-    flex-shrink: 0;
-    object-fit: contain;
+/* Círculo dorado con icono */
+.social-icon-circle {
+    display: flex;
+    width: 40px;
+    height: 40px;
+    background: var(--primary-color);
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    color: white;
     transition: var(--transition);
-    /* Filtro para cambiar al color principal - ajusta los valores según tu color principal */
-    filter: brightness(0) saturate(100%) invert(56%) sepia(85%) saturate(492%) hue-rotate(15deg) brightness(95%) contrast(89%);
+    flex-shrink: 0;
 }
 
-/* Efectos hover para las imágenes */
-.contact-social-btn:hover .contact-social-icon {
+.contact-social-btn:hover .social-icon-circle {
+    background: var(--primary-hover);
     transform: scale(1.1);
-    /* En hover, puede ser más intenso o mantener el mismo color */
-    filter: brightness(0) saturate(100%) invert(48%) sepia(79%) saturate(492%) hue-rotate(15deg) brightness(100%) contrast(95%);
+    box-shadow: 0 4px 8px rgba(200, 168, 130, 0.3);
 }
 
 .contact-social-btn span {
-    color: inherit;
+    color: var(--text-dark);
     font-weight: 500;
-}
-
-/* Efectos hover para los botones */
-.contact-social-btn.instagram:hover {
-    border-color: var(--primary-color);
-}
-
-.contact-social-btn.facebook:hover {
-    border-color: var(--primary-color);
-}
-
-.contact-social-btn.whatsapp:hover {
-    border-color: var(--primary-color);
-}
-
-.contact-social-btn.messenger:hover {
-    border-color: var(--primary-color);
 }
 
 /* ========================================
@@ -285,5 +272,11 @@
 @media (max-width: 480px) {
     .contact-social-buttons {
         grid-template-columns: 1fr;
+    }
+    
+    .contact-form-container,
+    .contact-info-card,
+    .social-media-card {
+        padding: 1.5rem;
     }
 }
