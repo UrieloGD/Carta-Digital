@@ -144,6 +144,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $mostrar_compartir,
             $mostrar_fecha_limite_rsvp,
             $mostrar_solo_adultos,
+            $texto_solo_adultos
         ]);
         
         $invitacion_id = $db->lastInsertId();
