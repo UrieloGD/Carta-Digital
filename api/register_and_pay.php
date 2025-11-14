@@ -144,6 +144,7 @@ try {
         'amount' => $monto,
         'currency' => 'mxn',
         'description' => $descripcion . ' - ' . $nombres_novios,
+        'payment_method_types' => ['card'],
         'metadata' => [
             'cliente_id' => $cliente_id,
             'plan' => $plan,
@@ -155,10 +156,6 @@ try {
             'telefono' => $telefono,
         ],
         'receipt_email' => $email,
-        'automatic_payment_methods' => [
-            'enabled' => true,
-            'allow_redirects' => 'never'
-        ]
     ]);
     
     // ============================================

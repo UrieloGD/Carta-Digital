@@ -3,7 +3,6 @@
 // ========================================
 
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Main.js loaded');
     
     // Smooth scrolling for anchor links
     const anchorLinks = document.querySelectorAll('a[href^="#"]');

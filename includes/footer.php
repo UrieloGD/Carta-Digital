@@ -62,9 +62,7 @@
         const navMenu = document.getElementById('nav-menu');
         
         if (!navToggle || !navMenu) return;
-        
-        console.log('✅ Navbar inicializando...');
-        
+                
         navMenu.classList.remove('active');
         navToggle.classList.remove('active');
         
@@ -152,7 +150,6 @@
             }
         });
         
-        console.log('✅ Navbar listo');
     }
     
     window.addEventListener('scroll', function() {
