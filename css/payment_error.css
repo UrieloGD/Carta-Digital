@@ -5,7 +5,7 @@
 .payment-error-section {
     min-height: 100vh;
     background: linear-gradient(135deg, #fff5f5 0%, #ffe9e9 100%);
-    padding: 120px 0 40px 0;
+    padding: 20px 0 40px 0;
     display: flex;
     align-items: center;
 }

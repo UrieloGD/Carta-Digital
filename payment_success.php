@@ -1,23 +1,24 @@
 <?php 
 require_once './includes/header.php';
 require_once './config/database.php';
+require_once './config/stripe_config.php';
 require_once './config/email_config.php';
 require_once './functions/email_bienvenida.php';
 require_once './functions/email_notificacion_admin.php';
 
 // Obtener parámetros
 $pedido_id = isset($_GET['pedido_id']) ? (int)$_GET['pedido_id'] : null;
-$payment_intent = isset($_GET['payment_intent']) ? $_GET['payment_intent'] : null;
+$payment_intent_id = isset($_GET['payment_intent']) ? $_GET['payment_intent'] : null;
 
 $pedido = null;
 $error = null;
 
-if ($pedido_id) {
+if ($pedido_id && $payment_intent_id) {
     try {
         $database = new Database();
         $db = $database->getConnection();
         
-        // Obtener información del pedido con el slug del cliente
+        // Obtener información del pedido (sin filtrar por estado todavía)
         $stmt = $db->prepare("
             SELECT 
                 p.*, 
@@ -30,29 +31,69 @@ if ($pedido_id) {
             JOIN clientes c ON p.cliente_id = c.id
             LEFT JOIN plantillas pl ON p.plantilla_id = pl.id
             LEFT JOIN invitaciones i ON p.invitacion_id = i.id
-            WHERE p.id = ? AND p.estado = 'completado'
+            WHERE p.id = ?
         ");
         $stmt->execute([$pedido_id]);
         $pedido = $stmt->fetch(PDO::FETCH_ASSOC);
         
         if (!$pedido) {
-            $error = "No se encontró el pedido o el pago no ha sido confirmado aún.";
-        } else {
-            // Generar contraseña (slug del cliente + fecha evento)
+            $error = "No se encontró el pedido.";
+        } 
+        elseif ($pedido['payment_intent_id'] !== $payment_intent_id) {
+            $error = "El pago no coincide con el pedido.";
+        } 
+        elseif ($pedido['estado'] !== 'completado') {
+            // El pedido aún no está marcado como completado en BD
+            // Verificar directamente con Stripe
+            try {
+                $paymentIntent = \Stripe\PaymentIntent::retrieve($payment_intent_id);
+                
+                if ($paymentIntent->status === 'succeeded') {
+                    // Stripe confirma que está pagado
+                    // Actualizar AHORA en la BD (no esperar webhook)
+                    $stmt = $db->prepare("
+                        UPDATE pedidos 
+                        SET estado = 'completado', fecha_pago = NOW() 
+                        WHERE id = ?
+                    ");
+                    $stmt->execute([$pedido_id]);
+                    
+                    // Actualizar variable local para renderizar éxito
+                    $pedido['estado'] = 'completado';
+                    $pedido['fecha_pago'] = date('Y-m-d H:i:s');
+                    
+                    // Generar contraseña
+                    $raw_password = $pedido['slug'] . str_replace('-', '', $pedido['fecha_evento']);
+                    
+                    // Enviar emails
+                    enviarEmailBienvenida($pedido, $raw_password);
+                    enviarNotificacionAdmin($pedido, $raw_password);
+                    
+                } else {
+                    // El pago aún no está confirmado en Stripe
+                    $error = "El pago aún no está confirmado. Estado: " . $paymentIntent->status;
+                }
+                
+            } catch (\Stripe\Exception\ApiErrorException $e) {
+                error_log("Error al verificar PaymentIntent: " . $e->getMessage());
+                $error = "No se pudo verificar el pago con Stripe.";
+            }
+        } 
+        else {
+            // Generar contraseña para emails
             $raw_password = $pedido['slug'] . str_replace('-', '', $pedido['fecha_evento']);
             
-            // Enviar email al cliente
+            // Enviar emails (solo si no se han enviado - deberías verificar esto)
             enviarEmailBienvenida($pedido, $raw_password);
-            
-            // Enviar notificación al admin
             enviarNotificacionAdmin($pedido, $raw_password);
         }
+        
     } catch (Exception $e) {
         error_log("Error al obtener pedido: " . $e->getMessage());
-        $error = "Error al procesar tu solicitud";
+        $error = "Error al procesar tu solicitud: " . $e->getMessage();
     }
 } else {
-    $error = "Parámetros inválidos";
+    $error = "Parámetros inválidos (pedido_id o payment_intent faltante)";
 }
 ?>
 
@@ -62,7 +103,7 @@ if ($pedido_id) {
     <div class="container">
         <div class="success-container">
             
-            <?php if ($pedido): ?>
+            <?php if ($pedido && $pedido['estado'] === 'completado'): ?>
                 <!-- Éxito -->
                 <div class="success-box">
                     <div class="success-icon">
