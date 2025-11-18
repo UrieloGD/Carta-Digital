@@ -1,6 +1,7 @@
 <?php
 /**
  * API para crear Preference en Mercado Pago (sin SDK)
+ * Con detección automática de ambiente sandbox
  */
 
 session_start();
@@ -32,6 +33,12 @@ try {
     
     $access_token = $_ENV['MERCADOPAGO_ACCESS_TOKEN'] ?? '';
     $webhook_url = $_ENV['MERCADOPAGO_WEBHOOK_URL'] ?? '';
+    
+    // ✅ LOG DE CREDENCIALES
+    error_log("================================");
+    error_log("🔍 MERCADO PAGO - VERIFICACIÓN");
+    error_log("================================");
+    error_log("Access Token (20 chars): " . substr($access_token, 0, 20) . "...");
     
     if (empty($access_token)) {
         throw new Exception('MERCADOPAGO_ACCESS_TOKEN vacío en .env');
@@ -85,6 +92,11 @@ try {
     
     $plan_id = $plan_data['id'];
     $monto = $plan_data['precio'];
+    
+    // Validar monto mínimo
+    if ($monto < 1) {
+        throw new Exception("El monto mínimo es de $1 MXN");
+    }
     
     // Iniciar transacción
     $db->beginTransaction();
@@ -142,7 +154,20 @@ try {
 
     $invitacion_id = $db->lastInsertId();
 
-    $preference_data = [
+    // ============================================
+    // CREAR PREFERENCIA EN MERCADO PAGO
+    // ============================================
+
+    // URL base para back_urls
+    $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+    $base_url = $protocol . '://' . $_SERVER['HTTP_HOST'];
+
+    // ✅ CONSTRUIR URLs COMPLETAS CON INVITACION_ID
+    $success_url = $base_url . "/payment_success_mp.php?invitacion_id=" . $invitacion_id;
+    $failure_url = $base_url . "/payment_failed_mp.php";
+    $pending_url = $base_url . "/payment_pending_mp.php";
+
+        $preference_data = [
         "items" => [[
             "id" => "invitacion_" . $invitacion_id, 
             "title" => "Plan " . ucfirst($plan) . " - Carta Digital",
@@ -154,17 +179,30 @@ try {
             "name" => $nombre,
             "surname" => $apellido,
             "email" => $email,
-            "phone" => ["area_code" => "52", "number" => str_replace([' ', '-', '+', '52'], '', $telefono)]
+            "phone" => [
+                "area_code" => "52", 
+                "number" => str_replace([' ', '-', '+', '52'], '', $telefono)
+            ]
         ],
-        "notification_url" => $webhook_url,
         "back_urls" => [
-            "success" => "http://" . $_SERVER['HTTP_HOST'] . "/payment_success_mp.php?collection_id={collection_id}",
-            "failure" => "http://" . $_SERVER['HTTP_HOST'] . "/payment_failed_mp.php",
-            "pending" => "http://" . $_SERVER['HTTP_HOST'] . "/payment_pending_mp.php"
+            "success" => $success_url,
+            "failure" => $failure_url,
+            "pending" => $pending_url
         ],
         "external_reference" => "invitacion_" . $invitacion_id
     ];
-    
+
+
+    // Solo agregar notification_url si está configurado
+    if (!empty($webhook_url)) {
+        $preference_data["notification_url"] = $webhook_url;
+    }
+
+    // ✅ LOG PARA DEBUGGING
+    error_log("📤 ENVIANDO A MERCADO PAGO:");
+    error_log("Success URL: " . $success_url);
+    error_log("External Reference: invitacion_{$invitacion_id}");
+
     // Llamar API MP con cURL
     $ch = curl_init();
     curl_setopt_array($ch, [
@@ -184,21 +222,43 @@ try {
     $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     $curl_error = curl_error($ch);
     curl_close($ch);
-    
+
     if (!empty($curl_error)) {
         throw new Exception('cURL error: ' . $curl_error);
     }
-    
+
     $preference = json_decode($response, true);
-    
+
+    // ✅ LOG DE RESPUESTA
+    error_log("📦 RESPUESTA DE MERCADO PAGO (HTTP {$http_code}):");
+    error_log("Init Point: " . ($preference['init_point'] ?? 'NO DEFINIDO'));
+    error_log("Sandbox Init Point: " . ($preference['sandbox_init_point'] ?? 'NO DEFINIDO'));
+
     if ($http_code !== 201 || empty($preference['id'])) {
+        error_log("❌ Error completo MP API: " . json_encode($preference));
         throw new Exception('Error MP API (HTTP ' . $http_code . '): ' . ($preference['message'] ?? json_encode($preference)));
     }
+
+    // ✅ DETECTAR SI ES SANDBOX Y USAR LA URL CORRECTA
+    $redirect_url = $preference['init_point']; // Por defecto
+    $is_sandbox = false;
+
+    if (!empty($preference['sandbox_init_point'])) {
+        $redirect_url = $preference['sandbox_init_point'];
+        $is_sandbox = true;
+        error_log("✅ AMBIENTE: SANDBOX (Prueba)");
+    } else {
+        error_log("🔴 AMBIENTE: PRODUCCIÓN (Dinero real)");
+    }
+
+    error_log("Redirecting to: " . $redirect_url);
+    error_log("================================");
+
     
     // Crear pedido
     $stmt = $db->prepare("
-        INSERT INTO pedidos (cliente_id, invitacion_id, plantilla_id, plan, monto, metodo_pago, payment_intent_id) 
-        VALUES (?, ?, ?, ?, ?, 'mercado_pago', ?)
+        INSERT INTO pedidos (cliente_id, invitacion_id, plantilla_id, plan, monto, metodo_pago, payment_intent_id, fecha_creacion) 
+        VALUES (?, ?, ?, ?, ?, 'mercado_pago', ?, NOW())
     ");
     $stmt->execute([
         $cliente_id, 
@@ -215,9 +275,11 @@ try {
     http_response_code(200);
     echo json_encode([
         'success' => true,
-        'preference_url' => $preference['init_point'],
+        'preference_url' => $redirect_url, // ✅ URL CORRECTA (sandbox o producción)
         'preference_id' => $preference['id'],
-        'pedido_id' => $pedido_id
+        'pedido_id' => $pedido_id,
+        'invitacion_id' => $invitacion_id,
+        'is_sandbox' => $is_sandbox // Para debugging
     ]);
     
 } catch (Exception $e) {
