@@ -1,4 +1,4 @@
-/* Transition Image - Romance Clásico - 100% ANCHO */
+/* Transition Image - Romance Clásico - 100% ANCHO ACTUALIZADO */
 .transition-image {
     height: 80vh;
     min-height: 500px;
@@ -36,7 +36,7 @@
     animation: subtleZoom 30s ease-in-out infinite alternate;
 }
 
-/* Overlay romántico con gradiente suave */
+/* Overlay romántico con gradiente suave - COLORES ACTUALIZADOS */
 .transition-overlay {
     position: absolute;
     top: 0;
@@ -45,14 +45,14 @@
     height: 100%;
     background: linear-gradient(
         135deg,
-        rgba(254, 249, 249, 0.75) 0%,
-        rgba(254, 243, 243, 0.65) 50%,
-        rgba(248, 212, 212, 0.7) 100%
+        rgba(250, 247, 245, 0.75) 0%,
+        rgba(245, 236, 232, 0.65) 50%,
+        rgba(212, 165, 165, 0.7) 100%
     );
     z-index: 2;
 }
 
-/* Círculos flotantes románticos */
+/* Círculos flotantes románticos - COLORES ACTUALIZADOS */
 .transition-overlay::before {
     content: '';
     position: absolute;
@@ -60,24 +60,24 @@
     height: 100%;
     background-image: 
         /* Círculos grandes rosa y dorado */
-        radial-gradient(circle at 15% 20%, rgba(245, 198, 198, 0.18) 0%, transparent 25%),
-        radial-gradient(circle at 85% 80%, rgba(197, 164, 109, 0.15) 0%, transparent 30%),
-        radial-gradient(circle at 70% 15%, rgba(248, 212, 212, 0.12) 0%, transparent 20%),
-        radial-gradient(circle at 30% 85%, rgba(245, 198, 198, 0.1) 0%, transparent 25%),
+        radial-gradient(circle at 15% 20%, rgba(232, 196, 196, 0.18) 0%, transparent 25%),
+        radial-gradient(circle at 85% 80%, rgba(196, 165, 123, 0.15) 0%, transparent 30%),
+        radial-gradient(circle at 70% 15%, rgba(212, 165, 165, 0.12) 0%, transparent 20%),
+        radial-gradient(circle at 30% 85%, rgba(232, 196, 196, 0.1) 0%, transparent 25%),
         
         /* Círculos medianos */
-        radial-gradient(circle at 50% 50%, rgba(197, 164, 109, 0.1) 0%, transparent 15%),
-        radial-gradient(circle at 20% 60%, rgba(248, 212, 212, 0.14) 0%, transparent 18%),
-        radial-gradient(circle at 80% 40%, rgba(245, 198, 198, 0.08) 0%, transparent 12%),
+        radial-gradient(circle at 50% 50%, rgba(196, 165, 123, 0.1) 0%, transparent 15%),
+        radial-gradient(circle at 20% 60%, rgba(212, 165, 165, 0.14) 0%, transparent 18%),
+        radial-gradient(circle at 80% 40%, rgba(232, 196, 196, 0.08) 0%, transparent 12%),
         
         /* Círculos pequeños */
-        radial-gradient(circle at 40% 30%, rgba(248, 212, 212, 0.16) 0%, transparent 8%),
-        radial-gradient(circle at 65% 70%, rgba(197, 164, 109, 0.12) 0%, transparent 10%),
-        radial-gradient(circle at 10% 45%, rgba(245, 198, 198, 0.11) 0%, transparent 7%);
+        radial-gradient(circle at 40% 30%, rgba(212, 165, 165, 0.16) 0%, transparent 8%),
+        radial-gradient(circle at 65% 70%, rgba(196, 165, 123, 0.12) 0%, transparent 10%),
+        radial-gradient(circle at 10% 45%, rgba(232, 196, 196, 0.11) 0%, transparent 7%);
     animation: floatCircles 20s ease-in-out infinite alternate;
 }
 
-/* Anillos decorativos románticos */
+/* Anillos decorativos románticos - COLORES ACTUALIZADOS */
 .transition-overlay::after {
     content: '';
     position: absolute;
@@ -85,17 +85,17 @@
     height: 100%;
     background-image: 
         /* Anillos grandes */
-        radial-gradient(circle at 25% 25%, transparent 8%, rgba(245, 198, 198, 0.12) 8.5%, transparent 9%),
-        radial-gradient(circle at 75% 75%, transparent 10%, rgba(248, 212, 212, 0.1) 10.5%, transparent 11%),
-        radial-gradient(circle at 80% 20%, transparent 6%, rgba(197, 164, 109, 0.11) 6.5%, transparent 7%),
+        radial-gradient(circle at 25% 25%, transparent 8%, rgba(232, 196, 196, 0.12) 8.5%, transparent 9%),
+        radial-gradient(circle at 75% 75%, transparent 10%, rgba(212, 165, 165, 0.1) 10.5%, transparent 11%),
+        radial-gradient(circle at 80% 20%, transparent 6%, rgba(196, 165, 123, 0.11) 6.5%, transparent 7%),
         
         /* Anillos medianos */
-        radial-gradient(circle at 40% 70%, transparent 4%, rgba(248, 212, 212, 0.14) 4.3%, transparent 4.6%),
-        radial-gradient(circle at 60% 30%, transparent 5%, rgba(245, 198, 198, 0.12) 5.3%, transparent 5.6%),
+        radial-gradient(circle at 40% 70%, transparent 4%, rgba(212, 165, 165, 0.14) 4.3%, transparent 4.6%),
+        radial-gradient(circle at 60% 30%, transparent 5%, rgba(232, 196, 196, 0.12) 5.3%, transparent 5.6%),
         
         /* Anillos pequeños */
-        radial-gradient(circle at 90% 50%, transparent 2%, rgba(197, 164, 109, 0.16) 2.2%, transparent 2.4%),
-        radial-gradient(circle at 15% 80%, transparent 3%, rgba(248, 212, 212, 0.13) 3.2%, transparent 3.4%);
+        radial-gradient(circle at 90% 50%, transparent 2%, rgba(196, 165, 123, 0.16) 2.2%, transparent 2.4%),
+        radial-gradient(circle at 15% 80%, transparent 3%, rgba(212, 165, 165, 0.13) 3.2%, transparent 3.4%);
     animation: pulseRings 15s ease-in-out infinite alternate;
     opacity: 0.8;
 }
@@ -109,23 +109,23 @@
     animation: fadeInUp 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.5s both;
 }
 
-/* Tarjeta de texto romántica */
+/* Tarjeta de texto romántica - COLORES ACTUALIZADOS */
 .transition-text {
     max-width: 650px;
     margin: 0 auto;
     padding: 3rem 2.5rem;
     background: linear-gradient(
         135deg,
-        rgba(254, 249, 249, 0.85) 0%,
-        rgba(254, 243, 243, 0.8) 100%
+        rgba(250, 247, 245, 0.85) 0%,
+        rgba(245, 236, 232, 0.8) 100%
     );
-    border: 1px solid rgba(245, 198, 198, 0.4);
+    border: 1px solid rgba(232, 196, 196, 0.4);
     border-radius: 16px;
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     box-shadow: 
-        0 15px 50px rgba(245, 198, 198, 0.3),
-        0 5px 20px rgba(197, 164, 109, 0.2),
+        0 15px 50px rgba(212, 165, 165, 0.3),
+        0 5px 20px rgba(196, 165, 123, 0.2),
         inset 0 1px 0 rgba(255, 255, 255, 0.6);
     transition: var(--transition-smooth);
     position: relative;
@@ -140,7 +140,7 @@
     left: -50%;
     width: 200%;
     height: 200%;
-    background: radial-gradient(circle, rgba(245, 198, 198, 0.2) 0%, transparent 60%);
+    background: radial-gradient(circle, rgba(232, 196, 196, 0.2) 0%, transparent 60%);
     opacity: 0;
     transition: var(--transition-smooth);
     pointer-events: none;
@@ -154,14 +154,14 @@
 .transition-text:hover {
     background: linear-gradient(
         135deg,
-        rgba(254, 249, 249, 0.95) 0%,
-        rgba(254, 243, 243, 0.9) 100%
+        rgba(250, 247, 245, 0.95) 0%,
+        rgba(245, 236, 232, 0.9) 100%
     );
-    border-color: rgba(245, 198, 198, 0.6);
+    border-color: rgba(232, 196, 196, 0.6);
     transform: translateY(-8px);
     box-shadow: 
-        0 20px 60px rgba(245, 198, 198, 0.4),
-        0 0 40px rgba(245, 198, 198, 0.25),
+        0 20px 60px rgba(212, 165, 165, 0.4),
+        0 0 40px rgba(232, 196, 196, 0.25),
         inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
@@ -174,8 +174,8 @@
     letter-spacing: 0.02em;
     text-shadow: 
         0 2px 4px rgba(255, 255, 255, 0.8),
-        0 0 20px rgba(248, 212, 212, 0.4),
-        0 2px 8px rgba(245, 198, 198, 0.3),
+        0 0 20px rgba(212, 165, 165, 0.4),
+        0 2px 8px rgba(232, 196, 196, 0.3),
         1px 1px 3px rgba(0, 0, 0, 0.15);
 }
 
@@ -216,7 +216,7 @@
     width: 8px;
     height: 8px;
     background: radial-gradient(circle, var(--accent-rose-light) 0%, transparent 70%);
-    box-shadow: 0 0 20px rgba(248, 212, 212, 0.6);
+    box-shadow: 0 0 20px rgba(212, 165, 165, 0.6);
     animation: floatBubble1 8s infinite ease-in-out;
 }
 
@@ -227,7 +227,7 @@
     width: 6px;
     height: 6px;
     background: radial-gradient(circle, var(--accent-rose) 0%, transparent 70%);
-    box-shadow: 0 0 15px rgba(245, 198, 198, 0.5);
+    box-shadow: 0 0 15px rgba(232, 196, 196, 0.5);
     animation: floatBubble2 10s infinite ease-in-out 2s;
 }
 
@@ -238,7 +238,7 @@
     width: 4px;
     height: 4px;
     background: radial-gradient(circle, var(--accent-gold) 0%, transparent 70%);
-    box-shadow: 0 0 12px rgba(197, 164, 109, 0.5);
+    box-shadow: 0 0 12px rgba(196, 165, 123, 0.5);
     animation: floatBubble3 7s infinite ease-in-out 4s;
 }
 
@@ -256,7 +256,7 @@
     width: 5px;
     height: 5px;
     background: radial-gradient(circle, var(--accent-gold) 0%, transparent 70%);
-    box-shadow: 0 0 15px rgba(197, 164, 109, 0.4);
+    box-shadow: 0 0 15px rgba(196, 165, 123, 0.4);
     animation: floatBubble1 9s infinite ease-in-out 1s;
 }
 
@@ -266,7 +266,7 @@
     width: 7px;
     height: 7px;
     background: radial-gradient(circle, var(--accent-rose-light) 0%, transparent 70%);
-    box-shadow: 0 0 18px rgba(248, 212, 212, 0.5);
+    box-shadow: 0 0 18px rgba(212, 165, 165, 0.5);
     animation: floatBubble2 11s infinite ease-in-out 3s;
 }
 
@@ -379,7 +379,7 @@
         var(--accent-rose),
         transparent
     );
-    box-shadow: 0 0 15px rgba(245, 198, 198, 0.5);
+    box-shadow: 0 0 15px rgba(212, 165, 165, 0.5);
     z-index: 4;
 }
 
@@ -533,14 +533,14 @@
     .transition-overlay {
         background: linear-gradient(
             135deg,
-            rgba(254, 249, 249, 0.92) 0%,
-            rgba(254, 243, 243, 0.88) 50%,
-            rgba(248, 212, 212, 0.9) 100%
+            rgba(250, 247, 245, 0.92) 0%,
+            rgba(245, 236, 232, 0.88) 50%,
+            rgba(212, 165, 165, 0.9) 100%
         );
     }
     
     .transition-text {
-        background: rgba(254, 249, 249, 0.98);
+        background: rgba(250, 247, 245, 0.98);
         border-color: var(--accent-rose);
     }
     

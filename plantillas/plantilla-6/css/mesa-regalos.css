@@ -1,5 +1,5 @@
 /* ================================================
-   MESA DE REGALOS - ROMANCE CLÁSICO
+   MESA DE REGALOS - ROMANCE CLÁSICO ACTUALIZADO
    ================================================ */
 
 .mesa-regalos {
@@ -23,8 +23,8 @@
     height: 200%;
     background: radial-gradient(
         circle at center,
-        rgba(245, 198, 198, 0.06) 0%,
-        rgba(197, 164, 109, 0.03) 50%,
+        rgba(232, 196, 196, 0.06) 0%,
+        rgba(196, 165, 123, 0.03) 50%,
         transparent 70%
     );
     animation: waveRotate 35s linear infinite;
@@ -40,8 +40,8 @@
     width: 100%;
     height: 100%;
     background: 
-        radial-gradient(ellipse at 20% 30%, rgba(245, 198, 198, 0.05) 0%, transparent 40%),
-        radial-gradient(ellipse at 80% 70%, rgba(248, 212, 212, 0.04) 0%, transparent 40%);
+        radial-gradient(ellipse at 20% 30%, rgba(232, 196, 196, 0.05) 0%, transparent 40%),
+        radial-gradient(ellipse at 80% 70%, rgba(212, 165, 165, 0.04) 0%, transparent 40%);
     pointer-events: none;
     z-index: 1;
 }
@@ -56,12 +56,12 @@
     position: absolute;
     border-radius: 50%;
     background: radial-gradient(circle at 30% 30%, 
-        rgba(245, 198, 198, 0.08), 
-        rgba(197, 164, 109, 0.04));
+        rgba(232, 196, 196, 0.08), 
+        rgba(196, 165, 123, 0.04));
     pointer-events: none;
     z-index: 1;
     animation: floatCircle 25s ease-in-out infinite;
-    border: 1px solid rgba(245, 198, 198, 0.08);
+    border: 1px solid rgba(232, 196, 196, 0.08);
 }
 
 .mesa-regalos .floating-circle:nth-child(1) {
@@ -105,7 +105,7 @@
     top: 30%;
     left: 10%;
     background: linear-gradient(135deg, 
-        rgba(245, 198, 198, 0.15), 
+        rgba(232, 196, 196, 0.15), 
         transparent);
     transform: rotate(45deg);
 }
@@ -116,7 +116,7 @@
     bottom: 25%;
     right: 15%;
     background: linear-gradient(135deg, 
-        rgba(248, 212, 212, 0.12), 
+        rgba(212, 165, 165, 0.12), 
         transparent);
     clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
     animation-duration: 50s;
@@ -186,7 +186,7 @@
         var(--accent-rose) 80%, 
         transparent 100%);
     margin: 0 auto 2rem;
-    box-shadow: 0 0 10px rgba(245, 198, 198, 0.3);
+    box-shadow: 0 0 10px rgba(232, 196, 196, 0.3);
 }
 
 .mesa-regalos-header .section-title {
@@ -198,7 +198,7 @@
     letter-spacing: 0.02em;
     text-shadow: 
         0 2px 4px rgba(255, 255, 255, 0.8),
-        0 2px 8px rgba(245, 198, 198, 0.4),
+        0 2px 8px rgba(232, 196, 196, 0.4),
         1px 1px 3px rgba(0, 0, 0, 0.15);
 }
 
@@ -215,7 +215,7 @@
     margin: 24px auto;
     display: block;
     position: relative;
-    box-shadow: 0 0 15px rgba(245, 198, 198, 0.3);
+    box-shadow: 0 0 15px rgba(232, 196, 196, 0.3);
 }
 
 .mesa-regalos-header .decorative-line::before,
@@ -228,7 +228,7 @@
     height: 8px;
     background: var(--accent-rose);
     border-radius: 50%;
-    box-shadow: 0 0 12px rgba(245, 198, 198, 0.5);
+    box-shadow: 0 0 12px rgba(232, 196, 196, 0.5);
 }
 
 .mesa-regalos-header .decorative-line::before {
@@ -248,7 +248,7 @@
     font-style: italic;
     text-shadow: 
         0 2px 4px rgba(255, 255, 255, 0.8),
-        0 2px 6px rgba(245, 198, 198, 0.3),
+        0 2px 6px rgba(232, 196, 196, 0.3),
         1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
@@ -289,10 +289,10 @@
     overflow: hidden;
     border-radius: 15px;
     background: linear-gradient(135deg, 
-        rgba(254, 243, 243, 0.95) 0%, 
-        rgba(248, 212, 212, 0.9) 100%);
+        rgba(245, 236, 232, 0.95) 0%, 
+        rgba(212, 165, 165, 0.9) 100%);
     box-shadow: 
-        0 4px 20px rgba(245, 198, 198, 0.3),
+        0 4px 20px rgba(232, 196, 196, 0.3),
         inset 0 1px 0 rgba(255, 255, 255, 0.6);
     transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     cursor: pointer;
@@ -303,7 +303,7 @@
     width: 100%;
     min-height: 160px;
     padding: 2.5rem;
-    border: 2px solid rgba(245, 198, 198, 0.3);
+    border: 2px solid rgba(232, 196, 196, 0.3);
     backdrop-filter: blur(10px);
 }
 
@@ -334,7 +334,7 @@
     right: 0;
     bottom: 0;
     background: radial-gradient(circle at top right, 
-        rgba(245, 198, 198, 0.12) 0%, 
+        rgba(232, 196, 196, 0.12) 0%, 
         transparent 60%);
     opacity: 0;
     transition: opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -351,7 +351,7 @@
     background: linear-gradient(
         45deg,
         transparent 30%,
-        rgba(245, 198, 198, 0.2) 50%,
+        rgba(232, 196, 196, 0.2) 50%,
         transparent 70%
     );
     transform: rotate(45deg);
@@ -375,10 +375,10 @@
 .regalo-card:hover {
     transform: translateY(-10px) scale(1.02);
     box-shadow: 
-        0 20px 50px rgba(245, 198, 198, 0.4),
-        0 0 30px rgba(245, 198, 198, 0.2),
+        0 20px 50px rgba(232, 196, 196, 0.4),
+        0 0 30px rgba(232, 196, 196, 0.2),
         inset 0 1px 0 rgba(255, 255, 255, 0.8);
-    border-color: rgba(245, 198, 198, 0.5);
+    border-color: rgba(232, 196, 196, 0.5);
 }
 
 .regalo-card:active {
@@ -412,12 +412,12 @@
     height: auto;
     object-fit: contain;
     transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    filter: brightness(0.95) drop-shadow(0 2px 8px rgba(245, 198, 198, 0.4));
+    filter: brightness(0.95) drop-shadow(0 2px 8px rgba(232, 196, 196, 0.4));
 }
 
 .regalo-card:hover .regalo-icon img {
     transform: scale(1.15);
-    filter: brightness(1.05) drop-shadow(0 4px 15px rgba(245, 198, 198, 0.5));
+    filter: brightness(1.05) drop-shadow(0 4px 15px rgba(232, 196, 196, 0.5));
 }
 
 /* Texto cuando no hay logo */
@@ -439,7 +439,7 @@
     word-break: break-word;
     text-shadow: 
         0 2px 4px rgba(255, 255, 255, 0.8),
-        0 2px 6px rgba(245, 198, 198, 0.3),
+        0 2px 6px rgba(232, 196, 196, 0.3),
         1px 1px 2px rgba(0, 0, 0, 0.1);
     letter-spacing: 0.05em;
 }
@@ -449,7 +449,7 @@
     color: var(--accent-gold);
     text-shadow: 
         0 3px 6px rgba(255, 255, 255, 0.9),
-        0 3px 10px rgba(197, 164, 109, 0.4),
+        0 3px 10px rgba(196, 165, 123, 0.4),
         1px 1px 2px rgba(0, 0, 0, 0.15);
 }
 
@@ -465,7 +465,7 @@
     height: 1px;
     background: linear-gradient(90deg, 
         transparent, 
-        rgba(245, 198, 198, 0.3), 
+        rgba(232, 196, 196, 0.3), 
         transparent);
     margin: 0 auto 2rem;
 }
@@ -479,7 +479,7 @@
     letter-spacing: 0.02em;
     text-shadow: 
         0 2px 4px rgba(255, 255, 255, 0.8),
-        0 2px 6px rgba(245, 198, 198, 0.3),
+        0 2px 6px rgba(232, 196, 196, 0.3),
         1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 

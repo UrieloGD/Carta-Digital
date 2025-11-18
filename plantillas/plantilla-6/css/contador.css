@@ -1,5 +1,5 @@
 /* ================================================
-   CONTADOR - ROMANCE CLÁSICO
+   CONTADOR - ROMANCE CLÁSICO ACTUALIZADO
    Mantiene toda la funcionalidad, solo colores actualizados
    ================================================ */
 
@@ -23,8 +23,8 @@
     height: 200%;
     background: radial-gradient(
         circle at center,
-        rgba(245, 198, 198, 0.08) 0%,
-        rgba(197, 164, 109, 0.04) 40%,
+        rgba(232, 196, 196, 0.08) 0%,
+        rgba(196, 165, 123, 0.04) 40%,
         transparent 70%
     );
     animation: waveRotate 30s linear infinite;
@@ -41,8 +41,8 @@
     width: 100%;
     height: 100%;
     background: 
-        radial-gradient(ellipse at 15% 30%, rgba(245, 198, 198, 0.06) 0%, transparent 40%),
-        radial-gradient(ellipse at 85% 70%, rgba(248, 212, 212, 0.05) 0%, transparent 40%);
+        radial-gradient(ellipse at 15% 30%, rgba(232, 196, 196, 0.06) 0%, transparent 40%),
+        radial-gradient(ellipse at 85% 70%, rgba(212, 165, 165, 0.05) 0%, transparent 40%);
     pointer-events: none;
     z-index: 1;
 }
@@ -52,12 +52,12 @@
     position: absolute;
     border-radius: 50%;
     background: radial-gradient(circle at 30% 30%, 
-        rgba(245, 198, 198, 0.1), 
-        rgba(197, 164, 109, 0.05));
+        rgba(232, 196, 196, 0.1), 
+        rgba(196, 165, 123, 0.05));
     pointer-events: none;
     z-index: 1;
     animation: floatCircle 20s ease-in-out infinite;
-    border: 1px solid rgba(245, 198, 198, 0.1);
+    border: 1px solid rgba(232, 196, 196, 0.1);
 }
 
 .contador .floating-circle:nth-child(1) {
@@ -111,7 +111,7 @@
     top: 15%;
     right: 20%;
     background: linear-gradient(135deg, 
-        rgba(245, 198, 198, 0.2), 
+        rgba(232, 196, 196, 0.2), 
         transparent);
     transform: rotate(45deg);
     animation-duration: 45s;
@@ -123,7 +123,7 @@
     bottom: 25%;
     right: 30%;
     background: linear-gradient(135deg, 
-        rgba(248, 212, 212, 0.15), 
+        rgba(212, 165, 165, 0.15), 
         transparent);
     clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
     animation-duration: 50s;
@@ -135,7 +135,7 @@
     top: 50%;
     left: 5%;
     background: linear-gradient(135deg, 
-        rgba(197, 164, 109, 0.12), 
+        rgba(196, 165, 123, 0.12), 
         transparent);
     clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
     animation-duration: 55s;
@@ -199,7 +199,7 @@
     letter-spacing: 0.02em;
     text-shadow: 
         0 2px 4px rgba(255, 255, 255, 0.8),
-        0 2px 8px rgba(245, 198, 198, 0.4),
+        0 2px 8px rgba(232, 196, 196, 0.4),
         1px 1px 3px rgba(0, 0, 0, 0.15);
 }
 
@@ -233,9 +233,9 @@
     height: 2px;
     background: linear-gradient(90deg, 
         transparent 0%,
-        rgba(245, 198, 198, 0.2) 10%,
-        rgba(245, 198, 198, 0.4) 50%,
-        rgba(245, 198, 198, 0.2) 90%,
+        rgba(232, 196, 196, 0.2) 10%,
+        rgba(232, 196, 196, 0.4) 50%,
+        rgba(232, 196, 196, 0.2) 90%,
         transparent 100%);
     z-index: 0;
     display: none;
@@ -250,15 +250,15 @@
     margin: 0 auto 3rem;
     padding: clamp(2rem, 4vw, 3.5rem);
     background: linear-gradient(135deg, 
-        rgba(254, 243, 243, 0.95) 0%, 
-        rgba(248, 212, 212, 0.9) 100%);
-    border: 1px solid rgba(245, 198, 198, 0.3);
+        rgba(245, 236, 232, 0.95) 0%, 
+        rgba(212, 165, 165, 0.9) 100%);
+    border: 1px solid rgba(232, 196, 196, 0.3);
     border-radius: 12px;
     backdrop-filter: blur(15px);
     transition: var(--transition-smooth);
     position: relative;
     box-shadow: 
-        0 10px 40px rgba(245, 198, 198, 0.3),
+        0 10px 40px rgba(232, 196, 196, 0.3),
         inset 0 1px 0 rgba(255, 255, 255, 0.5);
     align-items: end;
 }
@@ -273,7 +273,7 @@
     bottom: 0;
     background: linear-gradient(45deg, 
         transparent 40%, 
-        rgba(245, 198, 198, 0.05) 50%, 
+        rgba(232, 196, 196, 0.05) 50%, 
         transparent 60%);
     opacity: 0;
     transition: var(--transition-smooth);
@@ -291,22 +291,22 @@
     height: 3px;
     background: linear-gradient(90deg, 
         transparent,
-        rgba(245, 198, 198, 0.3) 20%,
-        rgba(245, 198, 198, 0.5) 50%,
-        rgba(245, 198, 198, 0.3) 80%,
+        rgba(232, 196, 196, 0.3) 20%,
+        rgba(232, 196, 196, 0.5) 50%,
+        rgba(232, 196, 196, 0.3) 80%,
         transparent);
     border-radius: 2px;
-    box-shadow: 0 0 15px rgba(245, 198, 198, 0.4);
+    box-shadow: 0 0 15px rgba(232, 196, 196, 0.4);
     z-index: 0;
 }
 
 .countdown-grid:hover {
     transform: translateY(-8px);
     box-shadow: 
-        0 15px 50px rgba(245, 198, 198, 0.4),
-        0 0 0 1px rgba(245, 198, 198, 0.3),
-        0 0 30px rgba(245, 198, 198, 0.2);
-    border-color: rgba(245, 198, 198, 0.5);
+        0 15px 50px rgba(232, 196, 196, 0.4),
+        0 0 0 1px rgba(232, 196, 196, 0.3),
+        0 0 30px rgba(232, 196, 196, 0.2);
+    border-color: rgba(232, 196, 196, 0.5);
 }
 
 .countdown-grid:hover::before {
@@ -332,10 +332,10 @@
     height: 2rem;
     background: linear-gradient(to bottom,
         var(--accent-rose-light),
-        rgba(245, 198, 198, 0.5));
+        rgba(232, 196, 196, 0.5));
     opacity: 0;
     transition: var(--transition-smooth);
-    box-shadow: 0 0 10px rgba(245, 198, 198, 0.5);
+    box-shadow: 0 0 10px rgba(232, 196, 196, 0.5);
 }
 
 .time-unit:hover::before {
@@ -356,7 +356,7 @@
     border-radius: 50%;
     border: 2px solid var(--bg-primary);
     box-shadow: 
-        0 0 15px rgba(245, 198, 198, 0.6),
+        0 0 15px rgba(232, 196, 196, 0.6),
         inset 0 0 5px rgba(255, 255, 255, 0.5);
     opacity: 0;
     transition: var(--transition-smooth);
@@ -371,9 +371,9 @@
 
 .time-card {
     background: linear-gradient(135deg, 
-        rgba(254, 243, 243, 0.95) 0%, 
-        rgba(248, 212, 212, 0.9) 100%) !important;
-    border: 2px solid rgba(245, 198, 198, 0.4) !important;
+        rgba(245, 236, 232, 0.95) 0%, 
+        rgba(212, 165, 165, 0.9) 100%) !important;
+    border: 2px solid rgba(232, 196, 196, 0.4) !important;
     border-radius: 15px !important;
     padding: 2rem 1.5rem !important;
     text-align: center;
@@ -382,8 +382,8 @@
     overflow: hidden;
     backdrop-filter: blur(10px);
     box-shadow: 
-        0 8px 25px rgba(245, 198, 198, 0.3),
-        0 4px 12px rgba(197, 164, 109, 0.15),
+        0 8px 25px rgba(232, 196, 196, 0.3),
+        0 4px 12px rgba(196, 165, 123, 0.15),
         inset 0 1px 3px rgba(255, 255, 255, 0.6) !important;
 }
 
@@ -394,12 +394,12 @@
 .time-unit .time-card,
 .countdown-grid .time-card {
     background: linear-gradient(135deg, 
-        rgba(254, 243, 243, 0.95) 0%, 
-        rgba(248, 212, 212, 0.9) 100%) !important;
-    border: 2px solid rgba(245, 198, 198, 0.4) !important;
+        rgba(245, 236, 232, 0.95) 0%, 
+        rgba(212, 165, 165, 0.9) 100%) !important;
+    border: 2px solid rgba(232, 196, 196, 0.4) !important;
     box-shadow: 
-        0 8px 25px rgba(245, 198, 198, 0.3),
-        0 4px 12px rgba(197, 164, 109, 0.15),
+        0 8px 25px rgba(232, 196, 196, 0.3),
+        0 4px 12px rgba(196, 165, 123, 0.15),
         inset 0 1px 3px rgba(255, 255, 255, 0.6) !important;
 }
 
@@ -412,7 +412,7 @@
     right: -15px;
     bottom: -15px;
     background: radial-gradient(circle at center, 
-        rgba(245, 198, 198, 0.15) 0%, 
+        rgba(232, 196, 196, 0.15) 0%, 
         transparent 60%);
     border-radius: 50%;
     opacity: 0;
@@ -435,7 +435,7 @@
     transition: var(--transition-smooth);
     text-shadow: 
         0 2px 4px rgba(255, 255, 255, 0.8),
-        0 2px 8px rgba(245, 198, 198, 0.4),
+        0 2px 8px rgba(232, 196, 196, 0.4),
         1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
@@ -454,7 +454,7 @@
         var(--accent-rose-light), 
         transparent);
     transition: var(--transition-smooth);
-    box-shadow: 0 0 10px rgba(245, 198, 198, 0.5);
+    box-shadow: 0 0 10px rgba(232, 196, 196, 0.5);
 }
 
 .time-card:hover .time-number {
@@ -462,7 +462,7 @@
     transform: translateY(-3px);
     text-shadow: 
         0 3px 6px rgba(255, 255, 255, 0.9),
-        0 3px 10px rgba(197, 164, 109, 0.4),
+        0 3px 10px rgba(196, 165, 123, 0.4),
         1px 1px 2px rgba(0, 0, 0, 0.15);
 }
 
@@ -506,7 +506,7 @@
     margin: 0;
     text-shadow: 
         0 2px 4px rgba(255, 255, 255, 0.8),
-        0 2px 8px rgba(245, 198, 198, 0.3),
+        0 2px 8px rgba(232, 196, 196, 0.3),
         1px 1px 2px rgba(0, 0, 0, 0.1);
     line-height: 1.4;
 }
@@ -531,7 +531,7 @@
         transform: translateY(-10px) rotateX(90deg);
         opacity: 0.6;
         color: var(--accent-rose);
-        text-shadow: 0 0 20px rgba(245, 198, 198, 0.6);
+        text-shadow: 0 0 20px rgba(232, 196, 196, 0.6);
     }
     100% {
         transform: translateY(0) rotateX(0deg);
@@ -554,1341 +554,352 @@
         transform: scale(1);
         text-shadow: 
             0 2px 4px rgba(255, 255, 255, 0.8),
-            0 2px 8px rgba(197, 164, 109, 0.4),
+            0 2px 8px rgba(196, 165, 123, 0.4),
             1px 1px 2px rgba(0, 0, 0, 0.1);
     }
     50% {
         transform: scale(1.1);
         text-shadow: 
             0 3px 6px rgba(255, 255, 255, 0.9),
-            0 3px 12px rgba(197, 164, 109, 0.6),
-            0 0 35px rgba(245, 198, 198, 0.4),
+            0 3px 12px rgba(196, 165, 123, 0.6),
+            0 0 35px rgba(232, 196, 196, 0.4),
             1px 1px 3px rgba(0, 0, 0, 0.15);
     }
 }
 
-/* ========================================
-   CONTADOR SIMPLE - Romance Clásico Style
-   ======================================== */
-
-.contador-simple {
-    background: var(--bg-primary);
-    position: relative;
-    overflow: hidden;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-}
-
-.contador-simple::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(
-        circle at center,
-        rgba(245, 198, 198, 0.06) 0%,
-        rgba(197, 164, 109, 0.03) 50%,
-        transparent 70%
-    );
-    animation: waveRotate 35s linear infinite;
-    pointer-events: none;
-    z-index: 1;
-}
-
-/* Círculos flotantes para contador simple */
-.contador-simple .floating-circle {
-    position: absolute;
-    border-radius: 50%;
-    background: radial-gradient(circle at 30% 30%, 
-        rgba(245, 198, 198, 0.08), 
-        rgba(197, 164, 109, 0.04));
-    pointer-events: none;
-    z-index: 1;
-    animation: floatCircle 25s ease-in-out infinite;
-    border: 1px solid rgba(245, 198, 198, 0.08);
-}
-
-.contador-simple .floating-circle:nth-child(1) {
-    width: 250px;
-    height: 250px;
-    top: 15%;
-    left: -125px;
-    animation-duration: 28s;
-}
-
-.contador-simple .floating-circle:nth-child(2) {
-    width: 180px;
-    height: 180px;
-    bottom: 20%;
-    right: -90px;
-    animation-duration: 32s;
-    animation-delay: 7s;
-}
-
-.contador-simple .floating-circle:nth-child(3) {
-    width: 200px;
-    height: 200px;
-    top: 50%;
-    left: 8%;
-    animation-duration: 30s;
-    animation-delay: 12s;
-}
-
-.contador-simple .geometric-shape {
-    position: absolute;
-    pointer-events: none;
-    z-index: 1;
-    opacity: 0.06;
-    animation: rotateShape 45s linear infinite;
-}
-
-.contador-simple .geometric-shape:nth-child(4) {
-    width: 90px;
-    height: 90px;
-    top: 20%;
-    right: 15%;
-    background: linear-gradient(135deg, 
-        rgba(245, 198, 198, 0.15), 
-        transparent);
-    transform: rotate(45deg);
-}
-
-.contador-simple .geometric-shape:nth-child(5) {
-    width: 110px;
-    height: 110px;
-    bottom: 30%;
-    left: 12%;
-    background: linear-gradient(135deg, 
-        rgba(248, 212, 212, 0.12), 
-        transparent);
-    clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
-    animation-duration: 50s;
-}
-
-.contador-simple .contador-content {
-    position: relative;
-    z-index: 2;
-    width: 100%;
-    max-width: 650px;
-    margin: 0 auto;
-    text-align: center;
-}
-
-.contador-simple .contador-header {
-    text-align: center;
-    margin-bottom: 3rem;
-    opacity: 0;
-    animation: fadeInUp 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s both;
-}
-
-.contador-simple .contador-header h2 {
-    font-family: var(--font-script);
-    font-size: clamp(2.2rem, 5vw, 3rem);
-    color: var(--accent-rose-dark);
-    font-weight: 400;
-    margin-bottom: 1rem;
-    letter-spacing: 0.02em;
-    text-shadow: 
-        0 2px 4px rgba(255, 255, 255, 0.8),
-        0 2px 8px rgba(245, 198, 198, 0.4),
-        1px 1px 3px rgba(0, 0, 0, 0.15);
-}
-
-.contador-simple .contador-subtitle {
-    font-family: var(--font-elegant);
-    font-size: clamp(0.9rem, 2vw, 1.1rem);
-    color: var(--text-secondary);
-    font-weight: 400;
-    font-style: italic;
-    letter-spacing: 0.5px;
-    margin: 0;
-    text-shadow: 
-        0 1px 2px rgba(255, 255, 255, 0.8),
-        0 1px 4px rgba(0, 0, 0, 0.1);
-}
-
-/* Countdown Simple */
-.countdown-simple {
-    opacity: 0;
-    animation: fadeInUp 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.4s both;
-    margin-bottom: 3rem;
-}
-
-.time-unit-large {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    padding: 3.5rem 2.5rem;
-    background: linear-gradient(135deg, 
-        rgba(254, 243, 243, 0.98) 0%, 
-        rgba(248, 212, 212, 0.95) 100%);
-    border: 1px solid rgba(245, 198, 198, 0.3);
-    backdrop-filter: blur(20px);
-    border-radius: 20px;
-    transition: var(--transition-smooth);
-    overflow: hidden;
-    box-shadow: 
-        0 15px 50px rgba(245, 198, 198, 0.3),
-        inset 0 1px 0 rgba(255, 255, 255, 0.6);
-}
-
-/* Efecto de ondas en el fondo */
-.time-unit-large::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: 
-        radial-gradient(circle at 30% 40%, rgba(245, 198, 198, 0.08) 0%, transparent 50%),
-        radial-gradient(circle at 70% 60%, rgba(248, 212, 212, 0.06) 0%, transparent 50%);
-    opacity: 0;
-    transition: var(--transition-smooth);
-}
-
-.time-unit-large:hover {
-    transform: translateY(-10px);
-    box-shadow: 
-        0 25px 60px rgba(245, 198, 198, 0.4),
-        0 0 0 1px rgba(245, 198, 198, 0.3),
-        0 0 40px rgba(245, 198, 198, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.7);
-    border-color: rgba(245, 198, 198, 0.5);
-}
-
-.time-unit-large:hover::before {
-    opacity: 1;
-}
-
-/* Partículas flotantes románticas */
-.time-unit-large .particle {
-    position: absolute;
-    width: 5px;
-    height: 5px;
-    background: var(--accent-rose);
-    border-radius: 50%;
-    opacity: 0;
-    animation: floatParticle 4s ease-in-out infinite;
-    box-shadow: 0 0 10px rgba(245, 198, 198, 0.6);
-}
-
-.time-unit-large .particle:nth-child(1) {
-    top: 20%;
-    left: 15%;
-    animation-delay: 0s;
-}
-
-.time-unit-large .particle:nth-child(2) {
-    top: 70%;
-    right: 20%;
-    animation-delay: 1.3s;
-}
-
-.time-unit-large .particle:nth-child(3) {
-    bottom: 30%;
-    left: 25%;
-    animation-delay: 2.6s;
-}
-
-.time-unit-large .label {
-    font-family: var(--font-elegant);
-    font-size: clamp(0.9rem, 2vw, 1.1rem);
-    color: var(--text-secondary);
-    font-weight: 400;
-    margin-bottom: 1.5rem;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    opacity: 0.8;
-    transition: var(--transition-smooth);
-    text-shadow: 
-        0 1px 2px rgba(255, 255, 255, 0.8),
-        0 1px 3px rgba(0, 0, 0, 0.08);
-}
-
-.time-unit-large:hover .label {
-    color: var(--accent-rose);
-    opacity: 1;
-    transform: translateY(-3px);
-    letter-spacing: 2px;
-}
-
-.time-unit-large .number {
-    font-family: var(--font-elegant);
-    font-size: clamp(4rem, 15vw, 8rem);
-    color: var(--accent-rose-dark);
-    font-weight: 300;
-    line-height: 1;
-    position: relative;
-    transition: var(--transition-smooth);
-    text-shadow: 
-        0 3px 6px rgba(255, 255, 255, 0.8),
-        0 3px 10px rgba(245, 198, 198, 0.4),
-        1px 1px 3px rgba(0, 0, 0, 0.15);
-    margin: 0.5rem 0;
-}
-
-/* Línea decorativa bajo el número grande */
-.time-unit-large .number::before {
-    content: '';
-    position: absolute;
-    bottom: -8px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 0;
-    height: 3px;
-    background: linear-gradient(90deg, 
-        transparent, 
-        var(--accent-rose), 
-        var(--accent-rose-light), 
-        transparent);
-    transition: var(--transition-smooth);
-    border-radius: 2px;
-    box-shadow: 0 0 15px rgba(245, 198, 198, 0.6);
-}
-
-.time-unit-large:hover .number {
-    color: var(--accent-gold);
-    transform: scale(1.08);
-    text-shadow: 
-        0 4px 8px rgba(255, 255, 255, 0.9),
-        0 4px 15px rgba(197, 164, 109, 0.5),
-        0 0 40px rgba(245, 198, 198, 0.3),
-        1px 1px 3px rgba(0, 0, 0, 0.15);
-}
-
-.time-unit-large:hover .number::before {
-    width: 90%;
-}
-
-/* Animación de partículas */
-@keyframes floatParticle {
-    0%, 100% {
-        opacity: 0;
-        transform: translateY(0) scale(0);
-    }
-    20% {
-        opacity: 1;
-        transform: translateY(-15px) scale(1);
-    }
-    80% {
-        opacity: 0.6;
-        transform: translateY(-40px) scale(0.8);
-    }
-}
-
-/* Pulso suave para contador simple */
-@keyframes pulseOcean {
-    0%, 100% {
-        transform: scale(1);
-        box-shadow: 
-            0 15px 50px rgba(245, 198, 198, 0.3),
-            inset 0 1px 0 rgba(255, 255, 255, 0.6);
-    }
-    50% {
-        transform: scale(1.02);
-        box-shadow: 
-            0 20px 60px rgba(245, 198, 198, 0.4),
-            0 0 40px rgba(245, 198, 198, 0.3),
-            inset 0 1px 0 rgba(255, 255, 255, 0.7);
-    }
-}
-
-/* Estados especiales contador simple */
-.contador-simple.countdown-expired .time-unit-large {
-    animation: pulseOcean 2.5s infinite ease-in-out;
-}
-
-.contador-simple.countdown-expired .number {
-    color: var(--accent-gold);
-    animation: oceanGlowSimple 3s infinite ease-in-out;
-}
-
-.contador-simple.countdown-expired .label {
-    color: var(--accent-rose);
-    opacity: 1;
-}
-
-@keyframes oceanGlowSimple {
-    0%, 100% {
-        transform: scale(1);
-        text-shadow: 
-            0 3px 6px rgba(255, 255, 255, 0.8),
-            0 3px 10px rgba(197, 164, 109, 0.4),
-            1px 1px 3px rgba(0, 0, 0, 0.15);
-    }
-    50% {
-        transform: scale(1.12);
-        text-shadow: 
-            0 5px 10px rgba(255, 255, 255, 0.9),
-            0 5px 15px rgba(197, 164, 109, 0.6),
-            0 0 50px rgba(245, 198, 198, 0.4),
-            1px 1px 3px rgba(0, 0, 0, 0.15);
-    }
-}
-
-/* Efecto de actualización contador simple */
-.time-unit-large .number.updating {
-    animation: numberWaveSimple 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-@keyframes numberWaveSimple {
-    0% {
-        transform: rotateY(0deg) scale(1);
-        opacity: 1;
-    }
-    50% {
-        transform: rotateY(90deg) scale(0.95);
-        opacity: 0.5;
-        color: var(--accent-rose);
-    }
-    100% {
-        transform: rotateY(0deg) scale(1);
-        opacity: 1;
-    }
-}
-
-/* Mensaje contador simple */
-.contador-simple .countdown-message {
-    text-align: center;
-    opacity: 0;
-    animation: fadeInUp 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.6s both;
-    max-width: 500px;
-    margin: 0 auto;
-}
-
-.contador-simple .countdown-message .script-text {
-    font-family: var(--font-script);
-    font-size: clamp(1.4rem, 4vw, 2rem);
-    color: var(--accent-rose-dark);
-    font-weight: 400;
-    margin: 0;
-    text-shadow: 
-        0 2px 4px rgba(255, 255, 255, 0.8),
-        0 2px 8px rgba(245, 198, 198, 0.3),
-        1px 1px 2px rgba(0, 0, 0, 0.1);
-    line-height: 1.4;
-    padding: 0 1rem;
-}
-
-/* Estado de celebración */
-.contador-simple.celebration .time-unit-large {
-    background: linear-gradient(135deg, 
-        rgba(254, 243, 243, 0.95) 0%, 
-        rgba(245, 198, 198, 0.15) 100%);
-    border-color: rgba(245, 198, 198, 0.5);
-}
-
-.contador-simple.celebration .number {
-    animation: oceanGlowSimple 2s infinite ease-in-out;
-}
-
-/* Líneas decorativas con estilo romántico - CENTRADO PERFECTO */
-.decorative-line {
-    width: 120px;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, var(--accent-rose), var(--accent-rose-light), transparent);
-    margin: 2rem auto;
-    position: relative;
-    box-shadow: 0 0 10px rgba(245, 198, 198, 0.3);
-    display: block;
-}
-
-.decorative-line::before,
-.decorative-line::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 6px;
-    height: 6px;
-    background: var(--accent-rose);
-    border-radius: 50%;
-    box-shadow: 0 0 10px rgba(245, 198, 198, 0.5);
-}
-
-.decorative-line::before {
-    left: -12px;
-}
-
-.decorative-line::after {
-    right: -12px;
-}
-
-.decorative-line .line-accent {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 12px;
-    height: 12px;
-    background: var(--accent-rose-light);
-    border-radius: 50%;
-    box-shadow: 0 0 15px rgba(248, 212, 212, 0.6);
-}
-
-/* ========================================
-   ESTADO DE CELEBRACIÓN - "¡ES HOY!"
-   Estilos completos para cuando el contador expira
-   ======================================== */
-
-/* Contenedor principal cuando expira */
-.countdown-expired {
-    text-align: center;
-    padding: 4rem 2rem;
-    position: relative;
-    z-index: 10;
-}
-
-/* Unidad de tiempo en modo celebración */
-.countdown-expired .time-unit,
-.countdown-expired .time-unit.celebration {
-    background: linear-gradient(135deg, 
-        rgba(254, 243, 243, 0.98) 0%, 
-        rgba(245, 198, 198, 0.15) 50%,
-        rgba(248, 212, 212, 0.95) 100%);
-    border: 2px solid var(--accent-gold);
-    border-radius: 25px;
-    padding: 4rem 3rem;
-    max-width: 600px;
-    margin: 0 auto;
-    box-shadow: 
-        0 25px 60px rgba(245, 198, 198, 0.4),
-        0 0 50px rgba(197, 164, 109, 0.3),
-        inset 0 1px 0 rgba(255, 255, 255, 0.7);
-    animation: pulseGlowCelebration 3s ease-in-out infinite;
-    backdrop-filter: blur(20px);
-    display: block;
-}
-
-@keyframes pulseGlowCelebration {
-    0%, 100% {
-        transform: scale(1);
-        box-shadow: 
-            0 25px 60px rgba(245, 198, 198, 0.4),
-            0 0 50px rgba(197, 164, 109, 0.3),
-            inset 0 1px 0 rgba(255, 255, 255, 0.7);
-        border-color: var(--accent-gold);
-    }
-    50% {
-        transform: scale(1.03);
-        box-shadow: 
-            0 30px 70px rgba(245, 198, 198, 0.5),
-            0 0 80px rgba(197, 164, 109, 0.5),
-            0 0 100px rgba(245, 198, 198, 0.3),
-            inset 0 1px 0 rgba(255, 255, 255, 0.8);
-        border-color: var(--accent-rose-light);
-    }
-}
-
-/* Contenedor de contenido de celebración */
-.celebration-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 2rem;
-    position: relative;
-    z-index: 2;
-}
-
-/* Emoji de celebración */
-.celebration-emoji {
-    font-size: clamp(4rem, 10vw, 7rem);
-    line-height: 1;
-    animation: bounceEmoji 2s ease-in-out infinite;
-    display: block;
-    filter: drop-shadow(0 10px 20px rgba(245, 198, 198, 0.4));
-    margin: 0 auto;
-}
-
-@keyframes bounceEmoji {
-    0%, 100% {
-        transform: translateY(0) rotate(0deg) scale(1);
-    }
-    25% {
-        transform: translateY(-20px) rotate(-10deg) scale(1.05);
-    }
-    50% {
-        transform: translateY(-30px) rotate(0deg) scale(1.1);
-    }
-    75% {
-        transform: translateY(-20px) rotate(10deg) scale(1.05);
-    }
-}
-
-/* Texto principal "¡Es hoy!" */
-.celebration-text {
-    font-family: var(--font-script);
-    font-size: clamp(2.5rem, 8vw, 5rem);
-    color: var(--accent-gold);
-    font-weight: 400;
-    letter-spacing: 0.02em;
-    line-height: 1.2;
-    text-shadow: 
-        0 3px 6px rgba(255, 255, 255, 0.9),
-        0 3px 10px rgba(197, 164, 109, 0.6),
-        0 0 40px rgba(245, 198, 198, 0.4),
-        1px 1px 3px rgba(0, 0, 0, 0.15);
-    animation: glowPulseText 2.5s ease-in-out infinite;
-    position: relative;
-    display: block;
-    margin: 1rem 0;
-    text-align: center;
-}
-
-/* Línea decorativa bajo el texto principal */
-.celebration-text::after {
-    content: '';
-    position: absolute;
-    bottom: -15px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 80%;
-    height: 3px;
-    background: linear-gradient(90deg, 
-        transparent, 
-        var(--accent-rose), 
-        var(--accent-gold),
-        var(--accent-rose-light),
-        transparent);
-    border-radius: 2px;
-    box-shadow: 0 0 20px rgba(197, 164, 109, 0.6);
-    animation: lineGlow 2s ease-in-out infinite;
-}
-
-@keyframes glowPulseText {
-    0%, 100% {
-        color: var(--accent-gold);
-        text-shadow: 
-            0 3px 6px rgba(255, 255, 255, 0.9),
-            0 3px 10px rgba(197, 164, 109, 0.6),
-            0 0 40px rgba(245, 198, 198, 0.4),
-            1px 1px 3px rgba(0, 0, 0, 0.15);
-        transform: scale(1);
-    }
-    50% {
-        color: var(--accent-rose-dark);
-        text-shadow: 
-            0 4px 8px rgba(255, 255, 255, 1),
-            0 4px 15px rgba(245, 198, 198, 0.7),
-            0 0 60px rgba(197, 164, 109, 0.5),
-            1px 1px 3px rgba(0, 0, 0, 0.15);
-        transform: scale(1.05);
-    }
-}
-
-@keyframes lineGlow {
-    0%, 100% {
-        opacity: 0.6;
-        box-shadow: 0 0 20px rgba(197, 164, 109, 0.6);
-    }
-    50% {
-        opacity: 1;
-        box-shadow: 0 0 40px rgba(197, 164, 109, 0.9);
-    }
-}
-
-/* Subtítulo de celebración */
-.celebration-subtitle {
-    font-family: var(--font-elegant);
-    font-size: clamp(1.2rem, 3.5vw, 2rem);
-    color: var(--text-secondary);
-    font-weight: 400;
-    font-style: italic;
-    letter-spacing: 0.5px;
-    line-height: 1.4;
-    text-shadow: 
-        0 2px 4px rgba(255, 255, 255, 0.8),
-        0 2px 8px rgba(0, 0, 0, 0.1);
-    animation: fadeInOutSubtitle 3s ease-in-out infinite;
-    display: block;
-    margin: 0 auto;
-    max-width: 500px;
-    text-align: center;
-}
-
-@keyframes fadeInOutSubtitle {
-    0%, 100% {
-        opacity: 0.8;
-        color: var(--text-secondary);
-    }
-    50% {
-        opacity: 1;
-        color: var(--accent-rose);
-    }
-}
-
-/* Estado final-day para el countdown */
-.countdown-grid.final-day,
-.countdown-simple.final-day {
-    animation: pulseGlowCelebration 3s ease-in-out infinite;
-    min-height: auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* Partículas de celebración flotantes */
-.celebration-particle {
-    position: absolute;
-    width: 10px;
-    height: 10px;
-    background: var(--accent-rose);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 100;
-    box-shadow: 0 0 15px rgba(245, 198, 198, 0.8);
-    animation: particleFall 5s linear forwards;
-}
-
-.celebration-particle:nth-child(2n) {
-    background: var(--accent-rose-light);
-    box-shadow: 0 0 15px rgba(248, 212, 212, 0.8);
-}
-
-.celebration-particle:nth-child(3n) {
-    background: var(--accent-gold);
-    box-shadow: 0 0 15px rgba(197, 164, 109, 0.8);
-    width: 8px;
-    height: 8px;
-}
-
-@keyframes particleFall {
-    0% {
-        transform: translateY(-100vh) rotate(0deg) scale(1);
-        opacity: 1;
-    }
-    50% {
-        opacity: 1;
-        transform: translateY(50vh) rotate(360deg) scale(1.2);
-    }
-    100% {
-        transform: translateY(100vh) rotate(720deg) scale(0.5);
-        opacity: 0;
-    }
-}
-
-/* Efecto de resplandor de fondo */
-.countdown-expired::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 120%;
-    height: 120%;
-    background: radial-gradient(circle at center,
-        rgba(245, 198, 198, 0.15) 0%,
-        rgba(248, 212, 212, 0.08) 30%,
-        transparent 70%);
-    animation: glowExpand 4s ease-in-out infinite;
-    z-index: 1;
-    pointer-events: none;
-}
-
-@keyframes glowExpand {
-    0%, 100% {
-        transform: translate(-50%, -50%) scale(1);
-        opacity: 0.5;
-    }
-    50% {
-        transform: translate(-50%, -50%) scale(1.3);
-        opacity: 0.8;
-    }
-}
-
-/* Círculos decorativos alrededor del contenido */
-.celebration-content::before,
-.celebration-content::after {
-    content: '';
-    position: absolute;
-    border-radius: 50%;
-    border: 2px solid rgba(245, 198, 198, 0.3);
-    animation: circleExpand 3s ease-in-out infinite;
-}
-
-.celebration-content::before {
-    width: 300px;
-    height: 300px;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-.celebration-content::after {
-    width: 400px;
-    height: 400px;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    animation-delay: 0.5s;
-}
-
-@keyframes circleExpand {
-    0%, 100% {
-        transform: translate(-50%, -50%) scale(0.8);
-        opacity: 0;
-    }
-    50% {
-        transform: translate(-50%, -50%) scale(1.2);
-        opacity: 0.4;
-    }
-}
-
-/* Estado de celebración para el contador completo */
-.contador.celebration {
-    background: linear-gradient(135deg,
-        var(--bg-primary) 0%,
-        rgba(245, 198, 198, 0.12) 50%,
-        var(--bg-primary) 100%);
-}
-
-.contador.celebration::before {
-    animation-duration: 15s;
-    background: radial-gradient(
-        circle at center,
-        rgba(245, 198, 198, 0.15) 0%,
-        rgba(197, 164, 109, 0.08) 40%,
-        transparent 70%
-    );
-}
-
-/* Mensaje final para contador simple en celebración */
-.contador-simple .countdown-expired .celebration-text {
-    font-size: clamp(3rem, 10vw, 6rem);
-}
-
-.contador-simple .countdown-expired .celebration-subtitle {
-    font-size: clamp(1.4rem, 4vw, 2.2rem);
-}
-
-/* ========================================
-   RESPONSIVE DESIGN
-   ======================================== */
-
-@media (min-width: 1024px) {
-    /* Mostrar línea base en desktop */
-    .countdown-wrapper::before {
-        display: block;
-    }
-}
-
-@media (max-width: 992px) {
+/* Responsive Design */
+@media (max-width: 1024px) {
     .contador {
-        min-height: 90vh;
+        padding: 80px 20px;
+        min-height: auto;
     }
-    
+
     .countdown-grid {
-        max-width: 700px;
-        gap: 1.5rem;
-        padding: 2.5rem 2rem;
+        gap: clamp(1.25rem, 2.5vw, 2rem);
+        padding: clamp(1.75rem, 3vw, 2.5rem);
     }
-    
-    .countdown-grid::after {
-        display: none;
+
+    .time-card {
+        padding: 1.75rem 1.25rem !important;
     }
-    
-    .time-unit::before,
-    .time-unit::after {
-        display: none;
-    }
-    
+
     .time-number {
-        font-size: clamp(2.2rem, 7vw, 3.5rem);
+        font-size: clamp(2.5rem, 7vw, 3.5rem);
     }
-    
-    /* Ocultar algunas figuras en tablets */
-    .contador .floating-circle:nth-child(4),
-    .contador .geometric-shape:nth-child(7) {
-        display: none;
+
+    .time-label {
+        font-size: clamp(0.8rem, 1.8vw, 0.95rem);
     }
 }
 
 @media (max-width: 768px) {
     .contador {
-        min-height: auto;
-        padding: 3rem 0;
+        padding: 60px 15px;
     }
-    
+
     .contador-header {
         margin-bottom: 3rem;
     }
-    
+
+    .contador-header h2 {
+        font-size: clamp(2rem, 5vw, 2.8rem);
+        margin-bottom: 1rem;
+    }
+
+    .contador-subtitle {
+        font-size: clamp(0.9rem, 2vw, 1rem);
+    }
+
+    /* Grid cambia a 2x2 en tablet */
     .countdown-grid {
         grid-template-columns: repeat(2, 1fr);
-        gap: 2rem;
+        gap: 1.5rem;
         padding: 2rem 1.5rem;
         margin-bottom: 2.5rem;
-        max-width: 500px;
-        border-radius: 10px;
     }
-    
+
     .countdown-grid::after {
         display: none;
     }
-    
-    .time-unit {
-        padding: 1.5rem 1rem;
-        background: rgba(254, 243, 243, 0.7);
-        border: 1px solid rgba(245, 198, 198, 0.3);
-        border-radius: 8px;
-        transition: var(--transition-smooth);
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .time-unit::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(135deg, 
-            rgba(245, 198, 198, 0.05) 0%, 
-            transparent 100%);
-        opacity: 0;
-        transition: var(--transition-smooth);
-    }
-    
+
+    .time-unit::before,
     .time-unit::after {
         display: none;
     }
-    
-    .time-unit:hover {
-        background: rgba(254, 243, 243, 0.9);
-        border-color: rgba(245, 198, 198, 0.5);
-        transform: translateY(-5px);
+
+    .time-card {
+        padding: 1.5rem 1rem !important;
+        border-radius: 12px !important;
     }
-    
-    .time-unit:hover::before {
-        opacity: 1;
-    }
-    
+
     .time-number {
-        font-size: clamp(2rem, 6vw, 3rem);
-        margin-bottom: 0.5rem;
+        font-size: clamp(2.25rem, 6vw, 3rem);
+        margin-bottom: 0.4rem;
     }
-    
+
     .time-label {
-        font-size: clamp(0.75rem, 2vw, 0.9rem);
+        font-size: clamp(0.75rem, 1.6vw, 0.85rem);
+        letter-spacing: 1.2px;
     }
-    
-    /* Ocultar más elementos decorativos */
-    .contador .floating-circle:nth-child(3),
-    .contador .geometric-shape:nth-child(6) {
-        display: none;
+
+    .countdown-message .script-text {
+        font-size: clamp(1.2rem, 3vw, 1.5rem);
+        padding: 0 1.5rem;
     }
-    
-    /* Contador simple responsive */
-    .contador-simple {
-        min-height: 80vh;
-        padding: 2rem 0;
-    }
-    
-    .contador-simple .contador-header {
-        margin-bottom: 2rem;
-    }
-    
-    .time-unit-large {
-        padding: 2.5rem 1.5rem;
-        margin: 0 auto;
-        max-width: 320px;
-        border-radius: 15px;
-    }
-    
-    .time-unit-large .number {
-        font-size: clamp(3.5rem, 12vw, 6rem);
-    }
-    
-    .time-unit-large .label {
-        font-size: clamp(0.8rem, 2.5vw, 1rem);
-        margin-bottom: 1rem;
-    }
-    
-    .contador-simple .countdown-message .script-text {
-        font-size: clamp(1.2rem, 4vw, 1.6rem);
-    }
-    
-    .contador-simple .floating-circle:nth-child(3),
-    .contador-simple .geometric-shape:nth-child(5) {
-        display: none;
-    }
-    
-    /* Celebración responsive */
-    .countdown-expired {
-        padding: 3rem 1.5rem;
-    }
-    
-    .countdown-expired .time-unit {
-        padding: 3rem 2rem;
-        border-radius: 20px;
-    }
-    
-    .celebration-content {
-        gap: 1.5rem;
-    }
-    
-    .celebration-emoji {
-        font-size: clamp(3rem, 8vw, 5rem);
-    }
-    
-    .celebration-text {
-        font-size: clamp(2rem, 7vw, 3.5rem);
-    }
-    
-    .celebration-text::after {
-        width: 70%;
-        height: 2px;
-        bottom: -10px;
-    }
-    
-    .celebration-subtitle {
-        font-size: clamp(1rem, 3vw, 1.5rem);
-        max-width: 400px;
-        padding: 0 1rem;
-    }
-    
-    .celebration-content::before {
+
+    /* Reducir tamaño de círculos flotantes */
+    .contador .floating-circle:nth-child(1) {
         width: 200px;
         height: 200px;
     }
-    
-    .celebration-content::after {
-        width: 280px;
-        height: 280px;
+
+    .contador .floating-circle:nth-child(2) {
+        width: 150px;
+        height: 150px;
     }
-    
-    .decorative-line {
-        width: 100px;
-        margin: 1.5rem auto;
+
+    .contador .floating-circle:nth-child(3) {
+        width: 120px;
+        height: 120px;
     }
-    
-    .decorative-line::before {
-        left: -10px;
+
+    .contador .floating-circle:nth-child(4) {
+        width: 180px;
+        height: 180px;
     }
-    
-    .decorative-line::after {
-        right: -10px;
+
+    .contador .geometric-shape {
+        opacity: 0.04;
     }
-    
-    .decorative-line .line-accent {
-        width: 10px;
-        height: 10px;
+}
+
+@media (max-width: 640px) {
+    .countdown-grid {
+        gap: 1.25rem;
+        padding: 1.75rem 1.25rem;
+    }
+
+    .time-card {
+        padding: 1.25rem 0.875rem !important;
+    }
+
+    .time-number {
+        font-size: clamp(2rem, 5.5vw, 2.5rem);
+    }
+
+    .time-label {
+        font-size: clamp(0.7rem, 1.5vw, 0.8rem);
     }
 }
 
 @media (max-width: 480px) {
     .contador {
-        padding: 2rem 0;
+        padding: 50px 10px;
     }
-    
+
     .contador-header {
-        margin-bottom: 2rem;
+        margin-bottom: 2.5rem;
     }
-    
-    .countdown-grid {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-        padding: 1.5rem 1rem;
-        margin-bottom: 2rem;
-        max-width: 280px;
+
+    .contador-header h2 {
+        font-size: clamp(1.75rem, 4.5vw, 2.25rem);
+        margin-bottom: 0.75rem;
     }
-    
-    .time-unit {
-        padding: 1.25rem 0.75rem;
-        margin: 0;
-    }
-    
-    .time-number {
-        font-size: clamp(1.8rem, 5vw, 2.5rem);
-        margin-bottom: 0.25rem;
-    }
-    
-    .time-label {
-        font-size: 0.8rem;
-        letter-spacing: 1px;
-    }
-    
-    .countdown-message .script-text {
-        font-size: clamp(1.1rem, 4vw, 1.4rem);
+
+    .contador-subtitle {
+        font-size: clamp(0.85rem, 1.8vw, 0.95rem);
         padding: 0 1rem;
     }
-    
-    /* Ocultar todos los elementos decorativos grandes */
-    .contador .floating-circle,
+
+    .countdown-grid {
+        gap: 1rem;
+        padding: 1.5rem 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .time-card {
+        padding: 1rem 0.75rem !important;
+        border-radius: 10px !important;
+        border-width: 1.5px !important;
+    }
+
+    .time-number {
+        font-size: clamp(1.75rem, 5vw, 2.25rem);
+        margin-bottom: 0.35rem;
+    }
+
+    .time-number::after {
+        display: none;
+    }
+
+    .time-label {
+        font-size: clamp(0.65rem, 1.4vw, 0.75rem);
+        letter-spacing: 1px;
+    }
+
+    .countdown-message .script-text {
+        font-size: clamp(1.1rem, 2.8vw, 1.3rem);
+        padding: 0 1rem;
+    }
+
+    /* Ocultar círculos flotantes en móvil */
+    .contador .floating-circle {
+        display: none;
+    }
+
     .contador .geometric-shape {
         display: none;
     }
-    
-    /* Contador simple */
-    .contador-simple {
-        min-height: 70vh;
-        padding: 1.5rem 0;
-    }
-    
-    .contador-simple .contador-header {
-        margin-bottom: 1.5rem;
-    }
-    
-    .time-unit-large {
-        padding: 2rem 1rem;
-        max-width: 260px;
-    }
-    
-    .time-unit-large .number {
-        font-size: clamp(3rem, 10vw, 4.5rem);
-    }
-    
-    .time-unit-large .label {
-        font-size: 0.85rem;
-        margin-bottom: 0.8rem;
-    }
-    
-    .time-unit-large:hover {
-        transform: translateY(-6px);
-    }
-    
-    .contador-simple .countdown-message .script-text {
-        font-size: clamp(1.1rem, 4vw, 1.4rem);
-        padding: 0 0.5rem;
-    }
-    
-    .contador-simple .floating-circle,
-    .contador-simple .geometric-shape {
+
+    /* Simplificar efectos en móvil */
+    .countdown-grid::before {
         display: none;
     }
-    
-    /* Celebración */
-    .countdown-expired {
-        padding: 2rem 1rem;
+
+    .time-card::before {
+        display: none;
     }
-    
-    .countdown-expired .time-unit {
-        padding: 2.5rem 1.5rem;
-        border-radius: 15px;
-    }
-    
-    .celebration-content {
-        gap: 1rem;
-    }
-    
-    .celebration-emoji {
-        font-size: 3rem;
-    }
-    
-    .celebration-text {
-        font-size: 2rem;
-    }
-    
-    .celebration-text::after {
-        width: 60%;
-        height: 2px;
-        bottom: -8px;
-    }
-    
-    .celebration-subtitle {
-        font-size: 1rem;
-        max-width: 280px;
-    }
-    
-    .celebration-content::before {
-        width: 150px;
-        height: 150px;
-    }
-    
-    .celebration-content::after {
-        width: 220px;
-        height: 220px;
-    }
-    
-    .celebration-particle {
-        width: 8px;
-        height: 8px;
-    }
-    
-    .celebration-particle:nth-child(3n) {
-        width: 6px;
-        height: 6px;
-    }
-    
-    .decorative-line {
-        width: 80px;
-        margin: 1rem auto;
-    }
-    
-    .decorative-line::before,
-    .decorative-line::after {
-        width: 5px;
-        height: 5px;
-    }
-    
-    .decorative-line::before {
-        left: -8px;
-    }
-    
-    .decorative-line::after {
-        right: -8px;
-    }
-    
-    .decorative-line .line-accent {
-        width: 8px;
-        height: 8px;
+
+    .time-card:hover {
+        transform: scale(1.03) translateY(-3px);
     }
 }
 
-@media (max-width: 320px) {
+@media (max-width: 360px) {
+    .contador {
+        padding: 40px 8px;
+    }
+
     .countdown-grid {
-        padding: 1rem 0.5rem;
-        max-width: 250px;
+        gap: 0.875rem;
+        padding: 1.25rem 0.875rem;
     }
-    
-    .time-unit {
-        padding: 1rem 0.5rem;
+
+    .time-card {
+        padding: 0.875rem 0.625rem !important;
     }
-    
+
     .time-number {
-        font-size: 1.6rem;
+        font-size: clamp(1.5rem, 4.5vw, 2rem);
+        margin-bottom: 0.25rem;
     }
-    
+
     .time-label {
-        font-size: 0.75rem;
+        font-size: 0.65rem;
+        letter-spacing: 0.8px;
     }
-    
-    /* Contador simple */
-    .time-unit-large {
-        padding: 1.5rem 0.8rem;
-        max-width: 230px;
-    }
-    
-    .time-unit-large .number {
-        font-size: 2.8rem;
-    }
-    
-    .time-unit-large .label {
-        font-size: 0.8rem;
+
+    .countdown-message .script-text {
+        font-size: clamp(1rem, 2.5vw, 1.15rem);
     }
 }
 
-/* ========================================
-   ACCESIBILIDAD Y PREFERENCIAS
-   ======================================== */
-
+/* Optimización de rendimiento */
 @media (prefers-reduced-motion: reduce) {
     .contador::before,
     .contador::after,
-    .contador-simple::before,
     .contador .floating-circle,
-    .contador .geometric-shape,
-    .contador-simple .floating-circle,
-    .contador-simple .geometric-shape,
-    .time-unit-large .particle,
-    .time-number.updating,
-    .time-unit-large .number.updating,
-    .countdown-expired .time-number,
-    .contador-simple.countdown-expired .number,
-    .contador-simple.celebration .number {
-        animation: none;
+    .contador .geometric-shape {
+        animation: none !important;
     }
-    
-    .countdown-grid:hover,
-    .time-card:hover,
-    .time-unit-large:hover {
+
+    .countdown-grid,
+    .time-card,
+    .time-unit::before,
+    .time-unit::after,
+    .time-number,
+    .time-label {
+        animation: none !important;
+        transition: none !important;
+    }
+
+    .time-card:hover {
         transform: none;
     }
+
+    .countdown-expired .time-number {
+        animation: none !important;
+    }
+}
+
+/* Mejora de contraste para accesibilidad */
+@media (prefers-contrast: high) {
+    .countdown-grid {
+        background: rgba(250, 247, 245, 0.98);
+        border-color: var(--accent-rose);
+        border-width: 2px;
+    }
+
+    .time-card {
+        background: rgba(250, 247, 245, 0.98) !important;
+        border-color: var(--accent-rose) !important;
+        border-width: 2px !important;
+    }
+
+    .time-number {
+        color: var(--accent-rose-dark);
+        text-shadow: none;
+    }
+
+    .time-label {
+        color: var(--text-primary);
+        opacity: 1;
+    }
+
+    .contador-header h2,
+    .countdown-message .script-text {
+        text-shadow: none;
+    }
+}
+
+/* Modos de color específicos */
+@media (prefers-color-scheme: dark) {
+    /* Opcionalmente ajustar colores para modo oscuro si lo necesitas */
+    /* Por ahora mantiene el esquema romántico claro */
 }
 
 /* Estados de carga */
-.loading .countdown-wrapper {
+.countdown-grid.loading {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.countdown-grid.loading .time-number {
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* Efectos de entrada escalonada */
+.time-unit:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.time-unit:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.time-unit:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.time-unit:nth-child(4) {
+    animation-delay: 0.4s;
+}
+
+/* Estilos para animación de entrada */
+.time-unit {
     opacity: 0;
-    transform: translateY(50px);
+    animation: fadeInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
-.loaded .countdown-wrapper {
-    opacity: 1;
-    transform: translateY(0);
-    transition: all 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-/* Pantallas grandes */
-@media (min-width: 1200px) {
-    .countdown-grid {
-        padding: 4rem;
-        max-width: 1100px;
-    }
-    
-    .time-number {
-        font-size: 4.8rem;
-    }
-    
-    .time-label {
-        font-size: 1.1rem;
-    }
-    
-    /* Contador simple */
-    .contador-simple .contador-content {
-        max-width: 750px;
-    }
-    
-    .time-unit-large {
-        padding: 4.5rem 3.5rem;
-    }
-    
-    .time-unit-large .number {
-        font-size: 9rem;
-    }
-    
-    .time-unit-large .label {
-        font-size: 1.2rem;
-    }
-}
-
-/* Estados especiales de proximidad */
-.contador.very-close {
-    background: linear-gradient(135deg, 
-        var(--bg-primary) 0%, 
-        rgba(245, 198, 198, 0.08) 100%);
-}
-
-.contador.final-countdown::before {
-    animation-duration: 20s;
-    background: radial-gradient(
-        circle at center,
-        rgba(245, 198, 198, 0.12) 0%,
-        rgba(197, 164, 109, 0.06) 50%,
-        transparent 70%);
-}
-
-/* Contador simple proximidad */
-.contador-simple.very-close {
-    background: linear-gradient(135deg, 
-        var(--bg-primary) 0%, 
-        rgba(245, 198, 198, 0.1) 100%);
-}
-
-.contador-simple.final-countdown::before {
-    animation-duration: 25s;
-    background: radial-gradient(
-        circle at center,
-        rgba(245, 198, 198, 0.1) 0%,
-        rgba(197, 164, 109, 0.05) 50%,
-        transparent 70%
-    );
-}
-
-/* Transiciones del mensaje */
-.countdown-message .script-text,
-.contador-simple .countdown-message .script-text {
-    transition: all 0.3s ease-in-out;
-}
-
-/* Animación de entrada */
 @keyframes fadeInUp {
     from {
         opacity: 0;
@@ -1900,6 +911,120 @@
     }
 }
 
-/* ========================================
-   FIN DE ESTILOS DEL CONTADOR
-   ======================================== */
+/* Efectos especiales para hitos del contador */
+.time-unit.milestone .time-card {
+    animation: milestoneGlow 2s ease-in-out;
+}
+
+@keyframes milestoneGlow {
+    0%, 100% {
+        box-shadow: 
+            0 8px 25px rgba(232, 196, 196, 0.3),
+            0 4px 12px rgba(196, 165, 123, 0.15),
+            inset 0 1px 3px rgba(255, 255, 255, 0.6);
+    }
+    50% {
+        box-shadow: 
+            0 12px 40px rgba(232, 196, 196, 0.5),
+            0 8px 20px rgba(196, 165, 123, 0.3),
+            0 0 40px rgba(232, 196, 196, 0.4),
+            inset 0 1px 5px rgba(255, 255, 255, 0.8);
+        transform: scale(1.05);
+    }
+}
+
+/* Estilos para contador cuando llega a cero */
+.countdown-complete .countdown-grid {
+    background: linear-gradient(135deg, 
+        rgba(232, 196, 196, 0.2) 0%, 
+        rgba(196, 165, 123, 0.15) 100%);
+    border-color: var(--accent-gold);
+}
+
+.countdown-complete .time-card {
+    background: linear-gradient(135deg, 
+        rgba(250, 247, 245, 0.98) 0%, 
+        rgba(240, 230, 216, 0.95) 100%) !important;
+    border-color: var(--accent-gold) !important;
+}
+
+.countdown-complete .time-number {
+    color: var(--accent-gold);
+}
+
+/* Tooltips informativos (opcional) */
+.time-card[data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--accent-rose-dark);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 10;
+}
+
+.time-card[data-tooltip]:hover::after {
+    opacity: 1;
+}
+
+/* Separadores decorativos opcionales */
+.time-separator {
+    display: none;
+    font-size: 2rem;
+    color: var(--accent-rose);
+    align-self: center;
+    opacity: 0.5;
+}
+
+@media (min-width: 769px) {
+    .countdown-grid.with-separators {
+        grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
+        gap: 1.5rem;
+    }
+
+    .countdown-grid.with-separators .time-separator {
+        display: flex;
+        align-items: center;
+    }
+}
+
+/* Utilidades adicionales */
+.countdown-hidden {
+    display: none !important;
+}
+
+.countdown-visible {
+    display: block !important;
+}
+
+/* Print styles */
+@media print {
+    .contador {
+        background: white;
+    }
+
+    .contador::before,
+    .contador::after,
+    .contador .floating-circle,
+    .contador .geometric-shape {
+        display: none;
+    }
+
+    .countdown-grid {
+        box-shadow: none;
+        border: 2px solid var(--accent-rose);
+    }
+
+    .time-card {
+        box-shadow: none !important;
+        border: 1px solid var(--accent-rose) !important;
+    }
+}

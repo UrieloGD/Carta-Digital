@@ -1,4 +1,4 @@
-/* Sección Historia - Romance Clásico */
+/* Sección Historia - Romance Clásico ACTUALIZADO */
 .historia {
     background: var(--bg-primary);
     position: relative;
@@ -6,7 +6,7 @@
     padding: 120px 0;
 }
 
-/* Efecto de pétalos románticos de fondo */
+/* Efecto de pétalos románticos de fondo - COLORES ACTUALIZADOS */
 .historia::before {
     content: '';
     position: absolute;
@@ -15,8 +15,8 @@
     right: 0;
     bottom: 0;
     background: 
-        radial-gradient(circle at 15% 25%, rgba(245, 198, 198, 0.08) 0%, transparent 50%),
-        radial-gradient(circle at 85% 75%, rgba(197, 164, 109, 0.06) 0%, transparent 50%);
+        radial-gradient(circle at 15% 25%, rgba(232, 196, 196, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 85% 75%, rgba(196, 165, 123, 0.06) 0%, transparent 50%);
     pointer-events: none;
     z-index: 1;
 }
@@ -52,7 +52,7 @@
     right: 0;
     height: 1px;
     background: linear-gradient(90deg, transparent, var(--accent-rose), var(--accent-gold), var(--accent-rose), transparent);
-    box-shadow: 0 0 8px rgba(245, 198, 198, 0.3);
+    box-shadow: 0 0 8px rgba(212, 165, 165, 0.3);
 }
 
 .section-ornament.top::after {
@@ -67,8 +67,8 @@
     border: 2px solid var(--bg-primary);
     border-radius: 50%;
     box-shadow: 
-        0 0 0 4px rgba(245, 198, 198, 0.25),
-        0 0 15px rgba(245, 198, 198, 0.4);
+        0 0 0 4px rgba(232, 196, 196, 0.25),
+        0 0 15px rgba(212, 165, 165, 0.4);
 }
 
 .historia-header h2 {
@@ -80,7 +80,7 @@
     letter-spacing: 0.02em;
     text-shadow: 
         0 2px 4px rgba(255, 255, 255, 0.8),
-        0 2px 12px rgba(245, 198, 198, 0.3),
+        0 2px 12px rgba(212, 165, 165, 0.3),
         1px 1px 3px rgba(0, 0, 0, 0.15);
 }
 
@@ -122,7 +122,7 @@
     );
     transform: translateX(-50%);
     z-index: 1;
-    box-shadow: 0 0 10px rgba(245, 198, 198, 0.25);
+    box-shadow: 0 0 10px rgba(212, 165, 165, 0.25);
 }
 
 /* Efecto de flujo romántico en la línea */
@@ -184,7 +184,7 @@
     padding-left: 60px;
 }
 
-/* Puntos de conexión románticos */
+/* Puntos de conexión románticos - COLORES ACTUALIZADOS */
 .timeline-dot {
     position: absolute;
     top: 1rem;
@@ -195,8 +195,8 @@
     border-radius: 50%;
     z-index: 3;
     box-shadow: 
-        0 0 0 4px rgba(245, 198, 198, 0.25),
-        0 0 15px rgba(245, 198, 198, 0.4);
+        0 0 0 4px rgba(232, 196, 196, 0.25),
+        0 0 15px rgba(212, 165, 165, 0.4);
     transition: var(--transition-smooth);
 }
 
@@ -211,26 +211,26 @@
 .historia-item:hover .timeline-dot {
     transform: scale(1.3);
     box-shadow: 
-        0 0 0 6px rgba(245, 198, 198, 0.35),
-        0 0 20px rgba(245, 198, 198, 0.6),
-        0 0 30px rgba(248, 212, 212, 0.4);
+        0 0 0 6px rgba(232, 196, 196, 0.35),
+        0 0 20px rgba(212, 165, 165, 0.6),
+        0 0 30px rgba(212, 165, 165, 0.4);
     animation: bubblePulse 1.5s ease-in-out infinite;
 }
 
 @keyframes bubblePulse {
     0%, 100% {
         box-shadow: 
-            0 0 0 6px rgba(245, 198, 198, 0.35),
-            0 0 20px rgba(245, 198, 198, 0.6);
+            0 0 0 6px rgba(232, 196, 196, 0.35),
+            0 0 20px rgba(212, 165, 165, 0.6);
     }
     50% {
         box-shadow: 
-            0 0 0 8px rgba(245, 198, 198, 0.25),
-            0 0 25px rgba(245, 198, 198, 0.7);
+            0 0 0 8px rgba(232, 196, 196, 0.25),
+            0 0 25px rgba(212, 165, 165, 0.7);
     }
 }
 
-/* Párrafos románticos */
+/* Párrafos románticos - COLORES ACTUALIZADOS */
 .historia-paragraph {
     font-family: var(--font-sans);
     font-size: 1.125rem;
@@ -239,14 +239,14 @@
     font-weight: 400;
     margin: 0;
     padding: 1.5rem 2rem;
-    background: rgba(254, 243, 243, 0.6);
+    background: rgba(245, 236, 232, 0.6);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(245, 198, 198, 0.3);
+    border: 1px solid rgba(232, 196, 196, 0.3);
     border-radius: 12px;
     position: relative;
     transition: var(--transition-smooth);
     box-shadow: 
-        0 4px 15px rgba(245, 198, 198, 0.2),
+        0 4px 15px rgba(212, 165, 165, 0.2),
         inset 0 1px 3px rgba(255, 255, 255, 0.5);
     text-shadow: 
         0 1px 2px rgba(255, 255, 255, 0.8),
@@ -260,7 +260,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: radial-gradient(circle at top left, rgba(245, 198, 198, 0.1), transparent 60%);
+    background: radial-gradient(circle at top left, rgba(232, 196, 196, 0.1), transparent 60%);
     border-radius: 12px;
     opacity: 0;
     transition: var(--transition-smooth);
@@ -269,17 +269,17 @@
 .historia-paragraph:hover {
     transform: translateY(-4px);
     box-shadow: 
-        0 8px 25px rgba(245, 198, 198, 0.3),
-        0 0 20px rgba(245, 198, 198, 0.2),
+        0 8px 25px rgba(212, 165, 165, 0.3),
+        0 0 20px rgba(232, 196, 196, 0.2),
         inset 0 1px 5px rgba(255, 255, 255, 0.6);
-    border-color: rgba(245, 198, 198, 0.5);
+    border-color: rgba(232, 196, 196, 0.5);
 }
 
 .historia-paragraph:hover::before {
     opacity: 1;
 }
 
-/* Flechas de conexión románticas */
+/* Flechas de conexión románticas - COLORES ACTUALIZADOS */
 .historia-item:nth-child(odd) .historia-paragraph::after {
     content: '';
     position: absolute;
@@ -287,10 +287,10 @@
     top: 1.5rem;
     width: 0;
     height: 0;
-    border-left: 10px solid rgba(254, 243, 243, 0.6);
+    border-left: 10px solid rgba(245, 236, 232, 0.6);
     border-top: 10px solid transparent;
     border-bottom: 10px solid transparent;
-    filter: drop-shadow(2px 0 3px rgba(245, 198, 198, 0.2));
+    filter: drop-shadow(2px 0 3px rgba(212, 165, 165, 0.2));
 }
 
 .historia-item:nth-child(even) .historia-paragraph::after {
@@ -300,10 +300,10 @@
     top: 1.5rem;
     width: 0;
     height: 0;
-    border-right: 10px solid rgba(254, 243, 243, 0.6);
+    border-right: 10px solid rgba(245, 236, 232, 0.6);
     border-top: 10px solid transparent;
     border-bottom: 10px solid transparent;
-    filter: drop-shadow(-2px 0 3px rgba(245, 198, 198, 0.2));
+    filter: drop-shadow(-2px 0 3px rgba(212, 165, 165, 0.2));
 }
 
 /* Highlight romántico */
@@ -317,10 +317,10 @@
 
 .highlight-card {
     position: relative;
-    background: linear-gradient(135deg, rgba(254, 243, 243, 0.8) 0%, rgba(248, 212, 212, 0.6) 100%);
+    background: linear-gradient(135deg, rgba(245, 236, 232, 0.8) 0%, rgba(212, 165, 165, 0.6) 100%);
     backdrop-filter: blur(15px);
     padding: 3rem 2.5rem 2.5rem;
-    border: 1px solid rgba(245, 198, 198, 0.3);
+    border: 1px solid rgba(232, 196, 196, 0.3);
     border-radius: 16px;
     max-width: 550px;
     width: 100%;
@@ -328,7 +328,7 @@
     transition: var(--transition-smooth);
     overflow: visible;
     box-shadow: 
-        0 10px 40px rgba(245, 198, 198, 0.3),
+        0 10px 40px rgba(212, 165, 165, 0.3),
         inset 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 
@@ -347,16 +347,16 @@
         transparent
     );
     border-radius: 16px 16px 0 0;
-    box-shadow: 0 0 15px rgba(245, 198, 198, 0.5);
+    box-shadow: 0 0 15px rgba(212, 165, 165, 0.5);
 }
 
 .highlight-card:hover {
     transform: translateY(-8px);
     box-shadow: 
-        0 20px 60px rgba(245, 198, 198, 0.4),
-        0 0 30px rgba(245, 198, 198, 0.25),
+        0 20px 60px rgba(212, 165, 165, 0.4),
+        0 0 30px rgba(232, 196, 196, 0.25),
         inset 0 1px 0 rgba(255, 255, 255, 0.6);
-    border-color: rgba(245, 198, 198, 0.5);
+    border-color: rgba(232, 196, 196, 0.5);
 }
 
 /* Ornamento superior romántico */
@@ -372,9 +372,9 @@
     align-items: center;
     justify-content: center;
     border-radius: 20px;
-    border: 1px solid rgba(245, 198, 198, 0.3);
+    border: 1px solid rgba(232, 196, 196, 0.3);
     box-shadow: 
-        0 4px 15px rgba(245, 198, 198, 0.25),
+        0 4px 15px rgba(212, 165, 165, 0.25),
         inset 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 
@@ -418,7 +418,7 @@
     line-height: 1;
     opacity: 0.5;
     user-select: none;
-    text-shadow: 0 2px 8px rgba(245, 198, 198, 0.3);
+    text-shadow: 0 2px 8px rgba(212, 165, 165, 0.3);
 }
 
 .quote-mark.opening {
@@ -450,7 +450,7 @@
     min-height: 3rem;
     text-shadow: 
         0 1px 3px rgba(255, 255, 255, 0.8),
-        0 2px 8px rgba(245, 198, 198, 0.3),
+        0 2px 8px rgba(212, 165, 165, 0.3),
         1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
@@ -470,7 +470,7 @@
     opacity: 0.7;
     animation: shimmerHeart 2s infinite ease-in-out;
     display: inline-block;
-    filter: drop-shadow(0 0 8px rgba(245, 198, 198, 0.4));
+    filter: drop-shadow(0 0 8px rgba(212, 165, 165, 0.4));
 }
 
 .heart:nth-child(1) { animation-delay: 0s; }
@@ -485,12 +485,12 @@
     0%, 70%, 100% {
         opacity: 0.7;
         transform: scale(1);
-        filter: drop-shadow(0 0 8px rgba(245, 198, 198, 0.4));
+        filter: drop-shadow(0 0 8px rgba(212, 165, 165, 0.4));
     }
     35% {
         opacity: 1;
         transform: scale(1.2);
-        filter: drop-shadow(0 0 15px rgba(245, 198, 198, 0.7));
+        filter: drop-shadow(0 0 15px rgba(212, 165, 165, 0.7));
     }
 }
 

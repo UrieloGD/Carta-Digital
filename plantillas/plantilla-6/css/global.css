@@ -1,24 +1,51 @@
-/* Plantilla Romance Clásico - Estilos Globales */
+/* Plantilla Romance Clásico - Estilos Globales ACTUALIZADO V2 */
 :root {
-    /* Paleta Romance Clásico */
-    --bg-primary: #fef9f9;           /* Blanco rosado muy suave */
-    --bg-secondary: #fef3f3;         /* Rosa muy claro */
-    --bg-card: #ffffff;              /* Blanco puro */
-    --accent-rose: #fbdddd;          /* Rosa empolvado principal */
-    --accent-rose-light: #f8d4d4;    /* Rosa pastel claro */
-    --accent-rose-dark: #e69696;     /* Rosa empolvado oscuro */
-    --accent-gold: #c5a46d;          /* Dorado elegante */
-    --accent-gold-light: #d4b580;    /* Dorado claro */
-    --accent-champagne: #f7ede2;     /* Champagne suave */
-    --text-primary: #3d2e2e;         /* Marrón rosado oscuro */
-    --text-secondary: #5a4545;       /* Chocolate rosado */
-    --text-muted: #8a7373;           /* Rosa grisáceo */
-    --highlight: #d4a76d;            /* Dorado brillante */
-    --border-subtle: rgba(245, 198, 198, 0.2);
+    /* ================================================
+       FONDOS - Tonos muy claros diferenciados
+       ================================================ */
+    --bg-primary: #faf7f5;           /* Beige rosado muy suave */
+    --bg-secondary: #f5ece8;         /* Rosa arena claro */
+    --bg-card: #ffffff;              /* Blanco puro para cards */
+    
+    /* ================================================
+       ACENTOS PRINCIPALES - Rosa polvo elegante
+       ================================================ */
+    --accent-rose: #d4a5a5;          /* Rosa polvo suave (principal) */
+    --accent-rose-light: #e8c4c4;    /* Rosa polvo muy claro */
+    --accent-rose-dark: #a87676;     /* Rosa terracota */
+    
+    /* ================================================
+       ACENTOS COMPLEMENTARIOS - Terracota/Durazno
+       ================================================ */
+    --accent-peach: #dda588;         /* Terracota suave */
+    --accent-salmon: #d8a48f;        /* Durazno arena */
+    --accent-coral: #c9917b;         /* Coral terroso */
+    
+    /* ================================================
+       ACENTOS DORADOS - Contraste elegante
+       ================================================ */
+    --accent-gold: #c4a57b;          /* Dorado arena */
+    --accent-gold-light: #d9bc96;    /* Dorado claro cálido */
+    --accent-champagne: #f0e6d8;     /* Champagne cálido */
+    
+    /* ================================================
+       TEXTOS - Contraste alto para legibilidad
+       ================================================ */
+    --text-primary: #3d2e2e;         /* Marrón chocolate oscuro */
+    --text-secondary: #5c4545;       /* Marrón medio cálido */
+    --text-muted: #9d8080;           /* Gris rosado */
+    --text-on-rose: #ffffff;         /* Blanco para texto sobre rosa */
+    
+    /* ================================================
+       HIGHLIGHT Y BORDES
+       ================================================ */
+    --highlight: #c98686;            /* Rosa terracota suave */
+    --border-subtle: rgba(212, 165, 165, 0.15);
+    --border-accent: rgba(212, 165, 165, 0.35);
     
     /* Tipografías románticas elegantes */
     --font-serif: 'Playfair Display', serif;      /* Elegancia clásica */
-    --font-script: 'Great Vibes', cursive;        /* Script muy elegante */
+    --font-script: 'Allura', cursive;              /* Cursiva elegante y legible */
     --font-elegant: 'Cormorant Garamond', serif;  /* Alternativa elegante */
     --font-sans: 'Lato', sans-serif;              /* Limpia y legible */
     
@@ -28,16 +55,16 @@
     --section-padding: 120px 0;
     
     /* Sombras suaves románticas */
-    --shadow-soft: 0 10px 40px rgba(245, 198, 198, 0.15);
-    --shadow-card: 0 5px 25px rgba(197, 164, 109, 0.12);
-    --shadow-glow: 0 0 20px rgba(245, 198, 198, 0.25);
-    --shadow-gold: 0 5px 20px rgba(197, 164, 109, 0.2);
+    --shadow-soft: 0 10px 40px rgba(212, 165, 165, 0.12);
+    --shadow-card: 0 5px 25px rgba(221, 165, 136, 0.15);
+    --shadow-glow: 0 0 25px rgba(212, 165, 165, 0.2);
+    --shadow-gold: 0 5px 20px rgba(196, 165, 123, 0.2);
     
     /* Overlays */
-    --overlay-light: rgba(254, 249, 249, 0.95);
+    --overlay-light: rgba(250, 247, 245, 0.95);
     --overlay-gradient: linear-gradient(135deg, 
-        rgba(254, 249, 249, 0.9) 0%, 
-        rgba(254, 243, 243, 0.85) 100%
+        rgba(250, 247, 245, 0.95) 0%, 
+        rgba(245, 236, 232, 0.9) 100%
     );
     
     /* Transiciones elegantes */
@@ -64,8 +91,8 @@ body {
     color: var(--text-primary);
     background-color: var(--bg-primary);
     background-image: 
-        radial-gradient(circle at 20% 80%, rgba(245, 198, 198, 0.08) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, rgba(197, 164, 109, 0.06) 0%, transparent 50%);
+        radial-gradient(circle at 20% 80%, rgba(232, 196, 196, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(221, 165, 136, 0.06) 0%, transparent 50%);
     overflow-x: hidden;
     font-weight: 300;
 }
@@ -91,7 +118,7 @@ h1 {
     font-size: clamp(3.5rem, 8vw, 7rem);
     font-weight: 400;
     letter-spacing: 0.02em;
-    text-shadow: 0 2px 15px rgba(245, 198, 198, 0.3);
+    text-shadow: 0 2px 15px rgba(212, 165, 165, 0.3);
     color: var(--accent-rose);
 }
 
@@ -102,13 +129,13 @@ h2 {
     margin-bottom: 2rem;
     text-align: center;
     font-weight: 400;
-    text-shadow: 0 2px 10px rgba(245, 198, 198, 0.2);
+    text-shadow: 0 2px 10px rgba(168, 118, 118, 0.2);
 }
 
 h3 {
     font-family: var(--font-elegant);
     font-size: clamp(1.75rem, 3vw, 2.5rem);
-    color: var(--accent-rose);
+    color: var(--accent-coral);
     font-weight: 500;
 }
 
@@ -126,8 +153,9 @@ h4 {
     font-size: clamp(4rem, 10vw, 8rem);
     font-weight: 400;
     color: var(--accent-rose);
-    text-shadow: 0 4px 20px rgba(245, 198, 198, 0.4),
-                 0 0 40px rgba(197, 164, 109, 0.2);
+    text-shadow: 
+        0 4px 20px rgba(212, 165, 165, 0.35),
+        0 0 40px rgba(221, 165, 136, 0.2);
     letter-spacing: 0.03em;
 }
 
@@ -144,7 +172,7 @@ h4 {
 .event-title, .ubicacion-nombre {
     font-family: var(--font-elegant);
     font-size: clamp(1.5rem, 3vw, 2rem);
-    color: var(--accent-rose);
+    color: var(--accent-coral);
     font-weight: 500;
 }
 
@@ -174,13 +202,13 @@ p {
     background: linear-gradient(90deg, 
         transparent, 
         var(--accent-rose), 
-        var(--accent-gold),
+        var(--accent-peach),
         var(--accent-rose), 
         transparent
     );
     margin: 2rem auto;
     position: relative;
-    box-shadow: 0 0 10px rgba(245, 198, 198, 0.3);
+    box-shadow: 0 0 10px rgba(212, 165, 165, 0.3);
 }
 
 .decorative-line::before {
@@ -193,7 +221,7 @@ p {
     height: 8px;
     background: var(--accent-gold);
     border-radius: 50%;
-    box-shadow: 0 0 12px rgba(197, 164, 109, 0.5);
+    box-shadow: 0 0 12px rgba(196, 165, 123, 0.5);
 }
 
 .decorative-line::after {
@@ -204,7 +232,7 @@ p {
     transform: translate(-50%, -50%);
     font-size: 0.7rem;
     color: var(--accent-rose);
-    text-shadow: 0 0 8px rgba(245, 198, 198, 0.5);
+    text-shadow: 0 0 8px rgba(212, 165, 165, 0.5);
 }
 
 /* Decoración floral */
@@ -278,8 +306,8 @@ p {
 }
 
 .btn:hover {
-    background: linear-gradient(135deg, var(--accent-rose) 0%, var(--accent-rose-light) 100%);
-    color: white;
+    background: linear-gradient(135deg, var(--accent-rose) 0%, var(--accent-salmon) 100%);
+    color: var(--text-on-rose);
     transform: translateY(-2px);
     box-shadow: var(--shadow-soft), var(--shadow-glow);
     border-color: var(--accent-gold);
@@ -293,6 +321,17 @@ p {
 .btn-gold:hover {
     background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-gold-light) 100%);
     color: white;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--accent-rose) 0%, var(--accent-salmon) 100%);
+    color: white;
+    border-color: var(--accent-rose);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, var(--accent-rose-dark) 0%, var(--accent-coral) 100%);
+    transform: translateY(-3px);
 }
 
 /* Secciones */
@@ -343,7 +382,7 @@ section {
 /* Cards elegantes románticas */
 .card {
     background: var(--bg-card);
-    border: 1px solid var(--border-subtle);
+    border: 1px solid var(--border-accent);
     border-radius: var(--border-radius);
     padding: 2.5rem;
     transition: var(--transition-soft);
@@ -361,7 +400,7 @@ section {
     height: 3px;
     background: linear-gradient(90deg, 
         var(--accent-rose), 
-        var(--accent-gold),
+        var(--accent-peach),
         var(--accent-rose)
     );
     opacity: 0;
@@ -375,7 +414,7 @@ section {
     right: -50%;
     width: 200%;
     height: 200%;
-    background: radial-gradient(circle, rgba(245, 198, 198, 0.1) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(232, 196, 196, 0.1) 0%, transparent 70%);
     opacity: 0;
     transition: var(--transition-soft);
 }
@@ -398,11 +437,11 @@ section {
 .script-text {
     font-family: var(--font-script);
     font-size: 1.8rem;
-    color: var(--accent-gold);
+    color: var(--accent-peach);
     text-align: center;
     margin: 2rem 0;
     font-weight: 400;
-    text-shadow: 0 2px 10px rgba(197, 164, 109, 0.3);
+    text-shadow: 0 2px 10px rgba(221, 165, 136, 0.3);
 }
 
 /* Citas y frases especiales */
@@ -413,7 +452,7 @@ section {
     font-style: italic;
     text-align: center;
     line-height: 1.4;
-    text-shadow: 0 2px 10px rgba(245, 198, 198, 0.2);
+    text-shadow: 0 2px 10px rgba(212, 165, 165, 0.2);
     position: relative;
     padding: 0 2rem;
 }
@@ -534,7 +573,7 @@ section {
     height: 100%;
     background: linear-gradient(90deg,
         transparent,
-        rgba(245, 198, 198, 0.3),
+        rgba(232, 196, 196, 0.3),
         transparent
     );
     animation: shimmerRose 3s infinite;
@@ -544,8 +583,8 @@ section {
 .badge-rose {
     display: inline-block;
     padding: 6px 16px;
-    background: linear-gradient(135deg, var(--accent-rose), var(--accent-rose-light));
-    color: var(--text-primary);
+    background: linear-gradient(135deg, var(--accent-rose), var(--accent-salmon));
+    color: white;
     border-radius: 20px;
     font-size: 0.85rem;
     font-weight: 500;
@@ -556,6 +595,11 @@ section {
 
 .badge-gold {
     background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-light));
+    color: white;
+}
+
+.badge-peach {
+    background: linear-gradient(135deg, var(--accent-peach), var(--accent-salmon));
     color: white;
 }
 
@@ -580,12 +624,12 @@ section {
 /* Iconos románticos */
 .icon-rose {
     color: var(--accent-rose);
-    filter: drop-shadow(0 2px 5px rgba(245, 198, 198, 0.3));
+    filter: drop-shadow(0 2px 5px rgba(212, 165, 165, 0.3));
 }
 
 .icon-gold {
     color: var(--accent-gold);
-    filter: drop-shadow(0 2px 5px rgba(197, 164, 109, 0.3));
+    filter: drop-shadow(0 2px 5px rgba(196, 165, 123, 0.3));
 }
 
 /* Tooltips */
@@ -727,6 +771,10 @@ section {
     color: var(--accent-gold);
 }
 
+.peach-accent {
+    color: var(--accent-peach);
+}
+
 .text-primary-color {
     color: var(--text-primary);
 }
@@ -778,7 +826,7 @@ section {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, var(--accent-rose), var(--accent-gold));
+    background: linear-gradient(180deg, var(--accent-rose), var(--accent-peach));
     border-radius: 5px;
 }
 

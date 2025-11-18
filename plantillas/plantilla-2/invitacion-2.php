@@ -594,7 +594,6 @@ try {
 <section class="mesa-regalos" id="mesa-regalos">
     <div class="container">
         <div class="mesa-regalos-header">
-            <div class="header-icon">🎁</div>
             <h2>Mesa de Regalos</h2>
             <div class="decorative-line"></div>
             <p>Tu presencia es nuestro mejor regalo, pero si deseas obsequiarnos algo especial:</p>

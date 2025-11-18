@@ -1,4 +1,4 @@
-/* Music Player - Romance Clásico Theme - CÍRCULOS ROSA */
+/* Music Player - Romance Clásico Theme - CÍRCULOS ROSA ACTUALIZADOS */
 .music-controls {
     position: fixed;
     bottom: 30px;
@@ -9,9 +9,9 @@
 }
 
 .music-player-widget {
-    background: rgba(254, 249, 249, 0.95) !important;
+    background: rgba(250, 247, 245, 0.95) !important;
     backdrop-filter: blur(20px);
-    border: 1px solid rgba(245, 198, 198, 0.3) !important;
+    border: 1px solid rgba(232, 196, 196, 0.3) !important;
     border-radius: var(--border-radius);
     padding: 16px 20px;
     display: flex;
@@ -19,24 +19,24 @@
     gap: 16px;
     min-width: 320px;
     box-shadow: 
-        0 8px 25px rgba(245, 198, 198, 0.3),
-        0 2px 8px rgba(197, 164, 109, 0.15) !important;
+        0 8px 25px rgba(232, 196, 196, 0.3),
+        0 2px 8px rgba(196, 165, 123, 0.15) !important;
     transition: var(--transition-smooth);
 }
 
 .music-player-widget:hover {
-    background: rgba(254, 243, 243, 0.98) !important;
-    border-color: rgba(245, 198, 198, 0.5) !important;
+    background: rgba(245, 236, 232, 0.98) !important;
+    border-color: rgba(232, 196, 196, 0.5) !important;
     box-shadow: 
-        0 12px 35px rgba(245, 198, 198, 0.4),
-        0 4px 12px rgba(197, 164, 109, 0.2) !important;
+        0 12px 35px rgba(232, 196, 196, 0.4),
+        0 4px 12px rgba(196, 165, 123, 0.2) !important;
     transform: translateY(-2px);
 }
 
 /* Botón de reproducir/pausar - FONDO BLANCO CON CÍRCULO ROSA */
 .music-toggle {
-    background: linear-gradient(135deg, #ffffff, #fef9f9) !important;
-    border: 2px solid #f5c6c6 !important;
+    background: linear-gradient(135deg, #ffffff, #faf7f5) !important;
+    border: 2px solid #e8c4c4 !important;
     border-radius: 50% !important;
     width: 40px !important;
     height: 40px !important;
@@ -49,7 +49,7 @@
     font-size: 0.9rem !important;
     flex-shrink: 0 !important;
     box-shadow: 
-        0 4px 15px rgba(245, 198, 198, 0.5),
+        0 4px 15px rgba(232, 196, 196, 0.5),
         inset 0 1px 3px rgba(255, 255, 255, 0.8) !important;
     position: relative;
 }
@@ -60,25 +60,25 @@
     position: absolute;
     width: 28px;
     height: 28px;
-    background: #f5c6c6 !important;
+    background: #e8c4c4 !important;
     border-radius: 50%;
     z-index: 0;
     transition: var(--transition-smooth);
 }
 
 .music-toggle:hover {
-    background: linear-gradient(135deg, #fef9f9, #fef3f3) !important;
+    background: linear-gradient(135deg, #faf7f5, #f5ece8) !important;
     color: #ffffff !important;
     transform: scale(1.1) !important;
     box-shadow: 
-        0 0 20px rgba(245, 198, 198, 0.7), 
-        0 0 30px rgba(248, 212, 212, 0.5),
+        0 0 20px rgba(232, 196, 196, 0.7), 
+        0 0 30px rgba(212, 165, 165, 0.5),
         inset 0 1px 5px rgba(255, 255, 255, 0.9) !important;
-    border-color: #e8b4b4 !important;
+    border-color: #d4a5a5 !important;
 }
 
 .music-toggle:hover::before {
-    background: #e8b4b4 !important;
+    background: #d4a5a5 !important;
 }
 
 .music-toggle .play-icon {
@@ -135,18 +135,18 @@
 
 .volume-icon {
     font-size: 1rem;
-    color: #e8b4b4 !important;
+    color: #d4a5a5 !important;
     opacity: 0.9;
     transition: var(--transition-smooth);
-    filter: drop-shadow(0 0 4px rgba(248, 212, 212, 0.4));
+    filter: drop-shadow(0 0 4px rgba(212, 165, 165, 0.4));
 }
 
 /* SLIDER DE VOLUMEN - FONDO BLANCO CON BORDE ROSA */
 .volume-slider {
     width: 60px !important;
     height: 3px !important;
-    background: linear-gradient(90deg, #f5c6c6, #fef9f9) !important;
-    border: 1px solid #f5c6c6 !important;
+    background: linear-gradient(90deg, #e8c4c4, #faf7f5) !important;
+    border: 1px solid #e8c4c4 !important;
     border-radius: 3px !important;
     outline: none !important;
     cursor: pointer !important;
@@ -156,14 +156,14 @@
     transition: var(--transition-smooth) !important;
     opacity: 1 !important;
     box-shadow: 
-        0 2px 8px rgba(245, 198, 198, 0.3),
+        0 2px 8px rgba(232, 196, 196, 0.3),
         inset 0 1px 2px rgba(255, 255, 255, 0.5) !important;
 }
 
 .volume-slider:hover {
-    border-color: #e8b4b4 !important;
+    border-color: #d4a5a5 !important;
     box-shadow: 
-        0 0 12px rgba(245, 198, 198, 0.5),
+        0 0 12px rgba(232, 196, 196, 0.5),
         inset 0 1px 3px rgba(255, 255, 255, 0.7) !important;
 }
 
@@ -174,22 +174,22 @@
     width: 14px !important;
     height: 14px !important;
     border-radius: 50% !important;
-    background: #f5c6c6 !important;
+    background: #e8c4c4 !important;
     cursor: pointer !important;
     box-shadow: 
-        0 3px 10px rgba(245, 198, 198, 0.6),
-        0 1px 4px rgba(232, 180, 180, 0.4) !important;
+        0 3px 10px rgba(232, 196, 196, 0.6),
+        0 1px 4px rgba(212, 165, 165, 0.4) !important;
     transition: var(--transition-smooth) !important;
-    border: 2px solid #e8b4b4 !important;
+    border: 2px solid #d4a5a5 !important;
 }
 
 .volume-slider::-webkit-slider-thumb:hover {
-    background: #e8b4b4 !important;
-    border-color: #c5a46d !important;
+    background: #d4a5a5 !important;
+    border-color: #c4a57b !important;
     transform: scale(1.15);
     box-shadow: 
-        0 0 15px rgba(245, 198, 198, 0.8), 
-        0 0 25px rgba(248, 212, 212, 0.6) !important;
+        0 0 15px rgba(232, 196, 196, 0.8), 
+        0 0 25px rgba(212, 165, 165, 0.6) !important;
 }
 
 /* FIREFOX - LA BOLITA DEL VOLUMEN - ROSA SÓLIDO */
@@ -197,22 +197,22 @@
     width: 14px !important;
     height: 14px !important;
     border-radius: 50% !important;
-    background: #f5c6c6 !important;
+    background: #e8c4c4 !important;
     cursor: pointer !important;
-    border: 2px solid #e8b4b4 !important;
+    border: 2px solid #d4a5a5 !important;
     box-shadow: 
-        0 3px 10px rgba(245, 198, 198, 0.6),
-        0 1px 4px rgba(232, 180, 180, 0.4) !important;
+        0 3px 10px rgba(232, 196, 196, 0.6),
+        0 1px 4px rgba(212, 165, 165, 0.4) !important;
     transition: var(--transition-smooth) !important;
 }
 
 .volume-slider::-moz-range-thumb:hover {
-    background: #e8b4b4 !important;
-    border-color: #c5a46d !important;
+    background: #d4a5a5 !important;
+    border-color: #c4a57b !important;
     transform: scale(1.15);
     box-shadow: 
-        0 0 15px rgba(245, 198, 198, 0.8), 
-        0 0 25px rgba(248, 212, 212, 0.6) !important;
+        0 0 15px rgba(232, 196, 196, 0.8), 
+        0 0 25px rgba(212, 165, 165, 0.6) !important;
 }
 
 /* FIREFOX - LA LÍNEA DE FONDO */
@@ -220,8 +220,8 @@
     width: 100% !important;
     height: 3px !important;
     cursor: pointer !important;
-    background: linear-gradient(90deg, #ffffff, #fef9f9) !important;
-    border: 1px solid #f5c6c6 !important;
+    background: linear-gradient(90deg, #ffffff, #faf7f5) !important;
+    border: 1px solid #e8c4c4 !important;
     border-radius: 3px !important;
 }
 
@@ -230,8 +230,8 @@
     width: 100% !important;
     height: 3px !important;
     cursor: pointer !important;
-    background: linear-gradient(90deg, #ffffff, #fef9f9) !important;
-    border: 1px solid #f5c6c6 !important;
+    background: linear-gradient(90deg, #ffffff, #faf7f5) !important;
+    border: 1px solid #e8c4c4 !important;
     border-radius: 3px !important;
 }
 
@@ -253,8 +253,8 @@
 }
 
 .music-minimize:hover {
-    color: #e8b4b4 !important;
-    background: rgba(245, 198, 198, 0.2) !important;
+    color: #d4a5a5 !important;
+    background: rgba(232, 196, 196, 0.2) !important;
     transform: scale(1.1);
 }
 
@@ -266,7 +266,7 @@
     padding: 0 !important;
     border-radius: 50% !important;
     justify-content: center;
-    background: rgba(254, 249, 249, 0.98) !important;
+    background: rgba(250, 247, 245, 0.98) !important;
 }
 
 .music-controls.minimized .music-info,
@@ -282,22 +282,22 @@
 }
 
 .music-controls.minimized .music-player-widget:hover {
-    background: rgba(254, 243, 243, 1) !important;
-    box-shadow: 0 0 25px rgba(245, 198, 198, 0.5) !important;
+    background: rgba(245, 236, 232, 1) !important;
+    box-shadow: 0 0 25px rgba(232, 196, 196, 0.5) !important;
 }
 
 /* Animación de pulso romántico */
 @keyframes musicPulse {
     0%, 100% {
         box-shadow: 
-            0 8px 25px rgba(245, 198, 198, 0.3),
-            0 2px 8px rgba(197, 164, 109, 0.15);
+            0 8px 25px rgba(232, 196, 196, 0.3),
+            0 2px 8px rgba(196, 165, 123, 0.15);
     }
     50% {
         box-shadow: 
-            0 8px 25px rgba(245, 198, 198, 0.3),
-            0 2px 8px rgba(197, 164, 109, 0.15),
-            0 0 25px rgba(245, 198, 198, 0.5);
+            0 8px 25px rgba(232, 196, 196, 0.3),
+            0 2px 8px rgba(196, 165, 123, 0.15),
+            0 0 25px rgba(232, 196, 196, 0.5);
     }
 }
 
@@ -317,13 +317,13 @@
 @keyframes playGlow {
     0%, 100% {
         box-shadow: 
-            0 4px 15px rgba(245, 198, 198, 0.5),
+            0 4px 15px rgba(232, 196, 196, 0.5),
             inset 0 1px 3px rgba(255, 255, 255, 0.8);
     }
     50% {
         box-shadow: 
-            0 4px 20px rgba(245, 198, 198, 0.8), 
-            0 0 30px rgba(248, 212, 212, 0.6),
+            0 4px 20px rgba(232, 196, 196, 0.8), 
+            0 0 30px rgba(212, 165, 165, 0.6),
             inset 0 1px 5px rgba(255, 255, 255, 0.9);
     }
 }
@@ -331,11 +331,11 @@
 @keyframes volumeGlow {
     0% {
         opacity: 0.8;
-        filter: drop-shadow(0 0 4px rgba(248, 212, 212, 0.4));
+        filter: drop-shadow(0 0 4px rgba(212, 165, 165, 0.4));
     }
     100% {
         opacity: 1;
-        filter: drop-shadow(0 0 8px rgba(248, 212, 212, 0.7));
+        filter: drop-shadow(0 0 8px rgba(212, 165, 165, 0.7));
     }
 }
 
@@ -347,7 +347,7 @@
     left: 20px;
     right: 20px;
     height: 1px;
-    background: linear-gradient(90deg, transparent, #f5c6c6, #c5a46d, #f5c6c6, transparent) !important;
+    background: linear-gradient(90deg, transparent, #e8c4c4, #c4a57b, #e8c4c4, transparent) !important;
     opacity: 0.4;
 }
 
@@ -480,8 +480,8 @@
         text-shadow: none;
     }
     40% {
-        color: #f5c6c6;
-        text-shadow: 0 0 4px rgba(245, 198, 198, 0.5);
+        color: #e8c4c4;
+        text-shadow: 0 0 4px rgba(232, 196, 196, 0.5);
     }
     60%, 100% {
         color: #8a7373;
@@ -501,14 +501,14 @@
     font-size: 0.75rem;
     padding: 6px 12px;
     border-radius: 8px;
-    border: 1px solid rgba(245, 198, 198, 0.3) !important;
+    border: 1px solid rgba(232, 196, 196, 0.3) !important;
     white-space: nowrap;
     z-index: 1001;
     font-family: var(--font-sans);
     font-weight: 400;
     box-shadow: 
-        0 4px 15px rgba(245, 198, 198, 0.3),
-        0 2px 6px rgba(197, 164, 109, 0.15) !important;
+        0 4px 15px rgba(232, 196, 196, 0.3),
+        0 2px 6px rgba(196, 165, 123, 0.15) !important;
     text-shadow: 
         0 1px 2px rgba(255, 255, 255, 0.8),
         0 1px 4px rgba(0, 0, 0, 0.1);
