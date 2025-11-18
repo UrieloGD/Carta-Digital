@@ -202,8 +202,8 @@
 }
 
 .music-controls.minimized .music-toggle {
-    width: auto;
-    height: auto;
+    width: 48px !important;
+    height: 48px !important;
     font-size: 1.1rem;
 }
 

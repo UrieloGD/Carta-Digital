@@ -597,7 +597,7 @@
 
 @media (min-width: 1400px) {
     .galeria {
-        --grid-columns: 4;
+        --grid-columns: 3;
     }
 }
 
