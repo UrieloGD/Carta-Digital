@@ -284,7 +284,7 @@ try {
     echo json_encode([
         'success' => true,
         'preference_url' => $redirect_url, // ✅ URL CORRECTA (sandbox o producción)
-        'preference_id' => $preference['id'],
+        'external_reference' => $preference['id'],
         'pedido_id' => $pedido_id,
         'invitacion_id' => $invitacion_id,
         'is_sandbox' => $is_sandbox // Para debugging
