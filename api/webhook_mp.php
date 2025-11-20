@@ -7,57 +7,48 @@
 
 // Cargar configuración y base de datos
 require_once '../config/database.php';
-require_once '../vendor/autoload.php'; // Asegúrate de cargar el autoload para Dotenv
+// Cargar librerías de Email (Igual que en payment_success)
+require_once '../config/email_config.php';
+require_once '../functions/email_bienvenida.php';
+require_once '../functions/email_notificacion_admin.php';
 
-// Cargar variables de entorno
+require_once '../vendor/autoload.php'; 
+
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
 $dotenv->load();
 
-// Configurar headers
 header('Content-Type: application/json');
 
 try {
-    // 1. Obtener datos del webhook
+    // 1. Obtener datos
     $input = file_get_contents('php://input');
     $data = json_decode($input, true);
     
-    // Log para debugging (Opcional: guardar en un archivo de texto para revisar)
-    // file_put_contents('webhook_log.txt', date('Y-m-d H:i:s') . " - " . $input . "\n", FILE_APPEND);
-    
     if (!$data) {
         http_response_code(200);
-        echo json_encode(['status' => 'ok', 'message' => 'No data received']);
-        exit;
+        exit(json_encode(['status' => 'ok', 'message' => 'No data']));
     }
     
-    // 2. Verificar si es una notificación de pago
-    // Mercado Pago puede enviar notificaciones con estructura 'type' o 'topic'
+    // 2. Extraer ID de Pago
     $type = $data['type'] ?? $data['topic'] ?? '';
     $payment_id = null;
 
     if ($type === 'payment') {
         $payment_id = $data['data']['id'] ?? $data['resource'] ?? null;
     } 
-    // A veces la estructura cambia ligeramente dependiendo de la versión de la API
-    // Si recibes una URL en 'resource', extrae el ID
     if (isset($data['resource']) && strpos($data['resource'], '/v1/payments/') !== false) {
         $parts = explode('/', $data['resource']);
         $payment_id = end($parts);
     }
 
     if ($payment_id) {
-        // 3. Consultar API de Mercado Pago para validar el estado real
-        // Nunca confíes solo en los datos del webhook, consulta la fuente oficial
-        
+        // 3. Consultar API de Mercado Pago
         $access_token = $_ENV['MERCADOPAGO_ACCESS_TOKEN'] ?? '';
         
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, "https://api.mercadopago.com/v1/payments/$payment_id");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            "Authorization: Bearer $access_token",
-            "Content-Type: application/json"
-        ]);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ["Authorization: Bearer $access_token"]);
         
         $response = curl_exec($ch);
         $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -65,57 +56,81 @@ try {
 
         if ($http_code === 200) {
             $payment_info = json_decode($response, true);
+            $status = $payment_info['status'] ?? ''; 
+            $external_reference = $payment_info['external_reference'] ?? null;
             
-            // 4. Extraer datos clave
-            $status = $payment_info['status'] ?? ''; // approved, pending, rejected
-            $external_reference = $payment_info['external_reference'] ?? null; // AQUÍ DEBE VENIR TU PEDIDO ID
-            
-            // Solo procesamos si tenemos la referencia externa (ID del pedido)
             if ($external_reference) {
-                
-                // Conectar BD
                 $database = new Database();
                 $db = $database->getConnection();
                 
-                // Determinar el nuevo estado para tu BD
-                $nuevo_estado = null;
-                if ($status === 'approved') {
-                    $nuevo_estado = 'completado';
-                } else if ($status === 'rejected' || $status === 'cancelled') {
-                    $nuevo_estado = 'fallido';
-                }
-                
-                if ($nuevo_estado) {
-                    // 5. Actualizar el pedido en tu BD
-                    // Usamos external_reference para encontrar el pedido correcto
-                    $stmt = $db->prepare("
-                        UPDATE pedidos 
-                        SET estado = ?, 
-                            payment_intent_id = ?, -- Guardamos el ID real del pago de MP (ej. 1234567890)
-                            fecha_pago = NOW() 
-                        WHERE id = ?
-                    ");
+                // Verificar estado actual antes de actualizar
+                // Obtenemos datos completos del pedido para los correos
+                $stmt = $db->prepare("
+                    SELECT 
+                        p.*, 
+                        c.nombre, c.apellido, c.email, c.slug,
+                        c.nombres_novios, c.telefono,
+                        pl.nombre as plantilla_nombre,
+                        i.slug as invitacion_slug, 
+                        i.fecha_evento, i.hora_evento
+                    FROM pedidos p
+                    JOIN clientes c ON p.cliente_id = c.id
+                    LEFT JOIN plantillas pl ON p.plantilla_id = pl.id
+                    LEFT JOIN invitaciones i ON p.invitacion_id = i.id
+                    WHERE p.id = ?
+                ");
+                $stmt->execute([$external_reference]);
+                $pedido = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                if ($pedido) {
+                    $nuevo_estado = null;
                     
-                    // Ejecutamos update: estado, payment_id de MP, y el ID de tu pedido (external_reference)
-                    $stmt->execute([$nuevo_estado, $payment_id, $external_reference]);
+                    if ($status === 'approved' && $pedido['estado'] !== 'completado') {
+                        $nuevo_estado = 'completado';
+                    } else if (($status === 'rejected' || $status === 'cancelled') && $pedido['estado'] !== 'fallido') {
+                        $nuevo_estado = 'fallido';
+                    }
                     
-                    error_log("✅ Webhook: Pedido #$external_reference actualizado a estado: $nuevo_estado (Payment ID: $payment_id)");
+                    if ($nuevo_estado) {
+                        // Actualizar BD
+                        $stmtUpdate = $db->prepare("
+                            UPDATE pedidos 
+                            SET estado = ?, payment_intent_id = ?, fecha_pago = NOW() 
+                            WHERE id = ?
+                        ");
+                        $stmtUpdate->execute([$nuevo_estado, $payment_id, $external_reference]);
+                        
+                        // =====================================================
+                        // ENVÍO DE CORREOS (Solo si se completó exitosamente)
+                        // =====================================================
+                        if ($nuevo_estado === 'completado') {
+                            $raw_password = $pedido['slug'] . str_replace('-', '', $pedido['fecha_evento']);
+                            
+                            // Enviar emails
+                            if (function_exists('enviarEmailBienvenida')) {
+                                enviarEmailBienvenida($pedido, $raw_password);
+                            }
+                            if (function_exists('enviarNotificacionAdmin')) {
+                                enviarNotificacionAdmin($pedido, $raw_password);
+                            }
+                            error_log("✅ Webhook: Emails enviados para pedido #$external_reference");
+                        }
+                        
+                        error_log("✅ Webhook: Pedido #$external_reference actualizado a $nuevo_estado");
+                    } else {
+                        error_log("ℹ️ Webhook: Pedido #$external_reference ya estaba en estado {$pedido['estado']}");
+                    }
                 }
-            } else {
-                error_log("⚠️ Webhook: Pago recibido ($payment_id) sin external_reference");
             }
-        } else {
-            error_log("❌ Webhook: Error al consultar API Mercado Pago. HTTP Code: $http_code");
         }
     }
     
-    // Siempre responder 200 OK a Mercado Pago para que deje de reintentar
     http_response_code(200);
     echo json_encode(['status' => 'received']);
     
 } catch (Exception $e) {
-    error_log("❌ Webhook Error Fatal: " . $e->getMessage());
-    http_response_code(200); // Responder 200 incluso en error interno para evitar bucle de MP
+    error_log("❌ Webhook Error: " . $e->getMessage());
+    http_response_code(200);
     echo json_encode(['error' => $e->getMessage()]);
 }
 ?>
