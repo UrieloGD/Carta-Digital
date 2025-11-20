@@ -239,21 +239,29 @@ try {
         throw new Exception('Error MP API (HTTP ' . $http_code . '): ' . ($preference['message'] ?? json_encode($preference)));
     }
 
-    // ✅ DETECTAR SI ES SANDBOX Y USAR LA URL CORRECTA
-    $redirect_url = $preference['init_point']; // Por defecto
+    // ============================================
+    // SELECCIÓN DE URL SEGÚN ENTORNO CONFIGURADO
+    // ============================================
+    
+    // 1. Obtener entorno desde la configuración (cargada al inicio)
+    $environment_config = $_ENV['MERCADOPAGO_ENVIRONMENT'] ?? 'sandbox';
+    
+    // 2. Definir URL base por defecto (Producción)
+    $redirect_url = $preference['init_point'];
     $is_sandbox = false;
 
-    if (!empty($preference['sandbox_init_point'])) {
-        $redirect_url = $preference['sandbox_init_point'];
-        $is_sandbox = true;
-        error_log("✅ AMBIENTE: SANDBOX (Prueba)");
+    // 3. Si el entorno está configurado como 'sandbox', forzar la URL de pruebas
+    if ($environment_config === 'sandbox') {
+        if (!empty($preference['sandbox_init_point'])) {
+            $redirect_url = $preference['sandbox_init_point'];
+            $is_sandbox = true;
+            error_log("✅ AMBIENTE: SANDBOX (Forzado por configuración)");
+        } else {
+            error_log("⚠️ AMBIENTE: SANDBOX solicitado pero no devuelto por API. Usando init_point.");
+        }
     } else {
         error_log("🔴 AMBIENTE: PRODUCCIÓN (Dinero real)");
     }
-
-    error_log("Redirecting to: " . $redirect_url);
-    error_log("================================");
-
     
     // Crear pedido
     $stmt = $db->prepare("
