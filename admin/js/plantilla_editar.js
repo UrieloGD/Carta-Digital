@@ -308,6 +308,20 @@ class PlantillaEditor {
     }
 }
 
+// Mejorar el manejo de imágenes que no cargan
+document.addEventListener('DOMContentLoaded', function() {
+    const previewImages = document.querySelectorAll('.preview-image');
+    previewImages.forEach(img => {
+        img.addEventListener('error', function() {
+            // Solo ocultar la tarjeta de preview, no el formulario
+            const previewCard = this.closest('.preview-card');
+            if (previewCard) {
+                previewCard.style.display = 'none';
+            }
+        });
+    });
+});
+
 // Inicialización cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', function() {
     window.plantillaEditor = new PlantillaEditor();

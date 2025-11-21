@@ -317,9 +317,8 @@ if (isset($_SESSION['success_message'])) {
                     </h3>
                     <div class="preview-card">
                         <img src="<?php echo htmlspecialchars($ruta_preview); ?>" 
-                             alt="Preview de <?php echo htmlspecialchars($plantilla['nombre']); ?>"
-                             class="preview-image"
-                             onerror="this.style.display='none'; this.closest('.form-section').style.display='none';">
+                                alt="Preview de <?php echo htmlspecialchars($plantilla['nombre']); ?>"
+                                class="preview-image">
                         <p class="text-muted mt-3 mb-0">
                             <i class="bi bi-info-circle me-1"></i>
                             Preview actual de la plantilla
