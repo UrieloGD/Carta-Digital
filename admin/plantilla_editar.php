@@ -251,16 +251,34 @@ if (isset($_SESSION['success_message'])) {
                 <div class="row">
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label for="imagen_preview" class="form-label">
+                            <label for="imagen_preview_file" class="form-label">
                                 <i class="bi bi-image me-1"></i>
                                 Imagen Preview
                             </label>
-                            <input type="text" 
-                                   class="form-control" 
-                                   id="imagen_preview" 
-                                   name="imagen_preview" 
-                                   value="<?php echo htmlspecialchars($plantilla['imagen_preview']); ?>">
-                            <div class="form-text">Ejemplo: img/preview.png (relativo a la carpeta de la plantilla)</div>
+                            <div class="input-group">
+                                <input type="file" 
+                                    class="form-control" 
+                                    id="imagen_preview_file" 
+                                    name="imagen_preview_file"
+                                    accept="image/*"
+                                    data-plantilla-id="<?php echo $id; ?>">
+                                <button class="btn btn-outline-secondary" type="button" id="btn-upload-image">
+                                    <i class="bi bi-cloud-upload me-1"></i>
+                                    Subir
+                                </button>
+                            </div>
+                            <!-- Campo oculto para guardar la ruta en la BD -->
+                            <input type="hidden" id="imagen_preview" name="imagen_preview" 
+                                value="<?php echo htmlspecialchars($plantilla['imagen_preview']); ?>">
+                            <div class="form-text">
+                                <i class="bi bi-info-circle me-1"></i>
+                                Selecciona una imagen PNG y haz clic en "Subir"
+                            </div>
+                            <div id="upload-progress" class="mt-2" style="display: none;">
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 

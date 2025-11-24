@@ -1,4 +1,4 @@
-// admin/js/plantilla_nueva.js - JavaScript modularizado para creación de plantillas
+// admin/js/plantilla_nueva.js - JavaScript modularizado con upload de imágenes
 
 class PlantillaNueva {
     constructor() {
@@ -7,16 +7,26 @@ class PlantillaNueva {
         this.carpetaInput = document.getElementById('carpeta');
         this.invitacionEjemploSelect = document.getElementById('invitacion_ejemplo_id');
         
+        // Elementos de imagen
+        this.imagenFileInput = document.getElementById('imagenFile');
+        this.btnSelectImage = document.getElementById('btnSelectImage');
+        this.btnRemoveImage = document.getElementById('btnRemoveImage');
+        this.imagePreview = document.getElementById('imagePreview');
+        this.imagePreviewContainer = document.getElementById('imagePreviewContainer');
+        this.imagePlaceholder = document.getElementById('imagePlaceholder');
+        this.uploadProgress = document.getElementById('uploadProgress');
+        this.imagenPreviewInput = document.getElementById('imagen_preview');
+        
         this.init();
     }
 
     init() {
         this.bindEvents();
         this.setupFormValidation();
+        this.setupImageUpload();
         this.setupSweetAlerts();
-        this.reorganizarBotones();
         
-        console.log('Creación de plantillas inicializado');
+        console.log('Creación de plantillas con upload de imágenes inicializado');
     }
 
     bindEvents() {
@@ -34,6 +44,208 @@ class PlantillaNueva {
         this.setupCancelConfirmation();
     }
 
+    setupImageUpload() {
+        // Botón para abrir selector de archivos
+        if (this.btnSelectImage) {
+            this.btnSelectImage.addEventListener('click', () => {
+                this.imagenFileInput.click();
+            });
+        }
+
+        // Cuando se selecciona un archivo
+        if (this.imagenFileInput) {
+            this.imagenFileInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    this.uploadImage(file);
+                }
+            });
+        }
+
+        // Botón para eliminar imagen
+        if (this.btnRemoveImage) {
+            this.btnRemoveImage.addEventListener('click', () => {
+                this.removeImage();
+            });
+        }
+    }
+
+    uploadImage(file) {
+        // Validar tipo de archivo
+        const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+        if (!validTypes.includes(file.type)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Formato no válido',
+                text: 'Solo se permiten archivos JPG, PNG o WEBP',
+                confirmButtonColor: '#0d6efd'
+            });
+            return;
+        }
+
+        // Validar tamaño (5MB máximo)
+        if (file.size > 5 * 1024 * 1024) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Archivo muy grande',
+                text: 'El tamaño máximo permitido es 5MB',
+                confirmButtonColor: '#0d6efd'
+            });
+            return;
+        }
+
+        // Preparar FormData
+        const formData = new FormData();
+        formData.append('imagen', file);
+
+        // Mostrar barra de progreso
+        this.showUploadProgress();
+
+        // Realizar upload con AJAX
+        const xhr = new XMLHttpRequest();
+
+        // Progreso del upload
+        xhr.upload.addEventListener('progress', (e) => {
+            if (e.lengthComputable) {
+                const percentComplete = Math.round((e.loaded / e.total) * 100);
+                this.updateProgress(percentComplete);
+            }
+        });
+
+        // Cuando se completa el upload
+        xhr.addEventListener('load', () => {
+            if (xhr.status === 200) {
+                try {
+                    const response = JSON.parse(xhr.responseText);
+                    if (response.success) {
+                        this.handleUploadSuccess(response.ruta_relativa);
+                    } else {
+                        this.handleUploadError(response.error || 'Error desconocido');
+                    }
+                } catch (e) {
+                    this.handleUploadError('Error al procesar la respuesta del servidor');
+                }
+            } else {
+                this.handleUploadError('Error en la conexión con el servidor');
+            }
+        });
+
+        // Error en la petición
+        xhr.addEventListener('error', () => {
+            this.handleUploadError('Error de red al subir la imagen');
+        });
+
+        // Enviar la petición
+        xhr.open('POST', 'functions/upload_plantilla_imagen.php', true);
+        xhr.send(formData);
+    }
+
+    showUploadProgress() {
+        this.uploadProgress?.classList.remove('d-none');
+        this.imagePlaceholder?.classList.add('d-none');
+        this.btnSelectImage.disabled = true;
+    }
+
+    updateProgress(percent) {
+        const progressBar = this.uploadProgress?.querySelector('.progress-bar');
+        if (progressBar) {
+            progressBar.style.width = percent + '%';
+            progressBar.textContent = percent + '%';
+        }
+    }
+
+    handleUploadSuccess(rutaRelativa) {
+        // Ocultar barra de progreso
+        this.uploadProgress?.classList.add('d-none');
+        this.btnSelectImage.disabled = false;
+
+        // Actualizar campo hidden con la ruta
+        if (this.imagenPreviewInput) {
+            this.imagenPreviewInput.value = rutaRelativa;
+            // Remover clase de invalid si existe
+            this.imagenPreviewInput.classList.remove('is-invalid');
+        }
+
+        // Mostrar preview de la imagen
+        if (this.imagePreview && this.imagePreviewContainer) {
+            this.imagePreview.src = '../' + rutaRelativa;
+            this.imagePreviewContainer.classList.remove('d-none');
+            this.imagePlaceholder?.classList.add('d-none');
+        }
+
+        // Notificación de éxito
+        Swal.fire({
+            icon: 'success',
+            title: 'Imagen subida',
+            text: 'La imagen se ha cargado correctamente',
+            timer: 2000,
+            showConfirmButton: false,
+            position: 'top-end',
+            toast: true
+        });
+
+        console.log('Imagen subida exitosamente:', rutaRelativa);
+    }
+
+    handleUploadError(errorMessage) {
+        // Ocultar barra de progreso
+        this.uploadProgress?.classList.add('d-none');
+        this.btnSelectImage.disabled = false;
+
+        // Mostrar placeholder
+        this.imagePlaceholder?.classList.remove('d-none');
+
+        // Mostrar error
+        Swal.fire({
+            icon: 'error',
+            title: 'Error al subir imagen',
+            text: errorMessage,
+            confirmButtonColor: '#0d6efd'
+        });
+
+        console.error('Error en upload:', errorMessage);
+    }
+
+    removeImage() {
+        Swal.fire({
+            title: '¿Eliminar imagen?',
+            text: 'Deberás subir otra imagen para continuar',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#dc3545',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Limpiar input hidden
+                if (this.imagenPreviewInput) {
+                    this.imagenPreviewInput.value = '';
+                }
+
+                // Ocultar preview y mostrar placeholder
+                this.imagePreviewContainer?.classList.add('d-none');
+                this.imagePlaceholder?.classList.remove('d-none');
+
+                // Limpiar input file
+                if (this.imagenFileInput) {
+                    this.imagenFileInput.value = '';
+                }
+
+                // Notificación
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Imagen eliminada',
+                    timer: 1500,
+                    showConfirmButton: false,
+                    position: 'top-end',
+                    toast: true
+                });
+            }
+        });
+    }
+
     generateFolderName(event) {
         const nombre = event.target.value;
         const carpeta = 'plantilla-' + nombre.toLowerCase()
@@ -43,13 +255,10 @@ class PlantillaNueva {
             .trim('-');
         
         this.carpetaInput.value = carpeta;
-        
-        // Mostrar preview de la ruta generada
         this.showFolderPreview(carpeta);
     }
 
     showFolderPreview(carpeta) {
-        // Crear o actualizar elemento de preview
         let previewElement = document.getElementById('folder-preview');
         if (!previewElement) {
             previewElement = document.createElement('div');
@@ -75,7 +284,6 @@ class PlantillaNueva {
                 console.log('Invitación seleccionada:', selectedOption.text);
                 console.log('URL que se usará:', `/invitacion/${slug}`);
                 
-                // Mostrar información adicional con SweetAlert2 tooltip
                 this.showInvitacionInfo(selectedOption.text, slug);
             }
         }
@@ -84,15 +292,12 @@ class PlantillaNueva {
     showInvitacionInfo(nombre, slug) {
         const element = this.invitacionEjemploSelect;
         
-        // Tooltip de Bootstrap
         if (typeof bootstrap !== 'undefined') {
-            // Destruir tooltip existente
             const existingTooltip = bootstrap.Tooltip.getInstance(element);
             if (existingTooltip) {
                 existingTooltip.dispose();
             }
             
-            // Crear nuevo tooltip
             new bootstrap.Tooltip(element, {
                 title: `Ejemplo: ${nombre}\nSlug: ${slug}`,
                 placement: 'top',
@@ -104,14 +309,28 @@ class PlantillaNueva {
     setupFormValidation() {
         if (this.form) {
             this.form.addEventListener('submit', (event) => {
-                if (!this.form.checkValidity()) {
+                // Validar que haya imagen subida
+                if (!this.imagenPreviewInput.value) {
                     event.preventDefault();
                     event.stopPropagation();
                     
-                    // Mostrar SweetAlert2 con errores
+                    this.imagenPreviewInput.classList.add('is-invalid');
+                    
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Imagen requerida',
+                        text: 'Por favor sube una imagen de preview para la plantilla',
+                        confirmButtonColor: '#0d6efd'
+                    });
+                    
+                    return;
+                }
+                
+                if (!this.form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
                     this.showValidationErrors();
                 } else {
-                    // Confirmación antes de guardar con SweetAlert2
                     event.preventDefault();
                     this.confirmSave();
                 }
@@ -136,7 +355,6 @@ class PlantillaNueva {
             confirmButtonText: 'Entendido',
             position: 'center'
         }).then(() => {
-            // Enfocar el primer campo inválido
             if (invalidFields.length > 0) {
                 invalidFields[0].focus();
             }
@@ -144,7 +362,6 @@ class PlantillaNueva {
     }
 
     confirmSave() {
-        // Obtener datos del formulario para mostrar en la confirmación
         const nombre = this.nombreInput.value;
         const carpeta = this.carpetaInput.value;
         const archivoPrincipal = document.getElementById('archivo_principal').value;
@@ -172,7 +389,6 @@ class PlantillaNueva {
             position: 'center'
         }).then((result) => {
             if (result.isConfirmed) {
-                // Mostrar loading
                 Swal.fire({
                     title: 'Creando plantilla...',
                     text: 'Por favor espera',
@@ -183,7 +399,6 @@ class PlantillaNueva {
                     }
                 });
 
-                // Enviar formulario después de un breve delay para mostrar el loading
                 setTimeout(() => {
                     this.form.submit();
                 }, 500);
@@ -192,13 +407,16 @@ class PlantillaNueva {
     }
 
     setupCancelConfirmation() {
-        // Se configurará después de reorganizar los botones
         setTimeout(() => {
-            const cancelButtons = document.querySelectorAll('.floating-actions .btn-outline-secondary');
+            const cancelButtons = document.querySelectorAll('.floating-actions .btn-outline-secondary, a[href="plantillas.php"]');
             cancelButtons.forEach(cancelButton => {
                 cancelButton.addEventListener('click', (e) => {
                     // Solo preguntar si hay cambios en el formulario
-                    if (this.form && this.form.classList.contains('was-validated')) {
+                    const hasChanges = this.nombreInput?.value || 
+                                     this.carpetaInput?.value || 
+                                     this.imagenPreviewInput?.value;
+                    
+                    if (hasChanges) {
                         e.preventDefault();
                         
                         Swal.fire({
@@ -224,12 +442,10 @@ class PlantillaNueva {
     }
 
     setupSweetAlerts() {
-        // Mostrar información de bienvenida si es la primera vez
         this.showWelcomeInfo();
     }
 
     showWelcomeInfo() {
-        // Verificar si ya se mostró el mensaje (usando sessionStorage)
         const alreadyShown = sessionStorage.getItem('plantillaNuevaWelcomeShown');
         
         if (!alreadyShown) {
@@ -241,6 +457,7 @@ class PlantillaNueva {
                             <p><i class="bi bi-lightbulb me-2 text-warning"></i> <strong>Consejos:</strong></p>
                             <ul class="small">
                                 <li>El nombre de la carpeta se genera automáticamente</li>
+                                <li>Sube una imagen de preview (obligatorio)</li>
                                 <li>Asegúrate de que los archivos estén en la carpeta correcta</li>
                                 <li>Puedes asignar una invitación existente como ejemplo</li>
                             </ul>
@@ -252,52 +469,23 @@ class PlantillaNueva {
                     position: 'center'
                 });
                 
-                // Marcar como mostrado
                 sessionStorage.setItem('plantillaNuevaWelcomeShown', 'true');
             }, 1000);
         }
     }
 
-    // NUEVA FUNCIÓN: Reorganizar botones (sin justify-content-end)
-    reorganizarBotones() {
-        const actionButtonsSection = this.form?.querySelector('.d-flex.gap-2.justify-content-end')?.closest('.form-section');
-        
-        if (!this.form || !actionButtonsSection) return;
-        
-        const actionButtonsDiv = actionButtonsSection.querySelector('.d-flex.gap-2');
-        
-        if (actionButtonsDiv) {
-            // REMOVER la clase justify-content-end que causa el problema
-            actionButtonsDiv.classList.remove('justify-content-end');
-            
-            const floatingActions = document.createElement('div');
-            floatingActions.className = 'floating-actions';
-            
-            // Clonar solo los botones, no el div con justify-content-end
-            const buttons = actionButtonsDiv.querySelectorAll('.btn');
-            buttons.forEach(button => {
-                floatingActions.appendChild(button.cloneNode(true));
-            });
-            
-            // Reemplazar el contenido de la sección
-            actionButtonsSection.innerHTML = '';
-            actionButtonsSection.appendChild(floatingActions);
-            
-            console.log('Botones reorganizados correctamente sin justify-content-end');
-        }
-    }
-
-    // Método para limpiar el formulario
     clearForm() {
         if (this.form) {
             this.form.reset();
             this.form.classList.remove('was-validated');
             
-            // Limpiar preview de carpeta
             const previewElement = document.getElementById('folder-preview');
             if (previewElement) {
                 previewElement.remove();
             }
+            
+            // Limpiar imagen
+            this.removeImage();
         }
     }
 }
@@ -307,7 +495,6 @@ document.addEventListener('DOMContentLoaded', function() {
     window.plantillaNueva = new PlantillaNueva();
 });
 
-// Función global para limpiar formulario (puede ser llamada desde otros lugares)
 window.limpiarFormularioPlantilla = function() {
     if (window.plantillaNueva) {
         window.plantillaNueva.clearForm();

@@ -5,6 +5,10 @@ class PlantillaEditor {
         this.form = document.querySelector('form.needs-validation');
         this.activaCheckbox = document.getElementById('activa');
         this.invitacionEjemploSelect = document.getElementById('invitacion_ejemplo_id');
+        // AGREGAR ESTAS LÍNEAS QUE FALTABAN:
+        this.imagenFileInput = document.getElementById('imagen_preview_file');
+        this.btnUploadImage = document.getElementById('btn-upload-image');
+        this.imagenPreviewHidden = document.getElementById('imagen_preview');
         
         this.init();
     }
@@ -14,8 +18,6 @@ class PlantillaEditor {
         this.setupFormValidation();
         this.showSweetAlerts();
         this.reorganizarLayout();
-        
-        console.log('Editor de plantillas inicializado');
     }
 
     bindEvents() {
@@ -27,6 +29,28 @@ class PlantillaEditor {
         // Mejorar el selector de invitación con información adicional
         if (this.invitacionEjemploSelect) {
             this.invitacionEjemploSelect.addEventListener('change', (e) => this.handleInvitacionChange(e));
+        }
+
+        // Manejar carga de imagen
+        if (this.btnUploadImage) {
+            this.btnUploadImage.addEventListener('click', () => {
+                console.log('Botón clickeado');
+                this.uploadImage();
+            });
+        } else {
+            console.error('No se encontró el botón btn-upload-image');
+        }
+        
+        // Permitir Enter en el input de archivo
+        if (this.imagenFileInput) {
+            this.imagenFileInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    this.uploadImage();
+                }
+            });
+        } else {
+            console.error('No se encontró el input imagen_preview_file');
         }
 
         // Validación de campos requeridos en tiempo real
@@ -90,7 +114,7 @@ class PlantillaEditor {
             icon: 'error',
             title: 'Campos requeridos',
             html: `Por favor completa los siguientes campos obligatorios:<br><strong>${fieldNames.join(', ')}</strong>`,
-            confirmButtonColor: '#0d6efd',
+            confirmButtonColor: '#c8a882',
             confirmButtonText: 'Entendido',
             position: 'center'
         }).then(() => {
@@ -107,7 +131,7 @@ class PlantillaEditor {
             text: 'Se actualizará la información de la plantilla',
             icon: 'question',
             showCancelButton: true,
-            confirmButtonColor: '#0d6efd',
+            confirmButtonColor: '#c8a882',
             cancelButtonColor: '#6c757d',
             confirmButtonText: 'Sí, guardar',
             cancelButtonText: 'Cancelar',
@@ -172,7 +196,7 @@ class PlantillaEditor {
                 text: message,
                 timer: 3000,
                 showConfirmButton: true,
-                confirmButtonColor: '#0d6efd',
+                confirmButtonColor: '#c8a882',
                 timerProgressBar: true,
                 position: 'center'
             });
@@ -197,7 +221,7 @@ class PlantillaEditor {
     }
 
     setupCancelConfirmation() {
-        const cancelButtons = document.querySelectorAll('.floating-actions .btn-outline-secondary');
+        const cancelButtons = document.querySelectorAll('.floating-actions .btn-outline-secondary, a.btn-outline-secondary');
         cancelButtons.forEach(cancelButton => {
             cancelButton.addEventListener('click', (e) => {
                 // Solo preguntar si hay cambios en el formulario
@@ -306,6 +330,220 @@ class PlantillaEditor {
             }
         }
     }
+
+    uploadImage() {
+        console.log('uploadImage() llamado');
+        
+        if (!this.imagenFileInput) {
+            console.error('Input de archivo no encontrado');
+            return;
+        }
+
+        if (!this.imagenFileInput.files.length) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Selecciona una imagen',
+                text: 'Por favor selecciona una imagen antes de subir',
+                confirmButtonColor: '#c8a882',
+                position: 'center'
+            });
+            return;
+        }
+
+        const file = this.imagenFileInput.files[0];
+        const maxSize = 5 * 1024 * 1024; // 5MB
+
+        console.log('Archivo seleccionado:', file.name, 'Tamaño:', file.size);
+
+        // Validar tamaño
+        if (file.size > maxSize) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Archivo demasiado grande',
+                text: 'La imagen no debe exceder 5MB',
+                confirmButtonColor: '#dc3545',
+                position: 'center'
+            });
+            return;
+        }
+
+        // Validar tipo
+        if (!file.type.startsWith('image/')) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Tipo de archivo inválido',
+                text: 'Solo se permiten imágenes',
+                confirmButtonColor: '#dc3545',
+                position: 'center'
+            });
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('imagen', file);
+        formData.append('plantilla_id', this.imagenFileInput.dataset.plantillaId);
+
+        console.log('FormData preparado, plantilla_id:', this.imagenFileInput.dataset.plantillaId);
+
+        // Mostrar barra de progreso
+        const progressDiv = document.getElementById('upload-progress');
+        const progressBar = progressDiv.querySelector('.progress-bar');
+        progressDiv.style.display = 'block';
+        progressBar.style.width = '0%';
+
+        // Deshabilitar botón
+        this.btnUploadImage.disabled = true;
+        this.btnUploadImage.innerHTML = '<i class="bi bi-hourglass-split me-1"></i>Subiendo...';
+
+        const xhr = new XMLHttpRequest();
+
+        // Barra de progreso
+        xhr.upload.addEventListener('progress', (e) => {
+            if (e.lengthComputable) {
+                const percentComplete = (e.loaded / e.total) * 100;
+                progressBar.style.width = percentComplete + '%';
+                console.log('Progreso:', percentComplete.toFixed(2) + '%');
+            }
+        });
+
+        xhr.addEventListener('load', () => {
+            console.log('Carga completada, status:', xhr.status);
+            console.log('Respuesta:', xhr.responseText);
+
+            this.btnUploadImage.disabled = false;
+            this.btnUploadImage.innerHTML = '<i class="bi bi-cloud-upload me-1"></i>Subir';
+            progressDiv.style.display = 'none';
+
+            if (xhr.status === 200) {
+                try {
+                    const response = JSON.parse(xhr.responseText);
+                    
+                    if (response.success) {
+                        // Actualizar el campo oculto
+                        this.imagenPreviewHidden.value = response.ruta;
+                        
+                        // Limpiar el input de archivo
+                        this.imagenFileInput.value = '';
+
+                        // Actualizar la vista previa si existe
+                        this.updatePreviewImage(response.ruta_completa);
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: '¡Éxito!',
+                            text: response.mensaje,
+                            timer: 3000,
+                            showConfirmButton: true,
+                            confirmButtonColor: '#c8a882',
+                            timerProgressBar: true,
+                            position: 'center'
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: response.error || 'Error desconocido',
+                            confirmButtonColor: '#dc3545',
+                            position: 'center'
+                        });
+                    }
+                } catch (e) {
+                    console.error('Error al parsear respuesta:', e);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Error al procesar la respuesta del servidor',
+                        confirmButtonColor: '#dc3545',
+                        position: 'center'
+                    });
+                }
+            } else {
+                try {
+                    const response = JSON.parse(xhr.responseText);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: response.error || 'Error en la carga',
+                        confirmButtonColor: '#dc3545',
+                        position: 'center'
+                    });
+                } catch (e) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Error desconocido: ' + xhr.status,
+                        confirmButtonColor: '#dc3545',
+                        position: 'center'
+                    });
+                }
+            }
+        });
+
+        xhr.addEventListener('error', () => {
+            console.error('Error de red');
+            this.btnUploadImage.disabled = false;
+            this.btnUploadImage.innerHTML = '<i class="bi bi-cloud-upload me-1"></i>Subir';
+            progressDiv.style.display = 'none';
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Error de conexión',
+                text: 'No se pudo conectar con el servidor',
+                confirmButtonColor: '#dc3545',
+                position: 'center'
+            });
+        });
+
+        console.log('Enviando a: ./functions/upload_plantilla_imagen.php');
+        xhr.open('POST', './functions/upload_plantilla_imagen.php');
+        xhr.send(formData);
+    }
+
+    updatePreviewImage(rutaCompleta) {
+        console.log('Actualizando preview con:', rutaCompleta);
+        
+        let imgElement = document.querySelector('.preview-image');
+        
+        if (!imgElement) {
+            // Crear elemento de imagen si no existe
+            const previewCard = document.querySelector('.preview-card');
+            if (previewCard) {
+                imgElement = document.createElement('img');
+                imgElement.className = 'preview-image';
+                imgElement.alt = 'Preview';
+                previewCard.prepend(imgElement);
+            } else {
+                // Si no hay preview-card, crear la sección completa
+                const previewSidebar = document.querySelector('.preview-sidebar');
+                if (previewSidebar) {
+                    const newPreviewCard = document.createElement('div');
+                    newPreviewCard.className = 'preview-card';
+                    newPreviewCard.innerHTML = `
+                        <img src="" class="preview-image" alt="Preview">
+                        <p class="text-muted mt-3 mb-0">
+                            <i class="bi bi-info-circle me-1"></i>
+                            Preview de la plantilla
+                        </p>
+                    `;
+                    previewSidebar.appendChild(newPreviewCard);
+                    imgElement = newPreviewCard.querySelector('.preview-image');
+                }
+            }
+        }
+        
+        if (imgElement) {
+            // Agregar timestamp para evitar caché
+            imgElement.src = rutaCompleta + '?t=' + Date.now();
+            imgElement.style.display = 'block';
+            imgElement.classList.add('upload-success');
+            
+            // Remover clase después de la animación
+            setTimeout(() => {
+                imgElement.classList.remove('upload-success');
+            }, 600);
+        }
+    }
+
 }
 
 // Mejorar el manejo de imágenes que no cargan
