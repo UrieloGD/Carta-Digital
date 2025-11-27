@@ -454,6 +454,53 @@ $invitacion_url = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . $_SER
             </div>
         </div>
 
+        <!-- Gráficas -->
+        <div class="row mb-4">
+            <!-- Gráfica de Pastel -->
+            <div class="col-md-6 mb-3">
+                <div class="card chart-card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-chart-pie me-2"></i>Estado de Respuestas
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="chartEstadoRSVP"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Gráfica de Barras -->
+            <div class="col-md-6 mb-3">
+                <div class="card chart-card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-chart-bar me-2"></i>Distribución de Boletos
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="chartBoletos"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gráfica de Línea (Timeline) -->
+        <div class="card chart-card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-chart-line me-2"></i>Timeline de Confirmaciones
+                </h5>
+            </div>
+            <div class="card-body">
+                <canvas id="chartTimeline" height="100"></canvas>
+            </div>
+        </div>
+
         <!-- URL Pública -->
         <div class="card url-card mb-4">
             <div class="card-header">
@@ -890,7 +937,9 @@ $invitacion_url = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . $_SER
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+
     <script>
         // Variables globales
         window.dashboardConfig = {
@@ -906,8 +955,9 @@ $invitacion_url = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . $_SER
     </script>
     
     <!-- JS principal -->
-    <script src="js/dashboard_filtros.js?v=<?php echo filemtime('./js/dashboard_filtros.js'); ?>"></script>
     <script src="js/dashboard.js?v=<?php echo filemtime('./js/dashboard.js'); ?>"></script>
+    <script src="js/dashboard_filtros.js?v=<?php echo filemtime('./js/dashboard_filtros.js'); ?>"></script>
+    <script src="js/dashboard_charts.js?v=<?php echo filemtime('./js/dashboard_charts.js') ?>"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 </body>

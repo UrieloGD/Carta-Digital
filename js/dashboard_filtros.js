@@ -59,11 +59,19 @@ async function cargarTodosLosGrupos() {
             
             // Actualizar estadísticas
             if (data.stats) {
-                actualizarEstadisticas(data.stats);
+                this.actualizarEstadisticas(data.stats);
+
+                if (dashboardCharts) {
+                    dashboardCharts.actualizarGraficas(data.stats, data.grupos);
+                }
             }
             
-            // Renderizar primera página
             aplicarFiltros();
+    
+            // Inicializar gráficas
+            if (dashboardCharts) {
+                dashboardCharts.inicializarGraficas(data.stats, todosLosGrupos);
+            }
         } else {
             console.error('Error:', data.message);
             mostrarMensajeError('Error al cargar los grupos');
