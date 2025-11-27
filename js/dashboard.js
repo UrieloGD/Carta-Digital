@@ -1,4 +1,5 @@
-// dashboard.js - Funcionalidades del Dashboard de Invitaciones (Versión sin Auto-refresh)
+// dashboard.js - Funcionalidades del Dashboard de Invitaciones (ACTUALIZADO)
+
 class DashboardManager {
     constructor() {
         this.currentFilters = {
@@ -10,6 +11,7 @@ class DashboardManager {
         };
         this.filteredGroups = [];
         this.initializeEvents();
+        this.inicializarToasts();
     }
 
     // Inicializar eventos
@@ -19,6 +21,107 @@ class DashboardManager {
             const firstInput = e.target.querySelector('input[type="text"], input[type="number"]');
             if (firstInput) firstInput.focus();
         });
+    }
+
+    // Inicializar sistema de toasts
+    inicializarToasts() {
+        // Agregar estilos CSS para toasts si no existen
+        if (!document.getElementById('toast-styles')) {
+            const style = document.createElement('style');
+            style.id = 'toast-styles';
+            style.textContent = `
+                @keyframes slideInRight {
+                    from {
+                        transform: translateX(100%);
+                        opacity: 0;
+                    }
+                    to {
+                        transform: translateX(0);
+                        opacity: 1;
+                    }
+                }
+                
+                @keyframes slideOutRight {
+                    from {
+                        transform: translateX(0);
+                        opacity: 1;
+                    }
+                    to {
+                        transform: translateX(100%);
+                        opacity: 0;
+                    }
+                }
+                
+                .toast-notification {
+                    animation: slideInRight 0.3s ease;
+                }
+            `;
+            document.head.appendChild(style);
+        }
+    }
+
+    // Sistema de Toasts mejorado
+    mostrarToast(mensaje, tipo = 'success') {
+        let toastContainer = document.getElementById('toast-container');
+        if (!toastContainer) {
+            toastContainer = document.createElement('div');
+            toastContainer.id = 'toast-container';
+            toastContainer.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 9999;
+            `;
+            document.body.appendChild(toastContainer);
+        }
+        
+        const toast = document.createElement('div');
+        toast.className = `toast-notification toast-${tipo}`;
+        
+        const iconos = {
+            'success': '<i class="fas fa-check-circle"></i>',
+            'error': '<i class="fas fa-exclamation-circle"></i>',
+            'info': '<i class="fas fa-info-circle"></i>',
+            'warning': '<i class="fas fa-exclamation-triangle"></i>'
+        };
+        
+        toast.innerHTML = `
+            ${iconos[tipo] || iconos.success}
+            <span>${mensaje}</span>
+        `;
+        
+        toast.style.cssText = `
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 20px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            color: white;
+            font-size: 14px;
+            font-weight: 500;
+            min-width: 250px;
+            max-width: 400px;
+        `;
+        
+        const colores = {
+            'success': 'background: #28a745;',
+            'error': 'background: #dc3545;',
+            'info': 'background: #17a2b8;',
+            'warning': 'background: #ffc107; color: #333;'
+        };
+        
+        toast.style.cssText += colores[tipo] || colores.success;
+        
+        toastContainer.appendChild(toast);
+        
+        setTimeout(() => {
+            toast.style.animation = 'slideOutRight 0.3s ease';
+            setTimeout(() => {
+                toastContainer.removeChild(toast);
+            }, 300);
+        }, 3000);
     }
 
     // Alternar visibilidad de filtros
@@ -39,17 +142,13 @@ class DashboardManager {
 
     // Aplicar filtros
     applyFilters() {
-        // Obtener valores actuales de los filtros
         this.currentFilters.search = document.getElementById('search-input').value.toLowerCase();
         this.currentFilters.status = document.getElementById('status-filter').value;
         this.currentFilters.sortBy = document.getElementById('sort-by').value;
         this.currentFilters.itemsPerPage = document.getElementById('items-per-page').value;
         this.currentFilters.currentPage = 1;
         
-        // Aplicar filtros
         this.filterGroups();
-        
-        // Actualizar badges de filtros activos
         this.updateActiveFiltersBadges();
     }
 
@@ -75,11 +174,9 @@ class DashboardManager {
     // Filtrar grupos según los criterios
     filterGroups() {
         if (!this.allGroups || this.allGroups.length === 0) {
-            // Si no tenemos los grupos, usar los que están en el DOM
             this.allGroups = this.getGroupsFromDOM();
         }
         
-        // Aplicar filtro de búsqueda
         this.filteredGroups = this.allGroups.filter(group => {
             const matchesSearch = this.currentFilters.search === '' || 
                                 group.nombre_grupo.toLowerCase().includes(this.currentFilters.search) ||
@@ -91,17 +188,14 @@ class DashboardManager {
             return matchesSearch && matchesStatus;
         });
         
-        // Aplicar ordenamiento
         this.sortGroups();
         
-        // Aplicar paginación si es necesario
         if (this.currentFilters.itemsPerPage !== 'all') {
             const itemsPerPage = parseInt(this.currentFilters.itemsPerPage);
             const startIndex = (this.currentFilters.currentPage - 1) * itemsPerPage;
             this.filteredGroups = this.filteredGroups.slice(startIndex, startIndex + itemsPerPage);
         }
         
-        // Actualizar la visualización
         this.actualizarTablaGrupos(this.filteredGroups);
     }
 
@@ -123,42 +217,38 @@ class DashboardManager {
         }
     }
 
-    // Función para parsear fechas desde el formato mostrado en el DOM
+    // Parsear fechas desde el formato mostrado en el DOM
     parseDateFromDOM(dateText) {
         if (!dateText || dateText === 'Sin respuesta' || dateText === '') {
             return null;
         }
         
         try {
-            // El formato en el DOM es "d/m/Y H:i" pero necesitamos convertirlo a formato ISO
             const parts = dateText.split(' ');
             if (parts.length === 2) {
                 const dateParts = parts[0].split('/');
                 const timeParts = parts[1].split(':');
                 
                 if (dateParts.length === 3 && timeParts.length === 2) {
-                    // Crear fecha en formato YYYY-MM-DD HH:MM:SS
                     return `${dateParts[2]}-${dateParts[1]}-${dateParts[0]} ${timeParts[0]}:${timeParts[1]}:00`;
                 }
             }
-            return dateText; // Si no puede parsear, devolver el texto original
+            return dateText;
         } catch (error) {
             console.error('Error parseando fecha del DOM:', error);
             return dateText;
         }
     }
 
-    // Obtener grupos desde el DOM (para cuando no hay datos AJAX)
+    // Obtener grupos desde el DOM
     getGroupsFromDOM() {
         const grupos = [];
         
-        // Intentar obtener de la tabla desktop
         const rows = document.querySelectorAll('table tbody tr');
         if (rows.length > 0) {
             rows.forEach(row => {
                 const cells = row.querySelectorAll('td');
                 if (cells.length >= 6) {
-                    // Extraer datos de cada celda
                     const nombreElement = cells[0].querySelector('strong');
                     const acompanantesElement = cells[0].querySelector('small');
                     const boletosElement = cells[1].querySelector('.badge');
@@ -167,7 +257,6 @@ class DashboardManager {
                     const tokenElement = cells[3].querySelector('code');
                     const fechaElement = cells[4].querySelector('small:not(.text-info)');
                     
-                    // Obtener botones para extraer IDs de onclick
                     const editBtn = cells[5].querySelector('button[onclick*="editarGrupo"]');
                     let id_grupo = null;
                     if (editBtn) {
@@ -176,7 +265,6 @@ class DashboardManager {
                         id_grupo = idMatch ? parseInt(idMatch[1]) : null;
                     }
                     
-                    // Determinar estado
                     let estado = 'pendiente';
                     if (estadoElement) {
                         if (estadoElement.classList.contains('status-aceptado')) estado = 'aceptado';
@@ -192,7 +280,7 @@ class DashboardManager {
                         estado: estado,
                         token_unico: tokenElement ? tokenElement.textContent.trim() : '',
                         fecha_respuesta: fechaElement ? this.parseDateFromDOM(fechaElement.textContent.trim()) : null,
-                        fecha_creacion: new Date().toISOString(), // Fecha por defecto
+                        fecha_creacion: new Date().toISOString(),
                         comentarios: cells[4].querySelector('.text-info') ? 'Sí' : null
                     });
                 }
@@ -200,7 +288,6 @@ class DashboardManager {
             return grupos;
         }
         
-        // Intentar obtener de la vista móvil
         const mobileCards = document.querySelectorAll('.mobile-guest-card');
         if (mobileCards.length > 0) {
             mobileCards.forEach(card => {
@@ -208,9 +295,7 @@ class DashboardManager {
                 const estadoElement = card.querySelector('.status-badge');
                 const boletosElement = card.querySelector('.detail-item');
                 const tokenElement = card.querySelector('code');
-                const acompanantesElement = card.querySelector('.detail-item:nth-child(2) .fas.fa-users');
                 
-                // Extraer ID del botón editar
                 const editBtn = card.querySelector('button[onclick*="editarGrupo"]');
                 let id_grupo = null;
                 if (editBtn) {
@@ -219,14 +304,12 @@ class DashboardManager {
                     id_grupo = idMatch ? parseInt(idMatch[1]) : null;
                 }
                 
-                // Determinar estado
                 let estado = 'pendiente';
                 if (estadoElement) {
                     if (estadoElement.classList.contains('status-aceptado')) estado = 'aceptado';
                     else if (estadoElement.classList.contains('status-rechazado')) estado = 'rechazado';
                 }
                 
-                // Extraer número de boletos
                 let boletos = 0;
                 if (boletosElement) {
                     const boletosMatch = boletosElement.textContent.match(/(\d+)\s+boletos/);
@@ -236,7 +319,7 @@ class DashboardManager {
                 grupos.push({
                     id_grupo: id_grupo,
                     nombre_grupo: nombreElement ? nombreElement.textContent.trim() : '',
-                    nombres_acompanantes: acompanantesElement ? acompanantesElement.parentElement.textContent.trim() : '',
+                    nombres_acompanantes: '',
                     boletos_asignados: boletos,
                     boletos_confirmados: 0,
                     estado: estado,
@@ -254,9 +337,10 @@ class DashboardManager {
     // Actualizar badges de filtros activos
     updateActiveFiltersBadges() {
         const container = document.getElementById('active-filters');
+        if (!container) return;
+        
         container.innerHTML = '';
         
-        // Badge para búsqueda
         if (this.currentFilters.search) {
             container.innerHTML += `
                 <span class="filter-badge">
@@ -266,7 +350,6 @@ class DashboardManager {
             `;
         }
         
-        // Badge para estado
         if (this.currentFilters.status !== 'all') {
             const statusText = {
                 'pendiente': 'Sin respuesta',
@@ -282,7 +365,6 @@ class DashboardManager {
             `;
         }
         
-        // Badge para ordenamiento
         if (this.currentFilters.sortBy !== 'newest') {
             const sortText = {
                 'oldest': 'Más antiguos primero',
@@ -298,7 +380,6 @@ class DashboardManager {
             `;
         }
         
-        // Mostrar u ocultar contenedor
         if (container.innerHTML === '') {
             container.style.display = 'none';
         } else {
@@ -326,9 +407,8 @@ class DashboardManager {
         this.applyFilters();
     }
 
-    // Modificar la función actualizarTablaGrupos para manejar resultados vacíos
+    // Actualizar tabla de grupos
     actualizarTablaGrupos(grupos) {
-        // Si no hay resultados, mostrar mensaje
         if (grupos.length === 0) {
             const noResultsHTML = `
                 <tr>
@@ -350,13 +430,11 @@ class DashboardManager {
                 </tr>
             `;
             
-            // Actualizar vista desktop
             const tableBody = document.querySelector('table tbody');
             if (tableBody) {
                 tableBody.innerHTML = noResultsHTML;
             }
 
-            // Actualizar vista mobile
             const noResultsMobileHTML = `
                 <div class="no-results">
                     <i class="fas fa-search"></i>
@@ -381,7 +459,6 @@ class DashboardManager {
             return;
         }
         
-        // Resto del código original para mostrar grupos...
         const tableBody = document.querySelector('table tbody');
         if (tableBody) {
             tableBody.innerHTML = this.generarFilasTabla(grupos);
@@ -393,77 +470,84 @@ class DashboardManager {
         }
     }
 
-    // Modificar la función actualizarDatos para manejar elementos que pueden no existir
-    actualizarDatos() {
+    // ========================================
+    // ACTUALIZAR DATOS (BOTÓN ACTUALIZAR) - CORREGIDO
+    // ========================================
+    async actualizarDatos() {
         const btnActualizar = document.getElementById('btn-actualizar');
+        const iconoActualizar = document.getElementById('icono-actualizar');
         
-        if (!btnActualizar) {
-            console.error('No se encontró el botón actualizar');
+        if (!btnActualizar || !iconoActualizar) {
+            console.error('No se encontró el botón actualizar o su icono');
             return;
         }
         
-        // Mostrar loading
         btnActualizar.disabled = true;
-        btnActualizar.innerHTML = '<i class="fas fa-sync-alt fa-spin me-2"></i>Actualizando...';
-
-        // Hacer petición AJAX
-        const url = new URL(window.location.href);
-        url.searchParams.set('ajax', '1');
+        iconoActualizar.classList.add('fa-spin');
         
-        fetch(url.toString())
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Guardar todos los grupos para filtrar
-                    this.allGroups = data.grupos;
-                    
-                    this.actualizarEstadisticas(data.stats);
-                    this.filterGroups();
-                    
-                    // Feedback de éxito
-                    btnActualizar.innerHTML = '<i class="fas fa-check me-2"></i>Actualizado';
-                    btnActualizar.className = 'btn-action btn-success'; // Mantiene btn-action, cambia a success
-                    
-                    setTimeout(() => {
-                        btnActualizar.innerHTML = '<i class="fas fa-sync-alt me-2"></i>Actualizar';
-                        btnActualizar.className = 'btn-action btn-secondary'; // Vuelve a las clases originales
-                        btnActualizar.disabled = false;
-                    }, 2000);
-                } else {
-                    throw new Error('Error en la respuesta');
+        try {
+            if (typeof cargarTodosLosGrupos === 'function') {
+                await cargarTodosLosGrupos();
+                this.mostrarToast('Datos actualizados correctamente', 'success');
+            } else {
+                const response = await fetch(
+                    `?ajax=1&slug=${window.dashboardConfig.invitacionSlug}`,
+                    {
+                        method: 'GET',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    }
+                );
+                
+                if (!response.ok) {
+                    throw new Error(`Error HTTP: ${response.status}`);
                 }
-            })
-            .catch(error => {
-                console.error('Error actualizando datos:', error);
                 
-                // Feedback de error
-                btnActualizar.innerHTML = '<i class="fas fa-exclamation-triangle me-2"></i>Error';
-                btnActualizar.className = 'btn-action btn-danger'; // Mantiene btn-action, cambia a danger
+                const data = await response.json();
                 
-                setTimeout(() => {
-                    btnActualizar.innerHTML = '<i class="fas fa-sync-alt me-2"></i>Actualizar';
-                    btnActualizar.className = 'btn-action btn-secondary'; // Vuelve a las clases originales
-                    btnActualizar.disabled = false;
-                }, 2000);
-            });
+                if (data.success) {
+                    this.allGroups = data.grupos || [];
+                    
+                    if (data.stats) {
+                        this.actualizarEstadisticas(data.stats);
+                    }
+                    
+                    this.filterGroups();
+                    this.mostrarToast('Datos actualizados correctamente', 'success');
+                } else {
+                    throw new Error(data.message || 'Error desconocido');
+                }
+            }
+        } catch (error) {
+            console.error('Error actualizando datos:', error);
+            this.mostrarToast('Error al actualizar los datos', 'error');
+        } finally {
+            setTimeout(() => {
+                btnActualizar.disabled = false;
+                iconoActualizar.classList.remove('fa-spin');
+            }, 500);
+        }
     }
     
     // Actualizar estadísticas con animación
     actualizarEstadisticas(newStats) {
-        const statsMapping = [
-            { selector: '.stats-row .col-6:nth-child(1) .stats-number', value: newStats.total_boletos },
-            { selector: '.stats-row .col-6:nth-child(2) .stats-number', value: newStats.confirmados },
-            { selector: '.stats-row .col-6:nth-child(3) .stats-number', value: newStats.rechazados },
-            { selector: '.stats-row .col-6:nth-child(4) .stats-number', value: newStats.pendientes }
-        ];
+        const statsElements = {
+            'stat-total': newStats.total_boletos || 0,
+            'stat-confirmados': newStats.confirmados || 0,
+            'stat-rechazados': newStats.rechazados || 0,
+            'stat-pendientes': newStats.pendientes || 0
+        };
 
-        statsMapping.forEach(stat => {
-            const element = document.querySelector(stat.selector);
-            if (element && element.textContent != stat.value) {
-                element.style.animation = 'none';
-                element.offsetHeight; // Forzar reflow
-                element.textContent = stat.value || 0;
-                element.style.animation = 'pulse 0.6s ease-in-out';
+        Object.keys(statsElements).forEach(id => {
+            const element = document.getElementById(id);
+            if (element && element.textContent != statsElements[id]) {
+                element.classList.add('updated');
+                element.textContent = statsElements[id];
+                
+                setTimeout(() => {
+                    element.classList.remove('updated');
+                }, 600);
             }
         });
     }
@@ -475,7 +559,6 @@ class DashboardManager {
         }
         
         try {
-            // Si ya está en formato legible (viene del DOM), devolverlo tal cual
             if (typeof dateString === 'string' && dateString.includes('/')) {
                 return dateString;
             }
@@ -494,7 +577,6 @@ class DashboardManager {
     // Generar filas de tabla para desktop
     generarFilasTabla(grupos) {
         return grupos.map(grupo => {
-            // Validaciones y valores por defecto
             const nombreGrupo = grupo.nombre_grupo || 'Sin nombre';
             const boletosAsignados = grupo.boletos_asignados || 0;
             const boletosConfirmados = grupo.boletos_confirmados || 0;
@@ -528,9 +610,9 @@ class DashboardManager {
                         </span>
                     </td>
                     <td>
-                        <code>${tokenUnico}</code>
+                        de class="text-dark">${this.htmlEscape(tokenUnico)}</code>
                         <button class="btn btn-sm btn-outline-secondary ms-1" 
-                                onclick="copiarToken('${tokenUnico}')">
+                                onclick="copiarToken('${this.htmlEscape(tokenUnico)}')">
                             <i class="fas fa-copy"></i>
                         </button>
                     </td>
@@ -546,7 +628,7 @@ class DashboardManager {
                             <i class="fas fa-edit"></i>
                         </button>
                         <button class="btn btn-sm btn-info btn-action" 
-                                onclick="compartirInvitacion('${this.htmlEscape(nombreGrupo)}', '${tokenUnico}')">
+                                onclick="compartirInvitacion('${this.htmlEscape(nombreGrupo)}', '${this.htmlEscape(tokenUnico)}')">
                             <i class="fas fa-share"></i>
                         </button>
                         ${estado && estado !== 'pendiente' ? 
@@ -602,9 +684,9 @@ class DashboardManager {
                         
                         <div class="detail-item">
                             <i class="fas fa-key me-2"></i>
-                            Token: <code>${grupo.token_unico}</code>
+                            Token: <code class="text-dark">${this.htmlEscape(grupo.token_unico)}</code>
                             <button class="btn btn-sm btn-outline-secondary ms-1" 
-                                    onclick="copiarToken('${grupo.token_unico}')">
+                                    onclick="copiarToken('${this.htmlEscape(grupo.token_unico)}')">
                                 <i class="fas fa-copy"></i>
                             </button>
                         </div>
@@ -617,23 +699,23 @@ class DashboardManager {
                     </div>
                     
                     <div class="guest-actions">
-                        <button class="btn btn-sm btn-primary" 
+                        <button class="btn btn-sm btn-secondary btn-action" 
                                 onclick="editarGrupo(${grupo.id_grupo}, '${this.htmlEscape(grupo.nombre_grupo)}', ${grupo.boletos_asignados})">
                             <i class="fas fa-edit"></i>
                         </button>
                         
-                        <button class="btn btn-sm btn-info" 
-                                onclick="compartirInvitacion('${this.htmlEscape(grupo.nombre_grupo)}', '${grupo.token_unico}')">
+                        <button class="btn btn-sm btn-info btn-action" 
+                                onclick="compartirInvitacion('${this.htmlEscape(grupo.nombre_grupo)}', '${this.htmlEscape(grupo.token_unico)}')">
                             <i class="fas fa-share"></i>
                         </button>
                         
                         ${grupo.estado && grupo.estado !== 'pendiente' ?
-                            `<button class="btn btn-sm btn-success" 
+                            `<button class="btn btn-sm btn-success btn-action" 
                                     onclick="verDetallesRespuesta(${grupo.id_grupo})">
                                 <i class="fas fa-eye"></i>
                             </button>` : ''}
                         
-                        <button class="btn btn-sm btn-danger" 
+                        <button class="btn btn-sm btn-danger btn-action" 
                                 onclick="eliminarGrupo(${grupo.id_grupo}, '${this.htmlEscape(grupo.nombre_grupo)}')">
                             <i class="fas fa-trash"></i>
                         </button>
@@ -653,37 +735,48 @@ class DashboardManager {
             .replace(/>/g, '&gt;');
     }
 
-    // Copiar URL principal de invitación
-    copiarURL() {
-        const urlField = document.getElementById('invitacion-url');
-        urlField.select();
-        document.execCommand('copy');
-        
-        // Mostrar feedback
-        const btn = event.target.closest('button');
-        const originalText = btn.innerHTML;
-        btn.innerHTML = '<i class="fas fa-check me-2"></i>Copiado!';
-        btn.classList.replace('btn-primary', 'btn-success');
-        
-        setTimeout(() => {
-            btn.innerHTML = originalText;
-            btn.classList.replace('btn-success', 'btn-primary');
-        }, 2000);
+    htmlUnescape(str) {
+        const textarea = document.createElement('textarea');
+        textarea.innerHTML = str;
+        return textarea.value;
     }
 
-    // Copiar token individual
+    // ========================================
+    // COPIAR URL PRINCIPAL - CORREGIDO
+    // ========================================
+    copiarURL() {
+        const urlField = document.getElementById('invitacion-url');
+        if (!urlField) return;
+        
+        urlField.select();
+        
+        try {
+            document.execCommand('copy');
+            this.mostrarToast('URL copiada al portapapeles', 'success');
+        } catch (err) {
+            console.error('Error al copiar:', err);
+            this.mostrarToast('Error al copiar la URL', 'error');
+        }
+    }
+
+    // ========================================
+    // COPIAR TOKEN - CORREGIDO
+    // ========================================
     copiarToken(token) {
-        navigator.clipboard.writeText(token).then(() => {
-            // Mostrar feedback
-            const btn = event.target.closest('button');
-            btn.innerHTML = '<i class="fas fa-check"></i>';
-            btn.classList.replace('btn-outline-secondary', 'btn-success');
-            
-            setTimeout(() => {
-                btn.innerHTML = '<i class="fas fa-copy"></i>';
-                btn.classList.replace('btn-success', 'btn-outline-secondary');
-            }, 2000);
-        });
+        const tempInput = document.createElement('input');
+        tempInput.value = token;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        
+        try {
+            document.execCommand('copy');
+            this.mostrarToast('Token copiado al portapapeles', 'success');
+        } catch (err) {
+            console.error('Error al copiar:', err);
+            this.mostrarToast('Error al copiar el token', 'error');
+        }
+        
+        document.body.removeChild(tempInput);
     }
 
     // Editar grupo de invitados
@@ -696,150 +789,182 @@ class DashboardManager {
         modal.show();
     }
 
-    // Eliminar grupo con confirmación
+    // ========================================
+    // ELIMINAR GRUPO CON SWEETALERT2 - NUEVO
+    // ========================================
     eliminarGrupo(id, nombre) {
-        if (confirm(`¿Estás seguro de eliminar el grupo "${nombre}"?`)) {
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.innerHTML = `
-                <input type="hidden" name="action" value="eliminar_grupo">
-                <input type="hidden" name="id_grupo" value="${id}">
-            `;
-            document.body.appendChild(form);
-            form.submit();
-        }
+        Swal.fire({
+            title: '¿Estás seguro?',
+            html: `Se eliminará el grupo <strong>"${nombre}"</strong> y todas sus respuestas.<br><br>Esta acción no se puede deshacer.`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#dc3545',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: '<i class="fas fa-trash me-2"></i>Sí, eliminar',
+            cancelButtonText: '<i class="fas fa-times me-2"></i>Cancelar',
+            reverseButtons: true,
+            focusCancel: true,
+            customClass: {
+                confirmButton: 'btn btn-danger',
+                cancelButton: 'btn btn-secondary'
+            },
+            buttonsStyling: false
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.innerHTML = `
+                    <input type="hidden" name="action" value="eliminar_grupo">
+                    <input type="hidden" name="id_grupo" value="${id}">
+                `;
+                document.body.appendChild(form);
+                
+                Swal.fire({
+                    title: 'Eliminando...',
+                    html: 'Por favor espera',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+                
+                form.submit();
+            }
+        });
     }
 
-    // Compartir invitación
+    // ========================================
+    // COMPARTIR INVITACIÓN - CORREGIDO
+    // ========================================
     compartirInvitacion(nombreGrupo, token) {
-        // URL base sin token
-        const baseUrl = window.dashboardConfig.invitacionUrl;
-        
-        // Llenar modal con información
-        document.getElementById('grupo-nombre').textContent = nombreGrupo;
-        document.getElementById('link-invitacion').value = baseUrl;
-        document.getElementById('token-display').textContent = token;
-        
-        // Mostrar modal
         const modal = new bootstrap.Modal(document.getElementById('modalCompartir'));
+        
+        // Mostrar nombre del grupo
+        const grupoNombreElement = document.getElementById('grupo-nombre');
+        if (grupoNombreElement) {
+            grupoNombreElement.textContent = nombreGrupo;
+        }
+        
+        // CORRECCIÓN: Usar la URL pública de la invitación (sin token)
+        const linkInvitacion = window.dashboardConfig.invitacionUrl;
+        
+        // Actualizar campo del link
+        const linkInput = document.getElementById('link-invitacion');
+        if (linkInput) {
+            linkInput.value = linkInvitacion;
+        }
+        
+        // Mostrar token
+        const tokenDisplay = document.getElementById('token-display');
+        if (tokenDisplay) {
+            tokenDisplay.textContent = token;
+        }
+        
+        // Guardar datos para compartir
+        window.compartirData = {
+            nombreGrupo: nombreGrupo,
+            token: token,
+            linkInvitacion: linkInvitacion
+        };
+        
         modal.show();
     }
 
-    // Copiar link de invitación sin token
+    // Copiar link de invitación
     copiarLinkInvitacion() {
-        const urlField = document.getElementById('link-invitacion');
-        urlField.select();
-        document.execCommand('copy');
+        const input = document.getElementById('link-invitacion');
+        if (!input) return;
         
-        // Feedback
-        const btn = event.target;
-        btn.innerHTML = '<i class="fas fa-check"></i>';
-        btn.classList.replace('btn-outline-primary', 'btn-success');
+        input.select();
         
-        setTimeout(() => {
-            btn.innerHTML = '<i class="fas fa-copy"></i>';
-            btn.classList.replace('btn-success', 'btn-outline-primary');
-        }, 1500);
+        try {
+            document.execCommand('copy');
+            this.mostrarToast('Link copiado al portapapeles', 'success');
+        } catch (err) {
+            console.error('Error al copiar:', err);
+            this.mostrarToast('Error al copiar el link', 'error');
+        }
     }
 
-    // Copiar token del modal
+    // Copiar token desde modal
     copiarTokenDisplay() {
-        const token = document.getElementById('token-display').textContent;
-        navigator.clipboard.writeText(token).then(() => {
-            const btn = event.target.closest('button');
-            btn.innerHTML = '<i class="fas fa-check"></i>';
-            btn.classList.replace('btn-outline-secondary', 'btn-success');
-            
-            setTimeout(() => {
-                btn.innerHTML = '<i class="fas fa-copy"></i>';
-                btn.classList.replace('btn-success', 'btn-outline-secondary');
-            }, 1500);
-        });
+        const tokenElement = document.getElementById('token-display');
+        if (!tokenElement) return;
+        
+        const token = tokenElement.textContent;
+        
+        const tempInput = document.createElement('input');
+        tempInput.value = token;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        
+        try {
+            document.execCommand('copy');
+            this.mostrarToast('Token copiado al portapapeles', 'success');
+        } catch (err) {
+            console.error('Error al copiar:', err);
+            this.mostrarToast('Error al copiar el token', 'error');
+        }
+        
+        document.body.removeChild(tempInput);
     }
 
     // Compartir por WhatsApp
     compartirWhatsApp() {
-        const nombreGrupo = document.getElementById('grupo-nombre').textContent;
-        const url = document.getElementById('link-invitacion').value;
-        const token = document.getElementById('token-display').textContent;
-        const nombresNovios = this.htmlUnescape(window.dashboardConfig.nombresNovios);
+        if (!window.compartirData) return;
         
-        // Mensaje más compacto para evitar problemas de formato en WhatsApp
-        const mensaje = `¡Estas invitado a nuestra boda! ${nombresNovios}
-
-Confirma tu asistencia aqui: ${url}
-
-Tu codigo de acceso es: ${token}
-
-¡Esperamos verte en nuestro dia especial!`;
-
-        const mensajeCodificado = encodeURIComponent(mensaje);
-        window.open(`https://wa.me/?text=${mensajeCodificado}`, '_blank');
-    }
-
-    htmlUnescape(str) {
-        const textarea = document.createElement('textarea');
-        textarea.innerHTML = str;
-        return textarea.value;
+        const mensaje = `¡Estás invitado(a) a nuestra boda! 💒\n\n` +
+                       `Confirma tu asistencia aquí:\n${window.compartirData.linkInvitacion}\n\n` +
+                       `Tu código de acceso: ${window.compartirData.token}`;
+        
+        const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(mensaje)}`;
+        window.open(whatsappUrl, '_blank');
     }
 
     // Compartir por Telegram
     compartirTelegram() {
-        const nombreGrupo = document.getElementById('grupo-nombre').textContent;
-        const url = document.getElementById('link-invitacion').value;
-        const token = document.getElementById('token-display').textContent;
-        const nombresNovios = this.htmlUnescape(window.dashboardConfig.nombresNovios);
+        if (!window.compartirData) return;
         
-        const mensaje = `¡Estas invitado a nuestra boda! ${nombresNovios}
-
-Confirma tu asistencia aqui: ${url}
-
-Tu codigo de acceso es: ${token}
-
-¡Esperamos verte en nuestro dia especial!`;
-
-        const mensajeCodificado = encodeURIComponent(mensaje);
-        window.open(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${mensajeCodificado}`, '_blank');
+        const mensaje = `¡Estás invitado(a) a nuestra boda! 💒\n\n` +
+                       `Confirma tu asistencia aquí:\n${window.compartirData.linkInvitacion}\n\n` +
+                       `Tu código de acceso: ${window.compartirData.token}`;
+        
+        const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(window.compartirData.linkInvitacion)}&text=${encodeURIComponent(mensaje)}`;
+        window.open(telegramUrl, '_blank');
     }
 
     // Copiar mensaje completo
     copiarMensajeCompleto() {
-        const nombreGrupo = document.getElementById('grupo-nombre').textContent;
-        const url = document.getElementById('link-invitacion').value;
-        const token = document.getElementById('token-display').textContent;
-        const nombresNovios = this.htmlUnescape(window.dashboardConfig.nombresNovios);
+        if (!window.compartirData) return;
         
-        const mensaje = `¡Estas invitado a nuestra boda! ${nombresNovios}
-
-Confirma tu asistencia en: ${url}
-
-Tu codigo de acceso es: ${token}
-
-¡Esperamos verte en nuestro dia especial!`;
-
-        navigator.clipboard.writeText(mensaje).then(() => {
-            const btn = event.target;
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-check me-2"></i>¡Copiado!';
-            btn.classList.replace('btn-info', 'btn-success');
-            
-            setTimeout(() => {
-                btn.innerHTML = originalText;
-                btn.classList.replace('btn-success', 'btn-info');
-            }, 2000);
-        });
+        const mensaje = `¡Estás invitado(a) a nuestra boda! 💒\n\n` +
+                       `Confirma tu asistencia aquí:\n${window.compartirData.linkInvitacion}\n\n` +
+                       `Tu código de acceso: ${window.compartirData.token}`;
+        
+        const tempTextarea = document.createElement('textarea');
+        tempTextarea.value = mensaje;
+        document.body.appendChild(tempTextarea);
+        tempTextarea.select();
+        
+        try {
+            document.execCommand('copy');
+            this.mostrarToast('Mensaje copiado al portapapeles', 'success');
+        } catch (err) {
+            console.error('Error al copiar:', err);
+            this.mostrarToast('Error al copiar el mensaje', 'error');
+        }
+        
+        document.body.removeChild(tempTextarea);
     }
 
     // Ver detalles de respuesta RSVP
     verDetallesRespuesta(id_grupo) {
-        // Mostrar loading
         document.getElementById('detalles-respuesta-content').innerHTML = 
-            '<div class="text-center py-4"><i class="fas fa-spinner fa-spin"></i> Cargando detalles...</div>';
+            '<div class="text-center py-4"><i class="fas fa-spinner fa-spin fa-2x text-primary"></i><p class="mt-3 text-muted">Cargando detalles...</p></div>';
         
         const modal = new bootstrap.Modal(document.getElementById('modalDetallesRespuesta'));
         modal.show();
         
-        // Cargar detalles
         fetch(`./plantillas/plantilla-1/api/rsvp.php?action=cargar_respuesta&id_grupo=${id_grupo}`)
         .then(response => response.json())
         .then(data => {
@@ -847,13 +972,13 @@ Tu codigo de acceso es: ${token}
                 this.mostrarDetallesRespuesta(data.respuesta, data.nombres_invitados);
             } else {
                 document.getElementById('detalles-respuesta-content').innerHTML = 
-                    `<div class="alert alert-danger">Error: ${data.message}</div>`;
+                    `<div class="alert alert-danger"><i class="fas fa-exclamation-triangle me-2"></i>Error: ${data.message}</div>`;
             }
         })
         .catch(error => {
             console.error('Error:', error);
             document.getElementById('detalles-respuesta-content').innerHTML = 
-                '<div class="alert alert-danger">Error al cargar los detalles</div>';
+                '<div class="alert alert-danger"><i class="fas fa-exclamation-triangle me-2"></i>Error al cargar los detalles. Por favor, intenta nuevamente.</div>';
         });
     }
 
@@ -870,7 +995,7 @@ Tu codigo de acceso es: ${token}
                 <div class="card-body">
                     <h5 class="card-title mb-3">
                         <i class="fas fa-users me-2 text-primary"></i>
-                        ${respuesta.nombre_grupo}
+                        ${this.htmlEscape(respuesta.nombre_grupo)}
                     </h5>
                     
                     <div class="row mb-3">
@@ -902,34 +1027,32 @@ Tu codigo de acceso es: ${token}
                     </div>
         `;
         
-        // Mostrar nombres de invitados confirmados
         if (nombresInvitados && nombresInvitados.length > 0) {
             html += `
                 <hr>
                 <div class="mb-3">
-                    <strong>Invitados confirmados:</strong>
+                    <strong><i class="fas fa-user-check me-2 text-success"></i>Invitados confirmados:</strong>
                     <ul class="list-unstyled mt-2">`;
             
             nombresInvitados.forEach(nombre => {
                 html += `
                     <li class="mb-1">
                         <i class="fas fa-user me-2 text-primary"></i>
-                        ${nombre}
+                        ${this.htmlEscape(nombre)}
                     </li>`;
             });
             
             html += `</ul></div>`;
         }
         
-        // Mostrar comentarios si existen
         if (respuesta.comentarios && respuesta.comentarios.trim()) {
             html += `
                 <hr>
                 <div class="mb-3">
-                    <strong>Comentarios:</strong>
-                    <div class="alert alert-light mt-2">
-                        <i class="fas fa-quote-left me-2"></i>
-                        ${respuesta.comentarios}
+                    <strong><i class="fas fa-comment-dots me-2 text-info"></i>Comentarios:</strong>
+                    <div class="alert alert-light mt-2 mb-0">
+                        <i class="fas fa-quote-left me-2 text-muted"></i>
+                        ${this.htmlEscape(respuesta.comentarios)}
                     </div>
                 </div>`;
         }
@@ -946,16 +1069,13 @@ let dashboardManager;
 document.addEventListener('DOMContentLoaded', function() {
     dashboardManager = new DashboardManager();
 
-    // Obtener grupos iniciales del DOM si no hay datos AJAX
     dashboardManager.allGroups = dashboardManager.getGroupsFromDOM();
     dashboardManager.filterGroups();
 
-    // Inicializar filtros después de cargar los datos
     if (typeof grupos !== 'undefined' && grupos.length > 0) {
         dashboardManager.allGroups = grupos;
         dashboardManager.filterGroups();
     }
-    
     
     // Exponer funciones globalmente para el HTML
     window.copiarURL = () => dashboardManager.copiarURL();
@@ -969,12 +1089,10 @@ document.addEventListener('DOMContentLoaded', function() {
     window.compartirWhatsApp = () => dashboardManager.compartirWhatsApp();
     window.compartirTelegram = () => dashboardManager.compartirTelegram();
     window.copiarMensajeCompleto = () => dashboardManager.copiarMensajeCompleto();
-    // Funciones globales para los eventos del HTML
+    
     window.toggleFilters = () => dashboardManager.toggleFilters();
     window.applyFilters = () => dashboardManager.applyFilters();
     window.resetFilters = () => dashboardManager.resetFilters();
     window.removeFilter = (type) => dashboardManager.removeFilter(type);
-    
-    // Nueva función global para actualizar
     window.actualizarDatos = () => dashboardManager.actualizarDatos();
 });
