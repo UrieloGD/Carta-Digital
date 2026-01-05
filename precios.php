@@ -37,7 +37,7 @@ try {
             <?php 
             // Características por plan (puedes también ponerlas en la BD si lo deseas)
             $caracteristicas = [
-                'escencial' => [
+                'Esencial' => [
                     'Portada, Bienvenida, Historia',
                     'Contador simple',
                     'Ubicación (info + botón)',
@@ -46,7 +46,7 @@ try {
                     'Reservación por WhatsApp',
                     'Soporte 7 días'
                 ],
-                'premium' => [
+                'Premium' => [
                     'Portada, Bienvenida, Historia',
                     'Contador con cuenta regresiva',
                     'Cronograma del evento',
@@ -57,7 +57,7 @@ try {
                     'Reproductor musical',
                     'Soporte 30 días'
                 ],
-                'exclusivo' => [
+                'Exclusivo' => [
                     'Todo lo del plan Premium',
                     'Galería 15 fotos',
                     'Sección para tu mesa de regalos',
@@ -70,7 +70,7 @@ try {
             ];
             
             foreach ($planes as $index => $plan):
-                $es_popular = strtolower($plan['nombre']) === 'premium';
+                $es_popular = strtolower($plan['nombre']) === 'Premium';
                 $clase_plan = 'plan-card ' . strtolower($plan['nombre']) . '-plan';
                 if ($es_popular) {
                     $clase_plan .= ' featured';
@@ -99,8 +99,7 @@ try {
                     </ul>
                 </div>
                 
-                <a href="./plantillas.php?plan=<?php echo urlencode(strtolower($plan['nombre'])); ?>" 
-                   class="btn <?php echo $es_popular ? 'btn-primary' : 'btn-outline'; ?> btn-plan">
+                <a href="./plantillas.php?plan=<?php echo urlencode($plan['nombre']); ?>" class="btn <?php echo $es_popular ? 'btn-primary' : 'btn-outline'; ?> btn-plan">
                     <i class="fas fa-shopping-cart"></i> Elegir Plan
                 </a>
             </div>

@@ -79,9 +79,9 @@ function obtenerPreciosPlanes() {
         
         // FALLBACK: Precios por defecto (en caso de error en la BD)
         return [
-            'escencial' => 69900,    // $699 MXN
-            'premium' => 89900,      // $899 MXN
-            'exclusivo' => 119900    // $1,199 MXN
+            'Esencial' => 69900,    // $699 MXN
+            'Premium' => 89900,      // $899 MXN
+            'Exclusivo' => 119900    // $1,199 MXN
         ];
     }
 }

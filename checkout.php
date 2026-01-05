@@ -4,12 +4,13 @@ require_once './config/stripe_config.php';
 require_once './config/database.php';
 
 // Obtener parámetros de URL
-$plan = $_GET['plan'] ?? 'Escencial';
+$plan = $_GET['plan'] ?? 'Esencial';
+$plan = ucfirst(strtolower(trim($plan)));
 $plantilla_id = isset($_GET['plantilla']) ? (int)$_GET['plantilla'] : null;
 
 // Validar plan
 if (!isset($PLANES_PRECIOS[$plan])) {
-    $plan = 'Escencial';
+    $plan = 'Esencial';
 }
 
 $precio = $PLANES_PRECIOS[$plan];
@@ -61,7 +62,7 @@ if ($plantilla_id) {
                     <div class="summary-features">
                         <h4>¿Qué Incluye?</h4>
                         <ul>
-                            <?php if ($plan === 'Escencial' || $plan === 'Premium' || $plan === 'Exclusivo'): ?>
+                            <?php if ($plan === 'Esencial' || $plan === 'Premium' || $plan === 'Exclusivo'): ?>
                                 <li><i class="fas fa-check"></i> Portada personalizada</li>
                                 <li><i class="fas fa-check"></i> Historia de pareja</li>
                                 <li><i class="fas fa-check"></i> Información de ceremonia y recepción</li>

@@ -222,7 +222,7 @@ CREATE TABLE IF NOT EXISTS pedidos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     cliente_id INT NOT NULL,
     plantilla_id INT NOT NULL,
-    plan ENUM('escencial', 'premium', 'exclusivo') NOT NULL,
+    plan ENUM('Esencial', 'Premium', 'Exclusivo') NOT NULL,
     monto DECIMAL(10,2) NOT NULL,
     metodo_pago ENUM('stripe', 'mercado_pago', 'spei') DEFAULT 'stripe',
     estado ENUM('pendiente', 'completado', 'cancelado', 'reembolsado') DEFAULT 'pendiente',
