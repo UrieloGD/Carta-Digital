@@ -208,7 +208,7 @@ try {
             </div>
             <div class="faq-item">
                 <h4>¿Qué métodos de pago aceptan?</h4>
-                <p>Aceptamos tarjetas de crédito y débito a través de Stripe. Próximamente Mercado Pago y transferencias bancarias.</p>
+                <p>Aceptamos tarjetas de crédito y débito. Además, puedes pagar por medio de Mercado Pago y transferencias bancarias.</p>
             </div>
             <div class="faq-item">
                 <h4>¿Mi invitación será responsive?</h4>
