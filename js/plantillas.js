@@ -4,7 +4,7 @@
 const PLANES = [
     { 
         nombre: 'Plan Escencial', 
-        precio: '$699 MXN', 
+        precio: '$499 MXN', 
         recomendado: false, 
         valor: 'escencial',
         ventajas: [
@@ -19,7 +19,7 @@ const PLANES = [
     },
     { 
         nombre: 'Plan Premium', 
-        precio: '$899 MXN', 
+        precio: '$699 MXN', 
         recomendado: true, 
         valor: 'premium',
         ventajas: [
@@ -36,7 +36,7 @@ const PLANES = [
     },
     { 
         nombre: 'Plan Exclusivo', 
-        precio: '$1,199 MXN', 
+        precio: '$999 MXN', 
         recomendado: false, 
         valor: 'exclusivo',
         ventajas: [
