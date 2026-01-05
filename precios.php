@@ -70,12 +70,12 @@ try {
             ];
             
             foreach ($planes as $index => $plan):
-                $es_popular = strtolower($plan['nombre']) === 'Premium';
+                $es_popular = $plan['nombre'] === 'Premium';
                 $clase_plan = 'plan-card ' . strtolower($plan['nombre']) . '-plan';
                 if ($es_popular) {
                     $clase_plan .= ' featured';
                 }
-                $caracteristicas_plan = $caracteristicas[strtolower($plan['nombre'])] ?? [];
+                $caracteristicas_plan = $caracteristicas[$plan['nombre']] ?? [];
             ?>
             <div class="<?php echo $clase_plan; ?>">
                 <?php if ($es_popular): ?>
