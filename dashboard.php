@@ -32,10 +32,10 @@ if (!$resultado) {
 $plan = $resultado['plan'];
 
 // Redirigir según el plan
-if ($plan === 'exclusivo') {
+if ($plan === 'Exclusivo') {
     header('Location: dashboard_rsvp.php');
 } else {
-    // escencial o premium
+    // Esencial o Premium
     header('Location: invitacion_cliente.php');
 }
 exit;

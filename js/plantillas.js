@@ -3,10 +3,10 @@
 // ============================================
 const PLANES = [
     { 
-        nombre: 'Plan Escencial', 
+        nombre: 'Plan Esencial', 
         precio: '$499 MXN', 
         recomendado: false, 
-        valor: 'escencial',
+        valor: 'Esencial',
         ventajas: [
             'Portada, Bienvenida, Historia',
             'Contador simple',
@@ -21,9 +21,9 @@ const PLANES = [
         nombre: 'Plan Premium', 
         precio: '$699 MXN', 
         recomendado: true, 
-        valor: 'premium',
+        valor: 'Premium',
         ventajas: [
-            'Todo lo del plan Escencial',
+            'Todo lo del plan Esencial',
             'Contador con cuenta regresiva',
             'Cronograma del evento',
             'Ubicaciones con imágenes',
@@ -38,7 +38,7 @@ const PLANES = [
         nombre: 'Plan Exclusivo', 
         precio: '$999 MXN', 
         recomendado: false, 
-        valor: 'exclusivo',
+        valor: 'Exclusivo',
         ventajas: [
             'Todo lo del plan Premium',
             'Galería 15 fotos',
