@@ -461,9 +461,9 @@
     .hero-invitation {
         font-size: 0.75rem;
         letter-spacing: 1.5px;
-        margin-bottom: 1.2rem;
+        margin-bottom: -1rem;
         padding: 0.35rem 1rem;
-        bottom: 2rem;
+        bottom: 5rem;
     }
     
     .hero-invitation::before,
@@ -483,7 +483,7 @@
     }
     
     .hero-details {
-        margin-top: 23rem;
+        margin-top: 19rem;
         padding: 0.8rem 1rem;
     }
     
