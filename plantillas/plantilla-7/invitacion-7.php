@@ -483,7 +483,7 @@ try {
             <div class="contador-header">
                 <h2>Cuenta Regresiva</h2>
                 <div class="decorative-line"></div>
-                <p class="contador-subtitle">Hasta mi celebración</p>
+                <p class="contador-subtitle">Para mi celebración</p>
             </div>
             
             <?php if ($tipo_contador === 'simple'): ?>

@@ -199,19 +199,19 @@ function initCompleteCountdown(fechaEvento) {
         if (dias === 0) {
             if (horas === 0) {
                 mensaje = minutos <= 30 ? 
-                    '¡Solo unos minutos más para nuestro momento especial!' : 
+                    '¡Solo unos minutos más para mi momento especial!' : 
                     '¡El día ha llegado! Solo algunas horas más...';
             } else {
-                mensaje = '¡Hoy es nuestro día especial!';
+                mensaje = '¡Hoy es mi día especial!';
             }
         } else if (dias === 1) {
-            mensaje = '¡Mañana será nuestro día especial!';
+            mensaje = '¡Mañana será mi día especial!';
         } else if (dias <= 7) {
-            mensaje = `¡Solo ${dias} días para nuestro gran día!`;
+            mensaje = `¡Solo ${dias} días para mi gran día!`;
         } else if (dias <= 30) {
-            mensaje = `Faltan ${dias} días para celebrar nuestro amor`;
+            mensaje = `Faltan ${dias} días para celebrar mi cumpleaños`;
         } else {
-            mensaje = `${dias} días hasta nuestro momento especial`;
+            mensaje = `${dias} días para mi momento especial`;
         }
         
         // Actualizar con transición suave
