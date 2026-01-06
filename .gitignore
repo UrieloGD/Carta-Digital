@@ -13,3 +13,4 @@ Thumbs.db
 
 # Base de datos
 config/tables_database.sql
+config/database.php

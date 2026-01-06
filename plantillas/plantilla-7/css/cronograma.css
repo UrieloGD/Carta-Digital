@@ -1,0 +1,1031 @@
+/* ================================================
+   CRONOGRAMA - ROMANCE CLÁSICO CON MEJOR CONTRASTE
+   ================================================ */
+
+.cronograma {
+    background: var(--bg-primary);
+    position: relative;
+    overflow: hidden;
+    padding: 120px 0;
+}
+
+/* Efecto de pétalos románticos de fondo */
+.cronograma::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(
+        circle at center,
+        rgba(232, 196, 196, 0.06) 0%,
+        rgba(196, 165, 123, 0.03) 50%,
+        transparent 70%
+    );
+    animation: waveRotate 35s linear infinite;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Efecto adicional de profundidad romántica */
+.cronograma::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(ellipse at 25% 40%, rgba(232, 196, 196, 0.04) 0%, transparent 40%),
+        radial-gradient(ellipse at 75% 60%, rgba(212, 165, 165, 0.03) 0%, transparent 40%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Círculos flotantes decorativos */
+.cronograma .floating-circle {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, 
+        rgba(232, 196, 196, 0.08), 
+        rgba(196, 165, 123, 0.04));
+    pointer-events: none;
+    z-index: 1;
+    animation: floatCircle 25s ease-in-out infinite;
+    border: 1px solid rgba(232, 196, 196, 0.08);
+}
+
+.cronograma .floating-circle:nth-child(1) {
+    width: 200px;
+    height: 200px;
+    top: 10%;
+    left: -100px;
+    animation-duration: 28s;
+}
+
+.cronograma .floating-circle:nth-child(2) {
+    width: 150px;
+    height: 150px;
+    bottom: 20%;
+    right: -75px;
+    animation-duration: 32s;
+    animation-delay: 10s;
+}
+
+.cronograma .floating-circle:nth-child(3) {
+    width: 120px;
+    height: 120px;
+    top: 50%;
+    right: 8%;
+    animation-duration: 30s;
+    animation-delay: 5s;
+}
+
+/* Figuras geométricas decorativas */
+.cronograma .geometric-shape {
+    position: absolute;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.05;
+    animation: rotateShape 45s linear infinite;
+}
+
+.cronograma .geometric-shape:nth-child(4) {
+    width: 80px;
+    height: 80px;
+    top: 30%;
+    left: 10%;
+    background: linear-gradient(135deg, 
+        rgba(232, 196, 196, 0.15), 
+        transparent);
+    transform: rotate(45deg);
+}
+
+.cronograma .geometric-shape:nth-child(5) {
+    width: 100px;
+    height: 100px;
+    bottom: 25%;
+    right: 15%;
+    background: linear-gradient(135deg, 
+        rgba(212, 165, 165, 0.12), 
+        transparent);
+    clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+    animation-duration: 50s;
+}
+
+@keyframes floatCircle {
+    0%, 100% {
+        transform: translate(0, 0) scale(1);
+        opacity: 0.3;
+    }
+    25% {
+        transform: translate(30px, -30px) scale(1.1);
+        opacity: 0.5;
+    }
+    50% {
+        transform: translate(-20px, -50px) scale(0.95);
+        opacity: 0.4;
+    }
+    75% {
+        transform: translate(40px, -20px) scale(1.05);
+        opacity: 0.45;
+    }
+}
+
+@keyframes rotateShape {
+    0% {
+        transform: rotate(0deg) scale(1);
+        opacity: 0.05;
+    }
+    50% {
+        transform: rotate(180deg) scale(1.2);
+        opacity: 0.08;
+    }
+    100% {
+        transform: rotate(360deg) scale(1);
+        opacity: 0.05;
+    }
+}
+
+@keyframes waveRotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.cronograma-content {
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+}
+
+/* Header elegante */
+.cronograma-header {
+    text-align: center;
+    margin-bottom: 4rem;
+    opacity: 0;
+    animation: fadeInUp 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s both;
+}
+
+.cronograma-header h2 {
+    font-family: var(--font-script);
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    color: var(--accent-rose-dark);
+    font-weight: 400;
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.02em;
+    text-shadow: 
+        0 2px 8px rgba(255, 255, 255, 0.8),
+        0 3px 12px rgba(232, 196, 196, 0.3);
+}
+
+/* Línea decorativa romántica */
+.cronograma-header .decorative-line {
+    width: 120px;
+    height: 2px;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        var(--accent-rose) 20%, 
+        var(--accent-rose-light) 50%, 
+        var(--accent-rose) 80%, 
+        transparent 100%);
+    margin: 24px auto;
+    position: relative;
+    border-radius: 1px;
+    display: block;
+    box-shadow: 0 0 15px rgba(232, 196, 196, 0.3);
+}
+
+.cronograma-header .decorative-line::before,
+.cronograma-header .decorative-line::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 8px;
+    background: var(--accent-rose);
+    border-radius: 50%;
+    box-shadow: 0 0 12px rgba(232, 196, 196, 0.5);
+}
+
+.cronograma-header .decorative-line::before {
+    left: -12px;
+}
+
+.cronograma-header .decorative-line::after {
+    right: -12px;
+}
+
+.cronograma-subtitle {
+    font-family: var(--font-elegant);
+    font-size: 1.125rem;
+    color: var(--text-secondary);
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    font-style: italic;
+    margin: 0;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+}
+
+/* Timeline container */
+.timeline-container {
+    position: relative;
+    padding: 3rem 0;
+    opacity: 0;
+    animation: fadeInUp 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.4s both;
+}
+
+/* Línea central del timeline con gradiente romántico */
+.timeline-line {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: linear-gradient(
+        to bottom,
+        transparent 0%,
+        rgba(232, 196, 196, 0.2) 5%,
+        var(--accent-rose) 10%,
+        var(--accent-rose) 90%,
+        rgba(232, 196, 196, 0.2) 95%,
+        transparent 100%
+    );
+    transform: translateX(-50%);
+    z-index: 1;
+    box-shadow: 0 0 10px rgba(232, 196, 196, 0.3);
+}
+
+/* Items del timeline - CONFIGURACIÓN BASE */
+.timeline-item {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 3rem;
+    align-items: center;
+    margin-bottom: 4rem;
+    opacity: 0;
+    animation: slideInTimeline 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+.timeline-item:nth-child(odd) {
+    animation-delay: 0.6s;
+}
+
+.timeline-item:nth-child(even) {
+    animation-delay: 0.8s;
+}
+
+.timeline-item:last-child {
+    margin-bottom: 0;
+}
+
+/* ==========================================
+   CONFIGURACIÓN PARA ELEMENTOS IMPARES (1, 3, 5...)
+   Hora y contenido a la DERECHA
+   ========================================== */
+
+/* Elementos impares: hora en columna 3 (derecha) */
+.timeline-item:nth-child(odd) .timeline-time {
+    grid-column: 3;
+    text-align: left;
+    padding-left: 1.5rem;
+    padding-right: 0;
+}
+
+/* Elementos impares: punto en el centro (columna 2) */
+.timeline-item:nth-child(odd) .timeline-dot {
+    grid-column: 2;
+}
+
+/* Elementos impares: contenido también en columna 3 (debajo de la hora) */
+.timeline-item:nth-child(odd) .timeline-content {
+    grid-column: 3;
+    grid-row: 2;
+    padding-left: 1.5rem;
+    padding-right: 0;
+}
+
+/* ✅ Flecha apuntando a la derecha para impares */
+.timeline-item:nth-child(odd) .time-card::before {
+    border-right: 12px solid rgba(255, 255, 255, 0.98);
+    border-left: none;
+    left: -12px;
+    right: auto;
+    filter: drop-shadow(-2px 0 4px rgba(212, 165, 165, 0.3));
+}
+
+/* ==========================================
+   CONFIGURACIÓN PARA ELEMENTOS PARES (2, 4, 6...)
+   Hora y contenido a la IZQUIERDA
+   ========================================== */
+
+/* Elementos pares: hora en columna 1 (izquierda) */
+.timeline-item:nth-child(even) .timeline-time {
+    grid-column: 1;
+    text-align: right;
+    padding-right: 1.5rem;
+    padding-left: 0;
+}
+
+/* Elementos pares: punto en el centro (columna 2) */
+.timeline-item:nth-child(even) .timeline-dot {
+    grid-column: 2;
+}
+
+/* Elementos pares: contenido también en columna 1 (debajo de la hora) */
+.timeline-item:nth-child(even) .timeline-content {
+    grid-column: 1;
+    grid-row: 2;
+    padding-right: 1.5rem;
+    padding-left: 0;
+}
+
+/* ✅ Flecha apuntando a la izquierda para pares */
+.timeline-item:nth-child(even) .time-card::before {
+    border-left: 12px solid rgba(255, 255, 255, 0.98);
+    border-right: none;
+    right: -12px;
+    left: auto;
+    filter: drop-shadow(2px 0 4px rgba(212, 165, 165, 0.3));
+}
+
+/* ✅ CARD DEL TIEMPO - MEJOR CONTRASTE */
+.time-card {
+    display: inline-block;
+    padding: 0.875rem 1.5rem;
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.98) 0%, 
+        rgba(250, 247, 245, 0.96) 100%);
+    border: 2px solid rgba(212, 165, 165, 0.5);
+    border-radius: 8px;
+    transition: var(--transition-smooth);
+    position: relative;
+    min-width: 100px;
+    text-align: center;
+    box-shadow: 
+        0 6px 20px rgba(212, 165, 165, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+}
+
+/* Flecha conectora del tiempo */
+.time-card::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    transform: translateY(-50%);
+    transition: var(--transition-smooth);
+}
+
+.time-card:hover {
+    transform: translateY(-3px) scale(1.05);
+    border-color: rgba(212, 165, 165, 0.7);
+    box-shadow: 
+        0 10px 30px rgba(212, 165, 165, 0.4),
+        0 0 20px rgba(232, 196, 196, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.time-text {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    color: var(--accent-rose-dark);
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+}
+
+/* Punto central del timeline */
+.timeline-dot {
+    position: relative;
+    z-index: 2;
+    width: 20px;
+    height: 20px;
+    background: var(--bg-primary);
+    border: 3px solid var(--accent-rose);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-smooth);
+    flex-shrink: 0;
+    box-shadow: 
+        0 0 15px rgba(232, 196, 196, 0.4),
+        inset 0 1px 3px rgba(255, 255, 255, 0.3);
+    grid-row: 1 / 3;
+    align-self: start;
+    margin-top: 1rem;
+}
+
+.dot-inner {
+    width: 6px;
+    height: 6px;
+    background: var(--accent-rose-light);
+    border-radius: 50%;
+    transition: var(--transition-smooth);
+    box-shadow: 0 0 8px rgba(212, 165, 165, 0.6);
+}
+
+.timeline-item:hover .timeline-dot {
+    border-color: var(--accent-gold);
+    transform: scale(1.3);
+    box-shadow: 
+        0 0 25px rgba(196, 165, 123, 0.6),
+        inset 0 1px 3px rgba(255, 255, 255, 0.4);
+}
+
+.timeline-item:hover .dot-inner {
+    background: var(--accent-gold);
+    transform: scale(1.3);
+    box-shadow: 0 0 12px rgba(196, 165, 123, 0.8);
+}
+
+/* ✅ CARD DEL CONTENIDO - MEJOR CONTRASTE */
+.content-card {
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.98) 0%, 
+        rgba(250, 247, 245, 0.96) 100%);
+    border: 2px solid rgba(212, 165, 165, 0.5);
+    border-radius: 12px;
+    padding: 2rem;
+    transition: var(--transition-smooth);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 
+        0 8px 30px rgba(212, 165, 165, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(15px);
+}
+
+/* Borde superior animado romántico */
+.content-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, 
+        var(--accent-rose), 
+        var(--accent-rose-light), 
+        var(--accent-gold));
+    transform: scaleX(0);
+    transition: var(--transition-smooth);
+    transform-origin: left;
+    box-shadow: 0 0 10px rgba(232, 196, 196, 0.5);
+}
+
+/* Efecto de brillo en el fondo */
+.content-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at top right, 
+        rgba(232, 196, 196, 0.08) 0%, 
+        transparent 60%);
+    opacity: 0;
+    transition: var(--transition-smooth);
+    pointer-events: none;
+}
+
+.timeline-item:hover .content-card {
+    transform: translateY(-5px);
+    box-shadow: 
+        0 15px 45px rgba(212, 165, 165, 0.35),
+        0 0 30px rgba(232, 196, 196, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    border-color: rgba(212, 165, 165, 0.7);
+}
+
+.timeline-item:hover .content-card::before {
+    transform: scaleX(1);
+}
+
+.timeline-item:hover .content-card::after {
+    opacity: 1;
+}
+
+/* ✅ TÍTULO DEL EVENTO - MEJOR CONTRASTE */
+.event-title {
+    font-family: var(--font-elegant);
+    font-size: 1.5rem;
+    color: var(--accent-rose-dark);
+    font-weight: 600;
+    margin-bottom: 1rem;
+    letter-spacing: 0.5px;
+    line-height: 1.3;
+    text-shadow: 
+        0 2px 6px rgba(255, 255, 255, 0.8),
+        0 2px 10px rgba(232, 196, 196, 0.2);
+    transition: var(--transition-smooth);
+}
+
+.timeline-item:hover .event-title {
+    color: var(--accent-gold);
+    transform: translateX(3px);
+}
+
+/* ✅ DESCRIPCIÓN DEL EVENTO - MEJOR CONTRASTE */
+.event-description {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    color: var(--text-primary);
+    font-weight: 500;
+    line-height: 1.7;
+    margin-bottom: 1.25rem;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+}
+
+/* ✅ UBICACIÓN DEL EVENTO - MEJOR CONTRASTE */
+.event-location {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    font-weight: 500;
+    padding-top: 0.75rem;
+    border-top: 1px solid rgba(212, 165, 165, 0.3);
+    transition: var(--transition-smooth);
+}
+
+.timeline-item:hover .event-location {
+    border-top-color: rgba(212, 165, 165, 0.5);
+    color: var(--accent-rose-dark);
+}
+
+.location-icon {
+    font-size: 1rem;
+    opacity: 1;
+    flex-shrink: 0;
+    color: var(--accent-rose);
+    filter: drop-shadow(0 0 4px rgba(232, 196, 196, 0.4));
+    transition: var(--transition-smooth);
+}
+
+.timeline-item:hover .location-icon {
+    transform: scale(1.1);
+    color: var(--accent-gold);
+}
+
+.location-text {
+    font-style: italic;
+    letter-spacing: 0.3px;
+}
+
+/* Animaciones */
+@keyframes slideInTimeline {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ================================================
+   ESTADOS ESPECIALES
+   ================================================ */
+
+/* Evento actual destacado */
+.timeline-item.current-event .timeline-dot {
+    border-color: var(--accent-gold);
+    background: var(--accent-gold);
+    animation: currentEventPulse 2.5s infinite ease-in-out;
+    box-shadow: 0 0 30px rgba(196, 165, 123, 0.6);
+}
+
+.timeline-item.current-event .dot-inner {
+    background: var(--bg-primary);
+}
+
+.timeline-item.current-event .content-card {
+    border-color: rgba(196, 165, 123, 0.6);
+    box-shadow: 
+        0 10px 40px rgba(196, 165, 123, 0.3),
+        0 0 30px rgba(196, 165, 123, 0.2);
+}
+
+.timeline-item.current-event .event-title {
+    color: var(--accent-gold);
+}
+
+@keyframes currentEventPulse {
+    0%, 100% {
+        box-shadow: 0 0 20px rgba(196, 165, 123, 0.4);
+        transform: scale(1);
+    }
+    50% {
+        box-shadow: 0 0 35px rgba(196, 165, 123, 0.7);
+        transform: scale(1.15);
+    }
+}
+
+/* Estados de carga */
+.loading .timeline-item {
+    opacity: 0;
+    transform: translateY(40px);
+}
+
+.loaded .timeline-item {
+    opacity: 1;
+    transform: translateY(0);
+    transition: var(--transition-smooth);
+}
+
+/* ================================================
+   RESPONSIVE DESIGN OPTIMIZADO
+   ================================================ */
+
+/* Tablet grande */
+@media (max-width: 1024px) {
+    .cronograma {
+        padding: 100px 0;
+    }
+    
+    .cronograma-content {
+        max-width: 800px;
+    }
+    
+    .timeline-item {
+        gap: 2rem;
+        margin-bottom: 3.5rem;
+    }
+    
+    .content-card {
+        padding: 1.75rem;
+    }
+}
+
+/* Tablet y móvil */
+@media (max-width: 768px) {
+    .cronograma {
+        padding: 80px 0;
+    }
+    
+    .cronograma-header {
+        margin-bottom: 3rem;
+    }
+    
+    .cronograma-header .decorative-line {
+        width: 100px;
+    }
+    
+    .timeline-container {
+        padding: 2rem 0;
+    }
+    
+    /* Línea del timeline a la izquierda */
+    .timeline-line {
+        left: 35px;
+        transform: none;
+    }
+    
+    /* Layout móvil: todo vertical y del mismo lado */
+    .timeline-item {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        margin-bottom: 3rem;
+        margin-left: 70px;
+        position: relative;
+        width: calc(100% - 70px);
+    }
+    
+    /* REINICIAR configuración de grid para móvil */
+    .timeline-item:nth-child(odd),
+    .timeline-item:nth-child(even) {
+        display: flex;
+        flex-direction: column;
+        margin-left: 70px;
+        width: calc(100% - 70px);
+    }
+    
+    /* Punto del timeline - posición absoluta en móvil */
+    .timeline-dot {
+        position: absolute;
+        left: -35px;
+        top: 1rem;
+        width: 16px;
+        height: 16px;
+        border-width: 2px;
+        grid-row: unset;
+        margin-top: 0;
+    }
+    
+    .dot-inner {
+        width: 4px;
+        height: 4px;
+    }
+    
+    /* Tiempo - siempre arriba en móvil */
+    .timeline-time {
+        order: 1;
+        text-align: left;
+        padding: 0 !important;
+        margin-bottom: 1rem;
+        width: 100%;
+        grid-column: unset;
+    }
+    
+    .timeline-item:nth-child(odd) .timeline-time,
+    .timeline-item:nth-child(even) .timeline-time {
+        order: 1;
+        text-align: left;
+        padding: 0;
+        width: 100%;
+    }
+    
+    /* Contenido - siempre abajo en móvil */
+    .timeline-content {
+        order: 2;
+        padding: 0 !important;
+        width: 100%;
+        grid-column: unset;
+        grid-row: unset;
+    }
+    
+    .timeline-item:nth-child(odd) .timeline-content,
+    .timeline-item:nth-child(even) .timeline-content {
+        order: 2;
+        padding: 0;
+        width: 100%;
+    }
+    
+    /* Time card sin flecha en móvil */
+    .time-card {
+        padding: 0.625rem 1.25rem;
+        min-width: 90px;
+        font-size: 0.9rem;
+        display: inline-block;
+        width: auto;
+    }
+    
+    .time-card::before {
+        display: none !important;
+    }
+    
+    .timeline-item:nth-child(odd) .time-card::before,
+    .timeline-item:nth-child(even) .time-card::before {
+        display: none;
+    }
+    
+    .time-text {
+        font-size: 0.9rem;
+    }
+    
+    /* Content card ajustado */
+    .content-card {
+        padding: 1.5rem;
+        min-height: 200px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+    .event-title {
+        font-size: 1.25rem;
+        margin-bottom: 0.75rem;
+        flex-shrink: 0;
+        width: 100%;
+    }
+    
+    .event-description {
+        font-size: 0.95rem;
+        margin-bottom: 1rem;
+        flex: 1;
+        width: 100%;
+    }
+    
+    .event-location {
+        font-size: 0.9rem;
+        flex-shrink: 0;
+        margin-top: auto;
+        width: 100%;
+    }
+    
+    /* Ocultar elementos decorativos */
+    .cronograma .floating-circle:nth-child(3),
+    .cronograma .geometric-shape:nth-child(5) {
+        display: none;
+    }
+}
+
+/* Móvil */
+@media (max-width: 480px) {
+    .cronograma {
+        padding: 60px 0;
+    }
+    
+    .cronograma-content {
+        padding: 0 0.5rem;
+    }
+    
+    .cronograma-header .decorative-line {
+        width: 80px;
+    }
+    
+    .cronograma-header .decorative-line::before,
+    .cronograma-header .decorative-line::after {
+        width: 6px;
+        height: 6px;
+    }
+    
+    .cronograma-header .decorative-line::before {
+        left: -10px;
+    }
+    
+    .cronograma-header .decorative-line::after {
+        right: -10px;
+    }
+    
+    .timeline-line {
+        left: 22px;
+    }
+    
+    .timeline-item,
+    .timeline-item:nth-child(odd),
+    .timeline-item:nth-child(even) {
+        margin-left: 50px;
+        margin-bottom: 2.5rem;
+        width: calc(100% - 50px);
+    }
+    
+    .timeline-dot {
+        left: -28px;
+        top: 0.75rem;
+        width: 14px;
+        height: 14px;
+    }
+    
+    .dot-inner {
+        width: 3px;
+        height: 3px;
+    }
+    
+    .time-card {
+        padding: 0.5rem 1rem;
+        min-width: 80px;
+    }
+    
+    .time-text {
+        font-size: 0.85rem;
+    }
+    
+    .content-card {
+        padding: 1.25rem;
+        min-height: 180px;
+    }
+    
+    .event-title {
+        font-size: 1.125rem;
+        line-height: 1.4;
+    }
+    
+    .event-description {
+        font-size: 0.9rem;
+    }
+    
+    .event-location {
+        font-size: 0.85rem;
+    }
+    
+    .location-icon {
+        font-size: 0.85rem;
+    }
+    
+    /* Ocultar todos los elementos decorativos */
+    .cronograma .floating-circle,
+    .cronograma .geometric-shape {
+        display: none;
+    }
+}
+
+/* Móvil muy pequeño */
+@media (max-width: 320px) {
+    .timeline-item,
+    .timeline-item:nth-child(odd),
+    .timeline-item:nth-child(even) {
+        margin-left: 40px;
+        width: calc(100% - 40px);
+    }
+    
+    .timeline-line {
+        left: 18px;
+        width: 2px;
+    }
+    
+    .timeline-dot {
+        left: -22px;
+        width: 12px;
+        height: 12px;
+        border-width: 2px;
+    }
+    
+    .dot-inner {
+        width: 2px;
+        height: 2px;
+    }
+    
+    .time-card {
+        padding: 0.4rem 0.8rem;
+        min-width: 70px;
+    }
+    
+    .time-text {
+        font-size: 0.8rem;
+    }
+    
+    .content-card {
+        padding: 1rem;
+        min-height: 160px;
+    }
+    
+    .event-title {
+        font-size: 1rem;
+    }
+    
+    .event-description {
+        font-size: 0.85rem;
+    }
+    
+    .cronograma-header .decorative-line {
+        width: 70px;
+    }
+}
+
+/* ================================================
+   ACCESIBILIDAD Y PREFERENCIAS
+   ================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+    .cronograma::before,
+    .cronograma .floating-circle,
+    .cronograma .geometric-shape,
+    .timeline-item,
+    .timeline-dot,
+    .time-card,
+    .content-card,
+    .event-title,
+    .timeline-item.current-event .timeline-dot {
+        animation: none;
+        transition: none;
+    }
+    
+    .timeline-item:hover .timeline-dot,
+    .timeline-item:hover .content-card,
+    .time-card:hover {
+        transform: none;
+    }
+}
+
+/* Pantallas extra grandes */
+@media (min-width: 1200px) {
+    .cronograma-content {
+        max-width: 1000px;
+    }
+    
+    .timeline-item {
+        gap: 3.5rem;
+        margin-bottom: 4.5rem;
+    }
+    
+    .content-card {
+        padding: 2.25rem;
+    }
+    
+    .event-title {
+        font-size: 1.65rem;
+    }
+}
+
+/* ================================================
+   FIN DE ESTILOS DEL CRONOGRAMA
+   ================================================ */

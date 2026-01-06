@@ -1,0 +1,691 @@
+/* Sección Historia - Romance Clásico ACTUALIZADO */
+.historia {
+    background: var(--bg-primary);
+    position: relative;
+    overflow: hidden;
+    padding: 120px 0;
+}
+
+/* Efecto de pétalos románticos de fondo - COLORES ACTUALIZADOS */
+.historia::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 15% 25%, rgba(232, 196, 196, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 85% 75%, rgba(196, 165, 123, 0.06) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.historia-content {
+    position: relative;
+    z-index: 2;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* Header con ornamento romántico */
+.historia-header {
+    text-align: center;
+    margin-bottom: 5rem;
+    position: relative;
+    opacity: 0;
+    animation: fadeInUp 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s both;
+}
+
+.section-ornament {
+    position: relative;
+    height: 40px;
+    margin: 0 auto 2rem;
+    width: 200px;
+}
+
+.section-ornament.top::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent-rose), var(--accent-gold), var(--accent-rose), transparent);
+    box-shadow: 0 0 8px rgba(212, 165, 165, 0.3);
+}
+
+.section-ornament.top::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    background: var(--accent-rose);
+    border: 2px solid var(--bg-primary);
+    border-radius: 50%;
+    box-shadow: 
+        0 0 0 4px rgba(232, 196, 196, 0.25),
+        0 0 15px rgba(212, 165, 165, 0.4);
+}
+
+.historia-header h2 {
+    font-family: var(--font-script);
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    color: var(--accent-rose-dark);
+    font-weight: 400;
+    margin-bottom: 1rem;
+    letter-spacing: 0.02em;
+    text-shadow: 
+        0 2px 4px rgba(255, 255, 255, 0.8),
+        0 2px 12px rgba(212, 165, 165, 0.3),
+        1px 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+.section-subtitle {
+    font-family: var(--font-serif);
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    font-style: italic;
+    font-weight: 400;
+    text-shadow: 
+        0 1px 2px rgba(255, 255, 255, 0.8),
+        0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Timeline principal romántico */
+.historia-main {
+    position: relative;
+}
+
+.historia-timeline {
+    position: relative;
+    max-width: 800px;
+    margin: 0 auto 4rem;
+}
+
+.timeline-decoration {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(
+        to bottom,
+        transparent 0%,
+        var(--accent-rose) 10%,
+        var(--accent-gold) 50%,
+        var(--accent-rose) 90%,
+        transparent 100%
+    );
+    transform: translateX(-50%);
+    z-index: 1;
+    box-shadow: 0 0 10px rgba(212, 165, 165, 0.25);
+}
+
+/* Efecto de flujo romántico en la línea */
+.timeline-decoration::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 4px;
+    height: 20%;
+    background: linear-gradient(
+        to bottom,
+        var(--accent-rose-light),
+        transparent
+    );
+    transform: translateX(-50%);
+    animation: flowDown 3s ease-in-out infinite;
+    border-radius: 2px;
+    opacity: 0.6;
+}
+
+@keyframes flowDown {
+    0% {
+        top: 0;
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.6;
+    }
+    90% {
+        opacity: 0.6;
+    }
+    100% {
+        top: 80%;
+        opacity: 0;
+    }
+}
+
+.historia-text {
+    position: relative;
+    z-index: 2;
+}
+
+/* Items de la historia con alternancia */
+.historia-item {
+    position: relative;
+    margin-bottom: 3rem;
+    opacity: 0;
+    animation: slideInTimeline 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.historia-item:nth-child(odd) {
+    text-align: right;
+    padding-right: 60px;
+}
+
+.historia-item:nth-child(even) {
+    text-align: left;
+    padding-left: 60px;
+}
+
+/* Puntos de conexión románticos - COLORES ACTUALIZADOS */
+.timeline-dot {
+    position: absolute;
+    top: 1rem;
+    width: 14px;
+    height: 14px;
+    background: linear-gradient(135deg, var(--accent-rose), var(--accent-rose-light));
+    border: 3px solid var(--bg-primary);
+    border-radius: 50%;
+    z-index: 3;
+    box-shadow: 
+        0 0 0 4px rgba(232, 196, 196, 0.25),
+        0 0 15px rgba(212, 165, 165, 0.4);
+    transition: var(--transition-smooth);
+}
+
+.historia-item:nth-child(odd) .timeline-dot {
+    right: 53px;
+}
+
+.historia-item:nth-child(even) .timeline-dot {
+    left: 53px;
+}
+
+.historia-item:hover .timeline-dot {
+    transform: scale(1.3);
+    box-shadow: 
+        0 0 0 6px rgba(232, 196, 196, 0.35),
+        0 0 20px rgba(212, 165, 165, 0.6),
+        0 0 30px rgba(212, 165, 165, 0.4);
+    animation: bubblePulse 1.5s ease-in-out infinite;
+}
+
+@keyframes bubblePulse {
+    0%, 100% {
+        box-shadow: 
+            0 0 0 6px rgba(232, 196, 196, 0.35),
+            0 0 20px rgba(212, 165, 165, 0.6);
+    }
+    50% {
+        box-shadow: 
+            0 0 0 8px rgba(232, 196, 196, 0.25),
+            0 0 25px rgba(212, 165, 165, 0.7);
+    }
+}
+
+/* Párrafos románticos - COLORES ACTUALIZADOS */
+.historia-paragraph {
+    font-family: var(--font-sans);
+    font-size: 1.125rem;
+    line-height: 1.8;
+    color: var(--text-secondary);
+    font-weight: 400;
+    margin: 0;
+    padding: 1.5rem 2rem;
+    background: rgba(245, 236, 232, 0.6);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(232, 196, 196, 0.3);
+    border-radius: 12px;
+    position: relative;
+    transition: var(--transition-smooth);
+    box-shadow: 
+        0 4px 15px rgba(212, 165, 165, 0.2),
+        inset 0 1px 3px rgba(255, 255, 255, 0.5);
+    text-shadow: 
+        0 1px 2px rgba(255, 255, 255, 0.8),
+        0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.historia-paragraph::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at top left, rgba(232, 196, 196, 0.1), transparent 60%);
+    border-radius: 12px;
+    opacity: 0;
+    transition: var(--transition-smooth);
+}
+
+.historia-paragraph:hover {
+    transform: translateY(-4px);
+    box-shadow: 
+        0 8px 25px rgba(212, 165, 165, 0.3),
+        0 0 20px rgba(232, 196, 196, 0.2),
+        inset 0 1px 5px rgba(255, 255, 255, 0.6);
+    border-color: rgba(232, 196, 196, 0.5);
+}
+
+.historia-paragraph:hover::before {
+    opacity: 1;
+}
+
+/* Flechas de conexión románticas - COLORES ACTUALIZADOS */
+.historia-item:nth-child(odd) .historia-paragraph::after {
+    content: '';
+    position: absolute;
+    right: -10px;
+    top: 1.5rem;
+    width: 0;
+    height: 0;
+    border-left: 10px solid rgba(245, 236, 232, 0.6);
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    filter: drop-shadow(2px 0 3px rgba(212, 165, 165, 0.2));
+}
+
+.historia-item:nth-child(even) .historia-paragraph::after {
+    content: '';
+    position: absolute;
+    left: -10px;
+    top: 1.5rem;
+    width: 0;
+    height: 0;
+    border-right: 10px solid rgba(245, 236, 232, 0.6);
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    filter: drop-shadow(-2px 0 3px rgba(212, 165, 165, 0.2));
+}
+
+/* Highlight romántico */
+.historia-highlight {
+    display: flex;
+    justify-content: center;
+    margin-top: 5rem;
+    opacity: 0;
+    animation: fadeInScale 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 1s both;
+}
+
+.highlight-card {
+    position: relative;
+    background: linear-gradient(135deg, rgba(245, 236, 232, 0.8) 0%, rgba(212, 165, 165, 0.6) 100%);
+    backdrop-filter: blur(15px);
+    padding: 3rem 2.5rem 2.5rem;
+    border: 1px solid rgba(232, 196, 196, 0.3);
+    border-radius: 16px;
+    max-width: 550px;
+    width: 100%;
+    text-align: center;
+    transition: var(--transition-smooth);
+    overflow: visible;
+    box-shadow: 
+        0 10px 40px rgba(212, 165, 165, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.highlight-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, 
+        transparent,
+        var(--accent-rose), 
+        var(--accent-gold),
+        var(--accent-rose),
+        transparent
+    );
+    border-radius: 16px 16px 0 0;
+    box-shadow: 0 0 15px rgba(212, 165, 165, 0.5);
+}
+
+.highlight-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 
+        0 20px 60px rgba(212, 165, 165, 0.4),
+        0 0 30px rgba(232, 196, 196, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    border-color: rgba(232, 196, 196, 0.5);
+}
+
+/* Ornamento superior romántico */
+.quote-ornament {
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 40px;
+    background: var(--bg-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+    border: 1px solid rgba(232, 196, 196, 0.3);
+    box-shadow: 
+        0 4px 15px rgba(212, 165, 165, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.quote-ornament::before {
+    content: '';
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(90deg, 
+        transparent,
+        var(--accent-rose),
+        var(--accent-gold),
+        var(--accent-rose),
+        transparent
+    );
+    border-radius: 2px;
+}
+
+/* Estructura de la cita */
+.historia-quote {
+    margin: 0;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.quote-marks-container {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    width: 100%;
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+.quote-mark {
+    font-family: var(--font-serif);
+    font-size: 3rem;
+    color: var(--accent-rose);
+    line-height: 1;
+    opacity: 0.5;
+    user-select: none;
+    text-shadow: 0 2px 8px rgba(212, 165, 165, 0.3);
+}
+
+.quote-mark.opening {
+    align-self: flex-start;
+    margin-right: auto;
+    margin-left: 1rem;
+    transform: translateY(-0.5rem);
+}
+
+.quote-mark.closing {
+    align-self: flex-end;
+    margin-left: auto;
+    margin-right: 1rem;
+    transform: rotate(180deg) translateY(0.5rem);
+}
+
+.quote-text {
+    font-family: var(--font-script);
+    font-size: 1.5rem;
+    color: var(--accent-rose-dark) !important;
+    font-weight: 400;
+    line-height: 1.5;
+    margin: 0 2.5rem;
+    position: relative;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    min-height: 3rem;
+    text-shadow: 
+        0 1px 3px rgba(255, 255, 255, 0.8),
+        0 2px 8px rgba(212, 165, 165, 0.3),
+        1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Decoración de corazones */
+.hearts-decoration {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    height: 2rem;
+}
+
+.heart {
+    font-size: 1rem;
+    color: var(--accent-rose);
+    opacity: 0.7;
+    animation: shimmerHeart 2s infinite ease-in-out;
+    display: inline-block;
+    filter: drop-shadow(0 0 8px rgba(212, 165, 165, 0.4));
+}
+
+.heart:nth-child(1) { animation-delay: 0s; }
+.heart:nth-child(2) { 
+    animation-delay: 0.3s;
+    font-size: 1.2rem;
+    color: var(--accent-gold);
+}
+.heart:nth-child(3) { animation-delay: 0.6s; }
+
+@keyframes shimmerHeart {
+    0%, 70%, 100% {
+        opacity: 0.7;
+        transform: scale(1);
+        filter: drop-shadow(0 0 8px rgba(212, 165, 165, 0.4));
+    }
+    35% {
+        opacity: 1;
+        transform: scale(1.2);
+        filter: drop-shadow(0 0 15px rgba(212, 165, 165, 0.7));
+    }
+}
+
+/* Animaciones */
+@keyframes slideInTimeline {
+    from {
+        opacity: 0;
+        transform: translateX(-40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.9) translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .historia {
+        padding: 80px 0;
+    }
+
+    .historia-timeline {
+        max-width: 100%;
+    }
+    
+    .timeline-decoration {
+        display: none;
+    }
+    
+    .historia-item:nth-child(odd),
+    .historia-item:nth-child(even) {
+        text-align: center;
+        padding-left: 0;
+        padding-right: 0;
+        margin-bottom: 2rem;
+    }
+    
+    .historia-item:nth-child(odd) .timeline-dot,
+    .historia-item:nth-child(even) .timeline-dot {
+        display: none;
+    }
+    
+    .historia-item:nth-child(odd) .historia-paragraph::after,
+    .historia-item:nth-child(even) .historia-paragraph::after {
+        display: none;
+    }
+    
+    .historia-paragraph {
+        font-size: 1rem;
+        padding: 1.5rem;
+        text-align: center;
+        margin: 0 auto;
+        max-width: 100%;
+        border-radius: 12px;
+    }
+    
+    .historia-highlight {
+        margin-top: 3rem;
+        padding: 0 1rem;
+    }
+    
+    .highlight-card {
+        padding: 2.5rem 1.5rem 2rem;
+        max-width: 100%;
+    }
+    
+    .quote-ornament {
+        width: 80px;
+        height: 35px;
+        top: -18px;
+    }
+    
+    .quote-mark {
+        font-size: 2.5rem;
+    }
+    
+    .quote-mark.opening {
+        margin-left: 0.5rem;
+    }
+    
+    .quote-mark.closing {
+        margin-right: 0.5rem;
+    }
+    
+    .quote-text {
+        font-size: 1.3rem;
+        margin: 0 1.5rem;
+    }
+    
+    .hearts-decoration {
+        gap: 1.2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .historia {
+        padding: 60px 0;
+    }
+
+    .historia-header {
+        margin-bottom: 3rem;
+    }
+    
+    .section-ornament {
+        width: 150px;
+    }
+    
+    .historia-item {
+        margin-bottom: 1.5rem;
+    }
+    
+    .historia-paragraph {
+        font-size: 0.95rem;
+        padding: 1.25rem;
+        line-height: 1.7;
+    }
+    
+    .highlight-card {
+        padding: 2rem 1.25rem 1.5rem;
+        border-radius: 12px;
+    }
+    
+    .quote-ornament {
+        width: 70px;
+        height: 30px;
+        top: -15px;
+    }
+    
+    .quote-marks-container {
+        margin-bottom: 0.8rem;
+    }
+    
+    .quote-mark {
+        font-size: 2rem;
+    }
+    
+    .quote-mark.opening {
+        margin-left: 0.25rem;
+        transform: translateY(-0.3rem);
+    }
+    
+    .quote-mark.closing {
+        margin-right: 0.25rem;
+        transform: rotate(180deg) translateY(0.3rem);
+    }
+    
+    .quote-text {
+        font-size: 1.1rem;
+        margin: 0 1rem;
+        min-height: 2.5rem;
+        line-height: 1.4;
+    }
+    
+    .hearts-decoration {
+        margin-top: 1rem;
+        gap: 1rem;
+    }
+    
+    .heart {
+        font-size: 0.9rem;
+    }
+    
+    .heart:nth-child(2) {
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 360px) {
+    .historia-paragraph {
+        font-size: 0.9rem;
+        padding: 1rem;
+        line-height: 1.6;
+    }
+    
+    .highlight-card {
+        padding: 1.75rem 1rem 1.25rem;
+    }
+    
+    .quote-text {
+        font-size: 1rem;
+        margin: 0 0.75rem;
+    }
+    
+    .quote-mark {
+        font-size: 1.75rem;
+    }
+}

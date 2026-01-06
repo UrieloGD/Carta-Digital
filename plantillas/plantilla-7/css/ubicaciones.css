@@ -1,0 +1,1132 @@
+/* ================================================
+   SECCIÓN UBICACIONES - ROMANCE CLÁSICO ACTUALIZADO
+   ================================================ */
+
+.ubicaciones {
+    padding: 120px 0;
+    background: var(--bg-primary);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Fondo dinámico romántico con círculos flotantes */
+.ubicaciones::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(
+        circle at center,
+        rgba(232, 196, 196, 0.06) 0%,
+        rgba(196, 165, 123, 0.03) 50%,
+        transparent 70%
+    );
+    animation: waveRotate 35s linear infinite;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Efecto de profundidad romántica */
+.ubicaciones::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(ellipse at 20% 30%, rgba(232, 196, 196, 0.05) 0%, transparent 40%),
+        radial-gradient(ellipse at 80% 70%, rgba(212, 165, 165, 0.04) 0%, transparent 40%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Círculos flotantes decorativos */
+.ubicaciones .floating-circle {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, 
+        rgba(232, 196, 196, 0.08), 
+        rgba(196, 165, 123, 0.04));
+    pointer-events: none;
+    z-index: 1;
+    animation: floatCircle 25s ease-in-out infinite;
+    border: 1px solid rgba(232, 196, 196, 0.08);
+}
+
+.ubicaciones .floating-circle:nth-child(1) {
+    width: 220px;
+    height: 220px;
+    top: 15%;
+    left: -110px;
+    animation-duration: 28s;
+}
+
+.ubicaciones .floating-circle:nth-child(2) {
+    width: 160px;
+    height: 160px;
+    bottom: 25%;
+    right: -80px;
+    animation-duration: 32s;
+    animation-delay: 8s;
+}
+
+.ubicaciones .floating-circle:nth-child(3) {
+    width: 180px;
+    height: 180px;
+    top: 60%;
+    left: 10%;
+    animation-duration: 30s;
+    animation-delay: 15s;
+}
+
+/* Figuras geométricas decorativas */
+.ubicaciones .geometric-shape {
+    position: absolute;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.06;
+    animation: rotateShape 45s linear infinite;
+}
+
+.ubicaciones .geometric-shape:nth-child(4) {
+    width: 100px;
+    height: 100px;
+    top: 25%;
+    right: 12%;
+    background: linear-gradient(135deg, 
+        rgba(232, 196, 196, 0.15), 
+        transparent);
+    transform: rotate(45deg);
+}
+
+.ubicaciones .geometric-shape:nth-child(5) {
+    width: 90px;
+    height: 90px;
+    bottom: 35%;
+    left: 15%;
+    background: linear-gradient(135deg, 
+        rgba(212, 165, 165, 0.12), 
+        transparent);
+    clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+    animation-duration: 50s;
+}
+
+@keyframes floatCircle {
+    0%, 100% {
+        transform: translate(0, 0) scale(1);
+        opacity: 0.3;
+    }
+    25% {
+        transform: translate(30px, -30px) scale(1.1);
+        opacity: 0.5;
+    }
+    50% {
+        transform: translate(-20px, -50px) scale(0.95);
+        opacity: 0.4;
+    }
+    75% {
+        transform: translate(40px, -20px) scale(1.05);
+        opacity: 0.45;
+    }
+}
+
+@keyframes rotateShape {
+    0% {
+        transform: rotate(0deg) scale(1);
+        opacity: 0.06;
+    }
+    50% {
+        transform: rotate(180deg) scale(1.2);
+        opacity: 0.1;
+    }
+    100% {
+        transform: rotate(360deg) scale(1);
+        opacity: 0.06;
+    }
+}
+
+@keyframes waveRotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.ubicaciones-content {
+    position: relative;
+    z-index: 2;
+}
+
+/* Header elegante */
+.ubicaciones-header {
+    text-align: center;
+    margin-bottom: 80px;
+    opacity: 0;
+    animation: fadeInUp 1s ease 0.2s forwards;
+}
+
+.ubicaciones-header .section-title {
+    margin-bottom: 16px;
+    position: relative;
+    font-family: var(--font-script);
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    color: var(--accent-rose-dark);
+    font-weight: 400;
+    text-shadow: 
+        0 2px 4px rgba(255, 255, 255, 0.8),
+        0 2px 8px rgba(232, 196, 196, 0.4),
+        1px 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+/* Línea decorativa romántica perfectamente centrada */
+.ubicaciones-header .decorative-line {
+    width: 120px;
+    height: 2px;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        var(--accent-rose) 20%, 
+        var(--accent-rose-light) 50%, 
+        var(--accent-rose) 80%, 
+        transparent 100%);
+    margin: 24px auto;
+    position: relative;
+    border-radius: 1px;
+    display: block;
+    box-shadow: 0 0 15px rgba(232, 196, 196, 0.3);
+}
+
+.ubicaciones-header .decorative-line::before,
+.ubicaciones-header .decorative-line::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 8px;
+    background: var(--accent-rose);
+    border-radius: 50%;
+    box-shadow: 0 0 12px rgba(232, 196, 196, 0.5);
+}
+
+.ubicaciones-header .decorative-line::before {
+    left: -12px;
+}
+
+.ubicaciones-header .decorative-line::after {
+    right: -12px;
+}
+
+/* Punto central decorativo */
+.ubicaciones-header .decorative-line .line-accent {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 10px;
+    height: 10px;
+    background: var(--accent-rose-light);
+    border-radius: 50%;
+    box-shadow: 0 0 15px rgba(212, 165, 165, 0.6);
+}
+
+.ubicaciones-subtitle,
+.section-subtitle {
+    font-family: var(--font-elegant);
+    font-size: 1.125rem;
+    font-weight: 400;
+    color: var(--text-secondary);
+    font-style: italic;
+    letter-spacing: 0.5px;
+    max-width: 500px;
+    margin: 0 auto;
+    line-height: 1.6;
+    text-shadow: 
+        0 1px 2px rgba(255, 255, 255, 0.8),
+        0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Grid responsivo mejorado */
+.ubicaciones-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+    gap: 50px;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+/* Cards con diseño elegante romántico */
+.ubicacion-card {
+    opacity: 0;
+    transform: translateY(40px);
+    animation: fadeInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.ubicacion-card:nth-child(1) { animation-delay: 0.3s; }
+.ubicacion-card:nth-child(2) { animation-delay: 0.5s; }
+.ubicacion-card:nth-child(3) { animation-delay: 0.7s; }
+.ubicacion-card:nth-child(4) { animation-delay: 0.9s; }
+
+.ubicacion-card-inner {
+    background: linear-gradient(135deg, 
+        rgba(250, 247, 245, 0.95) 0%, 
+        rgba(245, 236, 232, 0.9) 100%) !important;
+    border-radius: 12px;
+    border: 1px solid rgba(232, 196, 196, 0.3) !important;
+    overflow: hidden;
+    transition: var(--transition-smooth);
+    position: relative;
+    box-shadow: 
+        0 10px 40px rgba(232, 196, 196, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(15px);
+}
+
+/* Efecto de brillo romántico en hover */
+.ubicacion-card-inner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, 
+        rgba(232, 196, 196, 0.12) 0%, 
+        transparent 70%);
+    opacity: 0;
+    transition: var(--transition-smooth);
+    z-index: 1;
+    pointer-events: none;
+}
+
+.ubicacion-card-inner:hover {
+    transform: translateY(-10px);
+    border-color: rgba(232, 196, 196, 0.5) !important;
+    box-shadow: 
+        0 20px 60px rgba(232, 196, 196, 0.4),
+        0 0 0 1px rgba(232, 196, 196, 0.3),
+        0 0 40px rgba(232, 196, 196, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.ubicacion-card-inner:hover::before {
+    opacity: 1;
+}
+
+/* ================================================
+   VERSIÓN CON IMÁGENES - MANTIENE PROPORCIONES
+   ================================================ */
+
+/* Contenedor de imagen optimizado */
+.ubicacion-image {
+    position: relative;
+    height: 220px;
+    overflow: hidden;
+    background: rgba(245, 236, 232, 0.5);
+}
+
+.ubicacion-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: var(--transition-smooth);
+    filter: brightness(0.9) contrast(1.1) saturate(1.1);
+}
+
+/* Overlay romántico sobre la imagen */
+.ubicacion-image::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(180deg, 
+        transparent 0%, 
+        rgba(245, 236, 232, 0.3) 100%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.ubicacion-card-inner:hover .ubicacion-image img {
+    transform: scale(1.1);
+    filter: brightness(1) contrast(1.1) saturate(1.2);
+}
+
+/* Badge mejorado con estilo romántico */
+.ubicacion-badge {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, 
+        var(--accent-rose) 0%, 
+        var(--accent-rose-light) 100%) !important;
+    color: #ffffff !important;
+    padding: 10px 18px;
+    border-radius: 25px;
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    z-index: 3;
+    box-shadow: 
+        0 4px 15px rgba(232, 196, 196, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
+    transition: var(--transition-smooth);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ubicacion-card-inner:hover .ubicacion-badge {
+    transform: translateY(-2px);
+    box-shadow: 
+        0 6px 20px rgba(232, 196, 196, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.badge-icon {
+    font-size: 1rem;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+}
+
+.badge-text {
+    font-weight: 600;
+}
+
+/* Overlay de la imagen con icono */
+.ubicacion-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg,
+        rgba(232, 196, 196, 0.3) 0%,
+        rgba(212, 165, 165, 0.2) 100%);
+    opacity: 0;
+    transition: var(--transition-smooth);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+}
+
+.ubicacion-card-inner:hover .ubicacion-overlay {
+    opacity: 1;
+}
+
+.ubicacion-icon {
+    font-size: 3rem;
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.3));
+    transform: scale(0.8);
+    transition: var(--transition-smooth);
+}
+
+.ubicacion-card-inner:hover .ubicacion-icon {
+    transform: scale(1);
+}
+
+/* ================================================
+   CONTENIDO ELEGANTE
+   ================================================ */
+
+.ubicacion-content {
+    padding: 45px 35px;
+    position: relative;
+    z-index: 2;
+}
+
+/* Ajuste específico para cards con imágenes */
+.ubicacion-card:has(.ubicacion-image) .ubicacion-content {
+    padding: 35px 30px 40px;
+}
+
+.ubicacion-header-content {
+    margin-bottom: 30px;
+}
+
+.ubicacion-nombre {
+    font-family: var(--font-elegant);
+    font-size: 2rem;
+    font-weight: 400;
+    color: var(--accent-rose-dark) !important;
+    margin-bottom: 0;
+    margin-top: 2rem;
+    letter-spacing: 1px;
+    line-height: 1.3;
+    text-shadow: 
+        0 2px 4px rgba(255, 255, 255, 0.8),
+        0 2px 8px rgba(232, 196, 196, 0.3),
+        1px 1px 2px rgba(0, 0, 0, 0.1);
+    transition: var(--transition-smooth);
+}
+
+.ubicacion-card-inner:hover .ubicacion-nombre {
+    color: var(--accent-gold) !important;
+    transform: translateX(3px);
+}
+
+/* Ajuste para nombre cuando hay imagen */
+.ubicacion-card:has(.ubicacion-image) .ubicacion-nombre {
+    margin-bottom: 0;
+    font-size: 1.8rem;
+}
+
+/* Detalles con iconos SVG - CÍRCULOS ROSA */
+.ubicacion-details {
+    margin-bottom: 30px;
+}
+
+.detail-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 18px;
+    margin-bottom: 24px;
+    padding: 18px 0;
+    border-bottom: 1px solid rgba(232, 196, 196, 0.2);
+    transition: var(--transition-smooth);
+}
+
+.detail-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.detail-item:hover {
+    padding-left: 8px;
+    border-bottom-color: rgba(232, 196, 196, 0.4);
+}
+
+/* CÍRCULOS DE ICONOS - ROSA */
+.detail-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: linear-gradient(135deg, 
+        rgba(232, 196, 196, 0.9) 0%, 
+        rgba(212, 165, 165, 0.5) 100%) !important;
+    border-radius: 50% !important;
+    border: 2px solid rgba(232, 196, 196, 0.25) !important;
+    color: var(--accent-rose) !important;
+    margin-top: 3px;
+    transition: var(--transition-smooth);
+    box-shadow: 
+        0 2px 8px rgba(232, 196, 196, 0.15),
+        inset 0 1px 2px rgba(255, 255, 255, 0.4);
+}
+
+.detail-item:hover .detail-icon {
+    background: linear-gradient(135deg, 
+        rgba(232, 196, 196, 0.9) 0%, 
+        rgba(212, 165, 165, 0.8) 100%) !important;
+    border-color: rgba(232, 196, 196, 0.4) !important;
+    transform: scale(1.15) rotate(5deg);
+    color: var(--accent-rose-light) !important;
+    box-shadow: 
+        0 4px 12px rgba(232, 196, 196, 0.25),
+        inset 0 1px 3px rgba(255, 255, 255, 0.5);
+}
+
+.detail-icon svg {
+    width: 20px;
+    height: 20px;
+    stroke: currentColor !important;
+    stroke-width: 2;
+    fill: none;
+    transition: var(--transition-smooth);
+    color: white;
+}
+
+.detail-item:hover .detail-icon svg {
+    transform: scale(1.05);
+}
+
+.detail-content {
+    flex: 1;
+}
+
+.detail-label {
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--accent-rose) !important;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    display: block;
+    margin-bottom: 8px;
+    transition: var(--transition-smooth);
+    text-shadow: 
+        0 1px 2px rgba(255, 255, 255, 0.8),
+        0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.detail-item:hover .detail-label {
+    color: var(--accent-rose-light) !important;
+    letter-spacing: 1.5px;
+}
+
+.detail-text {
+    font-family: var(--font-sans);
+    font-size: 1.05rem;
+    font-weight: 400;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin: 0;
+    text-shadow: 
+        0 1px 2px rgba(255, 255, 255, 0.8),
+        0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+/* Descripción elegante con estilo romántico */
+.ubicacion-descripcion {
+    margin-bottom: 35px;
+    padding: 20px;
+    background: rgba(232, 196, 196, 0.1);
+    border-radius: 8px;
+    border-left: 3px solid var(--accent-rose);
+    position: relative;
+    overflow: hidden;
+}
+
+.ubicacion-descripcion::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 0;
+    background: linear-gradient(to bottom, 
+        var(--accent-rose-light), 
+        var(--accent-rose));
+    transition: var(--transition-smooth);
+    box-shadow: 0 0 10px rgba(232, 196, 196, 0.5);
+}
+
+.ubicacion-card-inner:hover .ubicacion-descripcion::before {
+    height: 100%;
+}
+
+.ubicacion-descripcion p {
+    font-family: var(--font-elegant);
+    font-size: 1.05rem;
+    font-weight: 400;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin: 0;
+    font-style: italic;
+    text-shadow: 
+        0 1px 2px rgba(255, 255, 255, 0.8),
+        0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+/* Ajuste para descripción cuando hay imagen */
+.ubicacion-card:has(.ubicacion-image) .ubicacion-descripcion {
+    margin-bottom: 25px;
+    padding: 15px;
+}
+
+/* Botones mejorados con estilo romántico */
+.ubicacion-actions {
+    margin-top: 35px;
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.ubicacion-button,
+.btn,
+a.ubicacion-button,
+a.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 28px;
+    background: var(--accent-rose);
+    border: 2px solid var(--accent-rose) !important;
+    color: var(--bg-primary) !important;
+    text-decoration: none;
+    border-radius: 8px;
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: var(--transition-smooth);
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.ubicacion-button::before,
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, 
+        var(--accent-rose) 0%, 
+        var(--accent-rose-light) 100%) !important;
+    transition: var(--transition-smooth);
+    z-index: -1;
+}
+
+.ubicacion-button:hover,
+.btn:hover,
+a.ubicacion-button:hover,
+a.btn:hover {
+    color: #ffffff !important;
+    transform: translateY(-3px);
+    border-color: var(--accent-rose-light) !important;
+    box-shadow: 
+        0 8px 25px rgba(232, 196, 196, 0.8),
+        0 0 20px rgba(232, 196, 196, 0.9);
+}
+
+.ubicacion-button:hover::before,
+.btn:hover::before {
+    left: 0;
+}
+
+.button-icon {
+    transition: var(--transition-smooth);
+    filter: drop-shadow(0 0 3px rgba(232, 196, 196, 0.3));
+}
+
+.button-icon svg {
+    stroke: currentColor;
+    width: 18px;
+    height: 18px;
+}
+
+.ubicacion-button:hover .button-icon,
+.btn:hover .button-icon {
+    transform: translateX(3px);
+}
+
+.button-text {
+    font-weight: 600;
+}
+
+/* Ajuste para botones cuando hay imagen */
+.ubicacion-card:has(.ubicacion-image) .ubicacion-actions {
+    margin-top: 25px;
+}
+
+/* ================================================
+   ESTADOS ESPECIALES Y ANIMACIONES
+   ================================================ */
+
+/* Estados para cuando no hay imágenes en ninguna card */
+.ubicaciones:not(:has(.ubicacion-image)) .ubicaciones-grid {
+    max-width: 900px;
+}
+
+/* Estados para cuando todas las cards tienen imágenes */
+.ubicaciones:has(.ubicacion-card:has(.ubicacion-image)) .ubicaciones-grid {
+    gap: 40px;
+}
+
+/* Animaciones mejoradas */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ================================================
+   RESPONSIVE DESIGN OPTIMIZADO
+   ================================================ */
+
+/* Tablet grande */
+@media (max-width: 1024px) {
+    .ubicaciones {
+        padding: 100px 0;
+    }
+    
+    .ubicaciones-grid {
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 40px;
+    }
+    
+    .ubicacion-content {
+        padding: 40px 30px;
+    }
+    
+    .ubicacion-card:has(.ubicacion-image) .ubicacion-content {
+        padding: 30px 25px 35px;
+    }
+    
+    .ubicacion-nombre {
+        font-size: 1.75rem;
+    }
+    
+    .ubicacion-card:has(.ubicacion-image) .ubicacion-nombre {
+        font-size: 1.7rem;
+    }
+    
+    /* Ocultar algunos elementos decorativos */
+    .ubicaciones .floating-circle:nth-child(3),
+    .ubicaciones .geometric-shape:nth-child(5) {
+        display: none;
+    }
+}
+
+/* Tablet */
+@media (max-width: 768px) {
+    .ubicaciones {
+        padding: 80px 0;
+    }
+    
+    .ubicaciones-header {
+        margin-bottom: 60px;
+    }
+    
+    .ubicaciones-header .decorative-line {
+        width: 100px;
+    }
+    
+    .ubicaciones-grid {
+        grid-template-columns: 1fr;
+        gap: 35px;
+        max-width: 500px;
+    }
+    
+    .ubicacion-image {
+        height: 200px;
+    }
+    
+    .ubicacion-content {
+        padding: 35px 25px;
+    }
+    
+    .ubicacion-card:has(.ubicacion-image) .ubicacion-content {
+        padding: 25px 20px 30px;
+    }
+    
+    .ubicacion-nombre {
+        font-size: 1.6rem;
+        margin-bottom: 0;
+    }
+    
+    .ubicacion-card:has(.ubicacion-image) .ubicacion-nombre {
+        font-size: 1.5rem;
+        margin-bottom: 0;
+    }
+    
+    .ubicacion-header-content {
+        margin-bottom: 25px;
+    }
+    
+    .detail-item {
+        padding: 15px 0;
+        margin-bottom: 20px;
+    }
+    
+    .detail-icon {
+        width: 36px;
+        height: 36px;
+        margin-top: 2px;
+    }
+    
+    .detail-icon svg {
+        width: 18px;
+        height: 18px;
+    }
+    
+    .ubicacion-badge {
+        top: 15px;
+        right: 15px;
+        padding: 8px 14px;
+        font-size: 0.8rem;
+    }
+    
+    .ubicacion-button,
+    .btn {
+        padding: 14px 24px;
+        font-size: 0.9rem;
+        width: 100%;
+        justify-content: center;
+    }
+    
+    /* Ocultar más elementos decorativos */
+    .ubicaciones .floating-circle:nth-child(2) {
+        display: none;
+    }
+}
+
+/* Móvil grande */
+@media (max-width: 480px) {
+    .ubicaciones {
+        padding: 60px 0;
+    }
+    
+    .ubicaciones-header {
+        margin-bottom: 50px;
+    }
+    
+    .ubicaciones-header .decorative-line {
+        width: 80px;
+    }
+    
+    .ubicaciones-header .decorative-line::before {
+        left: -10px;
+        width: 6px;
+        height: 6px;
+    }
+    
+    .ubicaciones-header .decorative-line::after {
+        right: -10px;
+        width: 6px;
+        height: 6px;
+    }
+    
+    .ubicaciones-subtitle,
+    .section-subtitle {
+        font-size: 1rem;
+        padding: 0 10px;
+    }
+    
+    .ubicaciones-grid {
+        gap: 30px;
+    }
+    
+    .ubicacion-image {
+        height: 180px;
+    }
+    
+    .ubicacion-content {
+        padding: 30px 20px;
+    }
+    
+    .ubicacion-card:has(.ubicacion-image) .ubicacion-content {
+        padding: 20px 15px 25px;
+    }
+    
+    .ubicacion-nombre {
+        font-size: 1.45rem;
+        line-height: 1.4;
+    }
+    
+    .ubicacion-card:has(.ubicacion-image) .ubicacion-nombre {
+        font-size: 1.35rem;
+    }
+    
+    .ubicacion-header-content {
+        margin-bottom: 20px;
+    }
+    
+    .detail-item {
+        flex-direction: row;
+        gap: 15px;
+        padding: 12px 0;
+        margin-bottom: 18px;
+    }
+    
+    .detail-icon {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .detail-icon svg {
+        width: 16px;
+        height: 16px;
+    }
+    
+    .detail-label {
+        font-size: 0.85rem;
+        margin-bottom: 6px;
+    }
+    
+    .detail-text {
+        font-size: 1rem;
+    }
+    
+    .ubicacion-descripcion {
+        padding: 15px;
+        margin-bottom: 25px;
+    }
+    
+    .ubicacion-card:has(.ubicacion-image) .ubicacion-descripcion {
+        padding: 12px;
+        margin-bottom: 20px;
+    }
+    
+    .ubicacion-descripcion p {
+        font-size: 1rem;
+    }
+    
+    .ubicacion-badge {
+        top: 12px;
+        right: 12px;
+        padding: 6px 12px;
+        font-size: 0.75rem;
+        gap: 6px;
+    }
+    
+    .badge-icon {
+        font-size: 0.9rem;
+    }
+    
+    .ubicacion-button,
+    .btn {
+        padding: 12px 20px;
+        font-size: 0.85rem;
+        gap: 10px;
+    }
+    
+    .button-icon,
+    .button-icon svg {
+        width: 16px;
+        height: 16px;
+    }
+    
+    /* Ocultar todos los elementos decorativos */
+    .ubicaciones .floating-circle,
+    .ubicaciones .geometric-shape {
+        display: none;
+    }
+}
+
+/* Móvil pequeño */
+@media (max-width: 375px) {
+    .ubicaciones-grid {
+        grid-template-columns: 1fr;
+        gap: 25px;
+    }
+    
+    .ubicacion-card-inner {
+        border-radius: 10px;
+    }
+    
+    .ubicacion-content {
+        padding: 25px 18px;
+    }
+    
+    .ubicacion-card:has(.ubicacion-image) .ubicacion-content {
+        padding: 18px 15px 22px;
+    }
+    
+    .ubicacion-nombre {
+        font-size: 1.3rem;
+    }
+    
+    .ubicacion-card:has(.ubicacion-image) .ubicacion-nombre {
+        font-size: 1.25rem;
+    }
+    
+    .ubicacion-image {
+        height: 160px;
+    }
+    
+    .detail-item {
+        gap: 12px;
+    }
+    
+    .ubicacion-button,
+    .btn {
+        padding: 10px 18px;
+        font-size: 0.8rem;
+    }
+}
+
+/* Ajustes para pantallas muy pequeñas */
+@media (max-width: 320px) {
+    .ubicacion-content {
+        padding: 20px 15px;
+    }
+    
+    .ubicacion-card:has(.ubicacion-image) .ubicacion-content {
+        padding: 15px 12px 18px;
+    }
+    
+    .ubicacion-nombre {
+        font-size: 1.2rem;
+    }
+    
+    .ubicacion-card:has(.ubicacion-image) .ubicacion-nombre {
+        font-size: 1.15rem;
+    }
+    
+    .ubicacion-image {
+        height: 150px;
+    }
+    
+    .ubicaciones-header .decorative-line {
+        width: 70px;
+    }
+}
+
+/* ================================================
+   MEJORAS DE ACCESIBILIDAD Y RENDIMIENTO
+   ================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+    .ubicaciones::before,
+    .ubicaciones .floating-circle,
+    .ubicaciones .geometric-shape,
+    .ubicacion-card-inner,
+    .ubicacion-image img,
+    .detail-item,
+    .detail-icon,
+    .ubicacion-button,
+    .btn,
+    .ubicacion-nombre {
+        transition: none;
+        animation: none;
+    }
+    
+    .ubicacion-card-inner:hover {
+        transform: none;
+    }
+    
+    .ubicacion-card-inner:hover .ubicacion-image img {
+        transform: none;
+        filter: brightness(0.9) contrast(1.1);
+    }
+}
+
+/* Estados de carga */
+.ubicaciones.loading .ubicacion-card {
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+.ubicaciones.loaded .ubicacion-card {
+    opacity: 1;
+    transform: translateY(0);
+    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Pantallas extra grandes */
+@media (min-width: 1200px) {
+    .ubicaciones-grid {
+        max-width: 1200px;
+        gap: 55px;
+    }
+    
+    .ubicacion-content {
+        padding: 50px 40px;
+    }
+    
+    .ubicacion-nombre {
+        font-size: 2.2rem;
+    }
+}
+
+/* ================================================
+   FIN DE ESTILOS DE UBICACIONES
+   ================================================ */
