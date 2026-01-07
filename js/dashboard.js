@@ -913,9 +913,15 @@ class DashboardManager {
     compartirWhatsApp() {
         if (!window.compartirData) return;
         
-        const mensaje = `¡Estás invitado(a) a nuestra boda! 💒\n\n` +
-                       `Confirma tu asistencia aquí:\n${window.compartirData.linkInvitacion}\n\n` +
-                       `Tu código de acceso: ${window.compartirData.token}`;
+        // ✅ Detectar tipo de evento
+        const tipoEvento = window.dashboardConfig.tipoEvento || 'boda';
+        
+        let mensaje;
+        if (tipoEvento === 'xv') {
+            mensaje = `¡Estás invitado(a) a mis XV años! 🎉✨\n\nConfirma tu asistencia aquí:\n${window.compartirData.linkInvitacion}\n\nTu código de acceso: ${window.compartirData.token}`;
+        } else {
+            mensaje = `¡Estás invitado(a) a nuestra boda! 💍💕\n\nConfirma tu asistencia aquí:\n${window.compartirData.linkInvitacion}\n\nTu código de acceso: ${window.compartirData.token}`;
+        }
         
         const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(mensaje)}`;
         window.open(whatsappUrl, '_blank');
@@ -925,9 +931,15 @@ class DashboardManager {
     compartirTelegram() {
         if (!window.compartirData) return;
         
-        const mensaje = `¡Estás invitado(a) a nuestra boda! 💒\n\n` +
-                       `Confirma tu asistencia aquí:\n${window.compartirData.linkInvitacion}\n\n` +
-                       `Tu código de acceso: ${window.compartirData.token}`;
+        // ✅ Detectar tipo de evento
+        const tipoEvento = window.dashboardConfig.tipoEvento || 'boda';
+        
+        let mensaje;
+        if (tipoEvento === 'xv') {
+            mensaje = `¡Estás invitado(a) a mis XV años! 🎉✨\n\nConfirma tu asistencia aquí:\n${window.compartirData.linkInvitacion}\n\nTu código de acceso: ${window.compartirData.token}`;
+        } else {
+            mensaje = `¡Estás invitado(a) a nuestra boda! 💍💕\n\nConfirma tu asistencia aquí:\n${window.compartirData.linkInvitacion}\n\nTu código de acceso: ${window.compartirData.token}`;
+        }
         
         const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(window.compartirData.linkInvitacion)}&text=${encodeURIComponent(mensaje)}`;
         window.open(telegramUrl, '_blank');
@@ -937,9 +949,15 @@ class DashboardManager {
     copiarMensajeCompleto() {
         if (!window.compartirData) return;
         
-        const mensaje = `¡Estás invitado(a) a nuestra boda! 💒\n\n` +
-                       `Confirma tu asistencia aquí:\n${window.compartirData.linkInvitacion}\n\n` +
-                       `Tu código de acceso: ${window.compartirData.token}`;
+        // ✅ Detectar tipo de evento
+        const tipoEvento = window.dashboardConfig.tipoEvento || 'boda';
+        
+        let mensaje;
+        if (tipoEvento === 'xv') {
+            mensaje = `¡Estás invitado(a) a mis XV años! 🎉✨\n\nConfirma tu asistencia aquí:\n${window.compartirData.linkInvitacion}\n\nTu código de acceso: ${window.compartirData.token}`;
+        } else {
+            mensaje = `¡Estás invitado(a) a nuestra boda! 💍💕\n\nConfirma tu asistencia aquí:\n${window.compartirData.linkInvitacion}\n\nTu código de acceso: ${window.compartirData.token}`;
+        }
         
         const tempTextarea = document.createElement('textarea');
         tempTextarea.value = mensaje;
@@ -950,12 +968,13 @@ class DashboardManager {
             document.execCommand('copy');
             this.mostrarToast('Mensaje copiado al portapapeles', 'success');
         } catch (err) {
-            console.error('Error al copiar:', err);
+            console.error('Error al copiar', err);
             this.mostrarToast('Error al copiar el mensaje', 'error');
         }
         
         document.body.removeChild(tempTextarea);
     }
+
 
     // Ver detalles de respuesta RSVP
     verDetallesRespuesta(id_grupo) {
