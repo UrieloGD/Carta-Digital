@@ -946,13 +946,15 @@ $invitacion_url = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . $_SER
             invitacionSlug: '<?php echo $invitacion_slug; ?>',
             invitacionId: <?php echo $invitacion_seleccionada_id; ?>,
             invitacionUrl: '<?php echo $invitacion_url; ?>',
-            nombresNovios: '<?php echo htmlspecialchars($invitacion['nombres_novios'], ENT_QUOTES); ?>'
+            nombresNovios: '<?php echo htmlspecialchars($invitacion['nombres_novios'], ENT_QUOTES); ?>',
+            tipoEvento: <?php echo ($invitacion['plantilla_id'] == 7) ? "'xv'" : "'boda'"; ?>
         };
-
+        
         function cambiarInvitacion(invitacionId) {
-            window.location.href = 'dashboard_cliente.php?invitacion_id=' + invitacionId;
+            window.location.href = 'dashboard_rsvp.php?invitacion_id=' + invitacionId;
         }
     </script>
+
     
     <!-- JS principal -->
     <script src="js/dashboard.js?v=<?php echo filemtime('./js/dashboard.js'); ?>"></script>
