@@ -252,6 +252,7 @@ try {
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Alice&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Mea+Culpa&family=Tangerine:wght@400;700&display=swap" rel="stylesheet">
 
     <!-- Icon page -->
     <link rel="shortcut icon" href="./images/logo.webp" />
@@ -268,15 +269,9 @@ try {
     <div class="hero-content">
         <div class="container">
             <div class="hero-text">
-                <p class="hero-invitation">Celebrando mis XV años</p>
-                <h1 class="hero-names"><?php echo htmlspecialchars($nombres); ?></h1>
+                <h3 class="hero-title">Mis XV</h3>
                 
-                <div class="hero-details">
-                    <div class="hero-date"><?php echo $fecha; ?></div>
-                    <?php if ($ubicacion): ?>
-                    <div class="hero-location"><?php echo htmlspecialchars($ubicacion); ?></div>
-                    <?php endif; ?>
-                </div>
+                <h1 class="hero-names"><?php echo htmlspecialchars($nombres); ?></h1>
             </div>
         </div>
     </div>
