@@ -1111,7 +1111,6 @@ $tipo_rsvp = $invitacion['tipo_rsvp'] ?? 'whatsapp';
                     <blockquote class="quote-text">
                         <?php echo htmlspecialchars($mensaje_footer); ?>
                     </blockquote>
-                    <cite class="quote-author">— <?php echo htmlspecialchars($firma_footer); ?></cite>
                 </div>
                 
                 <?php if ($invitacion['mostrar_compartir'] ?? true): ?>
@@ -1135,7 +1134,7 @@ $tipo_rsvp = $invitacion['tipo_rsvp'] ?? 'whatsapp';
             
             <div class="footer-bottom">
                 <div class="footer-signature">
-                    <p class="signature-text">Con todo mi corazón</p>
+                    <p class="signature-text">Hoy celebro 15 años de vida, amor y bendiciones. Gracias por ser parte de este momento especial."</p>
                     <p class="signature-names"><?php echo htmlspecialchars($nombres); ?></p>
                 </div>
             </div>
