@@ -219,6 +219,13 @@ foreach ($invitaciones as $inv) {
                         <span class="d-none d-md-inline">Gestionar</span> Plantillas
                     </a>
                     <?php endif; ?>
+
+                    <?php if ($rol_usuario === 'admin'): ?>
+                    <a href="crear-usuario-manual.php" class="btn btn-outline-light btn-sm">
+                        <i class="bi bi-person-plus me-1"></i>
+                        <span class="d-none d-md-inline">Crear</span> Usuario Manual
+                    </a>
+                    <?php endif; ?>
                     
                     <?php if ($puede_crear): ?>
                     <a href="./functions/crear.php" class="btn btn-light btn-sm">

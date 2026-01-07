@@ -11,13 +11,15 @@ if (!isset($_SESSION['cliente_logueado']) || $_SESSION['cliente_logueado'] !== t
 $db = new Database();
 $conn = $db->getConnection();
 
-// Obtener la primera invitación y su plan
+// Obtener invitación con toda la información
 $stmt = $conn->prepare("
     SELECT 
         i.id,
-        ped.plan
+        i.tipo_rsvp,
+        i.plan_id,
+        ped.plan as pedido_plan
     FROM invitaciones i 
-    INNER JOIN pedidos ped ON i.id = ped.invitacion_id
+    LEFT JOIN pedidos ped ON i.id = ped.invitacion_id
     WHERE i.cliente_id = ?
     ORDER BY i.fecha_creacion DESC
     LIMIT 1
@@ -29,13 +31,17 @@ if (!$resultado) {
     die("Error: No se encontraron invitaciones.");
 }
 
-$plan = $resultado['plan'];
+$tipo_rsvp = $resultado['tipo_rsvp'];
+$plan_id = $resultado['plan_id'];
+$pedido_plan = $resultado['pedido_plan'];
 
-// Redirigir según el plan
-if ($plan === 'Exclusivo') {
+// ✅ Redirigir a dashboard RSVP si:
+// 1. tipo_rsvp es 'digital' O
+// 2. plan_id es 3 (Exclusivo) O
+// 3. pedido_plan es 'Exclusivo'
+if ($tipo_rsvp === 'digital' || $plan_id == 3 || $pedido_plan === 'Exclusivo') {
     header('Location: dashboard_rsvp.php');
 } else {
-    // Esencial o Premium
     header('Location: invitacion_cliente.php');
 }
 exit;
