@@ -1,4 +1,4 @@
-/* Hero Section - Romance Clásico XV AÑOS - TEXTO SUAVE Y NATURAL */
+/* Hero Section - Romance Clásico XV AÑOS - SOMBRAS BLANCAS INTENSAS */
 .hero {
     height: 100vh;
     min-height: 700px;
@@ -19,18 +19,19 @@
     z-index: 1;
 }
 
+/* ✅ IMAGEN MÁS CLARA */
 .hero-image {
     width: 100%;
     height: 100%;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    filter: brightness(0.75) saturate(1.2) contrast(1.05);
+    filter: brightness(0.85) saturate(1.1) contrast(1.03);
     transition: var(--transition-soft);
     animation: subtleZoomRomantic 25s ease-in-out infinite alternate;
 }
 
-/* ✅ OVERLAY AJUSTADO - Mejor legibilidad sin perder imagen */
+/* ✅ OVERLAY MÁS SUTIL */
 .hero-overlay {
     position: absolute;
     top: 0;
@@ -39,10 +40,10 @@
     height: 100%;
     background: linear-gradient(
         135deg,
-        rgba(250, 247, 245, 0.65) 0%,
-        rgba(245, 236, 232, 0.55) 30%,
-        rgba(232, 196, 196, 0.45) 60%,
-        rgba(250, 247, 245, 0.7) 100%
+        rgba(250, 247, 245, 0.45) 0%,
+        rgba(245, 236, 232, 0.38) 30%,
+        rgba(232, 196, 196, 0.32) 60%,
+        rgba(250, 247, 245, 0.5) 100%
     );
     z-index: 2;
 }
@@ -55,9 +56,9 @@
     width: 100%;
     height: 100%;
     background: 
-        radial-gradient(ellipse at 25% 25%, rgba(232, 196, 196, 0.12) 0%, transparent 50%),
-        radial-gradient(ellipse at 75% 75%, rgba(221, 165, 136, 0.1) 0%, transparent 50%),
-        radial-gradient(ellipse at 50% 80%, rgba(212, 165, 165, 0.08) 0%, transparent 60%);
+        radial-gradient(ellipse at 25% 25%, rgba(232, 196, 196, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 75% 75%, rgba(221, 165, 136, 0.06) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 80%, rgba(212, 165, 165, 0.05) 0%, transparent 60%);
     animation: softGlowRose 10s ease-in-out infinite alternate;
 }
 
@@ -69,17 +70,18 @@
     width: 100%;
     height: 100%;
     background-image: 
-        radial-gradient(2px 2px at 20% 30%, rgba(196, 165, 123, 0.15), transparent),
-        radial-gradient(1.5px 1.5px at 60% 70%, rgba(232, 196, 196, 0.12), transparent),
-        radial-gradient(1px 1px at 50% 50%, rgba(221, 165, 136, 0.1), transparent),
-        radial-gradient(2px 2px at 80% 15%, rgba(240, 230, 216, 0.15), transparent),
-        radial-gradient(1.5px 1.5px at 90% 60%, rgba(196, 165, 123, 0.12), transparent),
-        radial-gradient(1px 1px at 35% 85%, rgba(212, 165, 165, 0.15), transparent);
+        radial-gradient(2px 2px at 20% 30%, rgba(196, 165, 123, 0.08), transparent),
+        radial-gradient(1.5px 1.5px at 60% 70%, rgba(232, 196, 196, 0.06), transparent),
+        radial-gradient(1px 1px at 50% 50%, rgba(221, 165, 136, 0.05), transparent),
+        radial-gradient(2px 2px at 80% 15%, rgba(240, 230, 216, 0.08), transparent),
+        radial-gradient(1.5px 1.5px at 90% 60%, rgba(196, 165, 123, 0.06), transparent),
+        radial-gradient(1px 1px at 35% 85%, rgba(212, 165, 165, 0.08), transparent);
     background-size: 250% 250%;
     animation: floatingPetals 30s linear infinite;
-    opacity: 0.4;
+    opacity: 0.2;
 }
 
+/* ✅ CONTENIDO CENTRADO */
 .hero-content {
     position: relative;
     z-index: 3;
@@ -90,24 +92,24 @@
     align-items: center;
     justify-content: center;
     min-height: 100vh;
-    padding: 100px 0;
+    padding: 120px 20px 100px;
 }
 
 .hero-content .container {
     width: 100%;
+    max-width: 900px;
 }
 
+/* ✅ ESTRUCTURA FLEXIBLE */
 .hero-text {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 0 20px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    gap: 2rem;
 }
 
-/* ✅ Texto superior - SUAVE Y NATURAL */
+/* ✅ TEXTO SUPERIOR - SOMBRA BLANCA INTENSA */
 .hero-invitation {
     font-family: var(--font-serif);
     font-size: 0.95rem;
@@ -115,125 +117,85 @@
     color: var(--text-primary);
     letter-spacing: 3px;
     text-transform: uppercase;
-    margin-bottom: 2.5rem;
     opacity: 0;
     animation: fadeInUpRomantic 1.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.6s both;
     text-shadow: 
-        0 2px 8px rgba(255, 255, 255, 0.9),
-        0 3px 12px rgba(0, 0, 0, 0.3);
+        0 0 40px rgba(255, 255, 255, 1),
+        0 0 30px rgba(255, 255, 255, 1),
+        0 0 20px rgba(255, 255, 255, 1),
+        0 2px 15px rgba(255, 255, 255, 1),
+        0 3px 25px rgba(255, 255, 255, 0.98),
+        0 5px 40px rgba(255, 255, 255, 0.95),
+        0 7px 50px rgba(255, 255, 255, 0.9),
+        1px 1px 5px rgba(0, 0, 0, 0.5),
+        2px 2px 10px rgba(0, 0, 0, 0.4),
+        3px 3px 15px rgba(0, 0, 0, 0.3);
     position: relative;
     font-style: italic;
-    padding: 0.5rem 1.5rem;
-    background: rgba(250, 247, 245, 0.35);
-    backdrop-filter: blur(12px);
-    border-radius: 30px;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
 
-.hero-invitation::before,
-.hero-invitation::after {
-    content: '❤';
-    display: inline-block;
-    margin: 0 18px;
-    color: var(--accent-rose-dark);
-    font-size: 0.85em;
-    animation: heartbeatGentle 3s ease-in-out infinite;
-    opacity: 1;
-    text-shadow: 
-        0 2px 6px rgba(255, 255, 255, 0.8),
-        0 2px 10px rgba(212, 165, 165, 0.5);
-}
-
-/* ✅ Nombres principales - SUAVES Y ELEGANTES */
+/* ✅ NOMBRES PRINCIPALES - SOMBRA BLANCA SÚPER INTENSA */
 .hero-names {
     font-family: var(--font-script);
     font-size: clamp(3.5rem, 10vw, 7rem);
     font-weight: 400;
     color: var(--text-primary);
     line-height: 1.15;
-    margin-bottom: 3rem;
     letter-spacing: 0.03em;
     opacity: 0;
     animation: fadeInUpRomantic 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.9s both;
     text-shadow: 
-        0 3px 10px rgba(255, 255, 255, 0.8),
-        0 5px 20px rgba(0, 0, 0, 0.25),
-        0 8px 30px rgba(212, 165, 165, 0.4);
+        0 0 60px rgba(255, 255, 255, 1),
+        0 0 50px rgba(255, 255, 255, 1),
+        0 0 40px rgba(255, 255, 255, 1),
+        0 0 30px rgba(255, 255, 255, 1),
+        0 3px 20px rgba(255, 255, 255, 1),
+        0 5px 35px rgba(255, 255, 255, 1),
+        0 8px 50px rgba(255, 255, 255, 0.98),
+        0 10px 65px rgba(255, 255, 255, 0.95),
+        0 15px 80px rgba(255, 255, 255, 0.9),
+        2px 2px 12px rgba(0, 0, 0, 0.5),
+        3px 3px 18px rgba(0, 0, 0, 0.4),
+        4px 4px 25px rgba(0, 0, 0, 0.3);
     position: relative;
-    padding: 1rem 2rem;
-    background: rgba(250, 247, 245, 0.3);
-    backdrop-filter: blur(10px);
-    border-radius: 20px;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
 
-/* Línea decorativa dorada con corazón */
-.hero-names::after {
-    content: '';
-    display: block;
-    width: 150px;
-    height: 2px;
-    background: linear-gradient(
-        90deg, 
-        transparent, 
-        var(--accent-rose), 
-        var(--accent-gold),
-        var(--accent-rose), 
-        transparent
-    );
-    margin: 1.8rem auto 0;
-    box-shadow: 0 0 15px rgba(196, 165, 123, 0.5);
-    animation: lineShimmerGold 4s ease-in-out infinite alternate;
-    position: relative;
-}
-
+/* ✅ DETALLES */
 .hero-details {
-    margin-top: 3rem;
     opacity: 0;
     animation: fadeInUpRomantic 1.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) 1.2s both;
-    padding: 1.5rem 2rem;
-    background: rgba(250, 247, 245, 0.35);
-    backdrop-filter: blur(12px);
-    border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.5);
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
 }
 
-/* ✅ Fecha - SUAVE Y LEGIBLE */
+/* ✅ FECHA - SOMBRA BLANCA INTENSA */
 .hero-date {
     font-family: var(--font-elegant);
     font-size: clamp(1.5rem, 3.5vw, 2rem);
     color: var(--text-primary);
-    margin-bottom: 1.5rem;
     font-weight: 700;
     text-shadow: 
-        0 2px 8px rgba(255, 255, 255, 0.9),
-        0 3px 12px rgba(0, 0, 0, 0.3),
-        0 5px 20px rgba(61, 46, 46, 0.2);
+        0 0 45px rgba(255, 255, 255, 1),
+        0 0 35px rgba(255, 255, 255, 1),
+        0 0 25px rgba(255, 255, 255, 1),
+        0 2px 18px rgba(255, 255, 255, 1),
+        0 3px 28px rgba(255, 255, 255, 0.98),
+        0 5px 45px rgba(255, 255, 255, 0.95),
+        0 8px 60px rgba(255, 255, 255, 0.9),
+        1px 1px 5px rgba(0, 0, 0, 0.5),
+        2px 2px 10px rgba(0, 0, 0, 0.4),
+        3px 3px 15px rgba(0, 0, 0, 0.3);
     position: relative;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
 
-/* Flores decorativas */
-.hero-date::before,
-.hero-date::after {
-    content: '✿';
-    display: inline-block;
-    margin: 0 22px;
-    color: var(--text-primary);
-    font-size: 0.65em;
-    vertical-align: middle;
-    animation: floralPulse 3s ease-in-out infinite;
-    opacity: 0.9;
-    font-weight: 900;
-    text-shadow: 
-        0 2px 6px rgba(255, 255, 255, 0.8),
-        0 2px 10px rgba(212, 165, 165, 0.4);
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-}
-
+/* ✅ UBICACIÓN - SOMBRA BLANCA INTENSA */
 .hero-location {
     font-family: var(--font-serif);
     font-size: 1rem;
@@ -243,33 +205,30 @@
     text-transform: uppercase;
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 10px;
     font-style: italic;
     text-shadow: 
-        0 2px 8px rgba(255, 255, 255, 0.9),
-        0 3px 10px rgba(0, 0, 0, 0.25);
+        0 0 40px rgba(255, 255, 255, 1),
+        0 0 30px rgba(255, 255, 255, 1),
+        0 0 20px rgba(255, 255, 255, 1),
+        0 2px 15px rgba(255, 255, 255, 1),
+        0 3px 25px rgba(255, 255, 255, 0.98),
+        0 5px 40px rgba(255, 255, 255, 0.95),
+        1px 1px 5px rgba(0, 0, 0, 0.5),
+        2px 2px 10px rgba(0, 0, 0, 0.4),
+        3px 3px 15px rgba(0, 0, 0, 0.3);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
 
-/* Icono de ubicación */
-.hero-location::before {
-    content: '✦';
-    font-size: 1.1em;
-    color: var(--text-primary);
-    animation: sparkle 2s ease-in-out infinite;
-    text-shadow: 
-        0 2px 6px rgba(255, 255, 255, 0.8),
-        0 2px 10px rgba(196, 165, 123, 0.4);
-}
-
-/* Indicador de scroll con estilo romántico */
+/* Indicador de scroll */
 .hero-scroll-indicator {
     position: absolute;
     bottom: 50px;
     left: 50%;
     transform: translateX(-50%);
-    z-index: 3;
+    z-index: 4;
     opacity: 0;
     animation: fadeInUpRomantic 1.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) 1.8s both;
     cursor: pointer;
@@ -292,20 +251,6 @@
     box-shadow: 0 0 12px rgba(212, 165, 165, 0.4);
 }
 
-.scroll-line::before {
-    content: '♥';
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 0.7rem;
-    color: var(--accent-rose);
-    text-shadow: 
-        0 2px 6px rgba(255, 255, 255, 0.7),
-        0 0 10px rgba(212, 165, 165, 0.6);
-    animation: heartFloat 3s infinite ease-in-out;
-}
-
 .scroll-line::after {
     content: '';
     position: absolute;
@@ -321,15 +266,15 @@
     filter: drop-shadow(0 0 8px rgba(196, 165, 123, 0.5));
 }
 
-/* Animaciones románticas personalizadas */
+/* Animaciones */
 @keyframes subtleZoomRomantic {
     0% { transform: scale(1); }
     100% { transform: scale(1.08); }
 }
 
 @keyframes softGlowRose {
-    0% { opacity: 0.5; }
-    100% { opacity: 0.8; }
+    0% { opacity: 0.3; }
+    100% { opacity: 0.6; }
 }
 
 @keyframes floatingPetals {
@@ -337,36 +282,9 @@
     100% { background-position: 100% 100%; }
 }
 
-@keyframes heartbeatGentle {
-    0%, 100% { opacity: 0.7; transform: scale(1); }
-    50% { opacity: 1; transform: scale(1.15); }
-}
-
-@keyframes lineShimmerGold {
-    0% { box-shadow: 0 0 15px rgba(196, 165, 123, 0.5); }
-    100% { box-shadow: 0 0 25px rgba(196, 165, 123, 0.8); }
-}
-
-@keyframes floralPulse {
-    0%, 100% { opacity: 0.7; transform: scale(1) rotate(0deg); }
-    50% { opacity: 1; transform: scale(1.2) rotate(15deg); }
-}
-
-@keyframes sparkle {
-    0%, 100% { opacity: 0.7; transform: scale(1) rotate(0deg); }
-    50% { opacity: 1; transform: scale(1.3) rotate(90deg); }
-}
-
 @keyframes scrollPulseRomantic {
     0%, 100% { opacity: 0.6; transform: scaleY(0.95); }
     50% { opacity: 1; transform: scaleY(1); }
-}
-
-@keyframes heartFloat {
-    0% { top: 100%; opacity: 0; }
-    20% { opacity: 1; }
-    80% { opacity: 1; }
-    100% { top: -10%; opacity: 0; }
 }
 
 @keyframes scrollArrowRomantic {
@@ -379,9 +297,9 @@
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* Efectos hover elegantes */
+/* Hover effects */
 .hero:hover .hero-image {
-    filter: brightness(0.8) saturate(1.25) contrast(1.05);
+    filter: brightness(0.9) saturate(1.15) contrast(1.05);
     transform: scale(1.02);
 }
 
@@ -389,118 +307,127 @@
     transform: translateX(-50%) scale(1.1);
 }
 
-.hero-scroll-indicator:hover .scroll-line {
-    background: linear-gradient(
-        to bottom, 
-        transparent, 
-        var(--accent-gold) 20%, 
-        var(--accent-rose) 50%,
-        var(--accent-gold-light) 80%, 
-        transparent
-    );
-    box-shadow: var(--shadow-glow);
-}
-
-/* Responsive Design */
+/* Responsive */
 @media (max-width: 1024px) {
     .hero { min-height: 650px; }
-    .hero-content { min-height: 650px; padding: 80px 0; }
-    .hero-names { margin-bottom: 2.5rem; padding: 0.8rem 1.5rem; }
-    .hero-details { padding: 1.25rem 1.5rem; }
+    .hero-content { min-height: 650px; padding: 100px 20px 80px; }
+    .hero-text { gap: 1.8rem; }
 }
 
 @media (max-width: 768px) {
     .hero { min-height: 600px; }
-    .hero-content { min-height: 600px; padding: 70px 0; }
+    .hero-content { min-height: 600px; padding: 90px 20px 70px; }
+    .hero-text { gap: 1.5rem; }
+    
+    .hero-overlay {
+        background: linear-gradient(
+            135deg,
+            rgba(250, 247, 245, 0.35) 0%,
+            rgba(245, 236, 232, 0.28) 30%,
+            rgba(232, 196, 196, 0.22) 60%,
+            rgba(250, 247, 245, 0.4) 100%
+        );
+    }
     
     .hero-invitation {
         font-size: 0.85rem;
         letter-spacing: 2px;
-        margin-bottom: 1.8rem;
-        padding: 0.4rem 1.2rem;
     }
-    
-    .hero-invitation::before,
-    .hero-invitation::after { margin: 0 12px; }
-    
-    .hero-names {
-        margin-bottom: 2rem;
-        padding: 0.6rem 1.2rem;
-    }
-    
-    .hero-names::after {
-        width: 100px;
-        margin-top: 1.2rem;
-    }
-    
-    .hero-details {
-        margin-top: 2rem;
-        padding: 1rem 1.25rem;
-    }
-    
-    .hero-date::before,
-    .hero-date::after { margin: 0 16px; }
-    .hero-scroll-indicator { bottom: 40px; }
-    .scroll-line { height: 55px; }
 }
 
 @media (max-width: 480px) {
-    .hero {
-        min-height: 550px;
-    }
-    
+    .hero { min-height: 100vh; }
     .hero-content {
-        min-height: 550px;
-        padding: 60px 0;
+        min-height: 100vh;
+        padding: 80px 16px 60px;
     }
     
     .hero-text {
-        padding: 0 16px;
+        gap: 1.2rem;
+        width: 100%;
     }
     
+    .hero-overlay {
+        background: linear-gradient(
+            135deg,
+            rgba(250, 247, 245, 0.25) 0%,
+            rgba(245, 236, 232, 0.18) 30%,
+            rgba(232, 196, 196, 0.12) 60%,
+            rgba(250, 247, 245, 0.3) 100%
+        );
+    }
+    
+    .hero-overlay::before {
+        opacity: 0.5;
+    }
+    
+    .hero-overlay::after {
+        opacity: 0.15;
+    }
+    
+    .hero-image {
+        filter: brightness(0.9) saturate(1.08) contrast(1.02);
+    }
+    
+    /* Sombras aún más intensas en móvil */
     .hero-invitation {
         font-size: 0.75rem;
         letter-spacing: 1.5px;
-        margin-bottom: -1rem;
-        padding: 0.35rem 1rem;
-        bottom: 5rem;
-    }
-    
-    .hero-invitation::before,
-    .hero-invitation::after {
-        margin: 0 8px;
-        font-size: 0.75em;
+        bottom: 20rem;
+        text-shadow: 
+            0 0 50px rgba(255, 255, 255, 1),
+            0 0 40px rgba(255, 255, 255, 1),
+            0 0 30px rgba(255, 255, 255, 1),
+            0 2px 20px rgba(255, 255, 255, 1),
+            0 5px 50px rgba(255, 255, 255, 1),
+            2px 2px 12px rgba(0, 0, 0, 0.6),
+            3px 3px 20px rgba(0, 0, 0, 0.5);
     }
     
     .hero-names {
-        padding: 0.5rem 1rem;
-        bottom: 3rem;
-    }
-    
-    .hero-names::after {
-        width: 80px;
-        margin-top: 1rem;
-    }
-    
-    .hero-details {
-        margin-top: 19rem;
-        padding: 0.8rem 1rem;
+        top: 5rem;
+        text-shadow: 
+            0 0 70px rgba(255, 255, 255, 1),
+            0 0 60px rgba(255, 255, 255, 1),
+            0 0 50px rgba(255, 255, 255, 1),
+            0 0 40px rgba(255, 255, 255, 1),
+            0 5px 40px rgba(255, 255, 255, 1),
+            0 8px 60px rgba(255, 255, 255, 1),
+            0 15px 90px rgba(255, 255, 255, 1),
+            3px 3px 15px rgba(0, 0, 0, 0.6),
+            4px 4px 30px rgba(0, 0, 0, 0.5);
     }
     
     .hero-date {
-        margin-bottom: 1rem;
         font-size: clamp(1.25rem, 3vw, 1.75rem);
-    }
-    
-    .hero-date::before,
-    .hero-date::after {
-        margin: 0 10px;
-        font-size: 0.5em;
+        top: 5rem;
+        text-shadow: 
+            0 0 50px rgba(255, 255, 255, 1),
+            0 0 40px rgba(255, 255, 255, 1),
+            0 0 30px rgba(255, 255, 255, 1),
+            0 2px 20px rgba(255, 255, 255, 1),
+            0 5px 50px rgba(255, 255, 255, 1),
+            2px 2px 12px rgba(0, 0, 0, 0.6),
+            3px 3px 20px rgba(0, 0, 0, 0.5);
     }
     
     .hero-location {
         font-size: 0.9rem;
         letter-spacing: 1.5px;
+        text-shadow: 
+            0 0 50px rgba(255, 255, 255, 1),
+            0 0 40px rgba(255, 255, 255, 1),
+            0 0 30px rgba(255, 255, 255, 1),
+            0 2px 20px rgba(255, 255, 255, 1),
+            0 5px 50px rgba(255, 255, 255, 1),
+            2px 2px 12px rgba(0, 0, 0, 0.6),
+            3px 3px 20px rgba(0, 0, 0, 0.5);
+    }
+    
+    .hero-details {
+        gap: 0.8rem;
+        width: 100%;
+        max-width: 95%;
     }
     
     .hero-scroll-indicator {
@@ -508,15 +435,15 @@
     }
     
     .scroll-line {
-        height: 45px;
+        height: 50px;
     }
 }
 
-/* Preload suave romántico */
+/* Preload */
 .hero-image.loading {
     filter: brightness(0.5) blur(15px) saturate(0.5);
 }
 
 .hero-image.loaded {
-    filter: brightness(0.75) saturate(1.2) contrast(1.05);
+    filter: brightness(0.85) saturate(1.1) contrast(1.03);
 }

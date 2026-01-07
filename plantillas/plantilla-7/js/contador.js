@@ -205,7 +205,7 @@ function initCompleteCountdown(fechaEvento) {
                 mensaje = '¡Hoy es mi día especial!';
             }
         } else if (dias === 1) {
-            mensaje = '¡Mañana será mi día especial!';
+            mensaje = '¡Mañana es mi día especial!';
         } else if (dias <= 7) {
             mensaje = `¡Solo ${dias} días para mi gran día!`;
         } else if (dias <= 30) {
