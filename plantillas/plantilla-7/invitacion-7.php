@@ -435,9 +435,9 @@ try {
                         </blockquote>
                         
                         <div class="hearts-decoration">
-                            <span class="heart">♥</span>
-                            <span class="heart">♥</span>
-                            <span class="heart">♥</span>
+                            <span class="heart">★</span>
+                            <span class="heart">★</span>
+                            <span class="heart">★</span>
                         </div>
                     </div>
                 </div>

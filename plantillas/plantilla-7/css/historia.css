@@ -454,7 +454,7 @@
         1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-/* Decoración de corazones */
+/* Decoración de estrellas */
 .hearts-decoration {
     margin-top: 1.5rem;
     display: flex;
@@ -468,7 +468,7 @@
     font-size: 1rem;
     color: var(--accent-rose);
     opacity: 0.7;
-    animation: shimmerHeart 2s infinite ease-in-out;
+    animation: shimmerStar 2s infinite ease-in-out;
     display: inline-block;
     filter: drop-shadow(0 0 8px rgba(212, 165, 165, 0.4));
 }
@@ -481,15 +481,15 @@
 }
 .heart:nth-child(3) { animation-delay: 0.6s; }
 
-@keyframes shimmerHeart {
+@keyframes shimmerStar {
     0%, 70%, 100% {
         opacity: 0.7;
-        transform: scale(1);
+        transform: scale(1) rotate(0deg);
         filter: drop-shadow(0 0 8px rgba(212, 165, 165, 0.4));
     }
     35% {
         opacity: 1;
-        transform: scale(1.2);
+        transform: scale(1.2) rotate(72deg);
         filter: drop-shadow(0 0 15px rgba(212, 165, 165, 0.7));
     }
 }
