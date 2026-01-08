@@ -141,13 +141,12 @@ if (isset($_GET['exportar']) && $_GET['exportar'] === 'excel') {
 }
 
 // Obtener TODAS las invitaciones del cliente
-$stmt = $conn->prepare("
-    SELECT i.*, p.nombre as plantilla_nombre 
-    FROM invitaciones i 
-    INNER JOIN plantillas p ON i.plantilla_id = p.id 
-    WHERE i.cliente_id = ?
-    ORDER BY i.fecha_creacion DESC
-");
+$stmt = $conn->prepare("SELECT i.*, p.nombre as plantilla_nombre, p.carpeta as plantilla_carpeta 
+                        FROM invitaciones i 
+                        INNER JOIN plantillas p ON i.plantilla_id = p.id 
+                        WHERE i.cliente_id = ? 
+                        ORDER BY i.fecha_creacion DESC");
+
 $stmt->execute([$_SESSION['cliente_id']]);
 $invitaciones = $stmt->fetchAll();
 
@@ -947,7 +946,7 @@ $invitacion_url = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . $_SER
             invitacionId: <?php echo $invitacion_seleccionada_id; ?>,
             invitacionUrl: '<?php echo $invitacion_url; ?>',
             nombresNovios: '<?php echo htmlspecialchars($invitacion['nombres_novios'], ENT_QUOTES); ?>',
-            tipoEvento: <?php echo ($invitacion['plantilla_id'] == 7) ? "'xv'" : "'boda'"; ?>
+            tipoEvento: <?php echo ($invitacion['plantilla_carpeta'] == 'plantilla-7') ? "'xv'" : "'boda'"; ?>
         };
         
         function cambiarInvitacion(invitacionId) {
