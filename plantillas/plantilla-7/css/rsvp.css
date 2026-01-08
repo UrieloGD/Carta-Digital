@@ -301,13 +301,13 @@
     justify-content: center;
     gap: 1rem;
     padding: clamp(1rem, 2.5vw, 1.2rem) clamp(2rem, 4vw, 3rem);
-    background: transparent;
-    color: var(--accent-rose);
+    background: rgba(255, 255, 255, 0.95);
+    color: var(--accent-rose-dark);
     border: 2px solid var(--accent-rose);
     border-radius: 50px;
     font-family: var(--font-sans);
     font-size: clamp(1rem, 2.5vw, 1.1rem);
-    font-weight: 500;
+    font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
     text-decoration: none;
