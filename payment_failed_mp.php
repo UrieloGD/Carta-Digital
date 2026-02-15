@@ -44,7 +44,7 @@ $error_status = $_GET['status'] ?? null;
             
             <!-- Opción de contacto sutil -->
             <div style="margin-top: 2rem; font-size: 0.9rem; color: #6c757d;">
-                ¿Problemas persistentes? <a href="https://wa.me/523339047672" style="color: var(--primary-color); text-decoration: none; font-weight: 600;">Contáctanos</a>
+                ¿Problemas persistentes? <a href="https://wa.me/523324045368" style="color: var(--primary-color); text-decoration: none; font-weight: 600;">Contáctanos</a>
             </div>
         </div>
         

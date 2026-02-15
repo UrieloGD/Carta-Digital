@@ -223,7 +223,7 @@ if ($pedido_id && $payment_intent_id) {
                         <ul>
                             <li>
                                 <i class="fab fa-whatsapp"></i>
-                                <a href="https://wa.me/523339047672" target="_blank">WhatsApp</a>
+                                <a href="https://wa.me/523324045368" target="_blank">WhatsApp</a>
                             </li>
                             <li>
                                 <i class="fas fa-envelope"></i>

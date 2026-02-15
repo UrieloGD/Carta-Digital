@@ -39,7 +39,7 @@ $collection_id = $_GET['collection_id'] ?? null;
                 
                 <div class="action-buttons">
                     <a href="./" class="btn btn-primary">Volver al Inicio</a>
-                    <a href="https://wa.me/523339047672" class="btn btn-secondary">
+                    <a href="https://wa.me/523324045368" class="btn btn-secondary">
                         <i class="fab fa-whatsapp"></i> Soporte
                     </a>
                 </div>

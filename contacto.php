@@ -45,7 +45,7 @@
                     <div class="contact-details">
                         <div class="contact-item">
                             <i class="fa fa-phone contact-icon"></i>
-                            <span>+52 333 904 7672</span>
+                            <span>+52 3324045368</span>
                         </div>
                         
                         <div class="contact-item">
