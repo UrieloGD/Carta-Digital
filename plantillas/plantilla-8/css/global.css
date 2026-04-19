@@ -1,0 +1,274 @@
+/* Plantilla K-pop Demon Hunters x Raya - Estilos Globales */
+:root {
+    /* ================================================
+       FONDOS - Tonos oscuros elegantes con profundidad
+       ================================================ */
+    --bg-primary: #0f1421;           /* Azul oscuro profundo (base) */
+    --bg-secondary: #1a1f3a;         /* Azul oscuro (secciones) */
+    --bg-tertiary: #151d32;          /* Azul intermedio */
+    --bg-card: #1f2540;              /* Azul para cards */
+    
+    /* ================================================
+       ACENTOS PRINCIPALES - Morado Neón K-pop
+       ================================================ */
+    --accent-neon: #9d4edd;          /* Morado neón (principal) */
+    --accent-neon-light: #c77dff;    /* Morado neón claro */
+    --accent-neon-bright: #e0aaff;   /* Morado neón muy brillante */
+    --accent-neon-dark: #7209b7;     /* Morado neón oscuro */
+    
+    /* ================================================
+       ACENTOS ACUÁTICOS - Aqua/Cian Raya
+       ================================================ */
+    --accent-aqua: #00d4ff;          /* Aqua brillante (Raya principal) */
+    --accent-aqua-light: #00f5ff;    /* Aqua claro (destellos) */
+    --accent-aqua-medium: #00b8d4;   /* Aqua medio */
+    --accent-aqua-dark: #0088a8;     /* Aqua oscuro */
+    
+    /* ================================================
+       ACENTOS COMPLEMENTARIOS - Energía K-pop
+       ================================================ */
+    --accent-cyan: #06ffa5;          /* Verde cian (detalles) */
+    --accent-pink: #ff006e;          /* Rosa magenta (contraste) */
+    --accent-purple: #b537f2;        /* Púrpura vibrante */
+    
+    /* ================================================
+       TEXTOS - Alto contraste en fondo oscuro
+       ================================================ */
+    --text-primary: #ffffff;         /* Blanco puro para textos */
+    --text-secondary: #e0e0ff;       /* Blanco azulado */
+    --text-muted: #a0a5c0;           /* Gris azulado */
+    --text-on-dark: #ffffff;         /* Blanco sobre oscuro */
+    
+    /* ================================================
+       HIGHLIGHT Y BORDES
+       ================================================ */
+    --highlight: #00d4ff;            /* Aqua para resalte */
+    --glow-neon: #9d4edd;            /* Glow morado */
+    --glow-aqua: #00d4ff;            /* Glow aqua */
+    --border-neon: rgba(157, 78, 221, 0.4);
+    --border-aqua: rgba(0, 212, 255, 0.3);
+    --border-subtle: rgba(157, 78, 221, 0.15);
+    
+    /* ================================================
+       GRADIENTES DEPORTIVOS K-POP
+       ================================================ */
+    --gradient-neon: linear-gradient(135deg, #9d4edd 0%, #c77dff 100%);
+    --gradient-aqua: linear-gradient(135deg, #00d4ff 0%, #06ffa5 100%);
+    --gradient-dark: linear-gradient(135deg, #1a1f3a 0%, #151d32 100%);
+    --gradient-dual: linear-gradient(135deg, #9d4edd 0%, #00d4ff 100%);
+    
+    /* Tipografías modernas K-pop */
+    --font-serif: 'Playfair Display', serif;      /* Elegancia clásica */
+    --font-bold: 'Montserrat', sans-serif;        /* Bold K-pop */
+    --font-script: 'Alice', cursive;              /* Cursiva elegante */
+    --font-sans: 'Poppins', sans-serif;           /* Moderna y limpia */
+    
+    /* Espaciado y tamaños */
+    --container-max: 1200px;
+    --border-radius: 16px;
+    --border-radius-lg: 24px;
+    --section-padding: 120px 0;
+    
+    /* Sombras neon vibrantess */
+    --shadow-soft: 0 10px 40px rgba(0, 212, 255, 0.1);
+    --shadow-neon: 0 0 30px rgba(157, 78, 221, 0.25);
+    --shadow-aqua: 0 0 30px rgba(0, 212, 255, 0.25);
+    --shadow-glow: 0 0 50px rgba(157, 78, 221, 0.15), 0 0 50px rgba(0, 212, 255, 0.1);
+    
+    /* Transiciones suaves */
+    --transition-fast: 0.2s ease;
+    --transition-smooth: 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --transition-smooth-bounce: 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+/* ================================================
+   RESET Y BASE
+   ================================================ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-sans);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.6;
+    letter-spacing: 0.3px;
+    overflow-x: hidden;
+}
+
+/* ================================================
+   TIPOGRAFÍA
+   ================================================ */
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-bold);
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+h1 {
+    font-size: clamp(2.5rem, 8vw, 4.5rem);
+    line-height: 1.1;
+}
+
+h2 {
+    font-size: clamp(2rem, 6vw, 3.5rem);
+    line-height: 1.2;
+}
+
+h3 {
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+}
+
+p {
+    font-size: clamp(0.95rem, 1.5vw, 1.1rem);
+    color: var(--text-secondary);
+}
+
+/* ================================================
+   CONTENEDOR
+   ================================================ */
+.container {
+    max-width: var(--container-max);
+    margin: 0 auto;
+    padding: 0 20px;
+    width: 100%;
+}
+
+/* ================================================
+   BOTONES
+   ================================================ */
+.btn {
+    padding: 14px 32px;
+    border-radius: var(--border-radius);
+    border: none;
+    font-family: var(--font-bold);
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all var(--transition-smooth);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: var(--gradient-aqua);
+    transition: left var(--transition-smooth);
+    z-index: -1;
+}
+
+.btn-primary {
+    background: var(--gradient-neon);
+    color: #ffffff;
+    box-shadow: 0 0 20px rgba(157, 78, 221, 0.4);
+}
+
+.btn-primary:hover {
+    box-shadow: 0 0 35px rgba(157, 78, 221, 0.8), 0 0 60px rgba(0, 212, 255, 0.3);
+    transform: translateY(-3px);
+}
+
+.btn-secondary {
+    background: transparent;
+    color: var(--accent-aqua);
+    border: 2px solid var(--accent-aqua);
+    box-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
+}
+
+.btn-secondary:hover {
+    background: rgba(0, 212, 255, 0.1);
+    box-shadow: 0 0 30px rgba(0, 212, 255, 0.6);
+    transform: translateY(-3px);
+}
+
+/* ================================================
+   UTILIDADES
+   ================================================ */
+.section-ornament {
+    width: 60px;
+    height: 4px;
+    background: var(--gradient-dual);
+    margin: 20px auto;
+    border-radius: 2px;
+    box-shadow: 0 0 20px  rgba(0, 212, 255, 0.5);
+}
+
+.decorative-line {
+    width: 100px;
+    height: 2px;
+    background: var(--gradient-aqua);
+    margin: 15px auto;
+    box-shadow: 0 0 15px rgba(0, 212, 255, 0.4);
+}
+
+/* ================================================
+   SCROLLBAR PERSONALIZADO
+   ================================================ */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--gradient-dual);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--gradient-aqua);
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+}
+
+/* ================================================
+   RESPONSIVE - TABLET
+   ================================================ */
+@media (max-width: 768px) {
+    :root {
+        --section-padding: 80px 0;
+    }
+    
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.5rem; }
+}
+
+/* ================================================
+   RESPONSIVE - MOBILE
+   ================================================ */
+@media (max-width: 480px) {
+    :root {
+        --section-padding: 60px 0;
+    }
+    
+    .container {
+        padding: 0 15px;
+    }
+    
+    h1 { font-size: 1.5rem; }
+    h2 { font-size: 1.2rem; }
+    
+    /* Full viewport height para cada sección en mobile */
+    section {
+        min-height: 100dvh;
+    }
+    
+    section.hero {
+        min-height: 100vh;
+    }
+}

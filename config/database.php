@@ -12,7 +12,7 @@ class Database
             'host' => 'localhost',
             'dbname' => 'carta_digital',
             'username' => 'root',
-            'password' => '',
+            'password' => 'root',
             'charset' => 'utf8mb4'
         ),
         'production' => array(

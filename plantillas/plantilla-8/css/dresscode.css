@@ -1,0 +1,110 @@
+/* Dresscode Section */
+
+.dresscode {
+    padding: var(--section-padding);
+    background: var(--bg-primary);
+    position: relative;
+    overflow: hidden;
+}
+
+.dresscode .container {
+    position: relative;
+    z-index: 2;
+}
+
+.dresscode-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.dresscode-header h2 {
+    color: var(--accent-aqua);
+    font-size: clamp(2rem, 5vw, 3rem);
+    margin-bottom: 15px;
+    animation: aquaGlow 4s ease-in-out infinite;
+}
+
+.dresscode-description {
+    color: var(--text-secondary);
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto 3rem;
+    font-size: 1.05rem;
+    line-height: 1.8;
+}
+
+.dresscode-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+}
+
+.dresscode-item {
+    position: relative;
+    animation: fadeInUp 0.8s ease-out;
+}
+
+.dresscode-item:nth-child(1) { animation-delay: 0.1s; }
+.dresscode-item:nth-child(2) { animation-delay: 0.2s; }
+
+.dresscode-image {
+    position: relative;
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+    aspect-ratio: 2/3;
+    margin-bottom: 20px;
+    border: 3px solid var(--accent-neon);
+    box-shadow: 0 0 40px rgba(157, 78, 221, 0.3);
+}
+
+.dresscode-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.95) saturate(1.1);
+    transition: all var(--transition-smooth);
+}
+
+.dresscode-image:hover img {
+    transform: scale(1.05);
+    filter: brightness(1.05) saturate(1.2);
+}
+
+.dresscode-content h3 {
+    color: var(--accent-aqua);
+    font-size: 1.4rem;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.dresscode-content p {
+    color: var(--text-secondary);
+    line-height: 1.8;
+    font-size: 0.95rem;
+}
+
+/* ================================================
+   RESPONSIVE
+   ================================================ */
+@media (max-width: 768px) {
+    .dresscode {
+        padding: 80px 0;
+    }
+    
+    .dresscode-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .dresscode {
+        padding: 60px 0;
+        min-height: 100dvh;
+    }
+    
+    .dresscode-content h3 {
+        font-size: 1.1rem;
+    }
+}

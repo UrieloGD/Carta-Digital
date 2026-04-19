@@ -1,0 +1,266 @@
+/* Ubicaciones - Google Maps y Detalles */
+
+.ubicaciones {
+    min-height: 100vh;
+    padding: var(--section-padding);
+    background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Fondo animado */
+.ubicaciones::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: 
+        radial-gradient(circle at 20% 50%, rgba(157, 78, 221, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(0, 212, 255, 0.1) 0%, transparent 50%);
+    animation: rotate 60s linear infinite;
+    pointer-events: none;
+    z-index: 0;
+}
+
+@keyframes rotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.ubicaciones .container {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 900px;
+}
+
+.ubicaciones-header {
+    text-align: center;
+    margin-bottom: 3.5rem;
+    animation: fadeInUp 0.8s ease-out;
+}
+
+.ubicaciones-header h2 {
+    color: var(--accent-aqua);
+    font-size: clamp(1.8rem, 5vw, 3rem);
+    margin-bottom: 15px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    animation: textGlowLocation 4s ease-in-out infinite;
+    text-shadow: 0 0 25px rgba(0, 212, 255, 0.5);
+}
+
+@keyframes textGlowLocation {
+    0%, 100% { 
+        color: var(--accent-aqua);
+        text-shadow: 0 0 25px rgba(0, 212, 255, 0.5);
+    }
+    50% { 
+        color: #ffffff;
+        text-shadow: 0 0 50px rgba(0, 212, 255, 0.8), 0 0 80px rgba(157, 78, 221, 0.5);
+    }
+}
+
+.ubicaciones-header .decorative-line {
+    margin: 20px auto;
+    height: 3px;
+    width: 120px;
+    background: linear-gradient(90deg, #9d4edd, #00d4ff);
+    box-shadow: 0 0 25px rgba(0, 212, 255, 0.5);
+    border-radius: 2px;
+}
+
+.ubicacion-card-single {
+    background: linear-gradient(135deg, 
+        rgba(157, 78, 221, 0.2) 0%,
+        rgba(0, 212, 255, 0.15) 100%);
+    border: 3px solid var(--accent-aqua);
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+    transition: all var(--transition-smooth);
+    animation: fadeInUp 0.8s ease-out;
+    box-shadow: 0 0 50px rgba(0, 212, 255, 0.3),
+                inset 0 0 20px rgba(0, 212, 255, 0.1);
+}
+
+.ubicacion-card-single:hover {
+    border-color: #06ffa5;
+    box-shadow: 0 0 80px rgba(0, 212, 255, 0.6),
+                0 0 120px rgba(157, 78, 221, 0.4),
+                inset 0 0 30px rgba(0, 212, 255, 0.2);
+    transform: translateY(-5px);
+}
+
+.ubicacion-title {
+    color: var(--accent-aqua);
+    font-size: clamp(1.5rem, 4vw, 2.2rem);
+    font-weight: 900;
+    letter-spacing: 1px;
+    padding: 40px 40px 20px;
+    text-align: center;
+    text-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+}
+
+.ubicacion-address {
+    padding: 0 40px 30px;
+    text-align: center;
+}
+
+.ubicacion-address-text {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    line-height: 1.8;
+    letter-spacing: 0.5px;
+}
+
+.ubicacion-button-wrapper {
+    text-align: center;
+    padding: 0 40px 60px;
+}
+
+.ubicacion-map {
+    width: 100%;
+    height: 350px;
+    background: rgba(157, 78, 221, 0.2);
+    position: relative;
+    overflow: hidden;
+    border-top: 3px solid var(--accent-aqua);
+}
+
+.ubicacion-map iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    filter: brightness(0.95) saturate(1.1);
+}
+
+/* Botón de Google Maps */
+.ubicacion-button {
+    display: inline-block;
+    margin: 0;
+    padding: 15px 50px;
+    background: linear-gradient(135deg, 
+        rgba(157, 78, 221, 0.3) 0%,
+        rgba(0, 212, 255, 0.2) 100%);
+    border: 3px solid var(--accent-aqua);
+    color: var(--accent-aqua);
+    border-radius: var(--border-radius-lg);
+    font-weight: 700;
+    font-size: 1.05rem;
+    letter-spacing: 1px;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 30px rgba(0, 212, 255, 0.3),
+                inset 0 0 15px rgba(0, 212, 255, 0.1);
+    cursor: pointer;
+    text-align: center;
+}
+
+.ubicacion-button:hover {
+    background: linear-gradient(135deg, 
+        rgba(157, 78, 221, 0.6) 0%,
+        rgba(0, 212, 255, 0.4) 100%);
+    border-color: #06ffa5;
+    color: #ffffff;
+    box-shadow: 0 0 60px rgba(0, 212, 255, 0.6),
+                0 0 100px rgba(157, 78, 221, 0.4),
+                inset 0 0 25px rgba(0, 212, 255, 0.2);
+    transform: translateY(-3px);
+}
+
+.ubicacion-button:active {
+    transform: translateY(-1px);
+}
+
+/* ================================================
+   RESPONSIVE
+   ================================================ */
+@media (max-width: 768px) {
+    .ubicaciones {
+        min-height: auto;
+        padding: 60px 20px;
+    }
+
+    .ubicaciones-header {
+        margin-bottom: 2.5rem;
+    }
+
+    .ubicaciones-header h2 {
+        font-size: 1.5rem;
+    }
+
+    .ubicacion-card-single {
+        margin: 0 auto;
+    }
+
+    .ubicacion-title {
+        padding: 30px 30px 15px;
+        font-size: 1.4rem;
+    }
+
+    .ubicacion-address {
+        padding: 0 30px 25px;
+    }
+
+    .ubicacion-address-text {
+        font-size: 1rem;
+    }
+
+    .ubicacion-map {
+        height: 300px;
+    }
+
+    .ubicacion-button {
+        padding: 12px 30px;
+        font-size: 0.95rem;
+        margin: 20px auto 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .ubicaciones {
+        min-height: auto;
+        padding: 40px 15px;
+    }
+
+    .ubicaciones-header {
+        margin-bottom: 2rem;
+    }
+
+    .ubicaciones-header h2 {
+        font-size: 1.3rem;
+    }
+
+    .ubicacion-card-single {
+        border: 2px solid var(--accent-aqua);
+    }
+
+    .ubicacion-title {
+        padding: 25px 20px 15px;
+        font-size: 1.2rem;
+    }
+
+    .ubicacion-address {
+        padding: 0 20px 20px;
+    }
+
+    .ubicacion-address-text {
+        font-size: 0.95rem;
+    }
+
+    .ubicacion-map {
+        height: 250px;
+    }
+
+    .ubicacion-button {
+        padding: 12px 25px;
+        font-size: 0.9rem;
+        margin: 15px auto 0;
+    }
+}

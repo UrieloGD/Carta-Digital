@@ -1,0 +1,366 @@
+/* RSVP Section - K-pop Demon Hunters x Raya */
+
+:root {
+    --section-padding: 100px 0;
+    --border-radius-lg: 20px;
+    --border-radius: 12px;
+    --bg-secondary: #1a1f3a;
+    --bg-tertiary: #0f1421;
+    --border-aqua: #00d4ff;
+    --text-secondary: #b0bcc6;
+    --text-primary: #ffffff;
+    --accent-aqua: #00d4ff;
+    --accent-neon-light: #9d4edd;
+    --transition-smooth: 0.3s ease-in-out;
+}
+
+.rsvp {
+    padding: var(--section-padding);
+    background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+    position: relative;
+    overflow: hidden;
+    min-height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.rsvp::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: -20%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(157, 78, 221, 0.15) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.rsvp::after {
+    content: '';
+    position: absolute;
+    bottom: -20%;
+    left: -10%;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(0, 212, 255, 0.1) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-30px); }
+}
+
+.rsvp .container {
+    position: relative;
+    z-index: 2;
+    max-width: 700px;
+}
+
+.rsvp-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    animation: fadeInUp 0.8s ease-out;
+}
+
+.rsvp-header h2 {
+    color: var(--accent-aqua);
+    font-size: clamp(2.2rem, 5vw, 3.2rem);
+    margin-bottom: 15px;
+    font-weight: 700;
+    animation: textGlow 4s ease-in-out infinite;
+}
+
+.rsvp-subtitle {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+    animation: fadeInUp 0.8s ease-out 0.1s both;
+}
+
+.decorative-line {
+    height: 3px;
+    width: 60px;
+    background: linear-gradient(90deg, var(--accent-neon-light), var(--accent-aqua));
+    margin: 20px auto;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 212, 255, 0.4);
+}
+
+.rsvp-main {
+    animation: fadeInUp 0.8s ease-out 0.2s both;
+}
+
+.rsvp-message {
+    background: rgba(157, 78, 221, 0.1);
+    border: 2px solid rgba(0, 212, 255, 0.2);
+    border-radius: var(--border-radius-lg);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.rsvp-message::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent-aqua), transparent);
+}
+
+.rsvp-message p {
+    color: var(--text-secondary);
+    font-size: 1.05rem;
+    margin: 0;
+    line-height: 1.8;
+    animation: textGlow 4s ease-in-out infinite;
+}
+
+.rsvp-form {
+    background: rgba(31, 37, 64, 0.6);
+    border: 2px solid rgba(0, 212, 255, 0.2);
+    border-radius: var(--border-radius-lg);
+    padding: 2.5rem;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.rsvp-form::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, 
+        rgba(157, 78, 221, 0.05) 0%, 
+        transparent 50%,
+        rgba(0, 212, 255, 0.05) 100%);
+    pointer-events: none;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+    position: relative;
+    z-index: 2;
+}
+
+.form-group label {
+    display: block;
+    color: var(--accent-aqua);
+    font-weight: 600;
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    animation: fadeInUp 0.6s ease-out backwards;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 12px 15px;
+    background: rgba(15, 20, 33, 0.9);
+    border: 2px solid rgba(0, 212, 255, 0.2);
+    border-radius: var(--border-radius);
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 0.95rem;
+    transition: all 0.3s ease-in-out;
+}
+
+.form-group input::placeholder {
+    color: rgba(176, 188, 198, 0.5);
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--accent-aqua);
+    background: rgba(0, 212, 255, 0.03);
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.25);
+}
+
+.rsvp-action-wrapper {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.rsvp-button {
+    padding: 15px 50px;
+    background: linear-gradient(135deg, var(--accent-neon-light), var(--accent-aqua));
+    color: white;
+    border: none;
+    border-radius: var(--border-radius-lg);
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+    display: inline-block;
+}
+
+.rsvp-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.2);
+    transition: left 0.5s ease;
+}
+
+.rsvp-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(0, 212, 255, 0.4);
+}
+
+.rsvp-button:hover::before {
+    left: 100%;
+}
+
+.rsvp-details {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+}
+
+.detail-item {
+    text-align: center;
+    animation: fadeInUp 0.8s ease-out backwards;
+}
+
+.detail-item:nth-child(1) { animation-delay: 0.3s; }
+.detail-item:nth-child(3) { animation-delay: 0.5s; }
+
+.detail-label {
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+    display: block;
+    animation: textGlow 3.5s ease-in-out infinite;
+}
+
+.detail-value {
+    color: var(--accent-aqua);
+    font-weight: 600;
+    font-size: 1rem;
+    animation: textGlow 4s ease-in-out infinite;
+}
+
+.detail-separator {
+    color: var(--accent-neon-light);
+    font-size: 1.5rem;
+    animation: fadeInUp 0.8s ease-out 0.4s both;
+}
+
+.rsvp-closed {
+    background: rgba(157, 78, 221, 0.1);
+    border: 2px solid rgba(157, 78, 221, 0.3);
+    border-radius: var(--border-radius-lg);
+    padding: 3rem;
+    text-align: center;
+}
+
+.rsvp-closed h3 {
+    color: var(--accent-aqua);
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+}
+
+.rsvp-closed p {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    margin: 0;
+}
+
+/* ================================================
+   ANIMATIONS
+   ================================================ */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes textGlow {
+    0%, 100% {
+        text-shadow: 0 0 10px rgba(0, 212, 255, 0.3), 0 0 20px rgba(157, 78, 221, 0.2);
+    }
+    50% {
+        text-shadow: 0 0 20px rgba(0, 212, 255, 0.5), 0 0 30px rgba(157, 78, 221, 0.3);
+    }
+}
+
+/* ================================================
+   RESPONSIVE
+   ================================================ */
+@media (max-width: 768px) {
+    .rsvp {
+        padding: 80px 20px;
+        min-height: auto;
+    }
+    
+    .rsvp-form {
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .rsvp {
+        padding: 60px 20px;
+    }
+    
+    .rsvp-header h2 {
+        font-size: 1.8rem;
+    }
+    
+    .rsvp-form {
+        padding: 1.2rem;
+    }
+    
+    .rsvp-message {
+        padding: 1.5rem;
+    }
+    
+    .rsvp-button {
+        padding: 12px 30px;
+        font-size: 0.95rem;
+        width: 100%;
+    }
+    
+    .rsvp-details {
+        gap: 1rem;
+        flex-direction: column;
+    }
+    
+    .detail-separator {
+        display: none;
+    }
+}

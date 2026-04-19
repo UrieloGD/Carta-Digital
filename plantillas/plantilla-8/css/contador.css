@@ -1,0 +1,357 @@
+/* Contador Regresivo - Animaciones Dinámicas y Emocionantes */
+
+.contador {
+    padding: var(--section-padding);
+    background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+    position: relative;
+    overflow: hidden;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Fondo animado con burbujas */
+.contador::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 15% 20%, rgba(0, 212, 255, 0.2) 0%, transparent 25%),
+        radial-gradient(circle at 85% 80%, rgba(157, 78, 221, 0.18) 0%, transparent 22%),
+        radial-gradient(circle at 50% 50%, rgba(6, 255, 165, 0.12) 0%, transparent 30%),
+        radial-gradient(circle at 20% 70%, rgba(0, 212, 255, 0.15) 0%, transparent 20%);
+    animation: contadorBubbles 30s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 1;
+}
+
+@keyframes contadorBubbles {
+    0% { transform: translate(0, 0) scale(1); }
+    25% { transform: translate(30px, -50px) scale(1.1); }
+    50% { transform: translate(-20px, 30px) scale(0.95); }
+    75% { transform: translate(40px, 20px) scale(1.05); }
+    100% { transform: translate(0, 0) scale(1); }
+}
+
+/* Capa de luz adicional */
+.contador::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(0, 212, 255, 0.1) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: floatingLight 8s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 0;
+}
+
+@keyframes floatingLight {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(50px) scale(1.2); }
+}
+
+.contador .container {
+    position: relative;
+    z-index: 2;
+}
+
+/* Encabezado */
+.contador-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    animation: slideDown 0.8s ease-out;
+}
+
+.contador-title {
+    color: var(--accent-aqua);
+    font-size: clamp(1.8rem, 5vw, 3rem);
+    font-weight: 900;
+    margin: 0 0 15px 0;
+    animation: textGlowAnimation 4s ease-in-out infinite;
+    text-shadow: 0 0 25px rgba(0, 212, 255, 0.5);
+    letter-spacing: 2px;
+}
+
+@keyframes textGlowAnimation {
+    0%, 100% { 
+        color: var(--accent-aqua);
+        text-shadow: 0 0 25px rgba(0, 212, 255, 0.5), 0 0 50px rgba(157, 78, 221, 0.3);
+    }
+    50% { 
+        color: #ffffff;
+        text-shadow: 0 0 40px rgba(0, 212, 255, 0.8), 0 0 80px rgba(157, 78, 221, 0.6);
+    }
+}
+
+.contador-subtitle {
+    color: var(--accent-neon-light);
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-shadow: 0 0 15px rgba(157, 78, 221, 0.4);
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Display del contador */
+.contador-display {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    max-width: 900px;
+    margin: 0 auto;
+    flex-wrap: wrap;
+}
+
+.contador-unit {
+    background: linear-gradient(135deg, 
+        rgba(157, 78, 221, 0.2) 0%,
+        rgba(0, 212, 255, 0.15) 100%);
+    border: 3px solid var(--accent-aqua);
+    border-radius: var(--border-radius-lg);
+    padding: 30px 25px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    animation: countdownBounce 0.8s ease-out backwards;
+    box-shadow: 0 0 40px rgba(0, 212, 255, 0.3),
+                inset 0 0 20px rgba(0, 212, 255, 0.1);
+    flex: 1;
+    min-width: 120px;
+    max-width: 160px;
+}
+
+.contador-unit:nth-child(1) { animation-delay: 0.1s; }
+.contador-unit:nth-child(3) { animation-delay: 0.2s; }
+.contador-unit:nth-child(5) { animation-delay: 0.3s; }
+.contador-unit:nth-child(7) { animation-delay: 0.4s; }
+
+@keyframes countdownBounce {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.contador-unit::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        transparent 0%,
+        rgba(0, 212, 255, 0.3) 50%,
+        transparent 100%);
+    animation: unitShimmer 3s infinite;
+}
+
+@keyframes unitShimmer {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+.contador-unit:hover {
+    border-color: #06ffa5;
+    box-shadow: 0 0 60px rgba(0, 212, 255, 0.6),
+                0 0 100px rgba(157, 78, 221, 0.4),
+                inset 0 0 30px rgba(0, 212, 255, 0.2);
+    transform: translateY(-5px) scale(1.05);
+}
+
+.contador-value-wrapper {
+    position: relative;
+    z-index: 1;
+    display: inline-block;
+    min-width: 90px;
+}
+
+.contador-number {
+    font-family: var(--font-bold);
+    font-size: clamp(2rem, 8vw, 4rem);
+    font-weight: 900;
+    color: var(--accent-aqua);
+    display: block;
+    line-height: 1;
+    margin-bottom: 12px;
+    text-shadow: 
+        0 0 30px rgba(0, 212, 255, 0.6),
+        0 0 60px rgba(157, 78, 221, 0.4),
+        0 2px 15px rgba(0, 0, 0, 0.3);
+    animation: numberPulse 1s ease-in-out infinite;
+    letter-spacing: 2px;
+}
+
+@keyframes numberPulse {
+    0%, 100% { 
+        transform: scale(1);
+        text-shadow: 0 0 30px rgba(0, 212, 255, 0.6), 0 0 60px rgba(157, 78, 221, 0.4), 0 2px 15px rgba(0, 0, 0, 0.3);
+    }
+    50% { 
+        transform: scale(1.1);
+        text-shadow: 0 0 50px rgba(0, 212, 255, 1), 0 0 100px rgba(157, 78, 221, 0.6), 0 0 150px rgba(0, 212, 255, 0.4);
+    }
+}
+
+.contador-label {
+    color: var(--accent-neon-light);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 700;
+    position: relative;
+    z-index: 1;
+    text-shadow: 0 0 10px rgba(157, 78, 221, 0.3);
+}
+
+/* Separadores */
+.contador-separator {
+    color: var(--accent-aqua);
+    font-size: clamp(1.5rem, 5vw, 3rem);
+    font-weight: 900;
+    animation: separatorPulse 1s ease-in-out infinite;
+    text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+    margin: 0 10px;
+}
+
+@keyframes separatorPulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+}
+
+/* ================================================
+   RESPONSIVE
+   ================================================ */
+@media (max-width: 768px) {
+    .contador {
+        padding: 60px 20px;
+        min-height: auto;
+    }
+    
+    .contador-title {
+        font-size: 1.5rem;
+    }
+    
+    .contador-display {
+        gap: 0.5rem;
+    }
+    
+    .contador-unit {
+        padding: 20px 15px;
+        min-width: 90px;
+        max-width: 120px;
+    }
+    
+    .contador-number {
+        font-size: 1.8rem;
+        margin-bottom: 8px;
+    }
+    
+    .contador-label {
+        font-size: 0.75rem;
+    }
+    
+    .contador-separator {
+        font-size: 1.5rem;
+        margin: 0 5px;
+    }
+}
+
+@media (max-width: 480px) {
+    .contador {
+        padding: 40px 20px;
+        min-height: 100dvh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    
+    .contador-header {
+        margin-bottom: 3rem;
+        text-align: center;
+    }
+    
+    .contador-title {
+        font-size: 1.6rem;
+        margin-bottom: 15px;
+        letter-spacing: 1px;
+    }
+    
+    .contador-subtitle {
+        font-size: 1.15rem;
+        font-weight: 700;
+        letter-spacing: 2px;
+    }
+    
+    .contador-display {
+        display: flex;
+        flex-direction: column;
+        gap: 1.3rem;
+        max-width: 100%;
+        margin: 0 auto;
+        width: 100%;
+    }
+    
+    .contador-unit {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 22px 25px;
+        min-width: unset;
+        max-width: unset;
+        width: 100%;
+        border: 3px solid var(--accent-aqua);
+        background: linear-gradient(135deg, 
+            rgba(157, 78, 221, 0.25) 0%,
+            rgba(0, 212, 255, 0.2) 100%);
+        box-shadow: 0 0 30px rgba(0, 212, 255, 0.3),
+                    inset 0 0 15px rgba(0, 212, 255, 0.1);
+    }
+    
+    .contador-value-wrapper {
+        flex: 0 0 auto;
+        min-width: 85px;
+    }
+    
+    .contador-number {
+        font-size: 2.8rem;
+        margin-bottom: 0;
+        text-align: center;
+        line-height: 1;
+    }
+    
+    .contador-label {
+        font-size: 1rem;
+        letter-spacing: 1.5px;
+        flex: 1;
+        text-align: right;
+        margin-left: 25px;
+        font-weight: 700;
+    }
+    
+    .contador-separator {
+        display: none;
+    }
+}
