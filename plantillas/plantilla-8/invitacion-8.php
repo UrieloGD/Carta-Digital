@@ -596,10 +596,22 @@ try {
 
 <!-- Music Player -->
 <?php if ($musica_youtube_url): ?>
-<div class="music-player" id="musicPlayer" title="Reproducir música">
-    <span class="music-player-icon">🎵</span>
-    <audio id="playerAudio" src="" <?php echo $musica_autoplay ? 'autoplay' : ''; ?> loop></audio>
-</div>
+<!-- ================================================
+     MUSIC PLAYER — inicialización vía JS
+     El widget se inserta dinámicamente en el DOM.
+     No se necesita ningún elemento HTML aquí.
+     ================================================ -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        if (typeof MUSICA_URL !== 'undefined' && MUSICA_URL) {
+            initMusicPlayer(
+                MUSICA_URL,                                          // URL de YouTube
+                <?php echo $musica_autoplay ? 'true' : 'false'; ?>, // autoplay
+                0.7                                                  // volumen inicial (0-1)
+            );
+        }
+    });
+</script>
 <?php endif; ?>
 
 <!-- Scripts -->
