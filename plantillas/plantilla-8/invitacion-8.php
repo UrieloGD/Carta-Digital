@@ -364,26 +364,27 @@ try {
                         </div>
                         <div class="slide-info">
                             <div class="slide-counter"><span id="slideNumber"><?php echo $index + 1; ?></span> / <span id="totalSlides"><?php echo count($galeria); ?></span></div>
-                            <div class="slide-title">Momento <?php echo $index + 1; ?></div>
-                            <p class="slide-description">Parte de la magia de este evento especial</p>
                         </div>
                     </div>
                     <?php endforeach; ?>
                 </div>
             </div>
-            
-            <!-- Controles de navegación -->
-            <button class="carousel-btn carousel-prev" id="carouselPrev" aria-label="Imagen anterior">
-                <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="3">
-                    <polyline points="15 18 9 12 15 6"></polyline>
-                </svg>
-            </button>
-            
-            <button class="carousel-btn carousel-next" id="carouselNext" aria-label="Imagen siguiente">
-                <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="3">
-                    <polyline points="9 18 15 12 9 6"></polyline>
-                </svg>
-            </button>
+
+            <!-- ✅ NUEVO: Botones de navegación movidos aquí (entre contador y dots) -->
+            <!-- En desktop: ocultos (los originales siguen posicionados de forma absoluta en .carousel-container) -->
+            <!-- En mobile: visibles en flujo normal, entre el número y los puntos -->
+            <div class="carousel-nav-buttons">
+                <button class="carousel-btn carousel-prev" id="carouselPrev" aria-label="Imagen anterior">
+                    <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="3">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                </button>
+                <button class="carousel-btn carousel-next" id="carouselNext" aria-label="Imagen siguiente">
+                    <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="3">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </button>
+            </div>
             
             <!-- Indicadores de puntos -->
             <div class="carousel-dots" id="carouselDots">
