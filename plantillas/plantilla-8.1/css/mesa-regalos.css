@@ -1,0 +1,136 @@
+/* Mesa de Regalos Section */
+
+.mesa-regalos {
+    padding: var(--section-padding);
+    background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.mesa-regalos::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -20%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(0, 212, 255, 0.08) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.mesa-regalos .container {
+    position: relative;
+    z-index: 2;
+}
+
+.mesa-regalos-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.mesa-regalos-header h2 {
+    color: var(--accent-aqua);
+    font-size: clamp(2rem, 5vw, 3rem);
+    margin-bottom: 15px;
+    animation: aquaGlow 4s ease-in-out infinite;
+}
+
+.mesa-regalos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 2rem;
+}
+
+.regalo-card {
+    background: rgba(31, 37, 64, 0.7);
+    border: 2px solid var(--border-neon);
+    border-radius: var(--border-radius-lg);
+    padding: 25px;
+    text-align: center;
+    transition: all var(--transition-smooth);
+    animation: fadeInUp 0.8s ease-out;
+    position: relative;
+    overflow: hidden;
+}
+
+.regalo-card:hover {
+    border-color: var(--accent-aqua);
+    background: rgba(31, 37, 64, 0.95);
+    box-shadow: 0 0 30px rgba(0, 212, 255, 0.3),
+                0 0 60px rgba(157, 78, 221, 0.2);
+    transform: translateY(-8px);
+}
+
+.regalo-icon {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    display: block;
+    transition: all var(--transition-smooth);
+}
+
+.regalo-card:hover .regalo-icon {
+    transform: scale(1.2) rotate(10deg);
+}
+
+.regalo-nombre {
+    color: var(--accent-neon-light);
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.regalo-descripcion {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.regalo-link {
+    display: inline-block;
+    padding: 10px 20px;
+    background: rgba(0, 212, 255, 0.1);
+    color: var(--accent-aqua);
+    text-decoration: none;
+    border: 2px solid var(--accent-aqua);
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    transition: all var(--transition-smooth);
+    font-size: 0.9rem;
+}
+
+.regalo-link:hover {
+    background: var(--accent-aqua);
+    color: var(--bg-primary);
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+}
+
+/* ================================================
+   RESPONSIVE
+   ================================================ */
+@media (max-width: 768px) {
+    .mesa-regalos {
+        padding: 80px 0;
+    }
+    
+    .mesa-regalos-grid {
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .mesa-regalos {
+        padding: 60px 0;
+        min-height: 100dvh;
+    }
+    
+    .mesa-regalos-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .regalo-icon {
+        font-size: 2.5rem;
+    }
+}

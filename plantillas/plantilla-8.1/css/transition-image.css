@@ -1,0 +1,29 @@
+/* Transition Image & Effects */
+
+.transition-image {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--border-radius-lg);
+}
+
+.transition-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: all var(--transition-smooth);
+    filter: brightness(0.95) saturate(1.1);
+}
+
+.transition-image:hover img {
+    transform: scale(1.08);
+    filter: brightness(1.05) saturate(1.2);
+}
+
+/* ================================================
+   RESPONSIVE
+   ================================================ */
+@media (max-width: 768px) {
+    .transition-image img {
+        max-width: 100%;
+    }
+}

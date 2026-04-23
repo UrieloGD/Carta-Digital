@@ -1,71 +1,82 @@
-/* Hero Section - K-pop Demon Hunters x Raya - ANIMACIONES VIBRANTES */
+/* Hero Section - Kawaii Princess - ANIMACIONES VIBRANTES */
+
 
 /* ================================================
    ANIMACIONES GLOBALES
    ================================================ */
 @keyframes vibrantZoom {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
+    0%   { transform: scale(1);    }
+    50%  { transform: scale(1.05); }
     100% { transform: scale(1.02); }
 }
 
+
 @keyframes neonPulse {
     0%, 100% { 
-        box-shadow: 0 0 20px rgba(157, 78, 221, 0.5),
-                    0 0 40px rgba(0, 212, 255, 0.3);
+        box-shadow: 0 0 20px rgba(255, 182, 220, 0.5),
+                    0 0 40px rgba(216, 164, 248, 0.3);
     }
     50% { 
-        box-shadow: 0 0 40px rgba(157, 78, 221, 0.8),
-                    0 0 80px rgba(0, 212, 255, 0.6),
-                    0 0 120px rgba(157, 78, 221, 0.4);
+        box-shadow: 0 0 40px rgba(255, 182, 220, 0.8),
+                    0 0 80px rgba(216, 164, 248, 0.6),
+                    0 0 120px rgba(255, 182, 220, 0.4);
     }
 }
+
 
 @keyframes aquaGlow {
     0%, 100% { 
-        text-shadow: 0 0 10px rgba(0, 212, 255, 0.4),
-                     0 0 20px rgba(157, 78, 221, 0.3);
+        text-shadow: 
+            0 0 10px rgba(220, 160, 210, 0.6),
+            0 0 20px rgba(200, 140, 240, 0.4);
     }
     50% { 
-        text-shadow: 0 0 20px rgba(0, 212, 255, 0.8),
-                     0 0 40px rgba(157, 78, 221, 0.6),
-                     0 0 60px rgba(0, 212, 255, 0.4);
+        text-shadow: 
+            0 0 20px rgba(255, 182, 220, 0.95),
+            0 0 40px rgba(216, 164, 248, 0.7),
+            0 0 60px rgba(255, 210, 238, 0.5);
     }
 }
 
-@keyframes floatingParticles {
-    0% { 
-        opacity: 0;
-        transform: translateY(100px) translateX(-20px);
-    }
-    10% { opacity: 1; }
-    90% { opacity: 1; }
-    100% { 
-        opacity: 0;
-        transform: translateY(-80vh) translateX(20px);
-    }
-}
 
 @keyframes scrollFloat {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
+    0%, 100% { transform: translateY(0px);  }
+    50%       { transform: translateY(-10px); }
 }
+
 
 @keyframes shimmer {
-    0%, 100% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
+    0%, 100% { background-position: 0%   50%; }
+    50%       { background-position: 100% 50%; }
 }
 
+
 @keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0);    }
 }
+
+
+@keyframes dotFloat {
+    0%   { transform: translateY(110vh) scale(0.5); opacity: 0;   }
+    10%  { opacity: 0.8; }
+    90%  { opacity: 0.6; }
+    100% { transform: translateY(-10vh)  scale(1.2); opacity: 0;  }
+}
+
+
+@keyframes starsFloat {
+    0%   { transform: translateX(0%);  opacity: 0.5; }
+    50%  { transform: translateX(-4%); opacity: 0.9; }
+    100% { transform: translateX(0%);  opacity: 0.5; }
+}
+
+
+@keyframes orbPulse {
+    0%, 100% { transform: scale(1)   translateY(0px);  opacity: 0.25; }
+    50%       { transform: scale(1.3) translateY(-40px); opacity: 0.45; }
+}
+
 
 /* ================================================
    SECCIÓN HERO
@@ -78,8 +89,9 @@
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    background: var(--bg-primary);
+    background: #fff0f8;
 }
+
 
 .hero-background {
     position: absolute;
@@ -90,27 +102,38 @@
     z-index: 1;
 }
 
+
 .hero-image {
     width: 100%;
     height: 100%;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    filter: brightness(0.7) saturate(1.3) contrast(1.2);
+    filter: brightness(1.0) saturate(1.2) contrast(1.05);
     animation: vibrantZoom 20s ease-in-out infinite;
 }
 
+
+/* Overlay pastel claro - sin oscuridad */
 .hero-overlay {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(15, 20, 33, 0.75);
+    background: linear-gradient(
+        160deg,
+        rgba(255, 225, 245, 0.3) 0%,
+        rgba(235, 210, 255, 0.2) 50%,
+        rgba(255, 225, 245, 0.28) 100%
+    );
     z-index: 2;
 }
 
-/* Capa de partículas */
+
+/* ================================================
+   CAPA DE DESTELLOS RADIALES
+   ================================================ */
 .hero-overlay::before {
     content: '';
     position: absolute;
@@ -119,14 +142,17 @@
     width: 100%;
     height: 100%;
     background: 
-        radial-gradient(ellipse at 25% 25%, rgba(157, 78, 221, 0.15) 0%, transparent 50%),
-        radial-gradient(ellipse at 75% 75%, rgba(0, 212, 255, 0.1) 0%, transparent 50%),
-        radial-gradient(ellipse at 50% 80%, rgba(0, 212, 255, 0.08) 0%, transparent 60%);
+        radial-gradient(ellipse at 20% 20%, rgba(255, 182, 220, 0.38) 0%, transparent 45%),
+        radial-gradient(ellipse at 80% 75%, rgba(216, 164, 248, 0.32) 0%, transparent 45%),
+        radial-gradient(ellipse at 55% 85%, rgba(255, 210, 238, 0.28) 0%, transparent 50%),
+        radial-gradient(ellipse at 10% 70%, rgba(240, 190, 255, 0.25) 0%, transparent 35%),
+        radial-gradient(ellipse at 90% 20%, rgba(255, 192, 228, 0.3)  0%, transparent 35%);
     animation: neonPulse 6s ease-in-out infinite;
     pointer-events: none;
 }
 
-/* Capa animada de luz */
+
+/* Capa de brillo animado tipo shimmer */
 .hero-overlay::after {
     content: '';
     position: absolute;
@@ -135,20 +161,132 @@
     width: 100%;
     height: 100%;
     background-image: 
-        radial-gradient(2px 2px at 20% 30%, rgba(0, 212, 255, 0.2), transparent),
-        radial-gradient(1.5px 1.5px at 60% 70%, rgba(157, 78, 221, 0.15), transparent),
-        radial-gradient(1px 1px at 50% 50%, rgba(0, 212, 255, 0.1), transparent);
+        radial-gradient(3px 3px at 15% 25%, rgba(255, 182, 220, 0.55), transparent),
+        radial-gradient(2px 2px at 55% 65%, rgba(216, 164, 248, 0.5),  transparent),
+        radial-gradient(2px 2px at 45% 45%, rgba(255, 210, 238, 0.45), transparent),
+        radial-gradient(3px 3px at 80% 15%, rgba(240, 190, 255, 0.5),  transparent),
+        radial-gradient(2px 2px at 30% 80%, rgba(255, 192, 228, 0.45), transparent),
+        radial-gradient(1.5px 1.5px at 70% 40%, rgba(220, 170, 255, 0.4), transparent);
     background-size: 250% 250%;
     animation: shimmer 8s ease-in-out infinite;
-    opacity: 0.6;
+    opacity: 0.9;
 }
+
+
+/* ================================================
+   ORBES DECORATIVOS
+   ================================================ */
+.hero-orb-left {
+    position: absolute;
+    bottom: -12%;
+    left: -6%;
+    width: 550px;
+    height: 550px;
+    background: radial-gradient(circle, rgba(255, 182, 220, 0.25) 0%, rgba(216, 164, 248, 0.12) 50%, transparent 70%);
+    border-radius: 50%;
+    animation: orbPulse 8s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 2;
+}
+
+
+.hero-orb-right {
+    position: absolute;
+    top: -10%;
+    right: -8%;
+    width: 480px;
+    height: 480px;
+    background: radial-gradient(circle, rgba(216, 164, 248, 0.22) 0%, rgba(255, 182, 220, 0.1) 50%, transparent 70%);
+    border-radius: 50%;
+    animation: orbPulse 10s ease-in-out infinite reverse;
+    pointer-events: none;
+    z-index: 2;
+}
+
+
+/* ================================================
+   ESTRELLAS / FLORES FLOTANTES
+   ================================================ */
+.hero-sparkles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 3;
+    overflow: hidden;
+}
+
+
+.hero-sparkles::before {
+    content: '✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦';
+    position: absolute;
+    top: 6%;
+    left: 0;
+    width: 100%;
+    font-size: 0.85rem;
+    color: rgba(210, 130, 180, 0.45);
+    letter-spacing: 5vw;
+    animation: starsFloat 14s linear infinite;
+    white-space: nowrap;
+}
+
+
+.hero-sparkles::after {
+    content: '✿ ❀ ✿ ❀ ✿ ❀ ✿ ❀ ✿ ❀ ✿ ❀ ✿ ❀ ✿';
+    position: absolute;
+    bottom: 10%;
+    left: 0;
+    width: 100%;
+    font-size: 0.95rem;
+    color: rgba(180, 120, 220, 0.38);
+    letter-spacing: 5vw;
+    animation: starsFloat 17s linear infinite reverse;
+    white-space: nowrap;
+}
+
+
+/* ================================================
+   PUNTOS FLOTANTES
+   ================================================ */
+.hero-dots {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 3;
+}
+
+
+.hero-dots span {
+    position: absolute;
+    border-radius: 50%;
+    animation: dotFloat linear infinite;
+    opacity: 0;
+}
+
+
+.hero-dots span:nth-child(1)  { width:9px;  height:9px;  background: rgba(255,182,220,0.75); left:7%;  animation-duration:9s;  animation-delay:0s;   }
+.hero-dots span:nth-child(2)  { width:6px;  height:6px;  background: rgba(216,164,248,0.7);  left:17%; animation-duration:12s; animation-delay:1.5s; }
+.hero-dots span:nth-child(3)  { width:13px; height:13px; background: rgba(255,200,235,0.65); left:27%; animation-duration:8s;  animation-delay:2.5s; }
+.hero-dots span:nth-child(4)  { width:7px;  height:7px;  background: rgba(220,170,255,0.7);  left:38%; animation-duration:14s; animation-delay:0.8s; }
+.hero-dots span:nth-child(5)  { width:11px; height:11px; background: rgba(255,182,220,0.65); left:52%; animation-duration:10s; animation-delay:3.2s; }
+.hero-dots span:nth-child(6)  { width:8px;  height:8px;  background: rgba(240,190,255,0.75); left:63%; animation-duration:7s;  animation-delay:1s;   }
+.hero-dots span:nth-child(7)  { width:10px; height:10px; background: rgba(255,210,240,0.65); left:74%; animation-duration:11s; animation-delay:0.4s; }
+.hero-dots span:nth-child(8)  { width:5px;  height:5px;  background: rgba(210,160,245,0.8);  left:84%; animation-duration:9s;  animation-delay:2s;   }
+.hero-dots span:nth-child(9)  { width:12px; height:12px; background: rgba(255,182,220,0.6);  left:92%; animation-duration:13s; animation-delay:1.8s; }
+.hero-dots span:nth-child(10) { width:7px;  height:7px;  background: rgba(216,164,248,0.7);  left:44%; animation-duration:15s; animation-delay:4s;   }
+
 
 /* ================================================
    CONTENIDO HERO
    ================================================ */
 .hero-content {
     position: relative;
-    z-index: 3;
+    z-index: 5;
     width: 100%;
     text-align: center;
     animation: fadeInUp 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.3s both;
@@ -156,62 +294,70 @@
     align-items: center;
     justify-content: center;
     padding: 120px 20px 100px;
+    background: transparent;
 }
+
 
 .hero-content .container {
     width: 100%;
     max-width: 900px;
+    background: transparent;
 }
+
 
 .hero-text {
     position: relative;
-    z-index: 4;
+    z-index: 6;
+    background: transparent;
 }
+
 
 .hero-title {
     font-family: var(--font-bold);
-    font-size: clamp(1.5rem, 4vw, 2.5rem);
-    color: var(--accent-aqua);
+    font-size: clamp(1.2rem, 3.5vw, 2.5rem);
+    color: #ffffff;
     text-transform: uppercase;
     letter-spacing: 3px;
     margin-bottom: 20px;
     animation: aquaGlow 3s ease-in-out infinite;
-    font-weight: 300;
-    text-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+    font-weight: 700;
+    text-shadow: 
+        0 0 15px rgba(201, 95, 168, 0.9),
+        0 0 30px rgba(192, 132, 232, 0.7),
+        -1px -1px 0 rgba(160, 50, 120, 0.5),
+         1px -1px 0 rgba(160, 50, 120, 0.5),
+        -1px  1px 0 rgba(160, 50, 120, 0.5),
+         1px  1px 0 rgba(160, 50, 120, 0.5);
 }
+
 
 .hero-names {
     font-family: var(--font-bold);
-    font-size: clamp(2.5rem, 8vw, 5rem);
-    color: #ffffff;
+    font-size: clamp(2.8rem, 8vw, 5rem);
     font-weight: 900;
     line-height: 1.1;
     margin: 20px 0;
-    background: var(--gradient-dual);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #ffffff;
+    background: none;
+    -webkit-background-clip: unset;
+    -webkit-text-fill-color: #ffffff;
+    background-clip: unset;
     text-shadow: 
-        0 0 30px rgba(157, 78, 221, 0.4),
-        0 0 60px rgba(0, 212, 255, 0.2);
-    animation: neonPulse 4s ease-in-out infinite;
+        0 0 20px rgba(255, 182, 220, 0.95),
+        0 0 40px rgba(216, 164, 248, 0.75),
+        0 0 65px rgba(201, 95, 168, 0.55),
+        -2px -2px 0 rgba(180, 60, 140, 0.45),
+         2px -2px 0 rgba(180, 60, 140, 0.45),
+        -2px  2px 0 rgba(180, 60, 140, 0.45),
+         2px  2px 0 rgba(180, 60, 140, 0.45);
     letter-spacing: 2px;
 }
 
-/* Efecto de glow en el nombre */
+
 .hero-names::after {
-    content: attr(data-text);
-    position: absolute;
-    left: 0;
-    top: 0;
-    z-index: -1;
-    background: var(--gradient-dual);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    filter: blur(10px);
-    opacity: 0.5;
+    display: none;
 }
+
 
 /* ================================================
    INDICADOR DE SCROLL
@@ -225,19 +371,21 @@
     cursor: pointer;
 }
 
+
 .scroll-line {
     width: 2px;
     height: 30px;
     background: linear-gradient(180deg, 
-        rgba(0, 212, 255, 0.8) 0%,
-        rgba(157, 78, 221, 0.4) 100%);
+        rgba(210, 130, 180, 1) 0%,
+        rgba(192, 132, 232, 0.5) 100%);
     border-radius: 1px;
     animation: scrollFloat 1.5s ease-in-out infinite;
-    box-shadow: 0 0 15px rgba(0, 212, 255, 0.5);
+    box-shadow: 0 0 15px rgba(210, 130, 180, 0.7);
 }
 
+
 /* ================================================
-   RESPONSIVE - MOBILE
+   RESPONSIVE - TABLET
    ================================================ */
 @media (max-width: 768px) {
     .hero {
@@ -245,15 +393,19 @@
         height: auto;
         padding: 100px 0;
     }
-    
+
     .hero-title {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
     }
-    
+
     .hero-names {
-        font-size: 2rem;
+        font-size: 2.4rem;
     }
+
+    .hero-orb-left  { width: 350px; height: 350px; }
+    .hero-orb-right { width: 300px; height: 300px; }
 }
+
 
 /* ================================================
    RESPONSIVE - MOBILE
@@ -264,7 +416,7 @@
         height: 100vh;
         padding: 80px 0;
     }
-    
+
     .hero-content {
         padding: 0 15px;
         display: flex;
@@ -272,26 +424,32 @@
         justify-content: center;
         min-height: 100%;
         padding-bottom: 100px;
+        background: transparent;
     }
-    
+
     .hero-title {
-        font-size: 0.9rem;
+        font-size: 0.85rem;
         letter-spacing: 1px;
-        margin-bottom: 15px;
+        margin-bottom: 12px;
     }
-    
+
+    /* Nombre más grande en mobile pero sin exagerar */
     .hero-names {
-        font-size: 2.2rem;
-        letter-spacing: 2px;
-        line-height: 1.1;
+        font-size: 2.6rem;
+        letter-spacing: 1.5px;
+        line-height: 1.15;
+        -webkit-text-fill-color: #ffffff;
     }
-    
+
     .hero-subtitle {
         font-size: 1rem;
         margin-top: 15px;
     }
-    
+
     .hero-scroll-indicator {
         bottom: 20px;
     }
+
+    .hero-orb-left  { width: 280px; height: 280px; bottom: -8%; left: -10%; }
+    .hero-orb-right { width: 240px; height: 240px; top: -6%;   right: -10%; }
 }

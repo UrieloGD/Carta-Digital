@@ -93,11 +93,11 @@ $galeria = array_column($galeria_result, 'ruta');
 // Imágenes por defecto
 if (empty($galeria)) {
     $galeria = [
-        "./plantillas/plantilla-8/img/galeria/foto1.jpg",
-        "./plantillas/plantilla-8/img/galeria/foto2.jpg", 
-        "./plantillas/plantilla-8/img/galeria/foto3.jpg",
-        "./plantillas/plantilla-8/img/galeria/foto4.jpg",
-        "./plantillas/plantilla-8/img/galeria/foto5.jpg"
+        "./plantillas/plantilla-8.1/img/galeria/foto1.jpg",
+        "./plantillas/plantilla-8.1/img/galeria/foto2.jpg", 
+        "./plantillas/plantilla-8.1/img/galeria/foto3.jpg",
+        "./plantillas/plantilla-8.1/img/galeria/foto4.jpg",
+        "./plantillas/plantilla-8.1/img/galeria/foto5.jpg"
     ];
 }
 
@@ -135,9 +135,9 @@ $ubicacion = $invitacion['ubicacion'] ?: ($ubicacion_ceremonia['nombre_lugar'] ?
 $direccion_completa = $invitacion['direccion_completa'] ?: ($ubicacion_ceremonia['direccion'] ?? '');
 
 // Imágenes principales
-$imagen_hero = $invitacion['imagen_hero'] ?: './plantillas/plantilla-8/img/hero.jpg';
-$imagen_dedicatoria = $invitacion['imagen_dedicatoria'] ?: './plantillas/plantilla-8/img/dedicatoria.jpg';
-$imagen_destacada = $invitacion['imagen_destacada'] ?: './plantillas/plantilla-8/img/destacada.jpg';
+$imagen_hero = $invitacion['imagen_hero'] ?: './plantillas/plantilla-8.1/img/hero.jpg';
+$imagen_dedicatoria = $invitacion['imagen_dedicatoria'] ?: './plantillas/plantilla-8.1/img/dedicatoria.jpg';
+$imagen_destacada = $invitacion['imagen_destacada'] ?: './plantillas/plantilla-8.1/img/destacada.jpg';
 
 // Configuraciones
 $mostrar_contador = (bool)($invitacion['mostrar_contador'] ?? true);
@@ -191,19 +191,19 @@ try {
     <title><?php echo htmlspecialchars($nombres); ?> - Cumpleaños</title>
     
     <!-- Estilos Plantilla K-pop Demon Hunters x Raya -->
-    <link rel="stylesheet" href="./plantillas/plantilla-8/css/global.css?v=<?php echo time(); ?>" />
-    <link rel="stylesheet" href="./plantillas/plantilla-8/css/hero.css?v=<?php echo time(); ?>" />
-    <link rel="stylesheet" href="./plantillas/plantilla-8/css/bienvenida.css?v=<?php echo time(); ?>" />
-    <link rel="stylesheet" href="./plantillas/plantilla-8/css/historia.css?v=<?php echo time(); ?>" />
-    <link rel="stylesheet" href="./plantillas/plantilla-8/css/galeria.css?v=<?php echo time(); ?>" />
-    <link rel="stylesheet" href="./plantillas/plantilla-8/css/contador.css?v=<?php echo time(); ?>" />
-    <link rel="stylesheet" href="./plantillas/plantilla-8/css/cronograma.css?v=<?php echo time(); ?>" />
-    <link rel="stylesheet" href="./plantillas/plantilla-8/css/ubicaciones.css?v=<?php echo time(); ?>" />
-    <link rel="stylesheet" href="./plantillas/plantilla-8/css/dresscode.css?v=<?php echo time(); ?>" />
-    <link rel="stylesheet" href="./plantillas/plantilla-8/css/rsvp.css?v=<?php echo time(); ?>" />
-    <link rel="stylesheet" href="./plantillas/plantilla-8/css/mesa-regalos.css?v=<?php echo time(); ?>" />
-    <link rel="stylesheet" href="./plantillas/plantilla-8/css/footer.css?v=<?php echo time(); ?>" />
-    <link rel="stylesheet" href="./plantillas/plantilla-8/css/music-player.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="./plantillas/plantilla-8.1/css/global.css?v=<?php echo time(); ?>" />
+    <link rel="stylesheet" href="./plantillas/plantilla-8.1/css/hero.css?v=<?php echo time(); ?>" />
+    <link rel="stylesheet" href="./plantillas/plantilla-8.1/css/bienvenida.css?v=<?php echo time(); ?>" />
+    <link rel="stylesheet" href="./plantillas/plantilla-8.1/css/historia.css?v=<?php echo time(); ?>" />
+    <link rel="stylesheet" href="./plantillas/plantilla-8.1/css/galeria.css?v=<?php echo time(); ?>" />
+    <link rel="stylesheet" href="./plantillas/plantilla-8.1/css/contador.css?v=<?php echo time(); ?>" />
+    <link rel="stylesheet" href="./plantillas/plantilla-8.1/css/cronograma.css?v=<?php echo time(); ?>" />
+    <link rel="stylesheet" href="./plantillas/plantilla-8.1/css/ubicaciones.css?v=<?php echo time(); ?>" />
+    <link rel="stylesheet" href="./plantillas/plantilla-8.1/css/dresscode.css?v=<?php echo time(); ?>" />
+    <link rel="stylesheet" href="./plantillas/plantilla-8.1/css/rsvp.css?v=<?php echo time(); ?>" />
+    <link rel="stylesheet" href="./plantillas/plantilla-8.1/css/mesa-regalos.css?v=<?php echo time(); ?>" />
+    <link rel="stylesheet" href="./plantillas/plantilla-8.1/css/footer.css?v=<?php echo time(); ?>" />
+    <link rel="stylesheet" href="./plantillas/plantilla-8.1/css/music-player.css?v=<?php echo time(); ?>">
     
     <!-- Fuentes -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -217,15 +217,6 @@ try {
 
 <!-- Sección Hero -->
 <section class="hero" id="hero">
-    <!-- Decorativos de fondo -->
-    <div class="hero-orb-left"></div>
-    <div class="hero-orb-right"></div>
-    <div class="hero-sparkles"></div>
-    <div class="hero-dots">
-        <span></span><span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span><span></span>
-    </div>
-
     <div class="hero-background">
         <div class="hero-image" style="background-image: url('<?php echo htmlspecialchars($imagen_hero); ?>')"></div>
         <div class="hero-overlay"></div>
@@ -247,14 +238,6 @@ try {
 
 <!-- Sección Bienvenida -->
 <section class="bienvenida" id="bienvenida">
-    <!-- Elementos decorativos de fondo -->
-    <div class="bienvenida-orb"></div>
-    <div class="bienvenida-sparkles"></div>
-    <div class="bienvenida-dots">
-        <span></span><span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span><span></span>
-    </div>
-
     <div class="container">
         <div class="bienvenida-content">
             <div class="bienvenida-header-title">
@@ -293,14 +276,6 @@ try {
 <!-- Sección Contador -->
 <?php if ($mostrar_contador): ?>
 <section class="contador" id="contador">
-    <!-- Decorativos de fondo -->
-    <div class="contador-orb"></div>
-    <div class="contador-sparkles"></div>
-    <div class="contador-dots">
-        <span></span><span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span><span></span>
-    </div>
-
     <div class="container">
         <div class="contador-header">
             <h2 class="contador-title">La aventura comienza en</h2>
@@ -369,14 +344,6 @@ try {
 
 <!-- Sección Galería de Personajes -->
 <section class="galeria" id="galeria">
-    <!-- Decorativos de fondo -->
-    <div class="galeria-orb"></div>
-    <div class="galeria-sparkles"></div>
-    <div class="galeria-dots-bg">
-        <span></span><span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span><span></span>
-    </div>
-
     <div class="container">
         <div class="galeria-header">
             <h2>Galería Especial</h2>
@@ -474,14 +441,6 @@ try {
 <!-- Sección Ubicaciones -->
 <?php if ($ubicacion_evento): ?>
 <section class="ubicaciones" id="ubicaciones">
-    <!-- Decorativos de fondo -->
-    <div class="ubicaciones-orb"></div>
-    <div class="ubicaciones-sparkles"></div>
-    <div class="ubicaciones-dots">
-        <span></span><span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span><span></span>
-    </div>
-
     <div class="container">
         <div class="ubicaciones-header">
             <h2>Ubicación del Evento</h2>
@@ -534,14 +493,6 @@ try {
 
 <!-- Sección RSVP -->
 <section class="rsvp" id="rsvp">
-    <!-- Decorativos de fondo -->
-    <div class="rsvp-orb"></div>
-    <div class="rsvp-sparkles"></div>
-    <div class="rsvp-dots">
-        <span></span><span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span><span></span>
-    </div>
-
     <div class="container">
         <div class="rsvp-header">
             <h2>Confirma tu Asistencia</h2>
@@ -617,19 +568,6 @@ try {
 
 <!-- Footer -->
 <footer class="footer">
-    <!-- Decorativos de fondo -->
-    <div class="footer-sparkles"></div>
-    <div class="footer-dots">
-        <span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span>
-    </div>
-
-    <div class="footer-background">
-        <div class="bg-ornament bg-ornament-1"></div>
-        <div class="bg-ornament bg-ornament-2"></div>
-        <div class="bg-ornament bg-ornament-3"></div>
-    </div>
-
     <div class="container">
         <div class="footer-content">
             <div class="footer-main">
@@ -684,10 +622,10 @@ try {
     const RSVP_HABILITADO = <?php echo $rsvp_habilitado ? 'true' : 'false'; ?>;
 </script>
 
-<script src="./plantillas/plantilla-8/js/main.js?v=<?php echo time(); ?>"></script>
-<script src="./plantillas/plantilla-8/js/contador.js?v=<?php echo time(); ?>"></script>
-<script src="./plantillas/plantilla-8/js/galeria.js?v=<?php echo time(); ?>"></script>
-<script src="./plantillas/plantilla-8/js/music-player.js?v=<?php echo time(); ?>"></script>
+<script src="./plantillas/plantilla-8.1/js/main.js?v=<?php echo time(); ?>"></script>
+<script src="./plantillas/plantilla-8.1/js/contador.js?v=<?php echo time(); ?>"></script>
+<script src="./plantillas/plantilla-8.1/js/galeria.js?v=<?php echo time(); ?>"></script>
+<script src="./plantillas/plantilla-8.1/js/music-player.js?v=<?php echo time(); ?>"></script>
 
 </body>
 </html>

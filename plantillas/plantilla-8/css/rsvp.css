@@ -1,22 +1,77 @@
-/* RSVP Section - K-pop Demon Hunters x Raya */
+/* RSVP Section - Kawaii Princess */
 
-:root {
-    --section-padding: 100px 0;
-    --border-radius-lg: 20px;
-    --border-radius: 12px;
-    --bg-secondary: #1a1f3a;
-    --bg-tertiary: #0f1421;
-    --border-aqua: #00d4ff;
-    --text-secondary: #b0bcc6;
-    --text-primary: #ffffff;
-    --accent-aqua: #00d4ff;
-    --accent-neon-light: #9d4edd;
-    --transition-smooth: 0.3s ease-in-out;
+
+/* ================================================
+   ANIMACIONES
+   ================================================ */
+@keyframes float {
+    0%, 100% { transform: translateY(0px);   }
+    50%       { transform: translateY(-30px); }
 }
 
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0);    }
+}
+
+
+@keyframes orbPulse {
+    0%, 100% { transform: scale(1)    translateY(0);     opacity: 0.22; }
+    50%       { transform: scale(1.35) translateY(-40px); opacity: 0.42; }
+}
+
+
+@keyframes starsFloat {
+    0%   { transform: translateX(0%);  opacity: 0.5; }
+    50%  { transform: translateX(-5%); opacity: 0.9; }
+    100% { transform: translateX(0%);  opacity: 0.5; }
+}
+
+
+@keyframes dotFloat {
+    0%   { transform: translateY(110vh) scale(0.5); opacity: 0;   }
+    10%  { opacity: 0.8; }
+    90%  { opacity: 0.6; }
+    100% { transform: translateY(-10vh) scale(1.2);  opacity: 0;  }
+}
+
+
+@keyframes shimmerBtn {
+    0%   { left: -100%; }
+    100% { left:  100%; }
+}
+
+
+@keyframes textGlow {
+    0%, 100% {
+        color: #d4689e;
+        text-shadow:
+            0 0 15px rgba(255, 182, 220, 0.5),
+            0 0 30px rgba(220, 164, 248, 0.25);
+    }
+    50% {
+        color: #e088bb;
+        text-shadow:
+            0 0 25px rgba(255, 200, 230, 0.85),
+            0 0 50px rgba(230, 170, 255, 0.5),
+            0 0 80px rgba(255, 210, 238, 0.35);
+    }
+}
+
+
+@keyframes rotate {
+    0%   { transform: rotate(0deg);   }
+    100% { transform: rotate(360deg); }
+}
+
+
+/* ================================================
+   SECCIÓN RSVP
+   ================================================ */
 .rsvp {
     padding: var(--section-padding);
-    background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+    background: linear-gradient(135deg, #fff0f8 0%, #f8effe 50%, #fff5fb 100%);
     position: relative;
     overflow: hidden;
     min-height: 100dvh;
@@ -25,81 +80,213 @@
     justify-content: center;
 }
 
+
+/* ================================================
+   CAPA 1 - Rotación radial rosada
+   ================================================ */
 .rsvp::before {
     content: '';
     position: absolute;
-    top: 0;
-    right: -20%;
-    width: 500px;
-    height: 500px;
-    background: radial-gradient(circle, rgba(157, 78, 221, 0.15) 0%, transparent 70%);
-    border-radius: 50%;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background:
+        radial-gradient(circle at 20% 50%, rgba(255, 182, 220, 0.2)  0%, transparent 45%),
+        radial-gradient(circle at 80% 80%, rgba(220, 164, 248, 0.18) 0%, transparent 45%),
+        radial-gradient(circle at 55% 20%, rgba(255, 210, 238, 0.15) 0%, transparent 35%),
+        radial-gradient(circle at 10% 85%, rgba(240, 190, 255, 0.14) 0%, transparent 30%);
+    animation: rotate 60s linear infinite;
     pointer-events: none;
+    z-index: 0;
 }
 
+
+/* ================================================
+   CAPA 2 - Orbe esquina superior derecha
+   ================================================ */
 .rsvp::after {
     content: '';
     position: absolute;
-    bottom: -20%;
-    left: -10%;
-    width: 400px;
-    height: 400px;
-    background: radial-gradient(circle, rgba(0, 212, 255, 0.1) 0%, transparent 70%);
+    top: -10%;
+    right: -8%;
+    width: 480px;
+    height: 480px;
+    background: radial-gradient(circle,
+        rgba(220, 164, 248, 0.22) 0%,
+        rgba(255, 182, 220, 0.08) 50%,
+        transparent 70%);
     border-radius: 50%;
+    animation: orbPulse 9s ease-in-out infinite;
     pointer-events: none;
-    animation: float 6s ease-in-out infinite;
+    z-index: 0;
 }
 
-@keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-30px); }
+
+/* Orbe esquina inferior izquierda */
+.rsvp-orb {
+    position: absolute;
+    bottom: -12%;
+    left: -8%;
+    width: 520px;
+    height: 520px;
+    background: radial-gradient(circle,
+        rgba(255, 182, 220, 0.22) 0%,
+        rgba(220, 164, 248, 0.08) 50%,
+        transparent 70%);
+    border-radius: 50%;
+    animation: float 8s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 0;
 }
 
+
+/* ================================================
+   ESTRELLAS FLOTANTES
+   ================================================ */
+.rsvp-sparkles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+}
+
+
+.rsvp-sparkles::before {
+    content: '✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦';
+    position: absolute;
+    top: 5%;
+    left: 0;
+    width: 100%;
+    font-size: 0.85rem;
+    color: rgba(210, 130, 180, 0.38);
+    letter-spacing: 5vw;
+    animation: starsFloat 14s linear infinite;
+    white-space: nowrap;
+}
+
+
+.rsvp-sparkles::after {
+    content: '✿ ❀ ✿ ❀ ✿ ❀ ✿ ❀ ✿ ❀ ✿ ❀ ✿ ❀ ✿';
+    position: absolute;
+    bottom: 5%;
+    left: 0;
+    width: 100%;
+    font-size: 0.95rem;
+    color: rgba(200, 140, 220, 0.3);
+    letter-spacing: 5vw;
+    animation: starsFloat 17s linear infinite reverse;
+    white-space: nowrap;
+}
+
+
+/* ================================================
+   PUNTOS FLOTANTES
+   ================================================ */
+.rsvp-dots {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+
+.rsvp-dots span {
+    position: absolute;
+    border-radius: 50%;
+    animation: dotFloat linear infinite;
+    opacity: 0;
+}
+
+
+.rsvp-dots span:nth-child(1)  { width:9px;  height:9px;  background: rgba(255,182,220,0.75); left:5%;  animation-duration:9s;  animation-delay:0s;   }
+.rsvp-dots span:nth-child(2)  { width:6px;  height:6px;  background: rgba(220,164,248,0.7);  left:15%; animation-duration:13s; animation-delay:1.5s; }
+.rsvp-dots span:nth-child(3)  { width:12px; height:12px; background: rgba(255,200,235,0.65); left:25%; animation-duration:8s;  animation-delay:2.8s; }
+.rsvp-dots span:nth-child(4)  { width:7px;  height:7px;  background: rgba(230,170,255,0.7);  left:38%; animation-duration:14s; animation-delay:0.6s; }
+.rsvp-dots span:nth-child(5)  { width:10px; height:10px; background: rgba(255,182,220,0.65); left:52%; animation-duration:10s; animation-delay:3.5s; }
+.rsvp-dots span:nth-child(6)  { width:7px;  height:7px;  background: rgba(240,190,255,0.75); left:63%; animation-duration:7s;  animation-delay:1.2s; }
+.rsvp-dots span:nth-child(7)  { width:11px; height:11px; background: rgba(255,210,240,0.65); left:74%; animation-duration:11s; animation-delay:0.3s; }
+.rsvp-dots span:nth-child(8)  { width:5px;  height:5px;  background: rgba(255,182,220,0.8);  left:85%; animation-duration:9s;  animation-delay:2s;   }
+.rsvp-dots span:nth-child(9)  { width:9px;  height:9px;  background: rgba(220,164,248,0.6);  left:93%; animation-duration:12s; animation-delay:1.8s; }
+.rsvp-dots span:nth-child(10) { width:6px;  height:6px;  background: rgba(255,210,238,0.7);  left:44%; animation-duration:15s; animation-delay:4.2s; }
+
+
+/* ================================================
+   CONTAINER
+   ================================================ */
 .rsvp .container {
     position: relative;
     z-index: 2;
     max-width: 700px;
 }
 
+
+/* ================================================
+   HEADER
+   ================================================ */
 .rsvp-header {
     text-align: center;
     margin-bottom: 3rem;
     animation: fadeInUp 0.8s ease-out;
 }
 
+
 .rsvp-header h2 {
-    color: var(--accent-aqua);
+    color: #d4689e;
     font-size: clamp(2.2rem, 5vw, 3.2rem);
     margin-bottom: 15px;
     font-weight: 700;
     animation: textGlow 4s ease-in-out infinite;
+    text-shadow:
+        0 0 25px rgba(255, 182, 220, 0.55),
+        0 0 50px rgba(220, 164, 248, 0.3);
 }
 
+
 .rsvp-subtitle {
-    color: var(--text-secondary);
+    color: #e088bb;
     font-size: 1.1rem;
     text-align: center;
     max-width: 600px;
     margin: 0 auto;
+    font-weight: 600;
     animation: fadeInUp 0.8s ease-out 0.1s both;
 }
+
 
 .decorative-line {
     height: 3px;
     width: 60px;
-    background: linear-gradient(90deg, var(--accent-neon-light), var(--accent-aqua));
+    background: linear-gradient(90deg, #e88ec7, #daaff5);
     margin: 20px auto;
     border-radius: 10px;
-    box-shadow: 0 0 15px rgba(0, 212, 255, 0.4);
+    box-shadow: 0 0 15px rgba(255, 182, 220, 0.5);
 }
 
+
+/* ================================================
+   MAIN
+   ================================================ */
 .rsvp-main {
     animation: fadeInUp 0.8s ease-out 0.2s both;
 }
 
+
+/* ================================================
+   MENSAJE
+   ================================================ */
 .rsvp-message {
-    background: rgba(157, 78, 221, 0.1);
-    border: 2px solid rgba(0, 212, 255, 0.2);
+    background: linear-gradient(135deg,
+        rgba(255, 230, 248, 0.65) 0%,
+        rgba(242, 220, 255, 0.55) 100%);
+    border: 2px solid rgba(244, 184, 223, 0.5);
     border-radius: var(--border-radius-lg);
     padding: 2rem;
     margin-bottom: 2rem;
@@ -108,6 +295,8 @@
     overflow: hidden;
 }
 
+
+/* Línea superior decorativa en rosa */
 .rsvp-message::before {
     content: '';
     position: absolute;
@@ -115,20 +304,27 @@
     left: 0;
     width: 100%;
     height: 2px;
-    background: linear-gradient(90deg, transparent, var(--accent-aqua), transparent);
+    background: linear-gradient(90deg, transparent, #f4b8df, transparent);
 }
 
+
 .rsvp-message p {
-    color: var(--text-secondary);
+    color: #e088bb;
     font-size: 1.05rem;
     margin: 0;
     line-height: 1.8;
-    animation: textGlow 4s ease-in-out infinite;
+    font-weight: 600;
 }
 
+
+/* ================================================
+   FORMULARIO
+   ================================================ */
 .rsvp-form {
-    background: rgba(31, 37, 64, 0.6);
-    border: 2px solid rgba(0, 212, 255, 0.2);
+    background: linear-gradient(135deg,
+        rgba(255, 235, 250, 0.7) 0%,
+        rgba(245, 225, 255, 0.6) 100%);
+    border: 2px solid rgba(244, 184, 223, 0.5);
     border-radius: var(--border-radius-lg);
     padding: 2.5rem;
     margin-bottom: 2rem;
@@ -136,6 +332,8 @@
     overflow: hidden;
 }
 
+
+/* Brillo interior sutil */
 .rsvp-form::before {
     content: '';
     position: absolute;
@@ -143,12 +341,13 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, 
-        rgba(157, 78, 221, 0.05) 0%, 
+    background: linear-gradient(135deg,
+        rgba(255, 210, 240, 0.12) 0%,
         transparent 50%,
-        rgba(0, 212, 255, 0.05) 100%);
+        rgba(220, 164, 248, 0.08) 100%);
     pointer-events: none;
 }
+
 
 .form-group {
     margin-bottom: 1.5rem;
@@ -156,10 +355,12 @@
     z-index: 2;
 }
 
+
+/* Labels - rosa pastel */
 .form-group label {
     display: block;
-    color: var(--accent-aqua);
-    font-weight: 600;
+    color: #d4689e;
+    font-weight: 700;
     margin-bottom: 8px;
     font-size: 0.95rem;
     text-transform: uppercase;
@@ -167,40 +368,61 @@
     animation: fadeInUp 0.6s ease-out backwards;
 }
 
+
+/* Inputs y selects */
 .form-group input,
 .form-group select {
     width: 100%;
     padding: 12px 15px;
-    background: rgba(15, 20, 33, 0.9);
-    border: 2px solid rgba(0, 212, 255, 0.2);
+    /* Fondo blanco rosado muy suave */
+    background: rgba(255, 245, 252, 0.9);
+    border: 2px solid rgba(244, 184, 223, 0.6);
     border-radius: var(--border-radius);
-    color: var(--text-primary);
+    /* Texto rosa oscuro legible */
+    color: #c2559a;
     font-family: inherit;
     font-size: 0.95rem;
     transition: all 0.3s ease-in-out;
 }
 
+
 .form-group input::placeholder {
-    color: rgba(176, 188, 198, 0.5);
+    color: rgba(220, 150, 190, 0.55);
 }
+
 
 .form-group input:focus,
 .form-group select:focus {
     outline: none;
-    border-color: var(--accent-aqua);
-    background: rgba(0, 212, 255, 0.03);
-    box-shadow: 0 0 20px rgba(0, 212, 255, 0.25);
+    border-color: #e88ec7;
+    background: rgba(255, 240, 250, 0.95);
+    box-shadow:
+        0 0 20px rgba(255, 182, 220, 0.35),
+        0 0 40px rgba(220, 164, 248, 0.2);
 }
 
+
+/* Opciones del select */
+.form-group select option {
+    background: #fff0f8;
+    color: #c2559a;
+}
+
+
+/* ================================================
+   BOTÓN ENVIAR
+   ================================================ */
 .rsvp-action-wrapper {
     text-align: center;
     margin-bottom: 2rem;
 }
 
+
 .rsvp-button {
     padding: 15px 50px;
-    background: linear-gradient(135deg, var(--accent-neon-light), var(--accent-aqua));
-    color: white;
+    /* Gradiente rosa → lila pastel */
+    background: linear-gradient(135deg, #e88ec7, #daaff5);
+    color: #fff;
     border: none;
     border-radius: var(--border-radius-lg);
     font-size: 1.1rem;
@@ -211,10 +433,14 @@
     letter-spacing: 1px;
     position: relative;
     overflow: hidden;
-    box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+    box-shadow:
+        0 0 25px rgba(255, 182, 220, 0.45),
+        0 4px 15px rgba(220, 164, 248, 0.3);
     display: inline-block;
 }
 
+
+/* Shimmer sobre el botón */
 .rsvp-button::before {
     content: '';
     position: absolute;
@@ -222,19 +448,33 @@
     left: -100%;
     width: 100%;
     height: 100%;
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.25);
     transition: left 0.5s ease;
 }
 
+
 .rsvp-button:hover {
     transform: translateY(-3px);
-    box-shadow: 0 10px 30px rgba(0, 212, 255, 0.4);
+    background: linear-gradient(135deg, #d4689e, #c995e8);
+    box-shadow:
+        0 0 45px rgba(255, 182, 220, 0.7),
+        0 10px 30px rgba(220, 164, 248, 0.45);
 }
+
 
 .rsvp-button:hover::before {
     left: 100%;
 }
 
+
+.rsvp-button:active {
+    transform: translateY(-1px);
+}
+
+
+/* ================================================
+   DETALLES EXTRA
+   ================================================ */
 .rsvp-details {
     display: flex;
     justify-content: center;
@@ -244,123 +484,106 @@
     flex-wrap: wrap;
 }
 
+
 .detail-item {
     text-align: center;
     animation: fadeInUp 0.8s ease-out backwards;
 }
 
+
 .detail-item:nth-child(1) { animation-delay: 0.3s; }
 .detail-item:nth-child(3) { animation-delay: 0.5s; }
 
+
 .detail-label {
-    color: var(--text-secondary);
+    color: #e088bb;
     font-size: 0.8rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     margin-bottom: 4px;
     display: block;
-    animation: textGlow 3.5s ease-in-out infinite;
+    font-weight: 600;
 }
+
 
 .detail-value {
-    color: var(--accent-aqua);
-    font-weight: 600;
+    color: #d4689e;
+    font-weight: 700;
     font-size: 1rem;
-    animation: textGlow 4s ease-in-out infinite;
+    text-shadow: 0 0 12px rgba(255, 182, 220, 0.45);
 }
 
+
 .detail-separator {
-    color: var(--accent-neon-light);
+    color: #f4b8df;
     font-size: 1.5rem;
     animation: fadeInUp 0.8s ease-out 0.4s both;
 }
 
+
+/* ================================================
+   RSVP CERRADO
+   ================================================ */
 .rsvp-closed {
-    background: rgba(157, 78, 221, 0.1);
-    border: 2px solid rgba(157, 78, 221, 0.3);
+    background: linear-gradient(135deg,
+        rgba(255, 230, 248, 0.65) 0%,
+        rgba(242, 220, 255, 0.55) 100%);
+    border: 2px solid rgba(244, 184, 223, 0.5);
     border-radius: var(--border-radius-lg);
     padding: 3rem;
     text-align: center;
 }
 
+
 .rsvp-closed h3 {
-    color: var(--accent-aqua);
+    color: #d4689e;
     font-size: 1.8rem;
     margin-bottom: 1rem;
+    text-shadow: 0 0 20px rgba(255, 182, 220, 0.5);
 }
+
 
 .rsvp-closed p {
-    color: var(--text-secondary);
+    color: #e088bb;
     font-size: 1rem;
     margin: 0;
+    font-weight: 600;
 }
+
 
 /* ================================================
-   ANIMATIONS
-   ================================================ */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes textGlow {
-    0%, 100% {
-        text-shadow: 0 0 10px rgba(0, 212, 255, 0.3), 0 0 20px rgba(157, 78, 221, 0.2);
-    }
-    50% {
-        text-shadow: 0 0 20px rgba(0, 212, 255, 0.5), 0 0 30px rgba(157, 78, 221, 0.3);
-    }
-}
-
-/* ================================================
-   RESPONSIVE
+   RESPONSIVE - TABLET
    ================================================ */
 @media (max-width: 768px) {
     .rsvp {
         padding: 80px 20px;
         min-height: auto;
     }
-    
-    .rsvp-form {
-        padding: 1.5rem;
-    }
+
+    .rsvp-form { padding: 1.5rem; }
 }
 
+
+/* ================================================
+   RESPONSIVE - MOBILE
+   ================================================ */
 @media (max-width: 480px) {
-    .rsvp {
-        padding: 60px 20px;
-    }
-    
-    .rsvp-header h2 {
-        font-size: 1.8rem;
-    }
-    
-    .rsvp-form {
-        padding: 1.2rem;
-    }
-    
-    .rsvp-message {
-        padding: 1.5rem;
-    }
-    
+    .rsvp { padding: 60px 20px; }
+
+    .rsvp-header h2  { font-size: 1.8rem; }
+    .rsvp-form       { padding: 1.2rem; }
+    .rsvp-message    { padding: 1.5rem; }
+
     .rsvp-button {
         padding: 12px 30px;
         font-size: 0.95rem;
         width: 100%;
     }
-    
+
     .rsvp-details {
         gap: 1rem;
         flex-direction: column;
     }
-    
-    .detail-separator {
-        display: none;
-    }
+
+    .detail-separator { display: none; }
 }

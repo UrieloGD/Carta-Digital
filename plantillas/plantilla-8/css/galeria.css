@@ -1,55 +1,100 @@
-/* Galería Carrusel K-pop Demon Hunters x Raya */
+/* Galería Carrusel - Kawaii Princess */
 
 
 /* ================================================
    ANIMACIONES DE GALERÍA
    ================================================ */
 @keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateX(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
+    from { opacity: 0; transform: translateX(30px);  }
+    to   { opacity: 1; transform: translateX(0);      }
 }
 
 
 @keyframes slideOut {
-    from {
-        opacity: 1;
-        transform: translateX(0);
-    }
-    to {
-        opacity: 0;
-        transform: translateX(-30px);
-    }
+    from { opacity: 1; transform: translateX(0);      }
+    to   { opacity: 0; transform: translateX(-30px);  }
 }
 
 
 @keyframes slideInLeft {
-    from {
-        opacity: 0;
-        transform: translateX(-30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
+    from { opacity: 0; transform: translateX(-30px);  }
+    to   { opacity: 1; transform: translateX(0);      }
 }
 
 
 @keyframes imagePulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.02); }
-    100% { transform: scale(1); }
+    0%   { transform: scale(1);    }
+    50%  { transform: scale(1.02); }
+    100% { transform: scale(1);    }
 }
 
 
 @keyframes dotPulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.2); }
+    0%, 100% { transform: scale(1);   }
+    50%       { transform: scale(1.2); }
+}
+
+
+@keyframes rotate {
+    0%   { transform: rotate(0deg);   }
+    100% { transform: rotate(360deg); }
+}
+
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0);    }
+}
+
+
+@keyframes orbPulse {
+    0%, 100% { transform: scale(1)    translateY(0);     opacity: 0.22; }
+    50%       { transform: scale(1.35) translateY(-40px); opacity: 0.42; }
+}
+
+
+@keyframes starsFloat {
+    0%   { transform: translateX(0%);  opacity: 0.5; }
+    50%  { transform: translateX(-5%); opacity: 0.9; }
+    100% { transform: translateX(0%);  opacity: 0.5; }
+}
+
+
+@keyframes dotFloat {
+    0%   { transform: translateY(110vh) scale(0.5); opacity: 0;   }
+    10%  { opacity: 0.8; }
+    90%  { opacity: 0.6; }
+    100% { transform: translateY(-10vh) scale(1.2);  opacity: 0;  }
+}
+
+
+@keyframes textGlow {
+    0%, 100% {
+        color: #d4689e;
+        text-shadow:
+            0 0 25px rgba(255, 182, 220, 0.55),
+            0 0 50px rgba(220, 164, 248, 0.3);
+    }
+    50% {
+        color: #e088bb;
+        text-shadow:
+            0 0 40px rgba(255, 200, 230, 0.9),
+            0 0 80px rgba(220, 170, 255, 0.6),
+            0 0 120px rgba(255, 210, 238, 0.4);
+    }
+}
+
+@keyframes frameGlow {
+    0%, 100% {
+        box-shadow:
+            0 0 50px rgba(255, 182, 220, 0.45),
+            0 0 100px rgba(220, 164, 248, 0.25);
+    }
+    50% {
+        box-shadow:
+            0 0 80px rgba(255, 182, 220, 0.75),
+            0 0 150px rgba(220, 164, 248, 0.45);
+    }
 }
 
 
@@ -59,13 +104,16 @@
 .galeria {
     min-height: 100vh;
     padding: var(--section-padding);
-    background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+    /* Fondo pastel rosado - sin nada azul */
+    background: linear-gradient(135deg, #fff0f8 0%, #f8effe 50%, #fff5fb 100%);
     position: relative;
     overflow: hidden;
 }
 
 
-/* Fondo animado */
+/* ================================================
+   CAPA 1 - Rotación radial rosada
+   ================================================ */
 .galeria::before {
     content: '';
     position: absolute;
@@ -73,21 +121,136 @@
     left: -50%;
     width: 200%;
     height: 200%;
-    background: 
-        radial-gradient(circle at 20% 50%, rgba(157, 78, 221, 0.15) 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(0, 212, 255, 0.1) 0%, transparent 50%);
+    background:
+        radial-gradient(circle at 20% 50%, rgba(255, 182, 220, 0.2)  0%, transparent 45%),
+        radial-gradient(circle at 80% 80%, rgba(220, 164, 248, 0.18) 0%, transparent 45%),
+        radial-gradient(circle at 55% 20%, rgba(255, 210, 238, 0.15) 0%, transparent 35%),
+        radial-gradient(circle at 10% 85%, rgba(240, 190, 255, 0.14) 0%, transparent 30%);
     animation: rotate 60s linear infinite;
     pointer-events: none;
     z-index: 0;
 }
 
 
-@keyframes rotate {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+/* ================================================
+   CAPA 2 - Orbe esquina superior derecha
+   ================================================ */
+.galeria::after {
+    content: '';
+    position: absolute;
+    top: -10%;
+    right: -8%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle,
+        rgba(220, 164, 248, 0.2)  0%,
+        rgba(255, 182, 220, 0.08) 50%,
+        transparent 70%);
+    border-radius: 50%;
+    animation: orbPulse 10s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 0;
 }
 
 
+/* Orbe esquina inferior izquierda */
+.galeria-orb {
+    position: absolute;
+    bottom: -12%;
+    left: -8%;
+    width: 580px;
+    height: 580px;
+    background: radial-gradient(circle,
+        rgba(255, 182, 220, 0.2)  0%,
+        rgba(220, 164, 248, 0.08) 50%,
+        transparent 70%);
+    border-radius: 50%;
+    animation: orbPulse 12s ease-in-out infinite reverse;
+    pointer-events: none;
+    z-index: 0;
+}
+
+
+/* ================================================
+   ESTRELLAS FLOTANTES
+   ================================================ */
+.galeria-sparkles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+}
+
+
+.galeria-sparkles::before {
+    content: '✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦';
+    position: absolute;
+    top: 5%;
+    left: 0;
+    width: 100%;
+    font-size: 0.85rem;
+    color: rgba(210, 130, 180, 0.38);
+    letter-spacing: 5vw;
+    animation: starsFloat 14s linear infinite;
+    white-space: nowrap;
+}
+
+
+.galeria-sparkles::after {
+    content: '✿ ❀ ✿ ❀ ✿ ❀ ✿ ❀ ✿ ❀ ✿ ❀ ✿ ❀ ✿';
+    position: absolute;
+    bottom: 5%;
+    left: 0;
+    width: 100%;
+    font-size: 0.95rem;
+    color: rgba(200, 140, 220, 0.3);
+    letter-spacing: 5vw;
+    animation: starsFloat 17s linear infinite reverse;
+    white-space: nowrap;
+}
+
+
+/* ================================================
+   PUNTOS FLOTANTES
+   ================================================ */
+.galeria-dots-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+
+.galeria-dots-bg span {
+    position: absolute;
+    border-radius: 50%;
+    animation: dotFloat linear infinite;
+    opacity: 0;
+}
+
+
+.galeria-dots-bg span:nth-child(1)  { width:9px;  height:9px;  background: rgba(255,182,220,0.75); left:5%;  animation-duration:9s;  animation-delay:0s;   }
+.galeria-dots-bg span:nth-child(2)  { width:6px;  height:6px;  background: rgba(220,164,248,0.7);  left:15%; animation-duration:13s; animation-delay:1.5s; }
+.galeria-dots-bg span:nth-child(3)  { width:12px; height:12px; background: rgba(255,200,235,0.65); left:25%; animation-duration:8s;  animation-delay:2.8s; }
+.galeria-dots-bg span:nth-child(4)  { width:7px;  height:7px;  background: rgba(230,170,255,0.7);  left:38%; animation-duration:14s; animation-delay:0.6s; }
+.galeria-dots-bg span:nth-child(5)  { width:10px; height:10px; background: rgba(255,182,220,0.65); left:52%; animation-duration:10s; animation-delay:3.5s; }
+.galeria-dots-bg span:nth-child(6)  { width:7px;  height:7px;  background: rgba(240,190,255,0.75); left:63%; animation-duration:7s;  animation-delay:1.2s; }
+.galeria-dots-bg span:nth-child(7)  { width:11px; height:11px; background: rgba(255,210,240,0.65); left:74%; animation-duration:11s; animation-delay:0.3s; }
+.galeria-dots-bg span:nth-child(8)  { width:5px;  height:5px;  background: rgba(255,182,220,0.8);  left:85%; animation-duration:9s;  animation-delay:2s;   }
+.galeria-dots-bg span:nth-child(9)  { width:9px;  height:9px;  background: rgba(220,164,248,0.6);  left:93%; animation-duration:12s; animation-delay:1.8s; }
+.galeria-dots-bg span:nth-child(10) { width:6px;  height:6px;  background: rgba(255,210,238,0.7);  left:44%; animation-duration:15s; animation-delay:4.2s; }
+
+
+/* ================================================
+   CONTAINER
+   ================================================ */
 .galeria .container {
     width: 100%;
     position: relative;
@@ -113,31 +276,22 @@
 .galeria-header h2 {
     font-family: var(--font-bold);
     font-size: clamp(1.8rem, 5vw, 3rem);
-    color: var(--accent-aqua);
+    color: #d4689e;
     margin-bottom: 15px;
     font-weight: 900;
     letter-spacing: 2px;
     animation: textGlow 4s ease-in-out infinite;
-    text-shadow: 0 0 25px rgba(0, 212, 255, 0.5);
-}
-
-
-@keyframes textGlow {
-    0%, 100% { 
-        color: var(--accent-aqua);
-        text-shadow: 0 0 25px rgba(0, 212, 255, 0.5);
-    }
-    50% { 
-        color: #ffffff;
-        text-shadow: 0 0 50px rgba(0, 212, 255, 0.8), 0 0 80px rgba(157, 78, 221, 0.5);
-    }
+    text-shadow:
+        0 0 25px rgba(255, 182, 220, 0.55),
+        0 0 50px rgba(220, 164, 248, 0.3);
 }
 
 
 .galeria-header p {
-    color: var(--text-muted);
+    color: #e088bb;
     font-size: 1.05rem;
     letter-spacing: 0.5px;
+    font-weight: 600;
 }
 
 
@@ -145,8 +299,9 @@
     margin: 20px auto;
     height: 3px;
     width: 120px;
-    background: linear-gradient(90deg, #9d4edd, #00d4ff);
-    box-shadow: 0 0 25px rgba(0, 212, 255, 0.5);
+    /* Gradiente rosa → lila pastel - sin azul */
+    background: linear-gradient(90deg, #e88ec7, #daaff5);
+    box-shadow: 0 0 25px rgba(255, 182, 220, 0.55);
     border-radius: 2px;
 }
 
@@ -199,7 +354,7 @@
 }
 
 
-/* Contenedor de imagen del carrusel */
+/* Contenedor de imagen */
 .slide-image-wrapper {
     flex: 0 0 450px;
     display: flex;
@@ -208,13 +363,12 @@
     width: 450px;
     height: 550px;
     position: relative;
-    border: 4px solid var(--accent-aqua);
+    border: 4px solid #f4b8df;
     border-radius: var(--border-radius-lg);
     overflow: hidden;
-    background: rgba(157, 78, 221, 0.1);
-    box-shadow: 0 0 50px rgba(0, 212, 255, 0.4),
-                0 0 100px rgba(157, 78, 221, 0.3),
-                inset 0 0 30px rgba(0, 212, 255, 0.1);
+    /* Fondo rosado muy suave - sin azul */
+    background: rgba(255, 230, 248, 0.45);
+    animation: frameGlow 3s ease-in-out infinite;
 }
 
 
@@ -224,17 +378,14 @@
     object-fit: contain;
     transition: all 0.3s ease;
     cursor: pointer;
-    filter: brightness(1) contrast(1.05);
+    filter: brightness(1.0) saturate(1.1);
     padding: 15px;
 }
 
 
 .carousel-image:hover {
     transform: scale(1.05);
-    box-shadow: 0 0 80px rgba(0, 212, 255, 0.6),
-                0 0 150px rgba(157, 78, 221, 0.5),
-                inset 0 0 40px rgba(0, 212, 255, 0.2);
-    filter: brightness(1.1) contrast(1.1);
+    filter: brightness(1.05) saturate(1.2);
 }
 
 
@@ -249,7 +400,7 @@
 
 .slide-counter {
     font-size: 0.95rem;
-    color: var(--accent-aqua);
+    color: #e088bb;
     font-weight: 700;
     letter-spacing: 2px;
     text-transform: uppercase;
@@ -260,14 +411,14 @@
 
 #slideNumber {
     font-size: 1.2rem;
-    color: #ffffff;
+    color: #f4b8df;
     font-weight: 900;
 }
 
 
 .slide-title {
     font-size: 1.8rem;
-    color: #ffffff;
+    color: #d4689e;
     font-weight: 900;
     margin-bottom: 15px;
     letter-spacing: 1px;
@@ -276,7 +427,7 @@
 
 
 .slide-description {
-    color: var(--text-muted);
+    color: #e088bb;
     font-size: 1rem;
     line-height: 1.6;
     letter-spacing: 0.5px;
@@ -284,7 +435,9 @@
 }
 
 
-/* ✅ Contenedor de botones para mobile (oculto en desktop) */
+/* ================================================
+   BOTONES DE NAVEGACIÓN
+   ================================================ */
 .carousel-nav-buttons {
     display: none;
     justify-content: center;
@@ -293,14 +446,16 @@
 }
 
 
-/* Botones de navegación (desktop: posición absoluta a los lados) */
 .carousel-btn {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background: linear-gradient(135deg, rgba(157, 78, 221, 0.3), rgba(0, 212, 255, 0.2));
-    border: 2px solid var(--accent-aqua);
-    color: var(--accent-aqua);
+    /* Fondo rosado translúcido - sin azul */
+    background: linear-gradient(135deg,
+        rgba(255, 182, 220, 0.3),
+        rgba(220, 164, 248, 0.2));
+    border: 2px solid #f4b8df;
+    color: #e088bb;
     width: 60px;
     height: 60px;
     border-radius: 50%;
@@ -310,18 +465,24 @@
     justify-content: center;
     transition: all 0.3s ease;
     z-index: 10;
-    box-shadow: 0 0 30px rgba(0, 212, 255, 0.3),
-                inset 0 0 20px rgba(0, 212, 255, 0.1);
+    box-shadow:
+        0 0 25px rgba(255, 182, 220, 0.35),
+        inset 0 0 15px rgba(255, 182, 220, 0.1);
     padding: 0;
 }
 
 
 .carousel-btn:hover {
-    background: linear-gradient(135deg, rgba(157, 78, 221, 0.6), rgba(0, 212, 255, 0.4));
-    box-shadow: 0 0 50px rgba(0, 212, 255, 0.6),
-                0 0 100px rgba(157, 78, 221, 0.4),
-                inset 0 0 30px rgba(0, 212, 255, 0.2);
+    background: linear-gradient(135deg,
+        rgba(255, 182, 220, 0.6),
+        rgba(220, 164, 248, 0.4));
+    border-color: #e88ec7;
+    box-shadow:
+        0 0 45px rgba(255, 182, 220, 0.65),
+        0 0 80px rgba(220, 164, 248, 0.4),
+        inset 0 0 25px rgba(255, 182, 220, 0.2);
     transform: translateY(-50%) scale(1.1);
+    color: #d4689e;
 }
 
 
@@ -336,17 +497,13 @@
 }
 
 
-.carousel-prev {
-    left: -80px;
-}
+.carousel-prev { left: -80px;  }
+.carousel-next { right: -80px; }
 
 
-.carousel-next {
-    right: -80px;
-}
-
-
-/* Indicadores de puntos */
+/* ================================================
+   INDICADORES DE PUNTOS
+   ================================================ */
 .carousel-dots {
     position: absolute;
     bottom: -60px;
@@ -362,8 +519,8 @@
     width: 12px;
     height: 12px;
     border-radius: 50%;
-    background: rgba(0, 212, 255, 0.3);
-    border: 2px solid var(--accent-aqua);
+    background: rgba(255, 182, 220, 0.35);
+    border: 2px solid #f4b8df;
     cursor: pointer;
     transition: all 0.3s ease;
     padding: 0;
@@ -371,14 +528,16 @@
 
 
 .dot:hover {
-    background: rgba(0, 212, 255, 0.6);
+    background: rgba(255, 182, 220, 0.65);
+    border-color: #e88ec7;
     transform: scale(1.2);
 }
 
 
 .dot.active {
-    background: var(--accent-aqua);
-    box-shadow: 0 0 20px rgba(0, 212, 255, 0.8);
+    background: #e088bb;
+    border-color: #e088bb;
+    box-shadow: 0 0 18px rgba(255, 182, 220, 0.8);
     transform: scale(1.3);
 }
 
@@ -392,44 +551,27 @@
         min-height: 500px;
     }
 
-
     .slide-image-wrapper {
         flex: 0 0 350px;
         width: 350px;
         height: 450px;
     }
 
-
     .carousel-btn {
         width: 50px;
         height: 50px;
     }
-
 
     .carousel-btn svg {
         width: 32px;
         height: 32px;
     }
 
+    .carousel-prev { left: -65px;  }
+    .carousel-next { right: -65px; }
 
-    .carousel-prev {
-        left: -65px;
-    }
-
-
-    .carousel-next {
-        right: -65px;
-    }
-
-    .slide-info {
-        padding: 20px;
-        max-width: 250px;
-    }
-
-
-    .slide-title {
-        font-size: 1.4rem;
-    }
+    .slide-info    { padding: 20px; max-width: 250px; }
+    .slide-title   { font-size: 1.4rem; }
 }
 
 
@@ -442,45 +584,26 @@
         min-height: auto;
     }
 
+    .galeria-header        { margin-bottom: 2rem; }
+    .galeria-header h2     { font-size: 1.5rem; }
+    .galeria-header p      { font-size: 0.95rem; }
 
-    .galeria-header {
-        margin-bottom: 2rem;
-    }
-
-
-    .galeria-header h2 {
-        font-size: 1.5rem;
-    }
-
-
-    .galeria-header p {
-        font-size: 0.95rem;
-    }
-
-
-    /* ✅ Wrapper en columna para ordenar: imagen → contador → botones → dots */
     .carousel-wrapper {
         flex-direction: column;
         gap: 1rem;
         min-height: auto;
         justify-content: flex-start;
         padding-top: 1rem;
-        padding-bottom: 0;          /* ya no necesitamos espacio extra al fondo */
+        padding-bottom: 0;
     }
 
-
-    .carousel-container {
-        max-width: 100%;
-        min-height: auto;
-    }
-
+    .carousel-container    { max-width: 100%; min-height: auto; }
 
     .carousel-slide {
         flex-direction: column;
         gap: 1rem;
         justify-content: center;
     }
-
 
     .slide-image-wrapper {
         flex: 0 0 auto;
@@ -490,13 +613,7 @@
         max-width: 100%;
     }
 
-
-    .carousel-image {
-        width: 100%;
-        height: 100%;
-        padding: 10px;
-    }
-
+    .carousel-image        { width: 100%; height: 100%; padding: 10px; }
 
     .slide-info {
         width: 100%;
@@ -505,33 +622,12 @@
         max-width: 100%;
     }
 
+    .slide-counter         { font-size: 0.85rem; margin-bottom: 0; }
+    .slide-title           { font-size: 1.3rem;  margin-bottom: 10px; }
+    .slide-description     { font-size: 0.9rem; }
 
-    .slide-counter {
-        font-size: 0.85rem;
-        margin-bottom: 0;
-    }
+    .carousel-wrapper > .carousel-btn { display: none; }
 
-
-    .slide-title {
-        font-size: 1.3rem;
-        margin-bottom: 10px;
-    }
-
-
-    .slide-description {
-        font-size: 0.9rem;
-    }
-
-
-    /* ✅ Botones originales (.carousel-btn sueltos) — OCULTAR en mobile */
-    /* Ya no están en el HTML como hijos directos de .carousel-wrapper,
-       pero si existieran como fallback, los ocultamos */
-    .carousel-wrapper > .carousel-btn {
-        display: none;
-    }
-
-
-    /* ✅ Mostrar el nuevo contenedor de botones entre contador y dots */
     .carousel-nav-buttons {
         display: flex;
         justify-content: center;
@@ -541,8 +637,6 @@
         margin-top: 0.5rem;
     }
 
-
-    /* ✅ Botones dentro del nav-buttons: sin posición absoluta */
     .carousel-nav-buttons .carousel-btn {
         position: static;
         transform: none;
@@ -550,18 +644,9 @@
         height: 50px;
     }
 
+    .carousel-nav-buttons .carousel-btn:hover  { transform: scale(1.1);  }
+    .carousel-nav-buttons .carousel-btn:active { transform: scale(0.95); }
 
-    .carousel-nav-buttons .carousel-btn:hover {
-        transform: scale(1.1);
-    }
-
-
-    .carousel-nav-buttons .carousel-btn:active {
-        transform: scale(0.95);
-    }
-
-
-    /* ✅ Dots: sin posición absoluta, en flujo normal debajo de los botones */
     .carousel-dots {
         position: static;
         bottom: auto;
@@ -571,22 +656,5 @@
         margin-top: 0.5rem;
     }
 
-
-    .dot {
-        width: 10px;
-        height: 10px;
-    }
-}
-
-
-/* Animaciones de entrada */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    .dot { width: 10px; height: 10px; }
 }

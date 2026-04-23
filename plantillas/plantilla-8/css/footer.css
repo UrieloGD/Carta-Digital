@@ -1,26 +1,57 @@
-/* Footer - K-pop Demon Hunters x Raya */
+/* Footer - Kawaii Princess */
 
-:root {
-    --bg-secondary: #1a1f3a;
-    --bg-tertiary: #0f1421;
-    --border-aqua: #00d4ff;
-    --text-secondary: #b0bcc6;
-    --text-primary: #ffffff;
-    --text-muted: #7a8496;
-    --accent-aqua: #00d4ff;
-    --accent-neon: #9d4edd;
-    --border-radius: 12px;
-    --transition-smooth: 0.3s ease-in-out;
+
+/* ================================================
+   ANIMACIONES
+   ================================================ */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0);    }
 }
 
+
+@keyframes starsFloat {
+    0%   { transform: translateX(0%);  opacity: 0.5; }
+    50%  { transform: translateX(-5%); opacity: 0.9; }
+    100% { transform: translateX(0%);  opacity: 0.5; }
+}
+
+
+@keyframes dotFloat {
+    0%   { transform: translateY(110vh) scale(0.5); opacity: 0;   }
+    10%  { opacity: 0.7; }
+    90%  { opacity: 0.5; }
+    100% { transform: translateY(-10vh) scale(1.2);  opacity: 0;  }
+}
+
+
+@keyframes shimmerBtn {
+    0%   { left: -100%; }
+    100% { left:  100%; }
+}
+
+
+@keyframes orbFloat {
+    0%, 100% { transform: translateY(0)     scale(1);   opacity: 0.2;  }
+    50%       { transform: translateY(-30px) scale(1.1); opacity: 0.38; }
+}
+
+
+/* ================================================
+   FOOTER
+   ================================================ */
 .footer {
-    background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+    background: linear-gradient(135deg, #fff0f8 0%, #f8effe 50%, #fff5fb 100%);
     padding: 80px 0 40px;
-    border-top: 2px solid rgba(0, 212, 255, 0.3);
+    border-top: 2px solid rgba(244, 184, 223, 0.6);
     position: relative;
     overflow: hidden;
 }
 
+
+/* ================================================
+   CAPA 1 - Destellos radiales
+   ================================================ */
 .footer::before {
     content: '';
     position: absolute;
@@ -28,17 +59,146 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: 
-        radial-gradient(ellipse at 20% 0%, rgba(157, 78, 221, 0.12) 0%, transparent 50%),
-        radial-gradient(ellipse at 80% 100%, rgba(0, 212, 255, 0.08) 0%, transparent 50%);
+    background:
+        radial-gradient(ellipse at 20% 0%,  rgba(255, 182, 220, 0.22) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 100%, rgba(220, 164, 248, 0.18) 0%, transparent 50%),
+        radial-gradient(ellipse at 55% 50%,  rgba(255, 210, 238, 0.12) 0%, transparent 40%);
     pointer-events: none;
+    z-index: 0;
 }
 
+
+/* ================================================
+   CAPA 2 - Orbe superior izquierdo
+   ================================================ */
+.footer::after {
+    content: '';
+    position: absolute;
+    top: -8%;
+    left: -6%;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle,
+        rgba(255, 182, 220, 0.2)  0%,
+        rgba(220, 164, 248, 0.08) 50%,
+        transparent 70%);
+    border-radius: 50%;
+    animation: orbFloat 10s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 0;
+}
+
+
+/* ================================================
+   ORNAMENTOS DE FONDO
+   ================================================ */
+.footer-background {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.bg-ornament { position: absolute; border-radius: 50%; }
+
+.bg-ornament-1 {
+    width: 300px; height: 300px;
+    top: -100px; left: -50px;
+    background: radial-gradient(circle, rgba(255, 182, 220, 0.18), transparent 70%);
+}
+
+.bg-ornament-2 {
+    width: 250px; height: 250px;
+    bottom: -75px; right: -50px;
+    background: radial-gradient(circle, rgba(220, 164, 248, 0.18), transparent 70%);
+}
+
+.bg-ornament-3 {
+    width: 200px; height: 200px;
+    bottom: 50px; left: 10%;
+    background: radial-gradient(circle, rgba(255, 210, 238, 0.15), transparent 70%);
+}
+
+
+/* ================================================
+   ESTRELLAS FLOTANTES
+   ================================================ */
+.footer-sparkles {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.footer-sparkles::before {
+    content: '✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦';
+    position: absolute;
+    top: 6%; left: 0;
+    width: 100%;
+    font-size: 0.8rem;
+    color: rgba(210, 130, 180, 0.35);
+    letter-spacing: 5vw;
+    animation: starsFloat 15s linear infinite;
+    white-space: nowrap;
+}
+
+.footer-sparkles::after {
+    content: '✿ ❀ ✿ ❀ ✿ ❀ ✿ ❀ ✿ ❀ ✿ ❀ ✿ ❀ ✿';
+    position: absolute;
+    bottom: 8%; left: 0;
+    width: 100%;
+    font-size: 0.85rem;
+    color: rgba(200, 140, 220, 0.28);
+    letter-spacing: 5vw;
+    animation: starsFloat 18s linear infinite reverse;
+    white-space: nowrap;
+}
+
+
+/* ================================================
+   PUNTOS FLOTANTES
+   ================================================ */
+.footer-dots {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.footer-dots span {
+    position: absolute;
+    border-radius: 50%;
+    animation: dotFloat linear infinite;
+    opacity: 0;
+}
+
+.footer-dots span:nth-child(1) { width:8px;  height:8px;  background:rgba(255,182,220,0.7);  left:8%;  animation-duration:10s; animation-delay:0s;   }
+.footer-dots span:nth-child(2) { width:5px;  height:5px;  background:rgba(220,164,248,0.65); left:20%; animation-duration:13s; animation-delay:1.5s; }
+.footer-dots span:nth-child(3) { width:10px; height:10px; background:rgba(255,200,235,0.6);  left:32%; animation-duration:9s;  animation-delay:2.5s; }
+.footer-dots span:nth-child(4) { width:6px;  height:6px;  background:rgba(230,170,255,0.65); left:45%; animation-duration:14s; animation-delay:0.8s; }
+.footer-dots span:nth-child(5) { width:9px;  height:9px;  background:rgba(255,182,220,0.6);  left:58%; animation-duration:11s; animation-delay:3s;   }
+.footer-dots span:nth-child(6) { width:6px;  height:6px;  background:rgba(240,190,255,0.7);  left:70%; animation-duration:8s;  animation-delay:1s;   }
+.footer-dots span:nth-child(7) { width:8px;  height:8px;  background:rgba(255,210,240,0.6);  left:80%; animation-duration:12s; animation-delay:0.5s; }
+.footer-dots span:nth-child(8) { width:5px;  height:5px;  background:rgba(255,182,220,0.75); left:91%; animation-duration:10s; animation-delay:2.2s; }
+
+
+/* ================================================
+   CONTAINER
+   ================================================ */
 .footer .container {
     position: relative;
     z-index: 2;
 }
 
+
+/* ================================================
+   CONTENIDO
+   ================================================ */
 .footer-content {
     animation: fadeInUp 0.8s ease-out 0.2s both;
 }
@@ -48,6 +208,10 @@
     text-align: center;
 }
 
+
+/* ================================================
+   CITA / BLOCKQUOTE
+   ================================================ */
 .footer-quote {
     margin-bottom: 2rem;
 }
@@ -55,47 +219,55 @@
 .footer-quote blockquote {
     margin: 0;
     padding: 2rem;
-    background: rgba(157, 78, 221, 0.08);
-    border: 2px solid rgba(0, 212, 255, 0.15);
+    background: linear-gradient(135deg,
+        rgba(255, 230, 248, 0.65) 0%,
+        rgba(242, 220, 255, 0.55) 100%);
+    border: 2px solid rgba(244, 184, 223, 0.5);
     border-radius: 16px;
     position: relative;
     overflow: hidden;
 }
 
+/* Línea superior rosa → lila */
 .footer-quote blockquote::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 3px;
-    background: linear-gradient(90deg, var(--accent-neon), var(--accent-aqua));
+    top: 0; left: 0;
+    width: 100%; height: 3px;
+    background: linear-gradient(90deg, #e88ec7, #daaff5);
 }
 
+/* Brillo interior */
 .footer-quote blockquote::after {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, 
-        rgba(0, 212, 255, 0.05) 0%, 
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: linear-gradient(135deg,
+        rgba(255, 210, 240, 0.1)  0%,
         transparent 50%,
-        rgba(157, 78, 221, 0.05) 100%);
+        rgba(220, 164, 248, 0.08) 100%);
     pointer-events: none;
 }
 
+/* ✅ FIX: fuerza rosa sobre el color: var(--text-secondary) global */
+.footer-quote blockquote p,
 .footer-quote p {
-    color: var(--text-secondary);
+    color: #d4689e !important;
     font-size: 1.1rem;
     font-style: italic;
     margin: 0;
     position: relative;
     z-index: 2;
     line-height: 1.8;
+    font-weight: 600;
+    text-shadow: 0 0 12px rgba(255, 182, 220, 0.3);
 }
 
+
+/* ================================================
+   BOTONES DE ACCIÓN
+   ================================================ */
 .footer-actions {
     display: flex;
     gap: 1.5rem;
@@ -109,16 +281,20 @@
     align-items: center;
     gap: 0.8rem;
     padding: 12px 24px;
-    background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(157, 78, 221, 0.1));
-    border: 2px solid rgba(0, 212, 255, 0.2);
+    background: linear-gradient(135deg,
+        rgba(255, 182, 220, 0.25),
+        rgba(220, 164, 248, 0.2));
+    border: 2px solid rgba(244, 184, 223, 0.6);
     border-radius: 12px;
-    color: var(--accent-aqua);
+    /* ✅ FIX: color explícito, no hereda --text-primary */
+    color: #d4689e !important;
     cursor: pointer;
     font-size: 0.95rem;
-    font-weight: 600;
+    font-weight: 700;
     transition: all 0.3s ease-in-out;
     position: relative;
     overflow: hidden;
+    text-decoration: none;
 }
 
 .footer-button::before {
@@ -126,44 +302,47 @@
     position: absolute;
     top: 0;
     left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.2), transparent);
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg,
+        transparent,
+        rgba(255, 220, 245, 0.45),
+        transparent);
     transition: left 0.5s ease;
 }
 
 .footer-button:hover {
-    background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(157, 78, 221, 0.15));
-    border-color: rgba(0, 212, 255, 0.4);
-    box-shadow: 0 0 20px rgba(0, 212, 255, 0.25);
+    background: linear-gradient(135deg,
+        rgba(255, 182, 220, 0.5),
+        rgba(220, 164, 248, 0.38));
+    border-color: #e88ec7;
+    color: #c2559a !important;
+    box-shadow:
+        0 0 30px rgba(255, 182, 220, 0.5),
+        0 0 55px rgba(220, 164, 248, 0.3);
     transform: translateY(-3px);
 }
 
-.footer-button:hover::before {
-    left: 100%;
-}
+.footer-button:hover::before { left: 100%; }
+.footer-button:active         { transform: translateY(-1px); }
 
-.button-icon {
-    font-size: 1.2em;
-    display: none;
-}
+.button-icon { font-size: 1.2em; display: none; }
+.button-text { text-transform: uppercase; letter-spacing: 0.5px; }
 
-.button-text {
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
 
-.footer-thanks {
-    margin-top: 2rem;
-}
+/* ================================================
+   AGRADECIMIENTO
+   ================================================ */
+.footer-thanks { margin-top: 2rem; }
 
+/* ✅ FIX: p global pone --text-secondary morado, lo sobreescribimos */
 .footer-thanks p {
-    color: var(--text-secondary);
+    color: #e088bb !important;
     font-size: 1rem;
     margin: 0;
     position: relative;
     display: inline-block;
     padding-bottom: 10px;
+    font-weight: 600;
 }
 
 .footer-thanks p::after {
@@ -172,20 +351,25 @@
     bottom: 0;
     left: 50%;
     transform: translateX(-50%);
-    width: 40px;
-    height: 2px;
-    background: linear-gradient(90deg, var(--accent-neon), var(--accent-aqua));
+    width: 40px; height: 2px;
+    background: linear-gradient(90deg, #e88ec7, #daaff5);
     border-radius: 10px;
+    box-shadow: 0 0 10px rgba(255, 182, 220, 0.45);
 }
 
+
+/* ================================================
+   FIRMA
+   ================================================ */
 .footer-signature {
     padding-top: 2rem;
-    border-top: 1px solid rgba(0, 212, 255, 0.1);
+    border-top: 1px solid rgba(244, 184, 223, 0.4);
     margin-top: 2rem;
 }
 
 .signature-text {
-    color: var(--text-muted);
+    /* ✅ FIX: evita herencia de --text-muted */
+    color: #e0a8ce !important;
     font-size: 0.9rem;
     margin: 0 0 1rem;
     display: none;
@@ -193,115 +377,49 @@
 
 .signature-text p {
     margin: 0;
+    color: #e0a8ce !important;
 }
 
+/* ✅ FIX: h* global pone --text-primary morado oscuro */
 .signature-names {
-    color: var(--accent-aqua);
+    color: #d4689e !important;
     font-size: 1.3rem;
     font-weight: 700;
     margin: 0;
     letter-spacing: 0.5px;
+    text-shadow:
+        0 0 20px rgba(255, 182, 220, 0.5),
+        0 0 40px rgba(220, 164, 248, 0.25);
 }
 
-/* Decorative ornaments */
-.footer-background {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    overflow: hidden;
-    z-index: 1;
-}
-
-.bg-ornament {
-    position: absolute;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(0, 212, 255, 0.1), transparent 70%);
-}
-
-.bg-ornament-1 {
-    width: 300px;
-    height: 300px;
-    top: -100px;
-    left: -50px;
-}
-
-.bg-ornament-2 {
-    width: 250px;
-    height: 250px;
-    bottom: -75px;
-    right: -50px;
-    background: radial-gradient(circle, rgba(157, 78, 221, 0.1), transparent 70%);
-}
-
-.bg-ornament-3 {
-    width: 200px;
-    height: 200px;
-    bottom: 50px;
-    left: 10%;
-    background: radial-gradient(circle, rgba(0, 212, 255, 0.08), transparent 70%);
-}
 
 /* ================================================
-   ANIMATIONS
-   ================================================ */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* ================================================
-   RESPONSIVE
+   RESPONSIVE - TABLET
    ================================================ */
 @media (max-width: 768px) {
-    .footer {
-        padding: 60px 0 30px;
-    }
-    
-    .footer-quote blockquote {
-        padding: 1.5rem;
-    }
-    
-    .footer-quote p {
-        font-size: 1rem;
-    }
-    
-    .footer-actions {
-        flex-direction: column;
-        gap: 1rem;
-    }
-    
-    .footer-button {
-        width: 100%;
-        justify-content: center;
-    }
+    .footer { padding: 60px 0 30px; }
+
+    .footer-quote blockquote { padding: 1.5rem; }
+    .footer-quote blockquote p,
+    .footer-quote p           { font-size: 1rem; }
+
+    .footer-actions { flex-direction: column; gap: 1rem; }
+    .footer-button  { width: 100%; justify-content: center; }
 }
 
+
+/* ================================================
+   RESPONSIVE - MOBILE
+   ================================================ */
 @media (max-width: 480px) {
-    .footer {
-        padding: 40px 0 20px;
-    }
-    
-    .footer-quote blockquote {
-        padding: 1.2rem;
-    }
-    
-    .footer-quote p {
-        font-size: 0.95rem;
-    }
-    
-    .signature-names {
-        font-size: 1.1rem;
-    }
-    
+    .footer { padding: 40px 0 20px; }
+
+    .footer-quote blockquote { padding: 1.2rem; }
+    .footer-quote blockquote p,
+    .footer-quote p           { font-size: 0.95rem; }
+
+    .signature-names { font-size: 1.1rem; }
+
     .footer-button {
         font-size: 0.85rem;
         padding: 10px 18px;

@@ -1,90 +1,102 @@
-/* Plantilla K-pop Demon Hunters x Raya - Estilos Globales */
+/* Plantilla Kawaii Princess - Estilos Globales */
 :root {
     /* ================================================
-       FONDOS - Tonos oscuros elegantes con profundidad
+       FONDOS - Tonos pastel suaves y cremosos
        ================================================ */
-    --bg-primary: #0f1421;           /* Azul oscuro profundo (base) */
-    --bg-secondary: #1a1f3a;         /* Azul oscuro (secciones) */
-    --bg-tertiary: #151d32;          /* Azul intermedio */
-    --bg-card: #1f2540;              /* Azul para cards */
-    
+    --bg-primary:   #fdf0f8;   /* Rosa muy pálido (base) */
+    --bg-secondary: #f9e4f4;   /* Rosa pálido (secciones) */
+    --bg-tertiary:  #f5eafc;   /* Lavanda muy suave */
+    --bg-card:      #ffffff;   /* Blanco puro para cards */
+
+
     /* ================================================
-       ACENTOS PRINCIPALES - Morado Neón K-pop
+       ACENTOS PRINCIPALES - Rosa Pastel Kawaii
        ================================================ */
-    --accent-neon: #9d4edd;          /* Morado neón (principal) */
-    --accent-neon-light: #c77dff;    /* Morado neón claro */
-    --accent-neon-bright: #e0aaff;   /* Morado neón muy brillante */
-    --accent-neon-dark: #7209b7;     /* Morado neón oscuro */
-    
+    --accent-neon:        #e88ec7;   /* Rosa medio (principal) */
+    --accent-neon-light:  #f4b8df;   /* Rosa claro */
+    --accent-neon-bright: #fcd4ec;   /* Rosa muy suave */
+    --accent-neon-dark:   #c95fa8;   /* Rosa oscuro vibrante */
+
+
     /* ================================================
-       ACENTOS ACUÁTICOS - Aqua/Cian Raya
+       ACENTOS SECUNDARIOS - Lavanda/Morado Pastel
        ================================================ */
-    --accent-aqua: #00d4ff;          /* Aqua brillante (Raya principal) */
-    --accent-aqua-light: #00f5ff;    /* Aqua claro (destellos) */
-    --accent-aqua-medium: #00b8d4;   /* Aqua medio */
-    --accent-aqua-dark: #0088a8;     /* Aqua oscuro */
-    
+    --accent-aqua:        #c084e8;   /* Lavanda vibrante */
+    --accent-aqua-light:  #daaff5;   /* Lavanda claro */
+    --accent-aqua-medium: #b06ad4;   /* Morado pastel medio */
+    --accent-aqua-dark:   #8e44b8;   /* Morado pastel oscuro */
+
+
     /* ================================================
-       ACENTOS COMPLEMENTARIOS - Energía K-pop
+       ACENTOS COMPLEMENTARIOS - Detalles dulces
        ================================================ */
-    --accent-cyan: #06ffa5;          /* Verde cian (detalles) */
-    --accent-pink: #ff006e;          /* Rosa magenta (contraste) */
-    --accent-purple: #b537f2;        /* Púrpura vibrante */
-    
+    --accent-cyan:   #f9a8d4;   /* Rosa bubble */
+    --accent-pink:   #f472b6;   /* Rosa hot (contraste) */
+    --accent-purple: #d8a4f8;   /* Lila brillante */
+
+
     /* ================================================
-       TEXTOS - Alto contraste en fondo oscuro
+       TEXTOS - Paleta rosa/lila, sin negro ni morado oscuro
        ================================================ */
-    --text-primary: #ffffff;         /* Blanco puro para textos */
-    --text-secondary: #e0e0ff;       /* Blanco azulado */
-    --text-muted: #a0a5c0;           /* Gris azulado */
-    --text-on-dark: #ffffff;         /* Blanco sobre oscuro */
-    
+    --text-primary:   #d4689e;   /* ✅ Rosa medio — headings y textos base */
+    --text-secondary: #e088bb;   /* ✅ Rosa suave — párrafos y subtítulos */
+    --text-muted:     #f0b8d8;   /* ✅ Rosa muy claro — textos terciarios */
+    --text-on-dark:   #ffffff;   /* Blanco sobre fondos de color */
+
+
     /* ================================================
        HIGHLIGHT Y BORDES
        ================================================ */
-    --highlight: #00d4ff;            /* Aqua para resalte */
-    --glow-neon: #9d4edd;            /* Glow morado */
-    --glow-aqua: #00d4ff;            /* Glow aqua */
-    --border-neon: rgba(157, 78, 221, 0.4);
-    --border-aqua: rgba(0, 212, 255, 0.3);
-    --border-subtle: rgba(157, 78, 221, 0.15);
-    
+    --highlight:     #e88ec7;
+    --glow-neon:     #e88ec7;
+    --glow-aqua:     #c084e8;
+    --border-neon:   rgba(232, 142, 199, 0.4);
+    --border-aqua:   rgba(192, 132, 232, 0.3);
+    --border-subtle: rgba(232, 142, 199, 0.2);
+
+
     /* ================================================
-       GRADIENTES DEPORTIVOS K-POP
+       GRADIENTES KAWAII PRINCESS
        ================================================ */
-    --gradient-neon: linear-gradient(135deg, #9d4edd 0%, #c77dff 100%);
-    --gradient-aqua: linear-gradient(135deg, #00d4ff 0%, #06ffa5 100%);
-    --gradient-dark: linear-gradient(135deg, #1a1f3a 0%, #151d32 100%);
-    --gradient-dual: linear-gradient(135deg, #9d4edd 0%, #00d4ff 100%);
-    
-    /* Tipografías modernas K-pop */
-    --font-serif: 'Playfair Display', serif;      /* Elegancia clásica */
-    --font-bold: 'Montserrat', sans-serif;        /* Bold K-pop */
-    --font-script: 'Alice', cursive;              /* Cursiva elegante */
-    --font-sans: 'Poppins', sans-serif;           /* Moderna y limpia */
-    
+    --gradient-neon: linear-gradient(135deg, #e88ec7 0%, #f4b8df 100%);
+    --gradient-aqua: linear-gradient(135deg, #c084e8 0%, #daaff5 100%);
+    --gradient-dark: linear-gradient(135deg, #f9e4f4 0%, #f5eafc 100%);
+    --gradient-dual: linear-gradient(135deg, #e88ec7 0%, #c084e8 100%);
+
+
+    /* Tipografías */
+    --font-serif:  'Playfair Display', serif;
+    --font-bold:   'Montserrat', sans-serif;
+    --font-script: 'Alice', cursive;
+    --font-sans:   'Poppins', sans-serif;
+
+
     /* Espaciado y tamaños */
-    --container-max: 1200px;
-    --border-radius: 16px;
-    --border-radius-lg: 24px;
-    --section-padding: 120px 0;
-    
-    /* Sombras neon vibrantess */
-    --shadow-soft: 0 10px 40px rgba(0, 212, 255, 0.1);
-    --shadow-neon: 0 0 30px rgba(157, 78, 221, 0.25);
-    --shadow-aqua: 0 0 30px rgba(0, 212, 255, 0.25);
-    --shadow-glow: 0 0 50px rgba(157, 78, 221, 0.15), 0 0 50px rgba(0, 212, 255, 0.1);
-    
-    /* Transiciones suaves */
-    --transition-fast: 0.2s ease;
-    --transition-smooth: 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    --transition-smooth-bounce: 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    --container-max:    1200px;
+    --border-radius:    20px;
+    --border-radius-lg: 30px;
+    --section-padding:  120px 0;
+
+
+    /* Sombras suaves y rosadas */
+    --shadow-soft: 0 10px 40px rgba(232, 142, 199, 0.15);
+    --shadow-neon:  0 0 30px rgba(232, 142, 199, 0.3);
+    --shadow-aqua:  0 0 30px rgba(192, 132, 232, 0.3);
+    --shadow-glow:  0 0 50px rgba(232, 142, 199, 0.2),
+                    0 0 50px rgba(192, 132, 232, 0.15);
+
+
+    /* Transiciones */
+    --transition-fast:           0.2s ease;
+    --transition-smooth:         0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --transition-smooth-bounce:  0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55);
 }
+
 
 /* ================================================
    RESET Y BASE
    ================================================ */
-* {
+*, *::before, *::after {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -97,11 +109,12 @@ html {
 body {
     font-family: var(--font-sans);
     background: var(--bg-primary);
-    color: var(--text-primary);
+    color: var(--text-primary);   /* ✅ ahora es #d4689e rosa */
     line-height: 1.6;
     letter-spacing: 0.3px;
     overflow-x: hidden;
 }
+
 
 /* ================================================
    TIPOGRAFÍA
@@ -110,6 +123,7 @@ h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-bold);
     font-weight: 700;
     letter-spacing: 0.5px;
+    color: var(--text-primary);   /* ✅ #d4689e rosa */
 }
 
 h1 {
@@ -128,8 +142,9 @@ h3 {
 
 p {
     font-size: clamp(0.95rem, 1.5vw, 1.1rem);
-    color: var(--text-secondary);
+    color: var(--text-secondary);   /* ✅ #e088bb rosa suave */
 }
+
 
 /* ================================================
    CONTENEDOR
@@ -140,6 +155,7 @@ p {
     padding: 0 20px;
     width: 100%;
 }
+
 
 /* ================================================
    BOTONES
@@ -174,26 +190,29 @@ p {
 .btn-primary {
     background: var(--gradient-neon);
     color: #ffffff;
-    box-shadow: 0 0 20px rgba(157, 78, 221, 0.4);
+    box-shadow: 0 0 20px rgba(232, 142, 199, 0.4);
 }
 
 .btn-primary:hover {
-    box-shadow: 0 0 35px rgba(157, 78, 221, 0.8), 0 0 60px rgba(0, 212, 255, 0.3);
+    box-shadow:
+        0 0 35px rgba(232, 142, 199, 0.8),
+        0 0 60px rgba(192, 132, 232, 0.4);
     transform: translateY(-3px);
 }
 
 .btn-secondary {
     background: transparent;
-    color: var(--accent-aqua);
+    color: var(--accent-aqua-dark);
     border: 2px solid var(--accent-aqua);
-    box-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
+    box-shadow: 0 0 15px rgba(192, 132, 232, 0.2);
 }
 
 .btn-secondary:hover {
-    background: rgba(0, 212, 255, 0.1);
-    box-shadow: 0 0 30px rgba(0, 212, 255, 0.6);
+    background: rgba(192, 132, 232, 0.1);
+    box-shadow: 0 0 30px rgba(192, 132, 232, 0.5);
     transform: translateY(-3px);
 }
+
 
 /* ================================================
    UTILIDADES
@@ -204,27 +223,23 @@ p {
     background: var(--gradient-dual);
     margin: 20px auto;
     border-radius: 2px;
-    box-shadow: 0 0 20px  rgba(0, 212, 255, 0.5);
+    box-shadow: 0 0 20px rgba(232, 142, 199, 0.5);
 }
 
 .decorative-line {
     width: 100px;
     height: 2px;
-    background: var(--gradient-aqua);
+    background: var(--gradient-neon);
     margin: 15px auto;
-    box-shadow: 0 0 15px rgba(0, 212, 255, 0.4);
+    box-shadow: 0 0 15px rgba(232, 142, 199, 0.4);
 }
+
 
 /* ================================================
    SCROLLBAR PERSONALIZADO
    ================================================ */
-::-webkit-scrollbar {
-    width: 10px;
-}
-
-::-webkit-scrollbar-track {
-    background: var(--bg-secondary);
-}
+::-webkit-scrollbar       { width: 10px; }
+::-webkit-scrollbar-track { background: var(--bg-secondary); }
 
 ::-webkit-scrollbar-thumb {
     background: var(--gradient-dual);
@@ -232,21 +247,21 @@ p {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: var(--gradient-aqua);
-    box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+    background: var(--gradient-neon);
+    box-shadow: 0 0 20px rgba(232, 142, 199, 0.5);
 }
+
 
 /* ================================================
    RESPONSIVE - TABLET
    ================================================ */
 @media (max-width: 768px) {
-    :root {
-        --section-padding: 80px 0;
-    }
-    
+    :root { --section-padding: 80px 0; }
+
     h1 { font-size: 2rem; }
     h2 { font-size: 1.5rem; }
 }
+
 
 /* ================================================
    RESPONSIVE - MOBILE
@@ -255,20 +270,12 @@ p {
     :root {
         --section-padding: 60px 0;
     }
-    
-    .container {
-        padding: 0 15px;
-    }
-    
+
+    .container { padding: 0 15px; }
+
     h1 { font-size: 1.5rem; }
     h2 { font-size: 1.2rem; }
-    
-    /* Full viewport height para cada sección en mobile */
-    section {
-        min-height: 100dvh;
-    }
-    
-    section.hero {
-        min-height: 100vh;
-    }
+
+    section       { min-height: 100dvh; }
+    section.hero  { min-height: 100vh;  }
 }

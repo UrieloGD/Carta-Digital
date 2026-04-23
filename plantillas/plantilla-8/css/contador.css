@@ -1,8 +1,98 @@
-/* Contador Regresivo - Animaciones Dinámicas y Emocionantes */
+/* Contador Regresivo - Kawaii Princess */
 
+
+/* ================================================
+   ANIMACIONES
+   ================================================ */
+@keyframes contadorBubbles {
+    0%   { transform: translate(0, 0)        scale(1);    }
+    25%  { transform: translate(30px, -50px)  scale(1.1);  }
+    50%  { transform: translate(-20px, 30px)  scale(0.95); }
+    75%  { transform: translate(40px, 20px)   scale(1.05); }
+    100% { transform: translate(0, 0)        scale(1);    }
+}
+
+
+@keyframes floatingLight {
+    0%, 100% { transform: translateY(0)     scale(1);   }
+    50%       { transform: translateY(50px)  scale(1.2); }
+}
+
+
+@keyframes orbPulse {
+    0%, 100% { transform: scale(1)    translateY(0);     opacity: 0.22; }
+    50%       { transform: scale(1.35) translateY(-45px); opacity: 0.42; }
+}
+
+
+@keyframes starsFloat {
+    0%   { transform: translateX(0%);  opacity: 0.5; }
+    50%  { transform: translateX(-5%); opacity: 0.9; }
+    100% { transform: translateX(0%);  opacity: 0.5; }
+}
+
+
+@keyframes dotFloat {
+    0%   { transform: translateY(110vh) scale(0.5); opacity: 0;   }
+    10%  { opacity: 0.8; }
+    90%  { opacity: 0.6; }
+    100% { transform: translateY(-10vh) scale(1.2);  opacity: 0;  }
+}
+
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-30px); }
+    to   { opacity: 1; transform: translateY(0);     }
+}
+
+
+@keyframes countdownBounce {
+    from { opacity: 0; transform: translateY(30px) scale(0.8); }
+    to   { opacity: 1; transform: translateY(0)    scale(1);   }
+}
+
+
+@keyframes unitShimmer {
+    0%   { left: -100%; }
+    100% { left:  100%; }
+}
+
+
+@keyframes numberPulse {
+    0%, 100% { transform: scale(1);   }
+    50%       { transform: scale(1.08); }
+}
+
+
+@keyframes separatorPulse {
+    0%, 100% { opacity: 0.6; }
+    50%       { opacity: 1;   }
+}
+
+
+@keyframes textGlowAnimation {
+    0%, 100% { 
+        color: #d4689e;
+        text-shadow: 
+            0 0 25px rgba(255, 182, 220, 0.55),
+            0 0 50px rgba(216, 164, 248, 0.3);
+    }
+    50% { 
+        color: #e088bb;
+        text-shadow: 
+            0 0 35px rgba(255, 200, 230, 0.9),
+            0 0 70px rgba(220, 170, 255, 0.65),
+            0 0 110px rgba(255, 210, 238, 0.4);
+    }
+}
+
+
+/* ================================================
+   SECCIÓN CONTADOR
+   ================================================ */
 .contador {
     padding: var(--section-padding);
-    background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+    background: linear-gradient(135deg, #fff5fb 0%, #f8effe 50%, #fff0f8 100%);
     position: relative;
     overflow: hidden;
     min-height: 100vh;
@@ -11,7 +101,10 @@
     justify-content: center;
 }
 
-/* Fondo animado con burbujas */
+
+/* ================================================
+   CAPA 1 - Burbujas radiales de fondo
+   ================================================ */
 .contador::before {
     content: '';
     position: absolute;
@@ -20,96 +113,169 @@
     width: 100%;
     height: 100%;
     background: 
-        radial-gradient(circle at 15% 20%, rgba(0, 212, 255, 0.2) 0%, transparent 25%),
-        radial-gradient(circle at 85% 80%, rgba(157, 78, 221, 0.18) 0%, transparent 22%),
-        radial-gradient(circle at 50% 50%, rgba(6, 255, 165, 0.12) 0%, transparent 30%),
-        radial-gradient(circle at 20% 70%, rgba(0, 212, 255, 0.15) 0%, transparent 20%);
-    animation: contadorBubbles 30s ease-in-out infinite;
+        radial-gradient(circle at 12% 18%, rgba(255, 182, 220, 0.45) 0%, transparent 22%),
+        radial-gradient(circle at 88% 78%, rgba(216, 164, 248, 0.4)  0%, transparent 20%),
+        radial-gradient(circle at 50% 50%, rgba(255, 210, 238, 0.3)  0%, transparent 28%),
+        radial-gradient(circle at 18% 72%, rgba(220, 170, 255, 0.35) 0%, transparent 18%),
+        radial-gradient(circle at 80% 25%, rgba(255, 192, 228, 0.38) 0%, transparent 16%),
+        radial-gradient(circle at 40% 90%, rgba(240, 190, 255, 0.32) 0%, transparent 14%),
+        radial-gradient(circle at 65% 10%, rgba(255, 182, 220, 0.35) 0%, transparent 16%);
+    animation: contadorBubbles 28s ease-in-out infinite;
     pointer-events: none;
     z-index: 1;
 }
 
-@keyframes contadorBubbles {
-    0% { transform: translate(0, 0) scale(1); }
-    25% { transform: translate(30px, -50px) scale(1.1); }
-    50% { transform: translate(-20px, 30px) scale(0.95); }
-    75% { transform: translate(40px, 20px) scale(1.05); }
-    100% { transform: translate(0, 0) scale(1); }
-}
 
-/* Capa de luz adicional */
+/* ================================================
+   CAPA 2 - Orbe esquina superior derecha
+   ================================================ */
 .contador::after {
     content: '';
     position: absolute;
-    top: -50%;
-    right: -50%;
-    width: 500px;
-    height: 500px;
-    background: radial-gradient(circle, rgba(0, 212, 255, 0.1) 0%, transparent 70%);
+    top: -15%;
+    right: -12%;
+    width: 550px;
+    height: 550px;
+    background: radial-gradient(circle, rgba(216, 164, 248, 0.22) 0%, rgba(255, 182, 220, 0.1) 50%, transparent 70%);
     border-radius: 50%;
-    animation: floatingLight 8s ease-in-out infinite;
+    animation: floatingLight 9s ease-in-out infinite;
     pointer-events: none;
     z-index: 0;
 }
 
-@keyframes floatingLight {
-    0%, 100% { transform: translateY(0) scale(1); }
-    50% { transform: translateY(50px) scale(1.2); }
+
+/* Orbe esquina inferior izquierda */
+.contador-orb {
+    position: absolute;
+    bottom: -12%;
+    left: -8%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(255, 182, 220, 0.22) 0%, rgba(216, 164, 248, 0.1) 50%, transparent 70%);
+    border-radius: 50%;
+    animation: orbPulse 11s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 0;
 }
 
+
+/* ================================================
+   ESTRELLAS FLOTANTES
+   ================================================ */
+.contador-sparkles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+}
+
+
+.contador-sparkles::before {
+    content: '✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦';
+    position: absolute;
+    top: 7%;
+    left: 0;
+    width: 100%;
+    font-size: 0.85rem;
+    color: rgba(210, 130, 180, 0.4);
+    letter-spacing: 5vw;
+    animation: starsFloat 13s linear infinite;
+    white-space: nowrap;
+}
+
+
+.contador-sparkles::after {
+    content: '✿ ❀ ✿ ❀ ✿ ❀ ✿ ❀ ✿ ❀ ✿ ❀ ✿ ❀ ✿';
+    position: absolute;
+    bottom: 8%;
+    left: 0;
+    width: 100%;
+    font-size: 0.95rem;
+    color: rgba(176, 106, 212, 0.35);
+    letter-spacing: 5vw;
+    animation: starsFloat 16s linear infinite reverse;
+    white-space: nowrap;
+}
+
+
+/* ================================================
+   PUNTOS FLOTANTES
+   ================================================ */
+.contador-dots {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+
+.contador-dots span {
+    position: absolute;
+    border-radius: 50%;
+    animation: dotFloat linear infinite;
+    opacity: 0;
+}
+
+
+.contador-dots span:nth-child(1)  { width:10px; height:10px; background: rgba(255,182,220,0.75); left:6%;  animation-duration:9s;  animation-delay:0s;   }
+.contador-dots span:nth-child(2)  { width:6px;  height:6px;  background: rgba(216,164,248,0.7);  left:16%; animation-duration:12s; animation-delay:1.5s; }
+.contador-dots span:nth-child(3)  { width:13px; height:13px; background: rgba(255,200,235,0.65); left:26%; animation-duration:8s;  animation-delay:2.8s; }
+.contador-dots span:nth-child(4)  { width:8px;  height:8px;  background: rgba(220,170,255,0.7);  left:38%; animation-duration:14s; animation-delay:0.6s; }
+.contador-dots span:nth-child(5)  { width:11px; height:11px; background: rgba(255,182,220,0.65); left:52%; animation-duration:10s; animation-delay:3.5s; }
+.contador-dots span:nth-child(6)  { width:7px;  height:7px;  background: rgba(240,190,255,0.75); left:63%; animation-duration:7s;  animation-delay:1.2s; }
+.contador-dots span:nth-child(7)  { width:12px; height:12px; background: rgba(255,210,240,0.65); left:74%; animation-duration:11s; animation-delay:0.3s; }
+.contador-dots span:nth-child(8)  { width:5px;  height:5px;  background: rgba(210,160,245,0.8);  left:84%; animation-duration:9s;  animation-delay:2s;   }
+.contador-dots span:nth-child(9)  { width:9px;  height:9px;  background: rgba(255,182,220,0.6);  left:92%; animation-duration:13s; animation-delay:1.8s; }
+.contador-dots span:nth-child(10) { width:7px;  height:7px;  background: rgba(216,164,248,0.7);  left:44%; animation-duration:15s; animation-delay:4.2s; }
+
+
+/* ================================================
+   CONTENIDO
+   ================================================ */
 .contador .container {
     position: relative;
     z-index: 2;
 }
 
-/* Encabezado */
+
 .contador-header {
     text-align: center;
     margin-bottom: 3rem;
     animation: slideDown 0.8s ease-out;
 }
 
+
+/* Título en pastel medio - legible pero suave */
 .contador-title {
-    color: var(--accent-aqua);
+    color: #d4689e;
     font-size: clamp(1.8rem, 5vw, 3rem);
     font-weight: 900;
     margin: 0 0 15px 0;
     animation: textGlowAnimation 4s ease-in-out infinite;
-    text-shadow: 0 0 25px rgba(0, 212, 255, 0.5);
     letter-spacing: 2px;
 }
 
-@keyframes textGlowAnimation {
-    0%, 100% { 
-        color: var(--accent-aqua);
-        text-shadow: 0 0 25px rgba(0, 212, 255, 0.5), 0 0 50px rgba(157, 78, 221, 0.3);
-    }
-    50% { 
-        color: #ffffff;
-        text-shadow: 0 0 40px rgba(0, 212, 255, 0.8), 0 0 80px rgba(157, 78, 221, 0.6);
-    }
-}
 
 .contador-subtitle {
-    color: var(--accent-neon-light);
+    /* Lavanda pastel media - misma familia que accent-aqua-medium */
+    color: #c084e8;
     font-size: 1.1rem;
-    font-weight: 700;
+    font-weight: 600;
     letter-spacing: 1px;
-    text-shadow: 0 0 15px rgba(157, 78, 221, 0.4);
+    text-shadow: 0 0 15px rgba(216, 164, 248, 0.4);
 }
 
-@keyframes slideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
 
-/* Display del contador */
+/* ================================================
+   DISPLAY CONTADOR
+   ================================================ */
 .contador-display {
     display: flex;
     align-items: center;
@@ -120,39 +286,33 @@
     flex-wrap: wrap;
 }
 
+
 .contador-unit {
     background: linear-gradient(135deg, 
-        rgba(157, 78, 221, 0.2) 0%,
-        rgba(0, 212, 255, 0.15) 100%);
-    border: 3px solid var(--accent-aqua);
+        rgba(255, 230, 248, 0.75) 0%,
+        rgba(242, 220, 255, 0.65) 100%);
+    border: 3px solid #f4b8df;
     border-radius: var(--border-radius-lg);
     padding: 30px 25px;
     text-align: center;
     position: relative;
     overflow: hidden;
     animation: countdownBounce 0.8s ease-out backwards;
-    box-shadow: 0 0 40px rgba(0, 212, 255, 0.3),
-                inset 0 0 20px rgba(0, 212, 255, 0.1);
+    box-shadow: 
+        0 0 35px rgba(255, 182, 220, 0.35),
+        0 4px 20px rgba(216, 164, 248, 0.18);
     flex: 1;
     min-width: 120px;
     max-width: 160px;
+    transition: all 0.3s ease;
 }
+
 
 .contador-unit:nth-child(1) { animation-delay: 0.1s; }
 .contador-unit:nth-child(3) { animation-delay: 0.2s; }
 .contador-unit:nth-child(5) { animation-delay: 0.3s; }
 .contador-unit:nth-child(7) { animation-delay: 0.4s; }
 
-@keyframes countdownBounce {
-    from {
-        opacity: 0;
-        transform: translateY(30px) scale(0.8);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-}
 
 .contador-unit::before {
     content: '';
@@ -163,23 +323,20 @@
     height: 100%;
     background: linear-gradient(90deg, 
         transparent 0%,
-        rgba(0, 212, 255, 0.3) 50%,
+        rgba(255, 220, 245, 0.5) 50%,
         transparent 100%);
     animation: unitShimmer 3s infinite;
 }
 
-@keyframes unitShimmer {
-    0% { left: -100%; }
-    100% { left: 100%; }
-}
 
 .contador-unit:hover {
-    border-color: #06ffa5;
-    box-shadow: 0 0 60px rgba(0, 212, 255, 0.6),
-                0 0 100px rgba(157, 78, 221, 0.4),
-                inset 0 0 30px rgba(0, 212, 255, 0.2);
+    border-color: #e88ec7;
+    box-shadow: 
+        0 0 55px rgba(255, 182, 220, 0.6),
+        0 0 90px rgba(216, 164, 248, 0.35);
     transform: translateY(-5px) scale(1.05);
 }
+
 
 .contador-value-wrapper {
     position: relative;
@@ -188,97 +345,80 @@
     min-width: 90px;
 }
 
+
+/* Número - rosa pastel claro, bien visible pero suave */
 .contador-number {
     font-family: var(--font-bold);
     font-size: clamp(2rem, 8vw, 4rem);
     font-weight: 900;
-    color: var(--accent-aqua);
+    color: #e088bb;
     display: block;
     line-height: 1;
     margin-bottom: 12px;
     text-shadow: 
-        0 0 30px rgba(0, 212, 255, 0.6),
-        0 0 60px rgba(157, 78, 221, 0.4),
-        0 2px 15px rgba(0, 0, 0, 0.3);
+        0 0 20px rgba(255, 182, 220, 0.7),
+        0 0 40px rgba(220, 150, 210, 0.4),
+        0 2px 4px rgba(200, 100, 170, 0.2);
     animation: numberPulse 1s ease-in-out infinite;
     letter-spacing: 2px;
 }
 
-@keyframes numberPulse {
-    0%, 100% { 
-        transform: scale(1);
-        text-shadow: 0 0 30px rgba(0, 212, 255, 0.6), 0 0 60px rgba(157, 78, 221, 0.4), 0 2px 15px rgba(0, 0, 0, 0.3);
-    }
-    50% { 
-        transform: scale(1.1);
-        text-shadow: 0 0 50px rgba(0, 212, 255, 1), 0 0 100px rgba(157, 78, 221, 0.6), 0 0 150px rgba(0, 212, 255, 0.4);
-    }
-}
 
+/* Etiqueta - lavanda pastel */
 .contador-label {
-    color: var(--accent-neon-light);
+    color: #c084e8;
     font-size: 0.9rem;
     text-transform: uppercase;
     letter-spacing: 1.5px;
     font-weight: 700;
     position: relative;
     z-index: 1;
-    text-shadow: 0 0 10px rgba(157, 78, 221, 0.3);
+    text-shadow: 0 0 10px rgba(216, 164, 248, 0.35);
 }
 
-/* Separadores */
+
+/* Separador - rosa pastel claro */
 .contador-separator {
-    color: var(--accent-aqua);
+    color: #f4b8df;
     font-size: clamp(1.5rem, 5vw, 3rem);
     font-weight: 900;
     animation: separatorPulse 1s ease-in-out infinite;
-    text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+    text-shadow: 0 0 15px rgba(255, 182, 220, 0.55);
     margin: 0 10px;
 }
 
-@keyframes separatorPulse {
-    0%, 100% { opacity: 0.5; }
-    50% { opacity: 1; }
-}
 
 /* ================================================
-   RESPONSIVE
+   RESPONSIVE - TABLET
    ================================================ */
 @media (max-width: 768px) {
     .contador {
         padding: 60px 20px;
         min-height: auto;
     }
-    
-    .contador-title {
-        font-size: 1.5rem;
-    }
-    
-    .contador-display {
-        gap: 0.5rem;
-    }
-    
+
+    .contador-title    { font-size: 1.5rem; }
+    .contador-display  { gap: 0.5rem; }
+
     .contador-unit {
         padding: 20px 15px;
         min-width: 90px;
         max-width: 120px;
     }
-    
+
     .contador-number {
         font-size: 1.8rem;
         margin-bottom: 8px;
     }
-    
-    .contador-label {
-        font-size: 0.75rem;
-    }
-    
-    .contador-separator {
-        font-size: 1.5rem;
-        margin: 0 5px;
-    }
+
+    .contador-label     { font-size: 0.75rem; }
+    .contador-separator { font-size: 1.5rem; margin: 0 5px; }
 }
 
+
+/* ================================================
+   RESPONSIVE - MOBILE
+   ================================================ */
 @media (max-width: 480px) {
     .contador {
         padding: 40px 20px;
@@ -287,24 +427,24 @@
         flex-direction: column;
         justify-content: center;
     }
-    
+
     .contador-header {
         margin-bottom: 3rem;
         text-align: center;
     }
-    
+
     .contador-title {
         font-size: 1.6rem;
         margin-bottom: 15px;
         letter-spacing: 1px;
     }
-    
+
     .contador-subtitle {
         font-size: 1.15rem;
-        font-weight: 700;
+        font-weight: 600;
         letter-spacing: 2px;
     }
-    
+
     .contador-display {
         display: flex;
         flex-direction: column;
@@ -313,7 +453,7 @@
         margin: 0 auto;
         width: 100%;
     }
-    
+
     .contador-unit {
         display: flex;
         align-items: center;
@@ -322,26 +462,27 @@
         min-width: unset;
         max-width: unset;
         width: 100%;
-        border: 3px solid var(--accent-aqua);
+        border: 3px solid #f4b8df;
         background: linear-gradient(135deg, 
-            rgba(157, 78, 221, 0.25) 0%,
-            rgba(0, 212, 255, 0.2) 100%);
-        box-shadow: 0 0 30px rgba(0, 212, 255, 0.3),
-                    inset 0 0 15px rgba(0, 212, 255, 0.1);
+            rgba(255, 235, 250, 0.8) 0%,
+            rgba(245, 225, 255, 0.7) 100%);
+        box-shadow: 
+            0 0 30px rgba(255, 182, 220, 0.3),
+            0 4px 15px rgba(216, 164, 248, 0.18);
     }
-    
+
     .contador-value-wrapper {
         flex: 0 0 auto;
         min-width: 85px;
     }
-    
+
     .contador-number {
         font-size: 2.8rem;
         margin-bottom: 0;
         text-align: center;
         line-height: 1;
     }
-    
+
     .contador-label {
         font-size: 1rem;
         letter-spacing: 1.5px;
@@ -350,8 +491,6 @@
         margin-left: 25px;
         font-weight: 700;
     }
-    
-    .contador-separator {
-        display: none;
-    }
+
+    .contador-separator { display: none; }
 }
