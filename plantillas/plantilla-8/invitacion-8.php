@@ -534,7 +534,6 @@ try {
 
 <!-- Sección RSVP -->
 <section class="rsvp" id="rsvp">
-    <!-- Decorativos de fondo -->
     <div class="rsvp-orb"></div>
     <div class="rsvp-sparkles"></div>
     <div class="rsvp-dots">
@@ -562,36 +561,12 @@ try {
                 </button>
             </div>
             <?php else: ?>
-            <!-- RSVP Formulario Digital -->
-            <form id="rsvp-form" class="rsvp-form" method="POST" action="./api/register_and_pay.php">
-                <input type="hidden" name="invitacion_slug" value="<?php echo htmlspecialchars($slug); ?>">
-                
-                <div class="form-group">
-                    <label for="nombres">Nombre Completo *</label>
-                    <input type="text" id="nombres" name="nombres" required placeholder="Tu nombre" />
-                </div>
-                
-                <div class="form-group">
-                    <label for="email">Email *</label>
-                    <input type="email" id="email" name="email" required placeholder="tu@email.com" />
-                </div>
-                
-                <div class="form-group">
-                    <label for="telefono">Teléfono</label>
-                    <input type="tel" id="telefono" name="telefono" placeholder="Tu teléfono" />
-                </div>
-                
-                <div class="form-group">
-                    <label for="asistencia">¿Confirmas tu asistencia? *</label>
-                    <select id="asistencia" name="asistencia" required>
-                        <option value="">Selecciona una opción</option>
-                        <option value="1">Sí, asistiré</option>
-                        <option value="0">No podré asistir</option>
-                    </select>
-                </div>
-                
-                <button type="submit" class="rsvp-button">Confirmar Asistencia</button>
-            </form>
+            <!-- RSVP Digital — abre el modal -->
+            <div class="rsvp-action-wrapper">
+                <button class="rsvp-button" onclick="openRSVPModal()">
+                    <span>Confirmar Asistencia</span>
+                </button>
+            </div>
             <?php endif; ?>
             
             <div class="rsvp-details">
@@ -615,9 +590,123 @@ try {
     </div>
 </section>
 
+
+<!-- =====================================================
+     MODAL RSVP DIGITAL (5 pasos)
+     Solo se renderiza si el tipo de RSVP es digital
+     ===================================================== -->
+<?php if ($tipo_rsvp === 'digital'): ?>
+<div id="rsvpModal" class="modal" style="display:none;">
+    <div class="modal-content">
+
+        <!-- PASO 1: Ingresar código -->
+        <div class="rsvp-step" id="step-codigo">
+            <button class="modal-close-btn" onclick="closeRSVPModal()" type="button" aria-label="Cerrar">✕</button>
+            <h3>Confirma tu Asistencia</h3>
+            <p class="step-description">Ingresa el código que aparece en tu invitación</p>
+            <form id="codigoForm" autocomplete="off">
+                <input type="hidden" name="slug" value="<?php echo htmlspecialchars($slug); ?>">
+                <div class="form-group">
+                    <label for="codigo_grupo">Código de invitación *</label>
+                    <input type="text" 
+                           id="codigo_grupo" 
+                           name="codigo_grupo" 
+                           required 
+                           placeholder="Ej: ABC123"
+                           style="text-transform: uppercase; letter-spacing: 0.1em;">
+                </div>
+                <div id="codigo-alert"></div>
+                <button type="submit" class="form-submit btn btn-primary">Validar Código</button>
+            </form>
+        </div>
+
+        <!-- PASO 2: Formulario de asistencia -->
+        <div class="rsvp-step" id="step-formulario" style="display:none;">
+            <button class="modal-close-btn" onclick="closeRSVPModal()" type="button" aria-label="Cerrar">✕</button>
+            <h3 id="nombre-grupo"></h3>
+            <p id="boletos-info" class="step-description"></p>
+            <form id="rsvpForm" autocomplete="off">
+                <input type="hidden" name="id_grupo" id="id_grupo">
+                <div class="form-group">
+                    <label for="estado">¿Confirmas tu asistencia? *</label>
+                    <select id="estado" name="estado" required onchange="toggleAsistenciaFields()">
+                        <option value="">Selecciona una opción</option>
+                        <option value="aceptado">Sí asistiremos ✓</option>
+                        <option value="rechazado">No podremos asistir</option>
+                    </select>
+                </div>
+                <div id="campos-asistencia" style="display:none;">
+                    <div class="form-group">
+                        <label for="boletos_confirmados">Número de asistentes *</label>
+                        <select id="boletos_confirmados" name="boletos_confirmados" onchange="updateNombresFields()"></select>
+                    </div>
+                    <div id="nombres-container"></div>
+                </div>
+                <div class="form-group">
+                    <label for="comentarios">Comentarios (opcional)</label>
+                    <textarea id="comentarios" name="comentarios" rows="3" placeholder="¿Algún comentario o mensaje?"></textarea>
+                </div>
+                <div id="form-alert"></div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="volverACodigo()">← Regresar</button>
+                    <button type="submit" class="btn btn-primary">Revisar →</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- PASO 3: Confirmación antes de enviar -->
+        <div class="rsvp-step" id="step-confirmacion" style="display:none;">
+            <button class="modal-close-btn" onclick="closeRSVPModal()" type="button" aria-label="Cerrar">✕</button>
+            <h3>Revisa tu confirmación</h3>
+            <p class="step-description">¿Los datos son correctos?</p>
+            <div id="confirmacion-info"></div>
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" onclick="volverAFormulario()">← Editar</button>
+                <button type="button" class="btn btn-primary" onclick="enviarConfirmacion()">Confirmar ✓</button>
+            </div>
+        </div>
+
+        <!-- PASO 4: Éxito -->
+        <div class="rsvp-step" id="step-exito" style="display:none;">
+            <div class="step-success-icon">🎉</div>
+            <p id="mensaje-exito" class="success-message"></p>
+            <div id="resumen-final"></div>
+            <div class="form-actions center">
+                <button type="button" class="btn btn-primary" onclick="closeRSVPModal()">Cerrar</button>
+            </div>
+        </div>
+
+        <!-- PASO 5: Ver respuesta existente -->
+        <div class="rsvp-step" id="step-ver-respuesta" style="display:none;">
+            <button class="modal-close-btn" onclick="closeRSVPModal()" type="button" aria-label="Cerrar">✕</button>
+            <h3>Tu respuesta registrada</h3>
+            <div id="respuesta-existente"></div>
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" onclick="closeRSVPModal()">Cerrar</button>
+                <button type="button" class="btn btn-primary" onclick="editarRespuesta()">Editar respuesta</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+<?php endif; ?>
+
+
+<!-- Modal Fecha Límite Excedida -->
+<div id="modalFechaLimite" class="modal" style="display:none;">
+    <div class="modal-content modal-content--small">
+        <div class="step-info-icon">⏰</div>
+        <h3>Confirmación cerrada</h3>
+        <p>El período para confirmar asistencia ha finalizado.</p>
+        <div class="form-actions center">
+            <button type="button" class="btn btn-primary" onclick="closeModalFechaLimite()">Entendido</button>
+        </div>
+    </div>
+</div>
+
+
 <!-- Footer -->
 <footer class="footer">
-    <!-- Decorativos de fondo -->
     <div class="footer-sparkles"></div>
     <div class="footer-dots">
         <span></span><span></span><span></span><span></span>
@@ -649,45 +738,48 @@ try {
                     </button>
                 </div>
                 <?php endif; ?>
-                </div>
             </div>
-        
         </div>
     </div>
 </footer>
 
+
 <!-- Music Player -->
 <?php if ($musica_youtube_url): ?>
-<!-- ================================================
-     MUSIC PLAYER — inicialización vía JS
-     El widget se inserta dinámicamente en el DOM.
-     No se necesita ningún elemento HTML aquí.
-     ================================================ -->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         if (typeof MUSICA_URL !== 'undefined' && MUSICA_URL) {
             initMusicPlayer(
-                MUSICA_URL,                                          // URL de YouTube
-                <?php echo $musica_autoplay ? 'true' : 'false'; ?>, // autoplay
-                0.7                                                  // volumen inicial (0-1)
+                MUSICA_URL,
+                <?php echo $musica_autoplay ? 'true' : 'false'; ?>,
+                0.7
             );
         }
     });
 </script>
 <?php endif; ?>
 
-<!-- Scripts -->
+
+<!-- =====================================================
+     VARIABLES GLOBALES PARA JAVASCRIPT
+     IMPORTANTE: deben declararse ANTES de cargar los scripts
+     ===================================================== -->
 <script>
-    // Datos para el contador
-    const FECHA_EVENTO = '<?php echo $invitacion['fecha_evento']; ?>';
-    const MUSICA_URL = '<?php echo htmlspecialchars($musica_youtube_url); ?>';
-    const RSVP_HABILITADO = <?php echo $rsvp_habilitado ? 'true' : 'false'; ?>;
+    const FECHA_EVENTO       = '<?php echo $invitacion['fecha_evento']; ?>';
+    const MUSICA_URL         = '<?php echo htmlspecialchars($musica_youtube_url); ?>';
+    const RSVP_HABILITADO    = <?php echo $rsvp_habilitado ? 'true' : 'false'; ?>;
+    const SLUG_INVITACION    = '<?php echo htmlspecialchars($slug); ?>';
+
+    const WHATSAPP_RSVP      = '<?php echo htmlspecialchars($numero_whatsapp_rsvp); ?>';
+    const NOMBRES_EVENTO     = '<?php echo htmlspecialchars($nombres); ?>';
+    const FECHA_EVENTO_TEXTO = '<?php echo htmlspecialchars($fecha); ?>';
 </script>
 
 <script src="./plantillas/plantilla-8/js/main.js?v=<?php echo time(); ?>"></script>
 <script src="./plantillas/plantilla-8/js/contador.js?v=<?php echo time(); ?>"></script>
 <script src="./plantillas/plantilla-8/js/galeria.js?v=<?php echo time(); ?>"></script>
 <script src="./plantillas/plantilla-8/js/music-player.js?v=<?php echo time(); ?>"></script>
+<script src="./plantillas/plantilla-8/js/rsvp.js?v=<?php echo time(); ?>"></script>
 
 </body>
 </html>

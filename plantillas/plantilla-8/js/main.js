@@ -67,12 +67,12 @@ function shareWhatsApp() {
 
 // Función para confirmar por WhatsApp (RSVP)
 function confirmarPorWhatsApp() {
-    const numero = '<?php echo $numero_whatsapp_rsvp; ?>';
-    const nombres = '<?php echo htmlspecialchars($nombres); ?>';
-    const fecha = '<?php echo $fecha; ?>';
-    const mensaje = encodeURIComponent(`¡Hola! Quiero confirmar mi asistencia a la celebración de ${nombres} el ${fecha}. ✨`);
-    const whatsappUrl = `https://wa.me/${numero}?text=${mensaje}`;
-    window.open(whatsappUrl, '_blank');
+    const numero  = (typeof WHATSAPP_RSVP !== 'undefined' ? WHATSAPP_RSVP : '').replace(/\D/g, '');
+    const nombres = typeof NOMBRES_EVENTO !== 'undefined' ? NOMBRES_EVENTO : '';
+    const fecha   = typeof FECHA_EVENTO_TEXTO !== 'undefined' ? FECHA_EVENTO_TEXTO : '';
+    const mensaje = encodeURIComponent(`¡Hola! Quiero confirmar mi asistencia a la celebración de ${nombres} el ${fecha}.`);
+    const url     = `https://wa.me/${numero}?text=${mensaje}`;
+    window.open(url, '_blank');
 }
 
 // Función para copiar enlace
