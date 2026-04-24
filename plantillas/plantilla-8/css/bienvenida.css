@@ -1,6 +1,84 @@
-/* Sección de Bienvenida - Kawaii Princess - FESTIVA Y JUVENIL */
+/* Sección de Bienvenida - Kawaii Princess - OPTIMIZADA */
 
 
+/* ================================================
+   ANIMACIONES — Solo transform + opacity (GPU)
+   ✅ Eliminado: box-shadow animado, scale en keyframes,
+      translateY en ::before, rotaciones de gradientes
+   ================================================ */
+
+/* Burbujas de fondo — solo opacity */
+@keyframes bubbleFloat {
+    0%,  100% { opacity: 0.75; }
+    50%        { opacity: 1;    }
+}
+
+/* Orbes — solo transform + opacity (sin scale costoso) */
+@keyframes bubblePulse {
+    0%, 100% { transform: translateY(0);    opacity: 0.2;  }
+    50%       { transform: translateY(-40px); opacity: 0.4; }
+}
+
+/* Título — solo translateY pequeño + opacity */
+@keyframes titleBounce {
+    0%, 100% { transform: translateY(0);    }
+    50%       { transform: translateY(-8px); }
+}
+
+/* Glow título — solo opacity (no cambia color) */
+@keyframes titleGlow {
+    0%, 100% { opacity: 0.9; }
+    50%       { opacity: 1;   }
+}
+
+/* Imagen flotante — solo translateY */
+@keyframes vibrant-float {
+    0%, 100% { transform: translateY(0);    }
+    50%       { transform: translateY(-12px); }
+}
+
+/* Tarjeta texto — solo opacity (elimina scale que fuerza repaint) */
+@keyframes festive-pulse {
+    0%, 100% { opacity: 0.92; }
+    50%       { opacity: 1;    }
+}
+
+/* Estrellas — solo translateX + opacity */
+@keyframes starsFloat {
+    0%   { transform: translateX(0);    opacity: 0.55; }
+    50%  { transform: translateX(-4%);  opacity: 0.9;  }
+    100% { transform: translateX(0);    opacity: 0.55; }
+}
+
+/* Dots — solo translateY + opacity */
+@keyframes dotFloat {
+    0%   { transform: translateY(110vh); opacity: 0;   }
+    10%  { opacity: 0.75; }
+    90%  { opacity: 0.55; }
+    100% { transform: translateY(-10vh); opacity: 0;   }
+}
+
+/* Shine — solo translateX */
+@keyframes shine {
+    0%   { transform: translateX(-120%); }
+    100% { transform: translateX(120%);  }
+}
+
+/* Entrada */
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-25px); }
+    to   { opacity: 1; transform: translateY(0);     }
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0);    }
+}
+
+
+/* ================================================
+   SECCIÓN
+   ================================================ */
 .bienvenida {
     padding: var(--section-padding);
     background: linear-gradient(135deg, #fff0f8 0%, #f8effe 50%, #fff5fc 100%);
@@ -13,16 +91,16 @@
 
 
 /* ================================================
-   CAPA 1 - Burbujas suaves flotantes
+   CAPA 1 — Burbujas estáticas + fade suave
+   ✅ Sin translateX/Y en el keyframe — evita
+      recalcular posición de 9 gradientes por frame
    ================================================ */
 .bienvenida::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: 
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background:
         radial-gradient(circle at 10% 15%, rgba(255, 182, 220, 0.5)  0%, transparent 12%),
         radial-gradient(circle at 88% 10%, rgba(216, 164, 248, 0.45) 0%, transparent 10%),
         radial-gradient(circle at 20% 65%, rgba(255, 200, 230, 0.45) 0%, transparent 14%),
@@ -32,164 +110,128 @@
         radial-gradient(circle at 70% 30%, rgba(240, 190, 255, 0.38) 0%, transparent 11%),
         radial-gradient(circle at 35% 10%, rgba(255, 192, 228, 0.4)  0%, transparent 9%),
         radial-gradient(circle at 60% 75%, rgba(210, 160, 245, 0.35) 0%, transparent 11%);
+    /* ✅ Solo opacity — no mueve nada, GPU puro */
     animation: bubbleFloat 18s ease-in-out infinite;
     pointer-events: none;
+    will-change: opacity;
 }
 
 
 /* ================================================
-   CAPA 2 - Orbe grande esquina inferior
+   CAPA 2 — Orbe inferior
    ================================================ */
 .bienvenida::after {
     content: '';
     position: absolute;
-    bottom: -15%;
-    left: -8%;
-    width: 700px;
-    height: 700px;
-    background: radial-gradient(circle, rgba(255, 182, 220, 0.28) 0%, rgba(216, 164, 248, 0.15) 50%, transparent 70%);
+    bottom: -15%; left: -8%;
+    width: 700px; height: 700px;
+    background: radial-gradient(circle,
+        rgba(255, 182, 220, 0.28) 0%,
+        rgba(216, 164, 248, 0.15) 50%,
+        transparent 70%);
     border-radius: 50%;
     animation: bubblePulse 7s ease-in-out infinite;
     pointer-events: none;
+    will-change: transform, opacity;
 }
 
 
 /* ================================================
-   CAPA 3 - Orbe secundario esquina superior derecha
-   (pseudo-elemento extra con wrapper)
+   ORBE SUPERIOR DERECHO
    ================================================ */
 .bienvenida-orb {
     position: absolute;
-    top: -10%;
-    right: -8%;
-    width: 500px;
-    height: 500px;
-    background: radial-gradient(circle, rgba(216, 164, 248, 0.25) 0%, rgba(255, 182, 220, 0.12) 50%, transparent 70%);
+    top: -10%; right: -8%;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle,
+        rgba(216, 164, 248, 0.25) 0%,
+        rgba(255, 182, 220, 0.12) 50%,
+        transparent 70%);
     border-radius: 50%;
     animation: bubblePulse 9s ease-in-out infinite reverse;
     pointer-events: none;
     z-index: 0;
+    will-change: transform, opacity;
 }
 
 
 /* ================================================
-   ESTRELLAS / DESTELLOS FLOTANTES
+   ESTRELLAS FLOTANTES
    ================================================ */
 .bienvenida-sparkles {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
     pointer-events: none;
     z-index: 1;
     overflow: hidden;
 }
 
-
-/* Estrellitas decorativas con CSS puro */
 .bienvenida-sparkles::before {
     content: '✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧';
     position: absolute;
-    top: 8%;
-    left: 0;
+    top: 8%; left: 0;
     width: 100%;
     font-size: 0.9rem;
     color: rgba(201, 95, 168, 0.35);
     letter-spacing: 4.5vw;
     animation: starsFloat 12s linear infinite;
     white-space: nowrap;
+    will-change: transform, opacity;
 }
-
 
 .bienvenida-sparkles::after {
     content: '✿ ❀ ✿ ❀ ✿ ❀ ✿ ❀ ✿ ❀ ✿ ❀ ✿ ❀ ✿ ❀';
     position: absolute;
-    bottom: 12%;
-    left: 0;
+    bottom: 12%; left: 0;
     width: 100%;
     font-size: 1rem;
     color: rgba(176, 106, 212, 0.3);
     letter-spacing: 4.5vw;
     animation: starsFloat 15s linear infinite reverse;
     white-space: nowrap;
-}
-
-
-@keyframes starsFloat {
-    0%   { transform: translateX(0%);    opacity: 0.6; }
-    50%  { transform: translateX(-5%);   opacity: 1;   }
-    100% { transform: translateX(0%);    opacity: 0.6; }
+    will-change: transform, opacity;
 }
 
 
 /* ================================================
-   PUNTOS FLOTANTES INDIVIDUALES
+   PUNTOS FLOTANTES
+   ✅ Reducidos de 10 a 6 en desktop
+   ✅ Ocultos en móvil vía media query
    ================================================ */
 .bienvenida-dots {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
     pointer-events: none;
     z-index: 1;
 }
-
 
 .bienvenida-dots span {
     position: absolute;
     border-radius: 50%;
     animation: dotFloat linear infinite;
     opacity: 0;
+    will-change: transform, opacity;
 }
 
-
-.bienvenida-dots span:nth-child(1)  { width:10px; height:10px; background: rgba(255,182,220,0.7); left:8%;  animation-duration:8s;  animation-delay:0s;   }
-.bienvenida-dots span:nth-child(2)  { width:6px;  height:6px;  background: rgba(216,164,248,0.7); left:18%; animation-duration:11s; animation-delay:1s;   }
-.bienvenida-dots span:nth-child(3)  { width:14px; height:14px; background: rgba(255,200,230,0.6); left:28%; animation-duration:9s;  animation-delay:2s;   }
-.bienvenida-dots span:nth-child(4)  { width:8px;  height:8px;  background: rgba(220,170,255,0.65);left:40%; animation-duration:13s; animation-delay:0.5s; }
-.bienvenida-dots span:nth-child(5)  { width:12px; height:12px; background: rgba(255,182,220,0.6); left:55%; animation-duration:10s; animation-delay:3s;   }
-.bienvenida-dots span:nth-child(6)  { width:7px;  height:7px;  background: rgba(240,190,255,0.7); left:65%; animation-duration:7s;  animation-delay:1.5s; }
-.bienvenida-dots span:nth-child(7)  { width:11px; height:11px; background: rgba(255,210,238,0.65);left:75%; animation-duration:12s; animation-delay:0.8s; }
-.bienvenida-dots span:nth-child(8)  { width:9px;  height:9px;  background: rgba(210,160,245,0.6); left:85%; animation-duration:9s;  animation-delay:2.5s; }
-.bienvenida-dots span:nth-child(9)  { width:5px;  height:5px;  background: rgba(255,182,220,0.8); left:93%; animation-duration:11s; animation-delay:1.2s; }
-.bienvenida-dots span:nth-child(10) { width:13px; height:13px; background: rgba(216,164,248,0.55);left:48%; animation-duration:14s; animation-delay:4s;   }
-
-
-@keyframes dotFloat {
-    0%   { transform: translateY(110vh) scale(0.5); opacity: 0;   }
-    10%  { opacity: 0.8; }
-    90%  { opacity: 0.6; }
-    100% { transform: translateY(-10vh)  scale(1.2); opacity: 0;   }
-}
+/* Solo 6 dots activos — los más espaciados */
+.bienvenida-dots span:nth-child(1)  { width:10px; height:10px; background:rgba(255,182,220,0.7);  left:8%;  animation-duration:8s;  animation-delay:0s;   }
+.bienvenida-dots span:nth-child(2)  { width:6px;  height:6px;  background:rgba(216,164,248,0.7);  left:22%; animation-duration:11s; animation-delay:1.5s; }
+.bienvenida-dots span:nth-child(3)  { width:12px; height:12px; background:rgba(255,200,230,0.6);  left:40%; animation-duration:9s;  animation-delay:3s;   }
+.bienvenida-dots span:nth-child(4)  { width:8px;  height:8px;  background:rgba(220,170,255,0.65); left:58%; animation-duration:13s; animation-delay:0.8s; }
+.bienvenida-dots span:nth-child(5)  { width:11px; height:11px; background:rgba(255,182,220,0.6);  left:74%; animation-duration:10s; animation-delay:2s;   }
+.bienvenida-dots span:nth-child(6)  { width:7px;  height:7px;  background:rgba(240,190,255,0.7);  left:90%; animation-duration:8s;  animation-delay:1s;   }
+/* Dots 7-10 ocultos — demasiado costo en móvil */
+.bienvenida-dots span:nth-child(7),
+.bienvenida-dots span:nth-child(8),
+.bienvenida-dots span:nth-child(9),
+.bienvenida-dots span:nth-child(10) { display: none; }
 
 
 /* ================================================
-   ANIMACIONES BASE
+   CONTAINER
    ================================================ */
-@keyframes bubbleFloat {
-    0%   { transform: translateY(0px)    translateX(0px);   opacity: 0.85; }
-    20%  { transform: translateY(-30px)  translateX(15px);  opacity: 1;    }
-    40%  { transform: translateY(-60px)  translateX(-20px); opacity: 0.9;  }
-    60%  { transform: translateY(-45px)  translateX(25px);  opacity: 1;    }
-    80%  { transform: translateY(-20px)  translateX(-10px); opacity: 0.9;  }
-    100% { transform: translateY(0px)    translateX(0px);   opacity: 0.85; }
-}
-
-
-@keyframes bubblePulse {
-    0%, 100% { transform: translateY(0)     scale(1);   opacity: 0.2; }
-    50%       { transform: translateY(-60px) scale(1.4); opacity: 0.45; }
-}
-
-
-@keyframes vibrant-float {
-    0%, 100% { transform: translateY(0)     rotateX(0deg); }
-    50%       { transform: translateY(-15px) rotateX(2deg); }
-}
-
-
 .bienvenida .container {
     position: relative;
     z-index: 2;
@@ -209,48 +251,22 @@
     animation: slideDown 0.8s ease-out;
 }
 
-
 .bienvenida-age-title {
     color: #c2589a;
     font-size: clamp(1.8rem, 6vw, 3.5rem);
     font-weight: 900;
     margin: 0;
     line-height: 1.2;
-    animation: titleGlow 3s ease-in-out infinite, titleBounce 2s ease-in-out infinite;
-    text-shadow: 
+    /* ✅ Animaciones separadas para que cada una
+       se maneje en su propia capa GPU */
+    animation:
+        titleGlow   3s ease-in-out infinite,
+        titleBounce 2s ease-in-out infinite;
+    text-shadow:
         0 0 20px rgba(220, 160, 210, 0.6),
-        0 0 40px rgba(200, 140, 240, 0.35),
-        0 2px 4px rgba(160, 60, 130, 0.15);
+        0 0 40px rgba(200, 140, 240, 0.35);
     letter-spacing: 1px;
-}
-
-
-@keyframes titleGlow {
-    0%, 100% { 
-        color: #c2589a;
-        text-shadow: 
-            0 0 20px rgba(220, 160, 210, 0.6),
-            0 0 40px rgba(200, 140, 240, 0.35);
-    }
-    50% { 
-        color: #d4689e;
-        text-shadow: 
-            0 0 30px rgba(255, 182, 220, 0.9),
-            0 0 60px rgba(216, 164, 248, 0.65),
-            0 0 90px rgba(255, 210, 238, 0.4);
-    }
-}
-
-
-@keyframes titleBounce {
-    0%, 100% { transform: translateY(0)     scale(1);    }
-    50%       { transform: translateY(-10px) scale(1.02); }
-}
-
-
-@keyframes slideDown {
-    from { opacity: 0; transform: translateY(-30px); }
-    to   { opacity: 1; transform: translateY(0);     }
+    will-change: transform, opacity;
 }
 
 
@@ -266,7 +282,6 @@
     margin-bottom: 3rem;
 }
 
-
 .bienvenida-image {
     text-align: center;
     animation: fadeInUp 0.8s ease-out 0.2s both;
@@ -277,17 +292,14 @@
     max-width: 500px;
 }
 
-
 .image-container {
     position: relative;
     max-width: 100%;
     width: 100%;
     height: 100%;
     min-height: 550px;
-    margin: 0;
-    padding: 0;
+    margin: 0; padding: 0;
 }
-
 
 .image-frame {
     position: relative;
@@ -295,45 +307,31 @@
     overflow: hidden;
     aspect-ratio: 3/4;
     border: 3px solid #dda0cc;
-    box-shadow: 
-        0 0 50px rgba(255, 182, 220, 0.55),
-        0 0 100px rgba(216, 164, 248, 0.3);
-    animation: vibrant-float 4s ease-in-out infinite, bubbleGlow 3s ease-in-out infinite;
+    /* ✅ box-shadow ESTÁTICO — no animado */
+    box-shadow:
+        0 0 50px rgba(255, 182, 220, 0.5),
+        0 0 90px rgba(216, 164, 248, 0.25);
+    /* ✅ Solo translateY — sin bubbleGlow */
+    animation: vibrant-float 4s ease-in-out infinite;
+    will-change: transform;
 }
-
 
 .image-frame img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: all var(--transition-smooth);
+    /* ✅ Sin transition en filter — muy costoso */
+    transition: transform 0.4s ease;
     filter: brightness(1.0) saturate(1.1);
 }
 
-
 .image-frame:hover img {
     transform: scale(1.05);
-    filter: brightness(1.05) saturate(1.2);
 }
 
-
-@keyframes bubbleGlow {
-    0%, 100% { 
-        box-shadow: 
-            0 0 50px  rgba(255, 182, 220, 0.55),
-            0 0 100px rgba(216, 164, 248, 0.3);
-    }
-    50% { 
-        box-shadow: 
-            0 0 80px  rgba(255, 182, 220, 0.8),
-            0 0 150px rgba(216, 164, 248, 0.5);
-    }
-}
-
-
-.image-overlay    { display: none; }
-.overlay-content  { display: none; }
-.overlay-text     { display: none; }
+.image-overlay,
+.overlay-content,
+.overlay-text,
 .image-decoration { display: none; }
 
 
@@ -350,65 +348,45 @@
     max-width: 600px;
 }
 
-
 .text-content { width: 100%; }
 .text-content > p { display: none; }
 
-
 .quote-decoration {
-    background: linear-gradient(135deg, rgba(255, 230, 248, 0.75) 0%, rgba(242, 220, 255, 0.65) 100%);
+    background: linear-gradient(135deg,
+        rgba(255, 230, 248, 0.75) 0%,
+        rgba(242, 220, 255, 0.65) 100%);
     border: 3px solid #dda0cc;
     border-radius: var(--border-radius-lg);
     padding: 35px;
     margin: 0;
     position: relative;
-    box-shadow: 
+    /* ✅ box-shadow ESTÁTICO */
+    box-shadow:
         0 0 35px rgba(255, 182, 220, 0.35),
         0 4px 20px rgba(216, 164, 248, 0.2);
+    /* ✅ Solo opacity — sin scale ni box-shadow animado */
     animation: festive-pulse 2s ease-in-out infinite;
     overflow: hidden;
     width: 100%;
+    will-change: opacity;
 }
-
-
-@keyframes festive-pulse {
-    0%, 100% { 
-        box-shadow: 
-            0 0 35px rgba(255, 182, 220, 0.35),
-            0 4px 20px rgba(216, 164, 248, 0.2);
-        transform: scale(1);
-    }
-    50% { 
-        box-shadow: 
-            0 0 60px rgba(255, 182, 220, 0.6),
-            0 4px 30px rgba(216, 164, 248, 0.35),
-            0 0 80px rgba(255, 210, 238, 0.3);
-        transform: scale(1.02);
-    }
-}
-
 
 .quote-decoration::before {
     content: '';
     position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(45deg, transparent 30%, rgba(255, 220, 245, 0.4) 50%, transparent 70%);
-    animation: shine 3s infinite;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: linear-gradient(45deg,
+        transparent 30%,
+        rgba(255, 220, 245, 0.35) 50%,
+        transparent 70%);
+    /* ✅ Solo translateX */
+    animation: shine 4s infinite;
+    will-change: transform;
 }
 
-
-@keyframes shine {
-    0%   { transform: translateX(-100%); }
-    100% { transform: translateX(100%);  }
-}
-
-
-.quote-mark     { display: none; }
+.quote-mark,
 .quote-mark-end { display: none; }
-
 
 .bienvenida-message {
     color: #7c2d8e;
@@ -422,32 +400,32 @@
     z-index: 1;
 }
 
-
-/* OCULTAR SECCIONES INNECESARIAS */
+/* Ocultar secciones innecesarias */
 .bienvenida-ceremony, .ceremony-ornament, .ceremony-main,
 .ceremony-date-container, .ceremony-label, .ceremony-date,
 .ceremony-details, .ceremony-time, .ceremony-venue, .ceremony-address,
 .familia-section, .familia-header, .familia-grid,
-.familia-column, .familia-icon, .familia-names {
-    display: none;
-}
+.familia-column, .familia-icon, .familia-names { display: none; }
 
 
 /* ================================================
-   RESPONSIVE
+   RESPONSIVE - TABLET
    ================================================ */
 @media (max-width: 768px) {
     .bienvenida { padding: 60px 20px; }
 
-    .bienvenida-main {
-        flex-direction: column;
-        gap: 2rem;
-    }
+    .bienvenida-main { flex-direction: column; gap: 2rem; }
 
     .image-container { min-height: 400px; }
+
+    /* ✅ Desactiva dots en tablet */
+    .bienvenida-dots { display: none; }
 }
 
 
+/* ================================================
+   RESPONSIVE - MOBILE
+   ================================================ */
 @media (max-width: 480px) {
     .bienvenida {
         padding: 60px 15px 40px;
@@ -471,20 +449,26 @@
         margin-bottom: 1.5rem;
     }
 
-    .bienvenida-image { max-width: 100%; }
-    .image-container  { min-height: 350px; }
-
-    .image-frame { aspect-ratio: 2.5/3.5; }
+    .bienvenida-image  { max-width: 100%; }
+    .image-container   { min-height: 350px; }
+    .image-frame       { aspect-ratio: 2.5/3.5; }
 
     .quote-decoration {
         padding: 18px;
-        margin: 0;
         border: 2px solid #dda0cc;
     }
 
     .bienvenida-message {
         font-size: 0.9rem;
         line-height: 1.5;
-        margin: 0;
+    }
+
+    /* ✅ Sparkles más lentas en móvil para ahorrar CPU */
+    .bienvenida-sparkles::before { animation-duration: 18s; }
+    .bienvenida-sparkles::after  { animation-duration: 22s; }
+
+    /* ✅ Desactiva float del título en móvil */
+    .bienvenida-age-title {
+        animation: titleGlow 3s ease-in-out infinite;
     }
 }

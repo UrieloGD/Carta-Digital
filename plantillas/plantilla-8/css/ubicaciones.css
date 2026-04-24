@@ -1,76 +1,63 @@
-/* Ubicaciones - Google Maps y Detalles - Kawaii Princess */
+/* Ubicaciones - Google Maps y Detalles - Kawaii Princess - OPTIMIZADA */
 
 
 /* ================================================
-   ANIMACIONES
+   ANIMACIONES — Solo transform + opacity (GPU)
+   ✅ Eliminado: rotate 60s en 200%x200%
+   ✅ Eliminado: scale en orbPulse y dotFloat
+   ✅ Eliminado: box-shadow animado en cardGlow
+   ✅ Eliminado: cambio de color/text-shadow en textGlowLocation
+   ✅ Shimmer con transform en lugar de left
    ================================================ */
-@keyframes rotate {
-    0%   { transform: rotate(0deg);   }
-    100% { transform: rotate(360deg); }
-}
-
 
 @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(30px); }
+    from { opacity: 0; transform: translateY(25px); }
     to   { opacity: 1; transform: translateY(0);    }
 }
 
-
+/* ✅ Solo translateY + opacity, sin scale */
 @keyframes orbPulse {
-    0%, 100% { transform: scale(1)    translateY(0);     opacity: 0.22; }
-    50%       { transform: scale(1.35) translateY(-40px); opacity: 0.42; }
+    0%, 100% { transform: translateY(0);     opacity: 0.2;  }
+    50%       { transform: translateY(-35px); opacity: 0.38; }
 }
 
-
+/* ✅ Solo translateX + opacity */
 @keyframes starsFloat {
-    0%   { transform: translateX(0%);  opacity: 0.5; }
-    50%  { transform: translateX(-5%); opacity: 0.9; }
-    100% { transform: translateX(0%);  opacity: 0.5; }
+    0%   { transform: translateX(0);   opacity: 0.5; }
+    50%  { transform: translateX(-4%); opacity: 0.9; }
+    100% { transform: translateX(0);   opacity: 0.5; }
 }
 
-
+/* ✅ Solo translateY + opacity, sin scale */
 @keyframes dotFloat {
-    0%   { transform: translateY(110vh) scale(0.5); opacity: 0;   }
-    10%  { opacity: 0.8; }
-    90%  { opacity: 0.6; }
-    100% { transform: translateY(-10vh) scale(1.2);  opacity: 0;  }
+    0%   { transform: translateY(110vh); opacity: 0;    }
+    10%  { opacity: 0.75; }
+    90%  { opacity: 0.55; }
+    100% { transform: translateY(-10vh); opacity: 0;    }
 }
 
-
+/* ✅ Solo opacity — sin color ni text-shadow */
 @keyframes textGlowLocation {
-    0%, 100% {
-        color: #d4689e;
-        text-shadow:
-            0 0 25px rgba(255, 182, 220, 0.55),
-            0 0 50px rgba(220, 164, 248, 0.3);
-    }
-    50% {
-        color: #e088bb;
-        text-shadow:
-            0 0 40px rgba(255, 200, 230, 0.9),
-            0 0 80px rgba(230, 170, 255, 0.6),
-            0 0 120px rgba(255, 210, 238, 0.4);
-    }
+    0%, 100% { opacity: 0.88; }
+    50%       { opacity: 1;   }
 }
 
-
+/* ✅ Solo opacity — sin box-shadow animado */
 @keyframes cardGlow {
-    0%, 100% {
-        box-shadow:
-            0 0 40px rgba(255, 182, 220, 0.35),
-            0 4px 20px rgba(220, 164, 248, 0.18);
-    }
-    50% {
-        box-shadow:
-            0 0 70px rgba(255, 182, 220, 0.6),
-            0 4px 35px rgba(220, 164, 248, 0.35);
-    }
+    0%, 100% { opacity: 0.95; }
+    50%       { opacity: 1;   }
 }
 
+/* ✅ Solo opacity — fondo sin rotate */
+@keyframes bgFade {
+    0%, 100% { opacity: 0.8; }
+    50%       { opacity: 1;  }
+}
 
+/* ✅ translateX en lugar de left */
 @keyframes shimmerBtn {
-    0%   { left: -100%; }
-    100% { left:  100%; }
+    0%   { transform: translateX(-100%); }
+    100% { transform: translateX(100%);  }
 }
 
 
@@ -90,36 +77,35 @@
 
 
 /* ================================================
-   CAPA 1 - Rotación radial rosada
+   CAPA 1 — Gradientes fijos + solo opacity
+   ✅ ANTES: rotate 60s en elemento 200%×200%
+   ✅ AHORA: tamaño 100%, solo bgFade
    ================================================ */
 .ubicaciones::before {
     content: '';
     position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
     background:
         radial-gradient(circle at 20% 50%, rgba(255, 182, 220, 0.2)  0%, transparent 50%),
         radial-gradient(circle at 80% 80%, rgba(220, 164, 248, 0.18) 0%, transparent 50%),
         radial-gradient(circle at 55% 20%, rgba(255, 210, 238, 0.15) 0%, transparent 35%),
         radial-gradient(circle at 10% 85%, rgba(240, 190, 255, 0.14) 0%, transparent 30%);
-    animation: rotate 60s linear infinite;
+    animation: bgFade 20s ease-in-out infinite;
     pointer-events: none;
     z-index: 0;
+    will-change: opacity;
 }
 
 
 /* ================================================
-   CAPA 2 - Orbe esquina superior derecha
+   CAPA 2 — Orbe superior derecho
    ================================================ */
 .ubicaciones::after {
     content: '';
     position: absolute;
-    top: -10%;
-    right: -8%;
-    width: 500px;
-    height: 500px;
+    top: -10%; right: -8%;
+    width: 500px; height: 500px;
     background: radial-gradient(circle,
         rgba(220, 164, 248, 0.2)  0%,
         rgba(255, 182, 220, 0.08) 50%,
@@ -128,16 +114,15 @@
     animation: orbPulse 10s ease-in-out infinite;
     pointer-events: none;
     z-index: 0;
+    will-change: transform, opacity;
 }
 
 
-/* Orbe esquina inferior izquierda */
+/* Orbe inferior izquierdo */
 .ubicaciones-orb {
     position: absolute;
-    bottom: -12%;
-    left: -8%;
-    width: 560px;
-    height: 560px;
+    bottom: -12%; left: -8%;
+    width: 560px; height: 560px;
     background: radial-gradient(circle,
         rgba(255, 182, 220, 0.2)  0%,
         rgba(220, 164, 248, 0.08) 50%,
@@ -146,6 +131,7 @@
     animation: orbPulse 12s ease-in-out infinite reverse;
     pointer-events: none;
     z-index: 0;
+    will-change: transform, opacity;
 }
 
 
@@ -154,76 +140,72 @@
    ================================================ */
 .ubicaciones-sparkles {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
     pointer-events: none;
     z-index: 1;
     overflow: hidden;
 }
 
-
 .ubicaciones-sparkles::before {
     content: '✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦';
     position: absolute;
-    top: 5%;
-    left: 0;
+    top: 5%; left: 0;
     width: 100%;
     font-size: 0.85rem;
     color: rgba(210, 130, 180, 0.38);
     letter-spacing: 5vw;
     animation: starsFloat 14s linear infinite;
     white-space: nowrap;
+    will-change: transform, opacity;
 }
-
 
 .ubicaciones-sparkles::after {
     content: '✿ ❀ ✿ ❀ ✿ ❀ ✿ ❀ ✿ ❀ ✿ ❀ ✿ ❀ ✿';
     position: absolute;
-    bottom: 5%;
-    left: 0;
+    bottom: 5%; left: 0;
     width: 100%;
     font-size: 0.95rem;
     color: rgba(200, 140, 220, 0.3);
     letter-spacing: 5vw;
     animation: starsFloat 17s linear infinite reverse;
     white-space: nowrap;
+    will-change: transform, opacity;
 }
 
 
 /* ================================================
    PUNTOS FLOTANTES
+   ✅ Reducidos de 10 a 6 activos
+   ✅ Ocultos en tablet/móvil
    ================================================ */
 .ubicaciones-dots {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
     pointer-events: none;
     z-index: 1;
 }
-
 
 .ubicaciones-dots span {
     position: absolute;
     border-radius: 50%;
     animation: dotFloat linear infinite;
     opacity: 0;
+    will-change: transform, opacity;
 }
 
-
-.ubicaciones-dots span:nth-child(1)  { width:9px;  height:9px;  background: rgba(255,182,220,0.75); left:5%;  animation-duration:9s;  animation-delay:0s;   }
-.ubicaciones-dots span:nth-child(2)  { width:6px;  height:6px;  background: rgba(220,164,248,0.7);  left:15%; animation-duration:13s; animation-delay:1.5s; }
-.ubicaciones-dots span:nth-child(3)  { width:12px; height:12px; background: rgba(255,200,235,0.65); left:25%; animation-duration:8s;  animation-delay:2.8s; }
-.ubicaciones-dots span:nth-child(4)  { width:7px;  height:7px;  background: rgba(230,170,255,0.7);  left:38%; animation-duration:14s; animation-delay:0.6s; }
-.ubicaciones-dots span:nth-child(5)  { width:10px; height:10px; background: rgba(255,182,220,0.65); left:52%; animation-duration:10s; animation-delay:3.5s; }
-.ubicaciones-dots span:nth-child(6)  { width:7px;  height:7px;  background: rgba(240,190,255,0.75); left:63%; animation-duration:7s;  animation-delay:1.2s; }
-.ubicaciones-dots span:nth-child(7)  { width:11px; height:11px; background: rgba(255,210,240,0.65); left:74%; animation-duration:11s; animation-delay:0.3s; }
-.ubicaciones-dots span:nth-child(8)  { width:5px;  height:5px;  background: rgba(255,182,220,0.8);  left:85%; animation-duration:9s;  animation-delay:2s;   }
-.ubicaciones-dots span:nth-child(9)  { width:9px;  height:9px;  background: rgba(220,164,248,0.6);  left:93%; animation-duration:12s; animation-delay:1.8s; }
-.ubicaciones-dots span:nth-child(10) { width:6px;  height:6px;  background: rgba(255,210,238,0.7);  left:44%; animation-duration:15s; animation-delay:4.2s; }
+.ubicaciones-dots span:nth-child(1)  { width:9px;  height:9px;  background:rgba(255,182,220,0.75); left:5%;  animation-duration:9s;  animation-delay:0s;   }
+.ubicaciones-dots span:nth-child(2)  { width:6px;  height:6px;  background:rgba(220,164,248,0.7);  left:20%; animation-duration:13s; animation-delay:1.5s; }
+.ubicaciones-dots span:nth-child(3)  { width:11px; height:11px; background:rgba(255,200,235,0.65); left:38%; animation-duration:8s;  animation-delay:2.8s; }
+.ubicaciones-dots span:nth-child(4)  { width:7px;  height:7px;  background:rgba(230,170,255,0.7);  left:56%; animation-duration:14s; animation-delay:0.6s; }
+.ubicaciones-dots span:nth-child(5)  { width:10px; height:10px; background:rgba(255,182,220,0.65); left:74%; animation-duration:10s; animation-delay:3.5s; }
+.ubicaciones-dots span:nth-child(6)  { width:5px;  height:5px;  background:rgba(240,190,255,0.75); left:90%; animation-duration:9s;  animation-delay:1.2s; }
+/* Dots 7-10 desactivados */
+.ubicaciones-dots span:nth-child(7),
+.ubicaciones-dots span:nth-child(8),
+.ubicaciones-dots span:nth-child(9),
+.ubicaciones-dots span:nth-child(10) { display: none; }
 
 
 /* ================================================
@@ -246,19 +228,19 @@
     animation: fadeInUp 0.8s ease-out;
 }
 
-
 .ubicaciones-header h2 {
     color: #d4689e;
     font-size: clamp(1.8rem, 5vw, 3rem);
     margin-bottom: 15px;
     font-weight: 900;
     letter-spacing: 2px;
+    /* ✅ Solo opacity */
     animation: textGlowLocation 4s ease-in-out infinite;
     text-shadow:
         0 0 25px rgba(255, 182, 220, 0.55),
         0 0 50px rgba(220, 164, 248, 0.3);
+    will-change: opacity;
 }
-
 
 .ubicaciones-header .decorative-line {
     margin: 20px auto;
@@ -272,6 +254,8 @@
 
 /* ================================================
    CARD ÚNICA
+   ✅ box-shadow ESTÁTICO — cardGlow solo opacity
+   ✅ transition solo en propiedades baratas
    ================================================ */
 .ubicacion-card-single {
     background: linear-gradient(135deg,
@@ -280,16 +264,23 @@
     border: 3px solid #f4b8df;
     border-radius: var(--border-radius-lg);
     overflow: hidden;
-    transition: all var(--transition-smooth);
+    /* ✅ box-shadow estático */
+    box-shadow:
+        0 0 40px rgba(255, 182, 220, 0.35),
+        0 4px 20px rgba(220, 164, 248, 0.18);
+    transition: transform      0.3s ease,
+                border-color   0.3s ease,
+                box-shadow     0.3s ease;
+    /* ✅ cardGlow solo opacity, no box-shadow */
     animation: fadeInUp 0.8s ease-out, cardGlow 3s ease-in-out infinite;
+    will-change: opacity;
 }
-
 
 .ubicacion-card-single:hover {
     border-color: #e88ec7;
     box-shadow:
-        0 0 70px rgba(255, 182, 220, 0.65),
-        0 0 120px rgba(220, 164, 248, 0.4);
+        0 0 70px rgba(255, 182, 220, 0.6),
+        0 0 110px rgba(220, 164, 248, 0.35);
     transform: translateY(-5px);
 }
 
@@ -318,7 +309,6 @@
     text-align: center;
 }
 
-
 .ubicacion-address-text {
     color: #e088bb;
     font-size: 1.1rem;
@@ -330,18 +320,18 @@
 
 /* ================================================
    BOTÓN GOOGLE MAPS
+   ✅ shimmer con transform, no left
+   ✅ box-shadow estático en reposo
    ================================================ */
 .ubicacion-button-wrapper {
     text-align: center;
     padding: 0 40px 60px;
 }
 
-
 .ubicacion-button {
     display: inline-block;
     position: relative;
     overflow: hidden;
-    margin: 0;
     padding: 15px 50px;
     background: linear-gradient(135deg,
         rgba(255, 182, 220, 0.35) 0%,
@@ -354,30 +344,33 @@
     letter-spacing: 1px;
     text-decoration: none;
     text-transform: uppercase;
-    transition: all 0.3s ease;
+    /* ✅ Solo propiedades baratas */
+    transition: transform      0.3s ease,
+                border-color   0.3s ease,
+                box-shadow     0.3s ease,
+                background     0.3s ease,
+                color          0.3s ease;
     box-shadow:
-        0 0 28px rgba(255, 182, 220, 0.35),
-        inset 0 0 15px rgba(255, 182, 220, 0.1);
+        0 0 28px rgba(255, 182, 220, 0.3),
+        inset 0 0 15px rgba(255, 182, 220, 0.08);
     cursor: pointer;
     text-align: center;
 }
 
-
-/* Shimmer sobre el botón */
+/* ✅ shimmer con transform — GPU puro */
 .ubicacion-button::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
     background: linear-gradient(90deg,
         transparent 0%,
-        rgba(255, 220, 245, 0.5) 50%,
+        rgba(255, 220, 245, 0.45) 50%,
         transparent 100%);
+    transform: translateX(-100%);
     animation: shimmerBtn 3s infinite;
+    will-change: transform;
 }
-
 
 .ubicacion-button:hover {
     background: linear-gradient(135deg,
@@ -386,12 +379,11 @@
     border-color: #e88ec7;
     color: #c2589a;
     box-shadow:
-        0 0 55px rgba(255, 182, 220, 0.65),
-        0 0 90px rgba(220, 164, 248, 0.4),
-        inset 0 0 25px rgba(255, 182, 220, 0.2);
+        0 0 55px rgba(255, 182, 220, 0.6),
+        0 0 85px rgba(220, 164, 248, 0.35),
+        inset 0 0 20px rgba(255, 182, 220, 0.15);
     transform: translateY(-3px);
 }
-
 
 .ubicacion-button:active {
     transform: translateY(-1px);
@@ -409,7 +401,6 @@
     overflow: hidden;
     border-top: 3px solid #f4b8df;
 }
-
 
 .ubicacion-map iframe {
     width: 100%;
@@ -431,8 +422,6 @@
     .ubicaciones-header        { margin-bottom: 2.5rem; }
     .ubicaciones-header h2     { font-size: 1.5rem; }
 
-    .ubicacion-card-single     { margin: 0 auto; }
-
     .ubicacion-title {
         padding: 30px 30px 15px;
         font-size: 1.4rem;
@@ -445,8 +434,10 @@
     .ubicacion-button {
         padding: 12px 30px;
         font-size: 0.95rem;
-        margin: 20px auto 0;
     }
+
+    /* ✅ Oculta dots en tablet */
+    .ubicaciones-dots { display: none; }
 }
 
 
@@ -476,6 +467,9 @@
     .ubicacion-button {
         padding: 12px 25px;
         font-size: 0.9rem;
-        margin: 15px auto 0;
     }
+
+    /* ✅ Sparkles más lentas en móvil */
+    .ubicaciones-sparkles::before { animation-duration: 20s; }
+    .ubicaciones-sparkles::after  { animation-duration: 24s; }
 }

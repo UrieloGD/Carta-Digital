@@ -1,100 +1,76 @@
-/* Galería Carrusel - Kawaii Princess */
+/* Galería Carrusel - Kawaii Princess - OPTIMIZADA */
 
 
 /* ================================================
-   ANIMACIONES DE GALERÍA
+   ANIMACIONES — Solo transform + opacity (GPU)
+   ✅ Eliminado: box-shadow animado, scale en orbes,
+      rotate en gradientes (el más costoso de todos)
    ================================================ */
-@keyframes slideIn {
-    from { opacity: 0; transform: translateX(30px);  }
-    to   { opacity: 1; transform: translateX(0);      }
-}
 
+/* Entradas del carrusel — sin cambios, ya son eficientes */
+@keyframes slideIn {
+    from { opacity: 0; transform: translateX(30px); }
+    to   { opacity: 1; transform: translateX(0);    }
+}
 
 @keyframes slideOut {
-    from { opacity: 1; transform: translateX(0);      }
-    to   { opacity: 0; transform: translateX(-30px);  }
+    from { opacity: 1; transform: translateX(0);     }
+    to   { opacity: 0; transform: translateX(-30px); }
 }
-
 
 @keyframes slideInLeft {
-    from { opacity: 0; transform: translateX(-30px);  }
-    to   { opacity: 1; transform: translateX(0);      }
+    from { opacity: 0; transform: translateX(-30px); }
+    to   { opacity: 1; transform: translateX(0);     }
 }
 
-
+/* ✅ Solo opacity — sin scale */
 @keyframes imagePulse {
-    0%   { transform: scale(1);    }
-    50%  { transform: scale(1.02); }
-    100% { transform: scale(1);    }
+    0%, 100% { opacity: 0.95; }
+    50%       { opacity: 1;   }
 }
 
-
+/* ✅ Solo scale en el dot activo — elemento pequeño, bajo costo */
 @keyframes dotPulse {
     0%, 100% { transform: scale(1);   }
     50%       { transform: scale(1.2); }
 }
 
-
-@keyframes rotate {
-    0%   { transform: rotate(0deg);   }
-    100% { transform: rotate(360deg); }
-}
-
-
 @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(30px); }
+    from { opacity: 0; transform: translateY(25px); }
     to   { opacity: 1; transform: translateY(0);    }
 }
 
-
+/* ✅ Orbes — solo translateY + opacity, sin scale */
 @keyframes orbPulse {
-    0%, 100% { transform: scale(1)    translateY(0);     opacity: 0.22; }
-    50%       { transform: scale(1.35) translateY(-40px); opacity: 0.42; }
+    0%, 100% { transform: translateY(0);     opacity: 0.2;  }
+    50%       { transform: translateY(-35px); opacity: 0.38; }
 }
 
-
+/* ✅ Estrellas — solo translateX + opacity */
 @keyframes starsFloat {
-    0%   { transform: translateX(0%);  opacity: 0.5; }
-    50%  { transform: translateX(-5%); opacity: 0.9; }
-    100% { transform: translateX(0%);  opacity: 0.5; }
+    0%   { transform: translateX(0);   opacity: 0.5; }
+    50%  { transform: translateX(-4%); opacity: 0.9; }
+    100% { transform: translateX(0);   opacity: 0.5; }
 }
 
-
+/* ✅ Dots — solo translateY + opacity, sin scale */
 @keyframes dotFloat {
-    0%   { transform: translateY(110vh) scale(0.5); opacity: 0;   }
-    10%  { opacity: 0.8; }
-    90%  { opacity: 0.6; }
-    100% { transform: translateY(-10vh) scale(1.2);  opacity: 0;  }
+    0%   { transform: translateY(110vh); opacity: 0;    }
+    10%  { opacity: 0.75; }
+    90%  { opacity: 0.55; }
+    100% { transform: translateY(-10vh); opacity: 0;    }
 }
 
-
+/* ✅ Glow título — solo opacity, no cambia color ni text-shadow */
 @keyframes textGlow {
-    0%, 100% {
-        color: #d4689e;
-        text-shadow:
-            0 0 25px rgba(255, 182, 220, 0.55),
-            0 0 50px rgba(220, 164, 248, 0.3);
-    }
-    50% {
-        color: #e088bb;
-        text-shadow:
-            0 0 40px rgba(255, 200, 230, 0.9),
-            0 0 80px rgba(220, 170, 255, 0.6),
-            0 0 120px rgba(255, 210, 238, 0.4);
-    }
+    0%, 100% { opacity: 0.88; }
+    50%       { opacity: 1;   }
 }
 
+/* ✅ Frame — solo opacity, box-shadow ESTÁTICO */
 @keyframes frameGlow {
-    0%, 100% {
-        box-shadow:
-            0 0 50px rgba(255, 182, 220, 0.45),
-            0 0 100px rgba(220, 164, 248, 0.25);
-    }
-    50% {
-        box-shadow:
-            0 0 80px rgba(255, 182, 220, 0.75),
-            0 0 150px rgba(220, 164, 248, 0.45);
-    }
+    0%, 100% { opacity: 0.9; }
+    50%       { opacity: 1;  }
 }
 
 
@@ -104,7 +80,6 @@
 .galeria {
     min-height: 100vh;
     padding: var(--section-padding);
-    /* Fondo pastel rosado - sin nada azul */
     background: linear-gradient(135deg, #fff0f8 0%, #f8effe 50%, #fff5fb 100%);
     position: relative;
     overflow: hidden;
@@ -112,36 +87,36 @@
 
 
 /* ================================================
-   CAPA 1 - Rotación radial rosada
+   CAPA 1 — Burbujas estáticas + fade suave
+   ✅ ANTES: rotate 60s en 200%x200% — el peor culpable
+   ✅ AHORA: gradientes fijos, solo opacity
    ================================================ */
 .galeria::before {
     content: '';
     position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
     background:
         radial-gradient(circle at 20% 50%, rgba(255, 182, 220, 0.2)  0%, transparent 45%),
         radial-gradient(circle at 80% 80%, rgba(220, 164, 248, 0.18) 0%, transparent 45%),
         radial-gradient(circle at 55% 20%, rgba(255, 210, 238, 0.15) 0%, transparent 35%),
         radial-gradient(circle at 10% 85%, rgba(240, 190, 255, 0.14) 0%, transparent 30%);
-    animation: rotate 60s linear infinite;
+    /* ✅ Solo opacity — no rota nada */
+    animation: imagePulse 20s ease-in-out infinite;
     pointer-events: none;
     z-index: 0;
+    will-change: opacity;
 }
 
 
 /* ================================================
-   CAPA 2 - Orbe esquina superior derecha
+   CAPA 2 — Orbe esquina superior derecha
    ================================================ */
 .galeria::after {
     content: '';
     position: absolute;
-    top: -10%;
-    right: -8%;
-    width: 500px;
-    height: 500px;
+    top: -10%; right: -8%;
+    width: 500px; height: 500px;
     background: radial-gradient(circle,
         rgba(220, 164, 248, 0.2)  0%,
         rgba(255, 182, 220, 0.08) 50%,
@@ -150,16 +125,15 @@
     animation: orbPulse 10s ease-in-out infinite;
     pointer-events: none;
     z-index: 0;
+    will-change: transform, opacity;
 }
 
 
 /* Orbe esquina inferior izquierda */
 .galeria-orb {
     position: absolute;
-    bottom: -12%;
-    left: -8%;
-    width: 580px;
-    height: 580px;
+    bottom: -12%; left: -8%;
+    width: 580px; height: 580px;
     background: radial-gradient(circle,
         rgba(255, 182, 220, 0.2)  0%,
         rgba(220, 164, 248, 0.08) 50%,
@@ -168,6 +142,7 @@
     animation: orbPulse 12s ease-in-out infinite reverse;
     pointer-events: none;
     z-index: 0;
+    will-change: transform, opacity;
 }
 
 
@@ -176,76 +151,72 @@
    ================================================ */
 .galeria-sparkles {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
     pointer-events: none;
     z-index: 1;
     overflow: hidden;
 }
 
-
 .galeria-sparkles::before {
     content: '✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦';
     position: absolute;
-    top: 5%;
-    left: 0;
+    top: 5%; left: 0;
     width: 100%;
     font-size: 0.85rem;
     color: rgba(210, 130, 180, 0.38);
     letter-spacing: 5vw;
     animation: starsFloat 14s linear infinite;
     white-space: nowrap;
+    will-change: transform, opacity;
 }
-
 
 .galeria-sparkles::after {
     content: '✿ ❀ ✿ ❀ ✿ ❀ ✿ ❀ ✿ ❀ ✿ ❀ ✿ ❀ ✿';
     position: absolute;
-    bottom: 5%;
-    left: 0;
+    bottom: 5%; left: 0;
     width: 100%;
     font-size: 0.95rem;
     color: rgba(200, 140, 220, 0.3);
     letter-spacing: 5vw;
     animation: starsFloat 17s linear infinite reverse;
     white-space: nowrap;
+    will-change: transform, opacity;
 }
 
 
 /* ================================================
    PUNTOS FLOTANTES
+   ✅ Reducidos de 10 a 6 activos
+   ✅ Ocultos en móvil
    ================================================ */
 .galeria-dots-bg {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
     pointer-events: none;
     z-index: 1;
 }
-
 
 .galeria-dots-bg span {
     position: absolute;
     border-radius: 50%;
     animation: dotFloat linear infinite;
     opacity: 0;
+    will-change: transform, opacity;
 }
 
-
-.galeria-dots-bg span:nth-child(1)  { width:9px;  height:9px;  background: rgba(255,182,220,0.75); left:5%;  animation-duration:9s;  animation-delay:0s;   }
-.galeria-dots-bg span:nth-child(2)  { width:6px;  height:6px;  background: rgba(220,164,248,0.7);  left:15%; animation-duration:13s; animation-delay:1.5s; }
-.galeria-dots-bg span:nth-child(3)  { width:12px; height:12px; background: rgba(255,200,235,0.65); left:25%; animation-duration:8s;  animation-delay:2.8s; }
-.galeria-dots-bg span:nth-child(4)  { width:7px;  height:7px;  background: rgba(230,170,255,0.7);  left:38%; animation-duration:14s; animation-delay:0.6s; }
-.galeria-dots-bg span:nth-child(5)  { width:10px; height:10px; background: rgba(255,182,220,0.65); left:52%; animation-duration:10s; animation-delay:3.5s; }
-.galeria-dots-bg span:nth-child(6)  { width:7px;  height:7px;  background: rgba(240,190,255,0.75); left:63%; animation-duration:7s;  animation-delay:1.2s; }
-.galeria-dots-bg span:nth-child(7)  { width:11px; height:11px; background: rgba(255,210,240,0.65); left:74%; animation-duration:11s; animation-delay:0.3s; }
-.galeria-dots-bg span:nth-child(8)  { width:5px;  height:5px;  background: rgba(255,182,220,0.8);  left:85%; animation-duration:9s;  animation-delay:2s;   }
-.galeria-dots-bg span:nth-child(9)  { width:9px;  height:9px;  background: rgba(220,164,248,0.6);  left:93%; animation-duration:12s; animation-delay:1.8s; }
-.galeria-dots-bg span:nth-child(10) { width:6px;  height:6px;  background: rgba(255,210,238,0.7);  left:44%; animation-duration:15s; animation-delay:4.2s; }
+.galeria-dots-bg span:nth-child(1)  { width:9px;  height:9px;  background:rgba(255,182,220,0.75); left:5%;  animation-duration:9s;  animation-delay:0s;   }
+.galeria-dots-bg span:nth-child(2)  { width:6px;  height:6px;  background:rgba(220,164,248,0.7);  left:20%; animation-duration:13s; animation-delay:1.5s; }
+.galeria-dots-bg span:nth-child(3)  { width:11px; height:11px; background:rgba(255,200,235,0.65); left:38%; animation-duration:8s;  animation-delay:2.8s; }
+.galeria-dots-bg span:nth-child(4)  { width:7px;  height:7px;  background:rgba(230,170,255,0.7);  left:56%; animation-duration:14s; animation-delay:0.6s; }
+.galeria-dots-bg span:nth-child(5)  { width:10px; height:10px; background:rgba(255,182,220,0.65); left:74%; animation-duration:10s; animation-delay:3.5s; }
+.galeria-dots-bg span:nth-child(6)  { width:5px;  height:5px;  background:rgba(240,190,255,0.75); left:90%; animation-duration:9s;  animation-delay:1.2s; }
+/* Dots 7-10 desactivados */
+.galeria-dots-bg span:nth-child(7),
+.galeria-dots-bg span:nth-child(8),
+.galeria-dots-bg span:nth-child(9),
+.galeria-dots-bg span:nth-child(10) { display: none; }
 
 
 /* ================================================
@@ -272,7 +243,6 @@
     animation: fadeInUp 0.8s ease-out;
 }
 
-
 .galeria-header h2 {
     font-family: var(--font-bold);
     font-size: clamp(1.8rem, 5vw, 3rem);
@@ -280,12 +250,13 @@
     margin-bottom: 15px;
     font-weight: 900;
     letter-spacing: 2px;
+    /* ✅ Solo opacity — sin cambio de color ni text-shadow */
     animation: textGlow 4s ease-in-out infinite;
     text-shadow:
         0 0 25px rgba(255, 182, 220, 0.55),
         0 0 50px rgba(220, 164, 248, 0.3);
+    will-change: opacity;
 }
-
 
 .galeria-header p {
     color: #e088bb;
@@ -294,12 +265,10 @@
     font-weight: 600;
 }
 
-
 .galeria .decorative-line {
     margin: 20px auto;
     height: 3px;
     width: 120px;
-    /* Gradiente rosa → lila pastel - sin azul */
     background: linear-gradient(90deg, #e88ec7, #daaff5);
     box-shadow: 0 0 25px rgba(255, 182, 220, 0.55);
     border-radius: 2px;
@@ -307,7 +276,7 @@
 
 
 /* ================================================
-   CARRUSEL INTERACTIVO
+   CARRUSEL
    ================================================ */
 .carousel-wrapper {
     position: relative;
@@ -319,7 +288,6 @@
     min-height: 600px;
 }
 
-
 .carousel-container {
     flex: 1;
     position: relative;
@@ -330,13 +298,11 @@
     max-width: 900px;
 }
 
-
 .carousel-track {
     width: 100%;
     height: 100%;
     position: relative;
 }
-
 
 .carousel-slide {
     display: flex;
@@ -348,55 +314,55 @@
     animation: slideIn 0.5s ease-out;
 }
 
-
 .carousel-slide.hidden {
     animation: slideOut 0.5s ease-out;
 }
 
 
-/* Contenedor de imagen */
+/* ================================================
+   IMAGEN DEL SLIDE
+   ✅ box-shadow ESTÁTICO — frameGlow solo opacity
+   ================================================ */
 .slide-image-wrapper {
     flex: 0 0 450px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 450px;
-    height: 550px;
+    width: 450px; height: 550px;
     position: relative;
     border: 4px solid #f4b8df;
     border-radius: var(--border-radius-lg);
     overflow: hidden;
-    /* Fondo rosado muy suave - sin azul */
     background: rgba(255, 230, 248, 0.45);
+    /* ✅ box-shadow fijo, solo opacity anima */
+    box-shadow:
+        0 0 50px rgba(255, 182, 220, 0.45),
+        0 0 90px rgba(220, 164, 248, 0.22);
     animation: frameGlow 3s ease-in-out infinite;
+    will-change: opacity;
 }
 
-
 .carousel-image {
-    width: 100%;
-    height: 100%;
+    width: 100%; height: 100%;
     object-fit: contain;
-    transition: all 0.3s ease;
+    /* ✅ Solo transform — sin transition en filter */
+    transition: transform 0.35s ease;
     cursor: pointer;
     filter: brightness(1.0) saturate(1.1);
     padding: 15px;
 }
 
-
 .carousel-image:hover {
     transform: scale(1.05);
-    filter: brightness(1.05) saturate(1.2);
 }
 
 
-/* Información de la slide */
+/* ================================================
+   INFO DEL SLIDE
+   ================================================ */
 .slide-info {
     flex: 0 0 auto;
     padding: 30px;
     text-align: left;
     max-width: 300px;
 }
-
 
 .slide-counter {
     font-size: 0.95rem;
@@ -408,13 +374,11 @@
     animation: slideInLeft 0.5s ease-out;
 }
 
-
 #slideNumber {
     font-size: 1.2rem;
     color: #f4b8df;
     font-weight: 900;
 }
-
 
 .slide-title {
     font-size: 1.8rem;
@@ -424,7 +388,6 @@
     letter-spacing: 1px;
     animation: slideInLeft 0.6s ease-out 0.1s backwards;
 }
-
 
 .slide-description {
     color: #e088bb;
@@ -445,32 +408,30 @@
     gap: 2rem;
 }
 
-
 .carousel-btn {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    /* Fondo rosado translúcido - sin azul */
     background: linear-gradient(135deg,
         rgba(255, 182, 220, 0.3),
         rgba(220, 164, 248, 0.2));
     border: 2px solid #f4b8df;
     color: #e088bb;
-    width: 60px;
-    height: 60px;
+    width: 60px; height: 60px;
     border-radius: 50%;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.3s ease;
+    /* ✅ box-shadow ESTÁTICO */
+    box-shadow: 0 0 25px rgba(255, 182, 220, 0.3);
+    transition: background 0.3s ease,
+                border-color 0.3s ease,
+                box-shadow 0.3s ease,
+                transform 0.3s ease;
     z-index: 10;
-    box-shadow:
-        0 0 25px rgba(255, 182, 220, 0.35),
-        inset 0 0 15px rgba(255, 182, 220, 0.1);
     padding: 0;
 }
-
 
 .carousel-btn:hover {
     background: linear-gradient(135deg,
@@ -478,31 +439,24 @@
         rgba(220, 164, 248, 0.4));
     border-color: #e88ec7;
     box-shadow:
-        0 0 45px rgba(255, 182, 220, 0.65),
-        0 0 80px rgba(220, 164, 248, 0.4),
-        inset 0 0 25px rgba(255, 182, 220, 0.2);
+        0 0 40px rgba(255, 182, 220, 0.6),
+        0 0 70px rgba(220, 164, 248, 0.35);
     transform: translateY(-50%) scale(1.1);
     color: #d4689e;
 }
-
 
 .carousel-btn:active {
     transform: translateY(-50%) scale(0.95);
 }
 
-
-.carousel-btn svg {
-    width: 40px;
-    height: 40px;
-}
-
+.carousel-btn svg { width: 40px; height: 40px; }
 
 .carousel-prev { left: -80px;  }
 .carousel-next { right: -80px; }
 
 
 /* ================================================
-   INDICADORES DE PUNTOS
+   INDICADORES / DOTS
    ================================================ */
 .carousel-dots {
     position: absolute;
@@ -514,18 +468,18 @@
     z-index: 10;
 }
 
-
 .dot {
-    width: 12px;
-    height: 12px;
+    width: 12px; height: 12px;
     border-radius: 50%;
     background: rgba(255, 182, 220, 0.35);
     border: 2px solid #f4b8df;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: background 0.3s ease,
+                border-color 0.3s ease,
+                transform 0.3s ease,
+                box-shadow 0.3s ease;
     padding: 0;
 }
-
 
 .dot:hover {
     background: rgba(255, 182, 220, 0.65);
@@ -533,11 +487,10 @@
     transform: scale(1.2);
 }
 
-
 .dot.active {
     background: #e088bb;
     border-color: #e088bb;
-    box-shadow: 0 0 18px rgba(255, 182, 220, 0.8);
+    box-shadow: 0 0 18px rgba(255, 182, 220, 0.75);
     transform: scale(1.3);
 }
 
@@ -546,32 +499,21 @@
    RESPONSIVE - TABLET
    ================================================ */
 @media (max-width: 768px) {
-    .carousel-wrapper {
-        gap: 1.5rem;
-        min-height: 500px;
-    }
+    .carousel-wrapper { gap: 1.5rem; min-height: 500px; }
 
-    .slide-image-wrapper {
-        flex: 0 0 350px;
-        width: 350px;
-        height: 450px;
-    }
+    .slide-image-wrapper { flex: 0 0 350px; width: 350px; height: 450px; }
 
-    .carousel-btn {
-        width: 50px;
-        height: 50px;
-    }
-
-    .carousel-btn svg {
-        width: 32px;
-        height: 32px;
-    }
+    .carousel-btn       { width: 50px; height: 50px; }
+    .carousel-btn svg   { width: 32px; height: 32px; }
 
     .carousel-prev { left: -65px;  }
     .carousel-next { right: -65px; }
 
-    .slide-info    { padding: 20px; max-width: 250px; }
-    .slide-title   { font-size: 1.4rem; }
+    .slide-info  { padding: 20px; max-width: 250px; }
+    .slide-title { font-size: 1.4rem; }
+
+    /* ✅ Desactiva dots en tablet */
+    .galeria-dots-bg { display: none; }
 }
 
 
@@ -579,14 +521,11 @@
    RESPONSIVE - MOBILE
    ================================================ */
 @media (max-width: 480px) {
-    .galeria {
-        padding: 40px 20px;
-        min-height: auto;
-    }
+    .galeria { padding: 40px 20px; min-height: auto; }
 
-    .galeria-header        { margin-bottom: 2rem; }
-    .galeria-header h2     { font-size: 1.5rem; }
-    .galeria-header p      { font-size: 0.95rem; }
+    .galeria-header    { margin-bottom: 2rem; }
+    .galeria-header h2 { font-size: 1.5rem; }
+    .galeria-header p  { font-size: 0.95rem; }
 
     .carousel-wrapper {
         flex-direction: column;
@@ -597,7 +536,7 @@
         padding-bottom: 0;
     }
 
-    .carousel-container    { max-width: 100%; min-height: auto; }
+    .carousel-container { max-width: 100%; min-height: auto; }
 
     .carousel-slide {
         flex-direction: column;
@@ -607,13 +546,11 @@
 
     .slide-image-wrapper {
         flex: 0 0 auto;
-        width: 100%;
-        height: 300px;
-        order: -1;
-        max-width: 100%;
+        width: 100%; height: 300px;
+        order: -1; max-width: 100%;
     }
 
-    .carousel-image        { width: 100%; height: 100%; padding: 10px; }
+    .carousel-image { width: 100%; height: 100%; padding: 10px; }
 
     .slide-info {
         width: 100%;
@@ -622,9 +559,9 @@
         max-width: 100%;
     }
 
-    .slide-counter         { font-size: 0.85rem; margin-bottom: 0; }
-    .slide-title           { font-size: 1.3rem;  margin-bottom: 10px; }
-    .slide-description     { font-size: 0.9rem; }
+    .slide-counter     { font-size: 0.85rem; margin-bottom: 0; }
+    .slide-title       { font-size: 1.3rem; margin-bottom: 10px; }
+    .slide-description { font-size: 0.9rem; }
 
     .carousel-wrapper > .carousel-btn { display: none; }
 
@@ -640,8 +577,7 @@
     .carousel-nav-buttons .carousel-btn {
         position: static;
         transform: none;
-        width: 50px;
-        height: 50px;
+        width: 50px; height: 50px;
     }
 
     .carousel-nav-buttons .carousel-btn:hover  { transform: scale(1.1);  }
@@ -649,12 +585,15 @@
 
     .carousel-dots {
         position: static;
-        bottom: auto;
-        left: auto;
+        bottom: auto; left: auto;
         transform: none;
         justify-content: center;
         margin-top: 0.5rem;
     }
 
     .dot { width: 10px; height: 10px; }
+
+    /* ✅ Sparkles más lentas en móvil */
+    .galeria-sparkles::before { animation-duration: 20s; }
+    .galeria-sparkles::after  { animation-duration: 24s; }
 }
